@@ -1,0 +1,18 @@
+{
+  "agent_name": "kwame_hotel_accra",
+  "persona": "kwame",
+  "client_name": "Adinkra Hotel",
+  "location": "Accra, Ghana",
+  "voice": {
+    "provider": "edge_tts",
+    "voice_id": "en-GB-RyanNeural",
+    "speed": 0.95
+  },
+  "stt_provider": "whisper",
+  "llm_provider": "mock",
+  "first_message": "Hello?",
+  "interruption_enabled": true,
+  "backchanneling_enabled": true,
+  "max_call_duration": 600,
+  "escalation_number": "+233XXXXXXXXX"
+}

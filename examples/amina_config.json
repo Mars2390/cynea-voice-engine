@@ -1,0 +1,18 @@
+{
+  "agent_name": "amina_kcb_kenya",
+  "persona": "amina",
+  "client_name": "KCB Bank",
+  "location": "Nairobi, Kenya",
+  "voice": {
+    "provider": "edge_tts",
+    "voice_id": "en-GB-SoniaNeural",
+    "speed": 1.0
+  },
+  "stt_provider": "whisper",
+  "llm_provider": "mock",
+  "first_message": "Hello, this is Amina. How can I help you today?",
+  "interruption_enabled": true,
+  "backchanneling_enabled": true,
+  "max_call_duration": 600,
+  "escalation_number": "+254XXXXXXXXX"
+}

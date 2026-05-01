@@ -89,7 +89,12 @@ class Conversation:
 
 @dataclass
 class AgentConfig:
-    """Configuration for a voice agent"""
+    """Configuration for a voice agent.
+
+    The fields below the divider are optional metadata used by the
+    loader, dashboard, and call-routing layers — the engine itself does
+    not require them to operate.
+    """
     name: str = "cynea_agent"
     system_prompt: str = ""
     stt_provider: str = "whisper"
@@ -100,6 +105,12 @@ class AgentConfig:
     first_message: str = "Hello?"
     interruption_enabled: bool = True
     backchanneling_enabled: bool = True
+    # ── optional metadata ────────────────────────────────────────────
+    persona: Optional[str] = None
+    client_name: Optional[str] = None
+    location: Optional[str] = None
+    max_call_duration: int = 600
+    escalation_number: Optional[str] = None
 
 
 @dataclass

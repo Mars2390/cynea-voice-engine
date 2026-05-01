@@ -3,7 +3,7 @@
     "calls": 1,
     "containment_rate": 1.0,
     "resolution_rate": 1.0,
-    "avg_duration_s": 20.27,
+    "avg_duration_s": 11.7,
     "avg_cost_cents": 4.2095,
     "total_cost_cents": 4.2095,
     "avg_sentiment": 0.2,
@@ -20,8 +20,8 @@
     {
       "call_id": "demo-call-001",
       "agent": "kwame_adinkra",
-      "started_at": 1777668811.3582573,
-      "ended_at": 1777668831.6246374,
+      "started_at": 1777669320.6544676,
+      "ended_at": 1777669332.3587863,
       "user_turns": 5,
       "assistant_turns": 6,
       "interruptions": 1,
@@ -35,7 +35,7 @@
       "resolution": true,
       "handoff_reason": null,
       "notes": "interruptions=1, recovery_rate=0.0",
-      "duration_s": 20.266,
+      "duration_s": 11.704,
       "cost_breakdown": {
         "stt_cents": 0.0,
         "llm_cents": 0.7095,

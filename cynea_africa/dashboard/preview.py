@@ -1658,19 +1658,773 @@ function showToast(msg) {{
 # CLI
 # =====================================================================
 
+# =====================================================================
+# Marketing landing page (cynea_landing.html)
+# =====================================================================
+# Combines the operations dashboard's call-history table with a
+# marketing-quality hero, agent showcase, and feature grid. Generated
+# as a single self-contained HTML file (only external request is
+# Google Fonts).
+#
+# Public entry point: generate_landing_page(...). Reuses dashboard
+# helpers where possible (call history table, status pills, sentiment
+# bars) so the two outputs can't drift.
+
+# Marketing copy lives at module scope so the operator can patch it
+# without touching the renderer.
+
+LANDING_HEADLINE = "Voice AI Built for Africa"
+LANDING_SUBTITLE = (
+    "Deploy human-like voice agents for hotels, banks, and call centers — "
+    "with African accents, local languages, and zero upfront infrastructure cost."
+)
+
+# Showcase metrics for the hero counter strip. Marketing numbers, not
+# live data — the operations dashboard at /dashboard.html shows real
+# values. Override via the metrics_override argument when you have
+# tender-grade real numbers to publish.
+LANDING_SHOWCASE_METRICS = {
+    "calls_handled": 1247,
+    "containment_rate": 0.867,
+    "cost_cents": 4.2,
+    "active_agents": 2,
+}
+
+LANDING_AGENTS = [
+    {
+        "key": "kwame",
+        "name": "Kwame",
+        "role": "Hotel Receptionist",
+        "country": "Ghana",
+        "voice_label": "British male · en-GB-RyanNeural",
+        "audio_file": "kwame_test_1.mp3",
+        "summary": (
+            "Handles bookings, room availability, restaurant hours and small "
+            "talk for hospitality clients."
+        ),
+    },
+    {
+        "key": "amina",
+        "name": "Amina",
+        "role": "Customer Service Agent",
+        "country": "Kenya",
+        "voice_label": "British female · en-GB-SoniaNeural",
+        "audio_file": "amina_test_1.mp3",
+        "summary": (
+            "Banking, telco and e-commerce inquiries with M-Pesa, airtime "
+            "and bundle support. Escalates complaints fast."
+        ),
+    },
+]
+
+LANDING_HOW_IT_WORKS = [
+    {
+        "step": "01",
+        "title": "Upload content",
+        "body": "Point Cynea at your scripts, PDFs, knowledge base or website. The agent learns your business, not the other way around.",
+        "icon": "upload",
+    },
+    {
+        "step": "02",
+        "title": "Configure agent",
+        "body": "Pick a persona, voice, escalation rules and pricing card. Validate the agent in the dashboard before going live.",
+        "icon": "sliders",
+    },
+    {
+        "step": "03",
+        "title": "Deploy to phone",
+        "body": "Get an Africa's Talking or Twilio number routed to the agent in minutes. Pay per minute used; cancel anytime.",
+        "icon": "phone",
+    },
+]
+
+LANDING_FEATURES = [
+    ("African accents & languages",       "English variants for Ghana, Kenya, Nigeria, South Africa — plus mixed Swahili tokens.", "globe"),
+    ("Human-like conversations",          "Sequence-id barge-in, grace periods, backchannels. No IVR feel.",                       "speech"),
+    ("Free voice processing",             "Local Whisper STT + free Edge TTS by default. You only pay LLM tokens and telephony.",   "bolt"),
+    ("Operations dashboard included",     "Per-call sentiment, containment, cost. Export PDF + CSV. Print-friendly.",              "chart"),
+    ("Zero infrastructure cost",          "Runs on a single 8 GB box. No Kubernetes, no Redis cluster required.",                  "cloud"),
+    ("African phone numbers",             "Africa's Talking integration for Kenya, Nigeria, Ghana, Tanzania, Uganda, Rwanda.",      "phone"),
+    ("Sentiment & analytics",             "Per-call sentiment scoring, containment trends, agent-vs-agent comparison.",            "trend"),
+    ("24 / 7 availability",               "Engine handles concurrent calls; metrics tracker keeps the audit trail.",                "clock"),
+]
+
+
+def generate_landing_page(
+    metrics_file: str = "examples/_out/calls.json",
+    output_file: Optional[str] = None,
+    *,
+    force_demo: bool = False,
+    metrics_override: Optional[dict] = None,
+) -> str:
+    """Render the full marketing + operations landing page.
+
+    Args:
+        metrics_file: Path to the calls.json file used to populate the
+            call-history table at the bottom.
+        output_file: Where to write. Defaults to a sibling
+            `cynea_landing.html` next to the input.
+        force_demo: Use sample data for the call-history table.
+        metrics_override: Override the showcase metrics (the hero
+            counter strip) with real numbers. Keys: calls_handled,
+            containment_rate, cost_cents, active_agents.
+
+    Returns:
+        Absolute path to the file written.
+    """
+    payload = _load_metrics(metrics_file, force_demo=force_demo)
+    calls = list(payload.get("calls") or [])
+    is_empty_state = payload.get("_is_empty_state", False)
+
+    showcase = dict(LANDING_SHOWCASE_METRICS)
+    if metrics_override:
+        showcase.update({k: v for k, v in metrics_override.items() if v is not None})
+
+    if output_file is None:
+        base_dir = os.path.dirname(os.path.abspath(metrics_file))
+        if not os.path.isdir(base_dir):
+            base_dir = os.path.abspath(os.path.join("examples", "_out"))
+            os.makedirs(base_dir, exist_ok=True)
+        output_file = os.path.join(base_dir, "cynea_landing.html")
+
+    html_text = _render_landing_html(
+        calls=calls,
+        showcase=showcase,
+        is_empty_state=is_empty_state,
+    )
+
+    output_file = os.path.abspath(output_file)
+    os.makedirs(os.path.dirname(output_file), exist_ok=True)
+    with open(output_file, "w", encoding="utf-8", newline="\n") as f:
+        f.write(html_text)
+    return output_file
+
+
+# ---------------------------------------------------------------------
+# Top-level renderer
+# ---------------------------------------------------------------------
+
+def _render_landing_html(*, calls: list, showcase: dict, is_empty_state: bool) -> str:
+    nav     = _landing_render_nav()
+    hero    = _landing_render_hero()
+    agents  = _landing_render_agent_showcase()
+    how     = _landing_render_how_it_works()
+    metrics = _landing_render_metrics_bar(showcase)
+    feats   = _landing_render_features()
+    history = _render_call_history_table(calls, is_empty_state)
+    footer  = _landing_render_footer()
+
+    css = _landing_render_css()
+    dashboard_css = _render_css()  # for the call-history table styling
+    js = _landing_render_js(calls)
+
+    return f"""<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Cynea Voice Engine — Voice AI built for Africa</title>
+<meta name="description" content="{html.escape(LANDING_SUBTITLE)}" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=DM+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>{dashboard_css}{css}</style>
+</head>
+<body class="landing">
+{nav}
+<main class="landing-main">
+  {hero}
+  {agents}
+  {how}
+  {metrics}
+  {feats}
+  <section id="dashboard" class="dashboard-anchor">
+    <div class="section-head">
+      <h2>Operations dashboard</h2>
+      <p class="muted">Live call history with containment, sentiment and cost per call.</p>
+    </div>
+    {history}
+  </section>
+</main>
+{footer}
+<div id="toast" role="status" aria-live="polite"></div>
+<script>{js}</script>
+</body>
+</html>
+"""
+
+
+# ---------------------------------------------------------------------
+# Section renderers (landing-only)
+# ---------------------------------------------------------------------
+
+def _landing_render_nav() -> str:
+    return """
+<nav class="nav" id="topnav">
+  <a class="nav-brand" href="#top">
+    <span class="brand-mark">CYNEA</span>
+    <span class="brand-tag">VOICE ENGINE</span>
+  </a>
+  <ul class="nav-links">
+    <li><a href="#features">Features</a></li>
+    <li><a href="#agents">Agents</a></li>
+    <li><a href="#dashboard">Dashboard</a></li>
+    <li><a href="https://github.com/Mars2390/cynea-voice-engine" target="_blank" rel="noopener">GitHub</a></li>
+  </ul>
+  <a class="btn btn-outline" id="bookDemo" href="#agents">Book a demo</a>
+</nav>
+"""
+
+
+def _landing_render_hero() -> str:
+    return f"""
+<section class="hero-marketing" id="top">
+  <div class="hero-bg" aria-hidden="true"></div>
+  <div class="hero-inner">
+    <span class="pill pill-cyan">Open source · MIT</span>
+    <h1 class="hero-title">{html.escape(LANDING_HEADLINE)}</h1>
+    <p class="hero-sub">{html.escape(LANDING_SUBTITLE)}</p>
+    <div class="hero-ctas">
+      <a class="btn btn-primary" href="#dashboard">See dashboard</a>
+      <button class="btn btn-outline play-btn" type="button"
+              data-audio="kwame_test_1.mp3"
+              data-label="Kwame demo">
+        <span class="play-icon" aria-hidden="true">▶</span>
+        Hear Kwame demo
+      </button>
+    </div>
+    <div class="hero-trust">
+      <span>Designed for hotels, banks, telcos and call centers</span>
+      <span class="dim">· Africa's Talking · Twilio · Plivo · SIP</span>
+    </div>
+  </div>
+</section>
+"""
+
+
+def _landing_render_agent_showcase() -> str:
+    cards = []
+    for agent in LANDING_AGENTS:
+        cards.append(f"""
+<article class="agent-showcase">
+  <header class="agent-showcase-head">
+    <div class="agent-name-row">
+      <span class="agent-icon" aria-hidden="true">{_landing_icon('user')}</span>
+      <h3>{html.escape(agent['name'])}</h3>
+      <span class="pill pill-green pill-sm">
+        <span class="pulse-dot"></span> Ready for calls
+      </span>
+    </div>
+    <p class="agent-role muted">{html.escape(agent['role'])} · {html.escape(agent['country'])}</p>
+  </header>
+  <p class="agent-summary">{html.escape(agent['summary'])}</p>
+  <dl class="agent-meta">
+    <dt>Voice</dt><dd>{html.escape(agent['voice_label'])}</dd>
+    <dt>Industry</dt><dd>{html.escape(agent['role'])}</dd>
+    <dt>Country</dt><dd>{html.escape(agent['country'])}</dd>
+  </dl>
+  <div class="agent-actions">
+    <button class="btn btn-primary play-btn" type="button"
+            data-audio="{html.escape(agent['audio_file'])}"
+            data-label="{html.escape(agent['name'])} demo">
+      <span class="play-icon" aria-hidden="true">▶</span>
+      Hear demo
+    </button>
+    <a class="btn btn-ghost" href="#dashboard">View metrics</a>
+  </div>
+</article>
+""")
+    return f"""
+<section class="agents-section" id="agents">
+  <div class="section-head">
+    <h2>Two agents shipping today</h2>
+    <p class="muted">Both run on the same engine. Add a third by writing one Python file plus a JSON config.</p>
+  </div>
+  <div class="agent-showcase-grid">{"".join(cards)}</div>
+</section>
+"""
+
+
+def _landing_render_how_it_works() -> str:
+    cards = []
+    for s in LANDING_HOW_IT_WORKS:
+        cards.append(f"""
+<article class="step-card">
+  <div class="step-num mono">{html.escape(s['step'])}</div>
+  <div class="step-icon">{_landing_icon(s['icon'])}</div>
+  <h3>{html.escape(s['title'])}</h3>
+  <p class="muted">{html.escape(s['body'])}</p>
+</article>
+""")
+    return f"""
+<section class="how-section">
+  <div class="section-head">
+    <h2>How it works</h2>
+    <p class="muted">From quiet repo to live phone number in three steps.</p>
+  </div>
+  <div class="how-grid">{"".join(cards)}</div>
+</section>
+"""
+
+
+def _landing_render_metrics_bar(showcase: dict) -> str:
+    """Big counter strip. Counter target lives on data-final; the
+    counter animation only fires when the strip scrolls into view."""
+    calls_handled = int(showcase.get("calls_handled") or 0)
+    containment = float(showcase.get("containment_rate") or 0)
+    cost_cents = float(showcase.get("cost_cents") or 0)
+    active_agents = int(showcase.get("active_agents") or 0)
+
+    return f"""
+<section class="metrics-strip" id="live-metrics">
+  <div class="metric">
+    <div class="metric-value mono"
+         data-counter="{calls_handled}" data-format="int">0</div>
+    <div class="metric-label muted">Calls handled</div>
+  </div>
+  <div class="metric">
+    <div class="metric-value mono"
+         data-counter="{containment * 100:.1f}" data-format="pct">0%</div>
+    <div class="metric-label muted">Containment rate</div>
+  </div>
+  <div class="metric">
+    <div class="metric-value mono"
+         data-counter="{cost_cents:.1f}" data-format="cents">0¢</div>
+    <div class="metric-label muted">Cost per call</div>
+  </div>
+  <div class="metric">
+    <div class="metric-value mono"
+         data-counter="{active_agents}" data-format="int">0</div>
+    <div class="metric-label muted">Active agents</div>
+  </div>
+</section>
+"""
+
+
+def _landing_render_features() -> str:
+    cards = []
+    for title, body, icon in LANDING_FEATURES:
+        cards.append(f"""
+<article class="feature-card">
+  <div class="feature-icon">{_landing_icon(icon)}</div>
+  <h3>{html.escape(title)}</h3>
+  <p class="muted">{html.escape(body)}</p>
+</article>
+""")
+    return f"""
+<section class="features-section" id="features">
+  <div class="section-head">
+    <h2>Built for African business</h2>
+    <p class="muted">Eight choices we made differently from US-first voice AI platforms.</p>
+  </div>
+  <div class="features-grid">{"".join(cards)}</div>
+</section>
+"""
+
+
+def _landing_render_footer() -> str:
+    return f"""
+<footer class="landing-footer">
+  <div class="footer-inner">
+    <div>
+      <span class="brand-mark small">CYNEA</span>
+      <span class="brand-tag">VOICE ENGINE</span>
+    </div>
+    <div class="footer-links">
+      <a href="https://github.com/Mars2390/cynea-voice-engine" target="_blank" rel="noopener">GitHub</a>
+      <a href="#features">Features</a>
+      <a href="#agents">Agents</a>
+      <a href="#dashboard">Dashboard</a>
+    </div>
+    <div class="footer-tag dim">
+      Cynea AI — Made in Kenya · Built for African business
+    </div>
+  </div>
+</footer>
+"""
+
+
+# ---------------------------------------------------------------------
+# Inline SVG icons (Lucide-style stroke icons, ~2 KB total)
+# ---------------------------------------------------------------------
+
+def _landing_icon(name: str) -> str:
+    icons = {
+        "user":   '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>',
+        "globe":  '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15 15 0 0 1 0 20M12 2a15 15 0 0 0 0 20"/></svg>',
+        "speech": '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>',
+        "bolt":   '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>',
+        "chart":  '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="20" x2="21" y2="20"/><rect x="6" y="10" width="3" height="10"/><rect x="11" y="6" width="3" height="14"/><rect x="16" y="13" width="3" height="7"/></svg>',
+        "cloud":  '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M17.5 19a4.5 4.5 0 1 0-1-8.9A6 6 0 0 0 4.5 12 4 4 0 0 0 5 19h12.5z"/></svg>',
+        "phone":  '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92V21a1 1 0 0 1-1.09 1 19.91 19.91 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6A19.91 19.91 0 0 1 3.21 4.09 1 1 0 0 1 4.2 3h4.09a1 1 0 0 1 1 .76 12.4 12.4 0 0 0 .65 2.62 1 1 0 0 1-.23 1L8 8.91a16 16 0 0 0 6 6l1.51-1.69a1 1 0 0 1 1-.23 12.4 12.4 0 0 0 2.62.65 1 1 0 0 1 .87 1.28z"/></svg>',
+        "trend":  '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/></svg>',
+        "clock":  '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>',
+        "upload": '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>',
+        "sliders":'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><line x1="4" y1="21" x2="4" y2="14"/><line x1="4" y1="10" x2="4" y2="3"/><line x1="12" y1="21" x2="12" y2="12"/><line x1="12" y1="8" x2="12" y2="3"/><line x1="20" y1="21" x2="20" y2="16"/><line x1="20" y1="12" x2="20" y2="3"/><line x1="1" y1="14" x2="7" y2="14"/><line x1="9" y1="8" x2="15" y2="8"/><line x1="17" y1="16" x2="23" y2="16"/></svg>',
+    }
+    return icons.get(name, '')
+
+
+# ---------------------------------------------------------------------
+# Landing CSS (appended to the dashboard CSS)
+# ---------------------------------------------------------------------
+
+def _landing_render_css() -> str:
+    c = _COLORS
+    return f"""
+/* === LANDING PAGE STYLES (additive on top of dashboard CSS) === */
+
+html {{ scroll-behavior: smooth; }}
+body.landing {{ overflow-x: hidden; }}
+body.landing main.landing-main {{ max-width: 1240px; margin: 0 auto; padding: 0 32px 80px; }}
+
+/* navigation bar */
+.nav {{
+  position: sticky; top: 0; z-index: 50;
+  display: flex; align-items: center; gap: 16px;
+  padding: 16px 32px;
+  background: {c['bg']}E6;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border-bottom: 1px solid {c['border']};
+}}
+.nav-brand {{
+  display: inline-flex; align-items: baseline; gap: 10px;
+  text-decoration: none;
+}}
+.nav-links {{
+  list-style: none; padding: 0; margin: 0 auto;
+  display: flex; gap: 28px;
+}}
+.nav-links a {{
+  color: {c['muted']}; text-decoration: none; font-weight: 500;
+  font-size: 14px;
+  transition: color 120ms ease;
+}}
+.nav-links a:hover {{ color: {c['text']}; }}
+.btn-outline {{
+  background: transparent; color: {c['accent']};
+  border: 1px solid {c['accent']}; font-weight: 600;
+  text-decoration: none; padding: 8px 16px;
+  border-radius: 999px;
+}}
+.btn-outline:hover {{ background: {c['accent']}14; }}
+@media (max-width: 720px) {{
+  .nav-links {{ display: none; }}
+}}
+
+.section-head {{ text-align: center; margin: 0 auto 32px; max-width: 720px; }}
+.section-head h2 {{
+  font-family: 'Syne', sans-serif; font-weight: 700;
+  font-size: 32px; letter-spacing: -0.01em; margin: 0 0 12px;
+}}
+.section-head p {{ font-size: 15px; }}
+
+/* hero */
+.hero-marketing {{
+  position: relative;
+  padding: 88px 0 96px;
+  text-align: center;
+  isolation: isolate;
+}}
+.hero-bg {{
+  position: absolute; inset: -10% -10% 0 -10%; z-index: -1;
+  background:
+    radial-gradient(800px 400px at 30% 30%, {c['accent']}22, transparent 60%),
+    radial-gradient(900px 500px at 70% 60%, {c['accent']}14, transparent 65%);
+  filter: blur(20px);
+  animation: heroDrift 14s ease-in-out infinite alternate;
+}}
+@keyframes heroDrift {{
+  0%   {{ transform: translate3d(-2%, 0, 0) scale(1); }}
+  100% {{ transform: translate3d(2%, -2%, 0) scale(1.05); }}
+}}
+.hero-inner {{ max-width: 820px; margin: 0 auto; }}
+.pill-cyan {{ color: {c['accent']}; border-color: {c['accent']}33; background: {c['accent']}14; }}
+.pill-sm {{ font-size: 10px; padding: 3px 8px; }}
+.hero-title {{
+  font-family: 'Syne', sans-serif; font-weight: 800;
+  font-size: clamp(40px, 6vw, 64px); line-height: 1.05;
+  letter-spacing: -0.02em; margin: 18px 0 16px;
+  background: linear-gradient(180deg, {c['text']} 0%, {c['accent']} 220%);
+  -webkit-background-clip: text; background-clip: text;
+  -webkit-text-fill-color: transparent;
+}}
+.hero-sub {{
+  font-size: 17px; color: {c['muted']}; max-width: 640px;
+  margin: 0 auto 32px;
+}}
+.hero-ctas {{
+  display: inline-flex; gap: 12px; flex-wrap: wrap; justify-content: center;
+  margin-bottom: 32px;
+}}
+.play-btn {{ display: inline-flex; align-items: center; gap: 8px; }}
+.play-icon {{ font-size: 11px; }}
+.hero-trust {{ font-size: 12px; color: {c['muted']}; }}
+
+/* agents showcase */
+.agents-section {{ padding: 64px 0; }}
+.agent-showcase-grid {{
+  display: grid; gap: 20px;
+  grid-template-columns: repeat(2, 1fr);
+}}
+@media (max-width: 800px) {{ .agent-showcase-grid {{ grid-template-columns: 1fr; }} }}
+.agent-showcase {{
+  background: linear-gradient(160deg, {c['card']} 0%, {c['bg3']} 100%);
+  border: 1px solid {c['border']}; border-radius: 16px;
+  padding: 26px; position: relative; overflow: hidden;
+}}
+.agent-showcase::before {{
+  content: ""; position: absolute; inset: 0; pointer-events: none;
+  background: linear-gradient(180deg, {c['accent']}10, transparent 35%);
+}}
+.agent-showcase-head {{ margin-bottom: 14px; }}
+.agent-name-row {{ display: flex; align-items: center; gap: 12px; }}
+.agent-icon {{
+  width: 36px; height: 36px; flex-shrink: 0;
+  display: inline-flex; align-items: center; justify-content: center;
+  border: 1px solid {c['border_strong']}; border-radius: 10px;
+  color: {c['accent']}; background: {c['bg2']};
+}}
+.agent-icon svg {{ width: 20px; height: 20px; }}
+.agent-name-row h3 {{ font-family: 'Syne', sans-serif; font-weight: 700; font-size: 22px; margin: 0; }}
+.agent-role {{ margin: 6px 0 0 48px; font-size: 13px; }}
+.agent-summary {{ font-size: 14px; margin: 0 0 16px; }}
+.agent-meta {{ display: grid; grid-template-columns: 96px 1fr; gap: 6px 14px; margin: 0 0 18px; font-size: 13px; }}
+.agent-meta dt {{ color: {c['muted']}; }}
+.agent-meta dd {{ margin: 0; font-family: 'JetBrains Mono', monospace; font-size: 12px; }}
+.agent-actions {{ display: flex; gap: 10px; flex-wrap: wrap; }}
+.pulse-dot {{
+  width: 7px; height: 7px; border-radius: 50%;
+  background: {c['green']}; display: inline-block;
+  box-shadow: 0 0 0 0 {c['green']}AA;
+  animation: pulse 1.6s infinite;
+}}
+
+/* how it works */
+.how-section {{ padding: 64px 0; }}
+.how-grid {{
+  display: grid; gap: 16px;
+  grid-template-columns: repeat(3, 1fr);
+}}
+@media (max-width: 900px) {{ .how-grid {{ grid-template-columns: 1fr; }} }}
+.step-card {{
+  background: {c['card']}; border: 1px solid {c['border']};
+  border-radius: 14px; padding: 28px;
+  position: relative;
+}}
+.step-num {{
+  font-family: 'JetBrains Mono', monospace; font-weight: 600;
+  color: {c['accent']}; font-size: 13px; letter-spacing: 0.1em;
+}}
+.step-icon {{
+  width: 44px; height: 44px; margin: 14px 0 18px;
+  display: inline-flex; align-items: center; justify-content: center;
+  border: 1px solid {c['border_strong']}; border-radius: 12px;
+  color: {c['accent']}; background: {c['bg2']};
+}}
+.step-icon svg {{ width: 22px; height: 22px; }}
+.step-card h3 {{ font-family: 'Syne', sans-serif; font-weight: 700; font-size: 18px; margin: 0 0 8px; }}
+
+/* metrics strip */
+.metrics-strip {{
+  display: grid; grid-template-columns: repeat(4, 1fr);
+  gap: 0;
+  margin: 32px 0 64px;
+  padding: 28px 0;
+  background: {c['card']};
+  border: 1px solid {c['border']}; border-radius: 16px;
+  position: relative; overflow: hidden;
+}}
+.metrics-strip::before {{
+  content: ""; position: absolute; inset: 0; pointer-events: none;
+  background: linear-gradient(90deg, {c['accent']}10, transparent 30%, transparent 70%, {c['accent']}10);
+}}
+@media (max-width: 720px) {{ .metrics-strip {{ grid-template-columns: repeat(2, 1fr); gap: 16px; padding: 16px 0; }} }}
+.metric {{
+  text-align: center;
+  border-right: 1px solid {c['border']};
+  padding: 0 16px;
+}}
+.metric:last-child {{ border-right: none; }}
+@media (max-width: 720px) {{ .metric {{ border-right: none; }} }}
+.metric-value {{
+  font-size: clamp(28px, 4vw, 40px); font-weight: 500;
+  color: {c['accent']}; letter-spacing: -0.02em;
+  font-feature-settings: "tnum" 1;
+}}
+.metric-label {{
+  font-size: 12px; text-transform: uppercase;
+  letter-spacing: 0.08em; margin-top: 8px;
+}}
+
+/* features grid */
+.features-section {{ padding: 64px 0; }}
+.features-grid {{
+  display: grid; gap: 16px;
+  grid-template-columns: repeat(4, 1fr);
+}}
+@media (max-width: 1000px) {{ .features-grid {{ grid-template-columns: repeat(2, 1fr); }} }}
+@media (max-width: 540px)  {{ .features-grid {{ grid-template-columns: 1fr; }} }}
+.feature-card {{
+  background: {c['card']}; border: 1px solid {c['border']};
+  border-radius: 14px; padding: 22px;
+  transition: border-color 200ms ease, transform 200ms ease;
+}}
+.feature-card:hover {{ border-color: {c['accent']}55; transform: translateY(-2px); }}
+.feature-icon {{
+  width: 36px; height: 36px;
+  display: inline-flex; align-items: center; justify-content: center;
+  border: 1px solid {c['border_strong']}; border-radius: 10px;
+  color: {c['accent']}; background: {c['bg2']};
+  margin-bottom: 12px;
+}}
+.feature-icon svg {{ width: 18px; height: 18px; }}
+.feature-card h3 {{ font-family: 'Syne', sans-serif; font-weight: 700; font-size: 15px; margin: 0 0 8px; }}
+.feature-card p {{ font-size: 13px; margin: 0; }}
+
+/* dashboard anchor */
+.dashboard-anchor {{ padding: 64px 0 0; scroll-margin-top: 80px; }}
+
+/* footer */
+.landing-footer {{
+  border-top: 1px solid {c['border']};
+  padding: 32px 0;
+  margin-top: 32px;
+}}
+.footer-inner {{
+  max-width: 1240px; margin: 0 auto; padding: 0 32px;
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 16px; flex-wrap: wrap;
+}}
+.footer-links {{ display: flex; gap: 18px; }}
+.footer-links a {{ color: {c['muted']}; text-decoration: none; font-size: 13px; }}
+.footer-links a:hover {{ color: {c['text']}; }}
+.footer-tag {{ font-size: 12px; }}
+
+/* anchor scroll-margin so sticky nav doesn't cover headings */
+#agents, #features, #dashboard {{ scroll-margin-top: 72px; }}
+"""
+
+
+# ---------------------------------------------------------------------
+# Landing JS — adds counter-on-scroll + audio play handlers on top of
+# the existing dashboard JS (sortable table, expand-on-click, toast).
+# ---------------------------------------------------------------------
+
+def _landing_render_js(calls: list) -> str:
+    base = _render_js(calls)
+    extras = """
+// -- audio play buttons (Hear Demo) -----------------------------------
+document.querySelectorAll('.play-btn').forEach(btn => {
+  btn.addEventListener('click', async (ev) => {
+    ev.preventDefault();
+    const src = btn.getAttribute('data-audio');
+    const label = btn.getAttribute('data-label') || 'Demo';
+    if (!src) { showToast('No audio configured for ' + label); return; }
+    try {
+      const audio = new Audio(src);
+      // Probe by attempting to play; the browser will surface the
+      // error via the rejected promise if the file 404s.
+      await audio.play();
+      showToast('Playing ' + label);
+    } catch (err) {
+      showToast(label + ' audio not generated yet — run examples/hear_kwame.py');
+    }
+  });
+});
+
+// -- counter-on-scroll for the metrics strip --------------------------
+(function() {
+  const counters = document.querySelectorAll('.metric-value[data-counter]');
+  if (!counters.length) return;
+  const fired = new WeakSet();
+
+  const animateCounter = (el) => {
+    const target = parseFloat(el.getAttribute('data-counter') || '0');
+    const fmt = el.getAttribute('data-format') || 'int';
+    const start = performance.now();
+    const dur = 1200;
+    function step(now) {
+      const t = Math.min(1, (now - start) / dur);
+      const eased = 1 - Math.pow(1 - t, 3);
+      const v = target * eased;
+      if (fmt === 'pct')        el.textContent = v.toFixed(1) + '%';
+      else if (fmt === 'cents') el.textContent = v.toFixed(1) + '¢';
+      else                      el.textContent = Math.round(v).toLocaleString();
+      if (t < 1) requestAnimationFrame(step);
+      else {
+        if (fmt === 'pct')        el.textContent = target.toFixed(1) + '%';
+        else if (fmt === 'cents') el.textContent = target.toFixed(1) + '¢';
+        else                      el.textContent = Math.round(target).toLocaleString();
+      }
+    }
+    requestAnimationFrame(step);
+  };
+
+  if ('IntersectionObserver' in window) {
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting && !fired.has(entry.target)) {
+          fired.add(entry.target);
+          animateCounter(entry.target);
+        }
+      });
+    }, { threshold: 0.4 });
+    counters.forEach(el => io.observe(el));
+  } else {
+    counters.forEach(animateCounter);
+  }
+})();
+
+// -- nav active link highlighting on scroll ---------------------------
+(function() {
+  const sections = ['agents', 'features', 'dashboard']
+    .map(id => document.getElementById(id)).filter(Boolean);
+  const links = document.querySelectorAll('.nav-links a[href^="#"]');
+  if (!sections.length || !('IntersectionObserver' in window)) return;
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (!entry.isIntersecting) return;
+      const id = entry.target.id;
+      links.forEach(a => {
+        const match = a.getAttribute('href') === '#' + id;
+        a.style.color = match ? '#F5F5F5' : '';
+      });
+    });
+  }, { rootMargin: '-30% 0px -65% 0px' });
+  sections.forEach(s => io.observe(s));
+})();
+"""
+    return base + "\n" + extras
+
+
+# =====================================================================
+# CLI
+# =====================================================================
+
 def _main(argv: list) -> int:
     metrics_file = "examples/_out/calls.json"
     force_demo = False
+    landing_mode = False
     args = list(argv[1:])
+
     if "--demo" in args:
         force_demo = True
         args.remove("--demo")
+    if "--landing" in args:
+        landing_mode = True
+        args.remove("--landing")
     if args:
         metrics_file = args[0]
+
     try:
-        path = generate_dashboard(metrics_file=metrics_file, force_demo=force_demo)
+        if landing_mode:
+            path = generate_landing_page(metrics_file=metrics_file, force_demo=force_demo)
+        else:
+            path = generate_dashboard(metrics_file=metrics_file, force_demo=force_demo)
     except Exception as exc:
-        print(f"[preview] failed to generate dashboard: {exc}", file=sys.stderr)
+        print(f"[preview] failed to generate output: {exc}", file=sys.stderr)
         return 1
     print(f"Wrote {path}")
     return 0

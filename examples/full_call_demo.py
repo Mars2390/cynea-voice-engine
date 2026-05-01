@@ -142,12 +142,26 @@ async def run_demo() -> None:
     MockLLM.script(MOCK_LLM_REPLIES)
     llm = get_llm_provider(config.llm_provider)
 
-    # TTS is best-effort; if edge-tts isn't installed, just log text.
+    # TTS is best-effort. Probe once with health_check() so we can give a
+    # clear, single-line reason if audio won't be generated, instead of
+    # spamming the same exception per turn.
     tts = None
+    tts_ready = False
     try:
         tts = get_tts_provider(config.tts_provider)
     except ValueError:
-        print("[demo] edge-tts not registered; skipping audio synthesis.")
+        print("[demo] TTS provider not registered; skipping audio synthesis.")
+
+    if tts is not None:
+        try:
+            health = await tts.health_check(timeout=2.0)
+        except Exception as exc:  # health_check is meant to never raise
+            health = {"ready": False, "reason": f"health_check raised: {exc}"}
+        if health.get("ready"):
+            tts_ready = True
+            print("[tts] Edge TTS ready — audio will be written to examples/_out/.")
+        else:
+            print(f"[tts] audio disabled — {health.get('reason') or 'unknown reason'}")
 
     out_dir = os.path.join(os.path.dirname(__file__), "_out")
     os.makedirs(out_dir, exist_ok=True)
@@ -158,7 +172,7 @@ async def run_demo() -> None:
         llm_input_tokens=_estimate_tokens(history.for_llm()),
         llm_output_tokens=_estimate_tokens([{"content": config.first_message}]),
     )
-    await _maybe_synth(tts, config, config.first_message, out_dir, turn=0)
+    await _maybe_synth(tts, tts_ready, config, config.first_message, out_dir, turn=0)
 
     # --- 3. Walk the scripted call -----------------------------------
     turn_idx = 0
@@ -215,7 +229,7 @@ async def run_demo() -> None:
         )
         print(f"Kwame: {reply}")
 
-        await _maybe_synth(tts, config, reply, out_dir, turn=turn_idx + 1)
+        await _maybe_synth(tts, tts_ready, config, reply, out_dir, turn=turn_idx + 1)
         interruptions.on_agent_speech_ended()
         turn_idx += 1
 
@@ -276,21 +290,52 @@ def _estimate_tokens(messages: list) -> int:
     return max(1, chars // 4)
 
 
-async def _maybe_synth(tts, config: AgentConfig, text: str, out_dir: str, turn: int) -> None:
-    """Synthesize audio if a TTS provider is wired; otherwise no-op."""
-    if tts is None:
+async def _maybe_synth(
+    tts,
+    tts_ready: bool,
+    config: AgentConfig,
+    text: str,
+    out_dir: str,
+    turn: int,
+) -> None:
+    """Synthesize audio if TTS was healthy at startup. Never crashes the demo.
+
+    Maps each exception type to a short, specific log line:
+        ImportError      -> "package missing"
+        ConnectionError  -> "no network / endpoint unreachable"
+        RuntimeError     -> "synthesis failed: <reason>"
+        anything else    -> "unexpected error"
+    """
+    if tts is None or not tts_ready:
         return
+    request = SynthesisRequest(text=text, voice=config.voice, speed=config.speed)
     try:
-        request = SynthesisRequest(text=text, voice=config.voice, speed=config.speed)
         audio = await tts.synthesize(request)
-        if not audio:
-            return
-        path = os.path.join(out_dir, f"kwame_turn_{turn:02d}.mp3")
+    except ImportError as exc:
+        print(f"  [tts] package missing: {exc}")
+        return
+    except ConnectionError as exc:
+        print(f"  [tts] no network: {exc}")
+        return
+    except RuntimeError as exc:
+        print(f"  [tts] synthesis failed: {exc}")
+        return
+    except Exception as exc:
+        print(f"  [tts] unexpected error: {exc!r}")
+        return
+
+    if not audio:
+        print("  [tts] synthesis returned empty audio; skipping write.")
+        return
+
+    path = os.path.join(out_dir, f"kwame_turn_{turn:02d}.mp3")
+    try:
         with open(path, "wb") as f:
             f.write(audio)
-        print(f"  [tts] wrote {path} ({len(audio)} bytes)")
-    except Exception as exc:
-        print(f"  [tts] skipped (no network or no edge-tts): {exc}")
+    except OSError as exc:
+        print(f"  [tts] could not write {path}: {exc}")
+        return
+    print(f"  [tts] wrote {path} ({len(audio):,} bytes)")
 
 
 if __name__ == "__main__":

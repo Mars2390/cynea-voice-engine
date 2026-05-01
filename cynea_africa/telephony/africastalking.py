@@ -1,4 +1,4 @@
-# Cynea Africa — Africa's Talking Telephony Handler
+# Cynea Africa â€” Africa's Talking Telephony Handler
 # Native integration with African phone networks
 # Supports: Kenya, Nigeria, Ghana, South Africa, Uganda, Tanzania, Rwanda
 
@@ -12,7 +12,7 @@ from cynea.models import AudioChunk
 
 @dataclass
 class ATConfig:
-    \"\"\"Africa's Talking configuration\"\"\"
+    """Africa's Talking configuration"""
     username: str
     api_key: str
     phone_number: str
@@ -20,7 +20,7 @@ class ATConfig:
 
 
 class AfricasTalkingHandler:
-    \"\"\"
+    """
     Africa's Talking telephony integration.
     
     Handles:
@@ -34,7 +34,7 @@ class AfricasTalkingHandler:
     2. Get API key from dashboard
     3. Register a phone number
     4. Configure SIP endpoint to point to this handler
-    \"\"\"
+    """
     
     def __init__(self, config: ATConfig):
         self.config = config
@@ -45,7 +45,7 @@ class AfricasTalkingHandler:
         self._call_sid: Optional[str] = None
     
     async def start(self):
-        \"\"\"Initialize the telephony handler\"\"\"
+        """Initialize the telephony handler"""
         self._active = True
         
         # In production, this would:
@@ -59,24 +59,24 @@ class AfricasTalkingHandler:
         print(f"  Status: Ready for calls")
     
     async def stop(self):
-        \"\"\"Shutdown the telephony handler\"\"\"
+        """Shutdown the telephony handler"""
         self._active = False
         print(f"[Africa's Talking] Handler stopped")
     
     def on_audio(self, callback: Callable):
-        \"\"\"Register callback for incoming audio chunks\"\"\"
+        """Register callback for incoming audio chunks"""
         self._on_audio = callback
     
     def on_dtmf(self, callback: Callable):
-        \"\"\"Register callback for DTMF digits (for USSD-like flows)\"\"\"
+        """Register callback for DTMF digits (for USSD-like flows)"""
         self._on_dtmf = callback
     
     def on_hangup(self, callback: Callable):
-        \"\"\"Register callback for call hangup\"\"\"
+        """Register callback for call hangup"""
         self._on_hangup = callback
     
     async def send_audio(self, audio_data: bytes):
-        \"\"\"Send audio to the caller\"\"\"
+        """Send audio to the caller"""
         if not self._active:
             return
         
@@ -85,24 +85,24 @@ class AfricasTalkingHandler:
         pass
     
     async def send_dtmf(self, digits: str):
-        \"\"\"Send DTMF tones to the caller\"\"\"
+        """Send DTMF tones to the caller"""
         if not self._active:
             return
         print(f"[DTMF Sent] {digits}")
     
     async def hangup(self):
-        \"\"\"End the current call\"\"\"
+        """End the current call"""
         self._active = False
         self._call_sid = None
         if self._on_hangup:
             await self._on_hangup()
     
     async def process_incoming_call(self, webhook_data: dict) -> dict:
-        \"\"\"
+        """
         Process an incoming call webhook from Africa's Talking.
         
         Returns the response that tells Africa's Talking how to handle the call.
-        \"\"\"
+        """
         self._call_sid = webhook_data.get("callSessionState", {}).get("sessionId")
         caller_number = webhook_data.get("callSessionState", {}).get("callerNumber")
         
@@ -117,7 +117,7 @@ class AfricasTalkingHandler:
         }
     
     async def process_audio_callback(self, audio_data: dict):
-        \"\"\"Process incoming audio from the call\"\"\"
+        """Process incoming audio from the call"""
         if not self._active or not self._on_audio:
             return
         
@@ -134,7 +134,7 @@ class AfricasTalkingHandler:
         await self._on_audio(chunk)
     
     async def process_dtmf_callback(self, dtmf_data: dict):
-        \"\"\"Process DTMF input from the caller\"\"\"
+        """Process DTMF input from the caller"""
         if not self._active or not self._on_dtmf:
             return
         
@@ -144,7 +144,7 @@ class AfricasTalkingHandler:
 
 # African voice-specific utilities
 class AfricanVoiceUtils:
-    \"\"\"Utilities for African telephony environments\"\"\"
+    """Utilities for African telephony environments"""
     
     # Common African phone number prefixes
     COUNTRY_CODES = {
@@ -170,7 +170,7 @@ class AfricanVoiceUtils:
     
     @classmethod
     def format_number(cls, number: str, country: str = "KE") -> str:
-        \"\"\"Format a phone number to E.164 standard\"\"\"
+        """Format a phone number to E.164 standard"""
         # Remove spaces, dashes, parentheses
         cleaned = number.replace(" ", "").replace("-", "").replace("(", "").replace(")", "")
         
@@ -186,7 +186,7 @@ class AfricanVoiceUtils:
     
     @classmethod
     def detect_country(cls, number: str) -> Optional[str]:
-        \"\"\"Detect country from phone number prefix\"\"\"
+        """Detect country from phone number prefix"""
         for code, prefix in cls.COUNTRY_CODES.items():
             if number.startswith(prefix):
                 return code

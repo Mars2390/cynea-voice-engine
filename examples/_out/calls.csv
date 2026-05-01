@@ -1,0 +1,2 @@
+call_id,agent,started_at,ended_at,duration_s,user_turns,assistant_turns,interruptions,stt_seconds,llm_input_tokens,llm_output_tokens,tts_characters,telephony_seconds,sentiment_score,containment,resolution,handoff_reason,stt_cents,llm_cents,tts_cents,telephony_cents,cost_total_cents
+demo-call-001,kwame_adinkra,1777666343.5944338,1777666344.0456362,0.451,5,6,1,15.3,1885,96,395,42.0,0.2,True,True,,0.0,0.7095,0.0,3.5,4.2095

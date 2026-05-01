@@ -1,4 +1,4 @@
-# Cynea Voice Engine — Core Orchestrator
+# Cynea Voice Engine â€” Core Orchestrator
 # The heart of the voice agent pipeline
 
 import asyncio
@@ -50,7 +50,7 @@ class CyneaEngine:
     
     async def _transcribe(self, audio: AudioChunk) -> Optional[Transcription]:
         """Transcribe audio using configured STT provider"""
-        # Placeholder — will be replaced with actual STT provider
+        # Placeholder â€” will be replaced with actual STT provider
         from cynea.providers import get_stt_provider
         provider = get_stt_provider(self.config.stt_provider)
         return await provider.transcribe(audio)

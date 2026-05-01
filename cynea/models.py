@@ -1,4 +1,4 @@
-# Cynea Voice Engine � Data Models
+# Cynea Voice Engine � Data Models
 # Core data structures for the voice agent pipeline
 
 from dataclasses import dataclass, field
@@ -24,11 +24,18 @@ class ConversationState(str, Enum):
 
 @dataclass
 class AudioChunk:
-    """Raw audio data from a call"""
+    """Raw audio data from a call.
+
+    encoding values:
+      "pcm16"  — 16-bit signed little-endian linear PCM (default)
+      "mulaw"  — 8-bit ITU-T G.711 μ-law (Twilio, most SIP carriers)
+      "alaw"   — 8-bit ITU-T G.711 A-law (some European/African carriers)
+    """
     data: bytes
     sample_rate: int = 16000
     channels: int = 1
     timestamp: float = 0.0
+    encoding: str = "pcm16"
 
 
 @dataclass

@@ -1,4 +1,4 @@
-# Cynea Africa — Edge TTS Synthesizer
+# Cynea Africa â€” Edge TTS Synthesizer
 # Free text-to-speech using Microsoft Edge TTS
 # Natural voices, zero API cost, works offline
 
@@ -9,7 +9,7 @@ from cynea.models import SynthesisRequest
 
 
 class EdgeTTSSynthesizer:
-    \"\"\"Free TTS provider using Edge TTS\"\"\"
+    """Free TTS provider using Edge TTS"""
     
     # Available natural voices
     VOICES = {
@@ -28,7 +28,7 @@ class EdgeTTSSynthesizer:
         self.voice = voice
     
     async def synthesize(self, request: SynthesisRequest) -> bytes:
-        \"\"\"Convert text to speech and return audio bytes\"\"\"
+        """Convert text to speech and return audio bytes"""
         try:
             import edge_tts
             

@@ -1,4 +1,4 @@
-# Cynea Voice Engine — Kwame Demo
+# Cynea Voice Engine â€” Kwame Demo
 # Working demonstration of the hotel receptionist voice agent
 
 import asyncio
@@ -14,7 +14,7 @@ from cynea_africa.theme import CYNE_COLORS
 async def main():
     print(f"\\033[96m")  # Cyan text
     print("=" * 50)
-    print("   CYNEA VOICE ENGINE — KWAME DEMO")
+    print("   CYNEA VOICE ENGINE â€” KWAME DEMO")
     print("   Hotel Receptionist Voice Agent")
     print("=" * 50)
     print(f"\\033[0m")  # Reset

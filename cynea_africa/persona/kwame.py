@@ -1,4 +1,4 @@
-# Cynea Africa — Kwame Persona
+# Cynea Africa â€” Kwame Persona
 # Undetectable hotel receptionist for Ghanaian market
 
 KWAME_SYSTEM_PROMPT = '''

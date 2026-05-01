@@ -1,4 +1,4 @@
-# Cynea Africa — Telephony Module
+# Cynea Africa â€” Telephony Module
 # African telephony provider integrations
 
 from cynea_africa.telephony.africastalking import (

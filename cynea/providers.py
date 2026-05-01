@@ -1,4 +1,4 @@
-# Cynea Voice Engine — Provider Registry
+# Cynea Voice Engine ï¿½ Provider Registry
 # Pluggable providers for STT, LLM, and TTS
 
 from typing import Protocol, Optional
@@ -65,7 +65,43 @@ def get_tts_provider(name: str):
     return _tts_providers[name]()
 
 
+# ----------------------------------------------------------------------
+# Built-in mock LLM â€” lets examples and tests run with no API key.
+# Register as "mock"; do not use in production.
+# ----------------------------------------------------------------------
+
+class MockLLM:
+    """Deterministic LLM for tests and demos.
+
+    Replies with the next entry in `scripted_replies` (cycles when exhausted)
+    or, if none provided, with a fixed acknowledgement. Tracks call count
+    and last messages so tests can assert on them.
+    """
+
+    _scripted: list = []
+    _index: int = 0
+    last_messages: list = []
+    call_count: int = 0
+
+    @classmethod
+    def script(cls, replies: list) -> None:
+        cls._scripted = list(replies)
+        cls._index = 0
+        cls.call_count = 0
+
+    async def generate(self, messages: list, system: str = "") -> str:
+        type(self).last_messages = messages
+        type(self).call_count += 1
+        if self._scripted:
+            reply = self._scripted[self._index % len(self._scripted)]
+            type(self)._index += 1
+            return reply
+        return "Sure, let me help with that."
+
+
 # Auto-register built-in providers when available
+register_llm("mock", MockLLM)
+
 try:
     from cynea_africa.transcriber.whisper import WhisperTranscriber
     register_stt("whisper", WhisperTranscriber)

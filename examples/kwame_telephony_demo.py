@@ -1,4 +1,4 @@
-# Cynea Voice Engine — Full Kwame Demo with Telephony
+# Cynea Voice Engine â€” Full Kwame Demo with Telephony
 # Complete demonstration: Kwame answers a real phone call
 
 import asyncio
@@ -14,8 +14,8 @@ from cynea_africa.telephony import AfricasTalkingHandler, ATConfig, AfricanVoice
 async def main():
     print("\\033[96m")  # Cyan
     print("=" * 60)
-    print("   CYNEA VOICE ENGINE — KWAME WITH TELEPHONY")
-    print("   Ghana Hotel Receptionist — Ready for Calls")
+    print("   CYNEA VOICE ENGINE â€” KWAME WITH TELEPHONY")
+    print("   Ghana Hotel Receptionist â€” Ready for Calls")
     print("=" * 60)
     print("\\033[0m")
     

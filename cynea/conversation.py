@@ -71,6 +71,20 @@ class ConversationHistory:
     # Turn-by-turn append
     # ====================================================================
 
+    # Convenience aliases — match the codebase's older `add_*` naming so
+    # callers (and the engine refactor) can use either name.
+    def add_user(self, content: str) -> None:
+        self.append_user(content)
+
+    def add_assistant(self, content: str, *, tool_calls=None) -> None:
+        self.append_assistant(content, tool_calls=tool_calls)
+
+    def add_turn(self, speaker: str, content: str) -> None:
+        if speaker == "user":
+            self.append_user(content)
+        else:
+            self.append_assistant(content)
+
     def append_user(self, content: str) -> None:
         """Append a user turn. Drops the duplicate if the last turn was an
         identical user message (handles double-fire from the ASR endpointer).

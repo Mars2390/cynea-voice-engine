@@ -1,6 +1,6 @@
 import asyncio
-from bolna.assistant import Assistant
-from bolna.models import (
+from cynea.assistant import Assistant
+from cynea.models import (
     Transcriber,
     Synthesizer,
     ElevenLabsConfig,

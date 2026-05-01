@@ -1,6 +1,6 @@
 import asyncio
-from bolna.assistant import Assistant
-from bolna.models import LlmAgent, SimpleLlmAgent
+from cynea.assistant import Assistant
+from cynea.models import LlmAgent, SimpleLlmAgent
 
 
 async def main():

@@ -35,7 +35,7 @@ chunks = []
 interruption_message = 0
 
 # WebSocket server address based on connection type
-server_url = "ws://localhost:5001"  # os.getenv("BOLNA_WS_SERVER_URL")
+server_url = "ws://localhost:5001"  # os.getenv("cynea_WS_SERVER_URL")
 assistant_id = os.getenv("ASSISTANT_ID")
 logging.info(f"Assistant ID {os.getenv('ASSISTANT_ID')}")
 uri = f"{server_url}/chat/v1/{assistant_id}"
@@ -153,7 +153,7 @@ stream = start_audio_stream()
 
 
 async def main():
-    api_key = os.getenv("BOLNA_API_KEY", None)
+    api_key = os.getenv("cynea_API_KEY", None)
     if api_key is not None:
         headers = {
             "Authorization": f"Bearer {api_key}",

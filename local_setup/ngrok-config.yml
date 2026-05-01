@@ -8,6 +8,6 @@ tunnels:
   plivo-app:
     addr: plivo-app:8002
     proto: http
-  bolna-app:
-    addr: bolna-app:5001
+  cynea-app:
+    addr: cynea-app:5001
     proto: http

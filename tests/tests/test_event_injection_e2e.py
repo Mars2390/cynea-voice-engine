@@ -14,11 +14,11 @@ import uuid
 import pytest
 from unittest.mock import AsyncMock, MagicMock, patch, call
 
-from bolna.agent_manager.task_manager import TaskManager
-from bolna.agent_types.graph_agent import GraphAgent
-from bolna.helpers.conversation_history import ConversationHistory
-from bolna.helpers.utils import create_ws_data_packet, get_md5_hash, update_prompt_with_context
-from bolna.enums import EdgeConditionType, NodeType
+from cynea.agent_manager.task_manager import TaskManager
+from cynea.agent_types.graph_agent import GraphAgent
+from cynea.helpers.conversation_history import ConversationHistory
+from cynea.helpers.utils import create_ws_data_packet, get_md5_hash, update_prompt_with_context
+from cynea.enums import EdgeConditionType, NodeType
 
 
 # ---------------------------------------------------------------------------
@@ -121,9 +121,9 @@ def _make_graph_agent(config_overrides=None):
     mock_llm.trigger_function_call = False
 
     with (
-        patch("bolna.agent_types.graph_agent.OpenAI", return_value=MagicMock()),
-        patch("bolna.agent_types.graph_agent.SUPPORTED_LLM_PROVIDERS", {"openai": MagicMock(return_value=mock_llm)}),
-        patch("bolna.agent_types.graph_agent.OpenAiLLM", return_value=MagicMock()),
+        patch("cynea.agent_types.graph_agent.OpenAI", return_value=MagicMock()),
+        patch("cynea.agent_types.graph_agent.SUPPORTED_LLM_PROVIDERS", {"openai": MagicMock(return_value=mock_llm)}),
+        patch("cynea.agent_types.graph_agent.OpenAiLLM", return_value=MagicMock()),
     ):
         agent = GraphAgent(cfg)
 

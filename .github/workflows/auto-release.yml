@@ -28,7 +28,7 @@ jobs:
             echo "skip=true" >> "$GITHUB_OUTPUT"
             exit 0
           fi
-          CURRENT=$(python3 -c "import re; m = re.search(r'__version__\s*=\s*\"(.+?)\"', open('bolna/__init__.py').read()); print(m.group(1))")
+          CURRENT=$(python3 -c "import re; m = re.search(r'__version__\s*=\s*\"(.+?)\"', open('cynea/__init__.py').read()); print(m.group(1))")
           LATEST_TAG=$(git describe --tags --abbrev=0 2>/dev/null || echo "0.0.0")
           if [ "$CURRENT" != "$LATEST_TAG" ]; then
             echo "skip=true" >> "$GITHUB_OUTPUT"

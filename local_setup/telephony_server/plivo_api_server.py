@@ -22,7 +22,7 @@ plivo_client = plivo.RestClient(os.getenv("PLIVO_AUTH_ID"), os.getenv("PLIVO_AUT
 
 def populate_ngrok_tunnels():
     response = requests.get("http://ngrok:4040/api/tunnels")  # ngrok interface
-    telephony_url, bolna_url = None, None
+    telephony_url, cynea_url = None, None
 
     if response.status_code == 200:
         data = response.json()
@@ -30,10 +30,10 @@ def populate_ngrok_tunnels():
         for tunnel in data["tunnels"]:
             if tunnel["name"] == "plivo-app":
                 telephony_url = tunnel["public_url"]
-            elif tunnel["name"] == "bolna-app":
-                bolna_url = tunnel["public_url"].replace("https:", "wss:")
+            elif tunnel["name"] == "cynea-app":
+                cynea_url = tunnel["public_url"].replace("https:", "wss:")
 
-        return telephony_url, bolna_url
+        return telephony_url, cynea_url
     else:
         print(f"Error: Unable to fetch data. Status code: {response.status_code}")
 
@@ -50,17 +50,17 @@ async def make_call(request: Request):
         if not call_details or "recipient_phone_number" not in call_details:
             raise HTTPException(status_code=404, detail="Recipient phone number not provided")
 
-        telephony_host, bolna_host = populate_ngrok_tunnels()
+        telephony_host, cynea_host = populate_ngrok_tunnels()
 
         print(f"telephony_host: {telephony_host}")
-        print(f"bolna_host: {bolna_host}")
+        print(f"cynea_host: {cynea_host}")
 
         # adding hangup_url since plivo opens a 2nd websocket once the call is cut.
-        # https://github.com/bolna-ai/bolna/issues/148#issuecomment-2127980509
+        # https://github.com/cynea-ai/cynea/issues/148#issuecomment-2127980509
         call = plivo_client.calls.create(
             from_=plivo_phone_number,
             to_=call_details.get("recipient_phone_number"),
-            answer_url=f"{telephony_host}/plivo_connect?bolna_host={bolna_host}&agent_id={agent_id}",
+            answer_url=f"{telephony_host}/plivo_connect?cynea_host={cynea_host}&agent_id={agent_id}",
             hangup_url=f"{telephony_host}/plivo_hangup_callback",
             answer_method="POST",
         )
@@ -73,15 +73,15 @@ async def make_call(request: Request):
 
 
 @app.post("/plivo_connect")
-async def plivo_connect(request: Request, bolna_host: str = Query(...), agent_id: str = Query(...)):
+async def plivo_connect(request: Request, cynea_host: str = Query(...), agent_id: str = Query(...)):
     try:
-        bolna_websocket_url = f"{bolna_host}/chat/v1/{agent_id}"
+        cynea_websocket_url = f"{cynea_host}/chat/v1/{agent_id}"
 
         response = """
         <Response>
             <Stream bidirectional="true" keepCallAlive="true">{}</Stream>
         </Response>
-        """.format(bolna_websocket_url)
+        """.format(cynea_websocket_url)
 
         return PlainTextResponse(str(response), status_code=200, media_type="text/xml")
 

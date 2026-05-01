@@ -8,7 +8,7 @@ import json
 import pytest
 from unittest.mock import AsyncMock, MagicMock, patch
 
-from bolna.agent_types.graph_agent import GraphAgent, _DETERMINISTIC_REASONING_PREFIX
+from cynea.agent_types.graph_agent import GraphAgent, _DETERMINISTIC_REASONING_PREFIX
 
 
 # ---------------------------------------------------------------------------
@@ -72,9 +72,9 @@ def _make_agent(config_overrides=None):
     mock_openai_llm_cls = MagicMock(return_value=mock_llm)
 
     with (
-        patch("bolna.agent_types.graph_agent.OpenAI", return_value=mock_openai_client),
-        patch("bolna.agent_types.graph_agent.SUPPORTED_LLM_PROVIDERS", {"openai": mock_openai_llm_cls}),
-        patch("bolna.agent_types.graph_agent.OpenAiLLM", return_value=MagicMock()),
+        patch("cynea.agent_types.graph_agent.OpenAI", return_value=mock_openai_client),
+        patch("cynea.agent_types.graph_agent.SUPPORTED_LLM_PROVIDERS", {"openai": mock_openai_llm_cls}),
+        patch("cynea.agent_types.graph_agent.OpenAiLLM", return_value=MagicMock()),
     ):
         agent = GraphAgent(cfg)
 

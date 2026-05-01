@@ -23,7 +23,7 @@ twilio_client = Client(twilio_account_sid, twilio_auth_token)
 
 def populate_ngrok_tunnels():
     response = requests.get("http://ngrok:4040/api/tunnels")  # ngrok interface
-    telephony_url, bolna_url = None, None
+    telephony_url, cynea_url = None, None
 
     if response.status_code == 200:
         data = response.json()
@@ -31,10 +31,10 @@ def populate_ngrok_tunnels():
         for tunnel in data["tunnels"]:
             if tunnel["name"] == "twilio-app":
                 telephony_url = tunnel["public_url"]
-            elif tunnel["name"] == "bolna-app":
-                bolna_url = tunnel["public_url"].replace("https:", "wss:")
+            elif tunnel["name"] == "cynea-app":
+                cynea_url = tunnel["public_url"].replace("https:", "wss:")
 
-        return telephony_url, bolna_url
+        return telephony_url, cynea_url
     else:
         print(f"Error: Unable to fetch data. Status code: {response.status_code}")
 
@@ -51,16 +51,16 @@ async def make_call(request: Request):
         if not call_details or "recipient_phone_number" not in call_details:
             raise HTTPException(status_code=404, detail="Recipient phone number not provided")
 
-        telephony_host, bolna_host = populate_ngrok_tunnels()
+        telephony_host, cynea_host = populate_ngrok_tunnels()
 
         print(f"telephony_host: {telephony_host}")
-        print(f"bolna_host: {bolna_host}")
+        print(f"cynea_host: {cynea_host}")
 
         try:
             call = twilio_client.calls.create(
                 to=call_details.get("recipient_phone_number"),
                 from_=twilio_phone_number,
-                url=f"{telephony_host}/twilio_connect?bolna_host={bolna_host}&agent_id={agent_id}",
+                url=f"{telephony_host}/twilio_connect?cynea_host={cynea_host}&agent_id={agent_id}",
                 method="POST",
                 record=True,
             )
@@ -75,14 +75,14 @@ async def make_call(request: Request):
 
 
 @app.post("/twilio_connect")
-async def twilio_connect(bolna_host: str = Query(...), agent_id: str = Query(...)):
+async def twilio_connect(cynea_host: str = Query(...), agent_id: str = Query(...)):
     try:
         response = VoiceResponse()
 
         connect = Connect()
-        bolna_websocket_url = f"{bolna_host}/chat/v1/{agent_id}"
-        connect.stream(url=bolna_websocket_url)
-        print(f"websocket connection done to {bolna_websocket_url}")
+        cynea_websocket_url = f"{cynea_host}/chat/v1/{agent_id}"
+        connect.stream(url=cynea_websocket_url)
+        print(f"websocket connection done to {cynea_websocket_url}")
         response.append(connect)
 
         return PlainTextResponse(str(response), status_code=200, media_type="text/xml")

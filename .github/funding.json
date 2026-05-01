@@ -3,24 +3,24 @@
   "entity": {
     "type": "organisation",
     "role": "maintainer",
-    "name": "Bolna",
-    "email": "hello@bolna.ai",
+    "name": "cynea",
+    "email": "hello@cynea.ai",
     "phone": "",
     "description": "Full stack tools for building voice agents",
     "webpageUrl": {
-      "url": "https://github.com/bolna-ai/bolna"
+      "url": "https://github.com/cynea-ai/cynea"
     }
   },
   "projects": [
     {
-      "guid": "bolna",
-      "name": "bolna",
+      "guid": "cynea",
+      "name": "cynea",
       "description": "Full stack tools for building voice agents",
       "webpageUrl": {
-        "url": "https://github.com/bolna-ai/bolna"
+        "url": "https://github.com/cynea-ai/cynea"
       },
       "repositoryUrl": {
-        "url": "https://github.com/bolna-ai/bolna"
+        "url": "https://github.com/cynea-ai/cynea"
       },
       "licenses": [
         "MIT License"

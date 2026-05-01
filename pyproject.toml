@@ -5,7 +5,7 @@ requires      = ["setuptools>=61.0.0", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "bolna"
+name = "cynea"
 version = "0.10.21"
 readme = "README.md"
 authors = [
@@ -24,7 +24,7 @@ requires-python = ">=3.10"
 dev = ["pip-tools", "pre-commit", "pytest", "pytest-asyncio", "ruff"]
 
 [tool.setuptools]
-package-dir = {"bolna" = "bolna"}
+package-dir = {"cynea" = "cynea"}
 
 [tool.setuptools.dynamic]
 dependencies = {file = ["requirements.txt"]}
@@ -47,6 +47,6 @@ name = "cz_conventional_commits"
 version_provider = "pep621"
 tag_format = "$version"
 version_files = [
-    "bolna/__init__.py:__version__",
+    "cynea/__init__.py:__version__",
 ]
 update_changelog_on_bump = false

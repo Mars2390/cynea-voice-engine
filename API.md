@@ -1,4 +1,4 @@
-# Bolna API Documentation
+# cynea API Documentation
 
 ## Endpoints
 

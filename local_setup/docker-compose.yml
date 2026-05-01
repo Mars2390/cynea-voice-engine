@@ -2,12 +2,12 @@ version: '3'
 
 services:
 
-  # main bolna service
-  bolna-app:
+  # main cynea service
+  cynea-app:
     build:
       context: .
-      dockerfile: dockerfiles/bolna_server.Dockerfile
-    image: bolna-app:latest  # This will tag the built image
+      dockerfile: dockerfiles/cynea_server.Dockerfile
+    image: cynea-app:latest  # This will tag the built image
     ports:
       - "5001:5001"
     depends_on:
@@ -50,7 +50,7 @@ services:
     depends_on:
       - redis
       - ngrok
-      - bolna-app
+      - cynea-app
     env_file:
       - .env
 
@@ -64,6 +64,6 @@ services:
     depends_on:
       - redis
       - ngrok
-      - bolna-app
+      - cynea-app
     env_file:
       - .env

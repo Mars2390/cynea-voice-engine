@@ -1,0 +1,28 @@
+# Cynea Voice Engine — Dependencies
+# Core
+fastapi>=0.108
+uvicorn>=0.22
+aiohttp
+httpx[http2]
+websockets>=15
+numpy>=1.26
+
+# STT (choose one or more)
+openai-whisper>=20231117
+
+# TTS (choose one or more)
+edge-tts>=6.1
+
+# LLM (choose one or more)
+anthropic>=0.30
+openai>=1.0
+
+# Telephony
+twilio>=8.9
+
+# Audio processing
+pydub
+scipy>=1.11
+
+# Token counting
+tiktoken

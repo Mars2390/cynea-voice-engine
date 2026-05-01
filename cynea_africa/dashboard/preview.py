@@ -1616,13 +1616,13 @@ if (shareBtn) shareBtn.addEventListener('click', async () => {{
 
 // -- toast ------------------------------------------------------------
 let toastTimer = null;
-function showToast(msg) {{
+function showToast(msg, duration) {{
   const el = document.getElementById('toast');
   if (!el) return;
   el.textContent = msg;
   el.classList.add('show');
   if (toastTimer) clearTimeout(toastTimer);
-  toastTimer = setTimeout(() => el.classList.remove('show'), 1800);
+  toastTimer = setTimeout(() => el.classList.remove('show'), duration || 1800);
 }}
 
 // -- KPI count-up animation ------------------------------------------
@@ -1659,30 +1659,33 @@ function showToast(msg) {{
 # =====================================================================
 
 # =====================================================================
-# Marketing landing page (cynea_landing.html)
+# Marketing landing page — cinematic edition
 # =====================================================================
-# Combines the operations dashboard's call-history table with a
-# marketing-quality hero, agent showcase, and feature grid. Generated
-# as a single self-contained HTML file (only external request is
-# Google Fonts).
+# Full-page hero + agent showcase + how-it-works + features + phone
+# mockup demo + collapsible call history. Reuses the dashboard's
+# call-history table renderer (`_render_call_history_table`) and CSS
+# so the two outputs can't drift.
 #
-# Public entry point: generate_landing_page(...). Reuses dashboard
-# helpers where possible (call history table, status pills, sentiment
-# bars) so the two outputs can't drift.
+# Public entry point: generate_landing_page(...).
+# CLI: python -m cynea_africa.dashboard.preview --landing
+#
+# Audio buttons drive a single shared <audio id="audio-player">. The
+# JS function `playDemo(file, fallback, errorMsg)` handles the file ->
+# fallback -> toast cascade. Toasts auto-dismiss in 3 s (default for
+# the dashboard helper is 1.8 s; the demo path passes 3000 explicitly).
 
-# Marketing copy lives at module scope so the operator can patch it
-# without touching the renderer.
+# ------------------------------------------------------------------
+# Module-level copy + config — patch these without touching the
+# renderer functions below.
+# ------------------------------------------------------------------
 
-LANDING_HEADLINE = "Voice AI Built for Africa"
+LANDING_HEADLINE_LEAD = "Voice AI"
+LANDING_HEADLINE_ACCENT = "Built for Africa"
 LANDING_SUBTITLE = (
-    "Deploy human-like voice agents for hotels, banks, and call centers — "
-    "with African accents, local languages, and zero upfront infrastructure cost."
+    "Deploy human-like voice agents that answer calls, handle "
+    "interruptions, and speak with African warmth — in hours, not months."
 )
 
-# Showcase metrics for the hero counter strip. Marketing numbers, not
-# live data — the operations dashboard at /dashboard.html shows real
-# values. Override via the metrics_override argument when you have
-# tender-grade real numbers to publish.
 LANDING_SHOWCASE_METRICS = {
     "calls_handled": 1247,
     "containment_rate": 0.867,
@@ -1694,61 +1697,73 @@ LANDING_AGENTS = [
     {
         "key": "kwame",
         "name": "Kwame",
+        "initials": "K",
+        "accent": "#00D4FF",
         "role": "Hotel Receptionist",
         "country": "Ghana",
         "voice_label": "British male · en-GB-RyanNeural",
-        "audio_file": "kwame_test_1.mp3",
+        "audio_file": "kwame_turn_00.mp3",
+        "audio_fallback": "kwame_turn_01.mp3",
+        "audio_error": "Kwame demo audio not available",
         "summary": (
-            "Handles bookings, room availability, restaurant hours and small "
-            "talk for hospitality clients."
+            "Handles bookings, room availability, restaurant hours, and "
+            "small talk for hospitality clients."
         ),
     },
     {
         "key": "amina",
         "name": "Amina",
+        "initials": "A",
+        "accent": "#A78BFA",
         "role": "Customer Service Agent",
         "country": "Kenya",
         "voice_label": "British female · en-GB-SoniaNeural",
         "audio_file": "amina_test_1.mp3",
+        "audio_fallback": "",
+        "audio_error": "Amina audio not generated yet — run hear_amina.py",
         "summary": (
-            "Banking, telco and e-commerce inquiries with M-Pesa, airtime "
-            "and bundle support. Escalates complaints fast."
+            "Banking, telco, and e-commerce inquiries with M-Pesa, "
+            "airtime, and bundle support. Escalates complaints fast."
         ),
     },
 ]
 
-LANDING_HOW_IT_WORKS = [
-    {
-        "step": "01",
-        "title": "Upload content",
-        "body": "Point Cynea at your scripts, PDFs, knowledge base or website. The agent learns your business, not the other way around.",
-        "icon": "upload",
-    },
-    {
-        "step": "02",
-        "title": "Configure agent",
-        "body": "Pick a persona, voice, escalation rules and pricing card. Validate the agent in the dashboard before going live.",
-        "icon": "sliders",
-    },
-    {
-        "step": "03",
-        "title": "Deploy to phone",
-        "body": "Get an Africa's Talking or Twilio number routed to the agent in minutes. Pay per minute used; cancel anytime.",
-        "icon": "phone",
-    },
+LANDING_HOW_STEPS = [
+    {"step": "01", "title": "Upload",    "body": "Point Cynea at your scripts, PDFs, knowledge base or website. The agent learns your business, not the other way around.", "icon": "upload"},
+    {"step": "02", "title": "Configure", "body": "Pick a persona, voice, language and escalation rules. Validate the agent in the dashboard before going live.",            "icon": "sliders"},
+    {"step": "03", "title": "Deploy",    "body": "Get an Africa's Talking or Twilio number routed to the agent in minutes. Pay per minute used; cancel anytime.",            "icon": "phone"},
 ]
 
 LANDING_FEATURES = [
-    ("African accents & languages",       "English variants for Ghana, Kenya, Nigeria, South Africa — plus mixed Swahili tokens.", "globe"),
-    ("Human-like conversations",          "Sequence-id barge-in, grace periods, backchannels. No IVR feel.",                       "speech"),
-    ("Free voice processing",             "Local Whisper STT + free Edge TTS by default. You only pay LLM tokens and telephony.",   "bolt"),
-    ("Operations dashboard included",     "Per-call sentiment, containment, cost. Export PDF + CSV. Print-friendly.",              "chart"),
-    ("Zero infrastructure cost",          "Runs on a single 8 GB box. No Kubernetes, no Redis cluster required.",                  "cloud"),
-    ("African phone numbers",             "Africa's Talking integration for Kenya, Nigeria, Ghana, Tanzania, Uganda, Rwanda.",      "phone"),
-    ("Sentiment & analytics",             "Per-call sentiment scoring, containment trends, agent-vs-agent comparison.",            "trend"),
-    ("24 / 7 availability",               "Engine handles concurrent calls; metrics tracker keeps the audit trail.",                "clock"),
+    ("African Voices",       "Voices for Ghana, Kenya, Nigeria, South Africa — plus mixed Swahili tokens.",            "globe"),
+    ("Human-like Speech",    "Sequence-id barge-in, grace periods, backchannels. No IVR feel.",                        "speech"),
+    ("Free STT/TTS",         "Local Whisper + free Edge TTS by default. You only pay LLM tokens and telephony.",       "bolt"),
+    ("Dashboard Included",   "Per-call sentiment, containment, cost. Export PDF + CSV. Print-friendly.",               "chart"),
+    ("Sentiment Analytics",  "Per-call sentiment scoring, containment trends, agent-vs-agent comparison.",             "trend"),
+    ("24 / 7 Operation",     "Engine handles concurrent calls; metrics tracker keeps the audit trail.",                "clock"),
 ]
 
+# Hero floating card + phone-mockup conversation. Speaker is rendered
+# in cyan; text is typed character-by-character.
+LANDING_HERO_CONVO = [
+    {"speaker": "Kwame",  "text": "Hello? Yes, Adinkra Hotel. How can I help you?"},
+    {"speaker": "Caller", "text": "I'd like to book a room for Friday."},
+    {"speaker": "Kwame",  "text": "Mm, let me check… yes, we have a double available. Two adults?"},
+    {"speaker": "Caller", "text": "Yes, two adults. What's the rate?"},
+]
+
+LANDING_PHONE_CONVO = [
+    {"speaker": "Kwame",  "text": "Hello? Yes, Adinkra Hotel. How can I help?"},
+    {"speaker": "Caller", "text": "Are you open this weekend?"},
+    {"speaker": "Kwame",  "text": "Yes, all weekend. Friday to Sunday works fine."},
+    {"speaker": "Caller", "text": "Perfect. I'd like to book a double."},
+    {"speaker": "Kwame",  "text": "Got it. I'll send a confirmation SMS."},
+]
+
+
+# ------------------------------------------------------------------
+# Public API
+# ------------------------------------------------------------------
 
 def generate_landing_page(
     metrics_file: str = "examples/_out/calls.json",
@@ -1757,17 +1772,17 @@ def generate_landing_page(
     force_demo: bool = False,
     metrics_override: Optional[dict] = None,
 ) -> str:
-    """Render the full marketing + operations landing page.
+    """Render the cinematic marketing landing page.
 
     Args:
         metrics_file: Path to the calls.json file used to populate the
-            call-history table at the bottom.
-        output_file: Where to write. Defaults to a sibling
-            `cynea_landing.html` next to the input.
-        force_demo: Use sample data for the call-history table.
-        metrics_override: Override the showcase metrics (the hero
-            counter strip) with real numbers. Keys: calls_handled,
-            containment_rate, cost_cents, active_agents.
+            collapsible call-history section.
+        output_file: Where to write the HTML. Defaults to
+            `cynea_landing.html` next to the metrics file.
+        force_demo: Use the in-code 15-call sample instead of real data.
+        metrics_override: Override the showcase counter strip with real
+            numbers (keys: calls_handled, containment_rate, cost_cents,
+            active_agents).
 
     Returns:
         Absolute path to the file written.
@@ -1800,22 +1815,24 @@ def generate_landing_page(
     return output_file
 
 
-# ---------------------------------------------------------------------
+# ------------------------------------------------------------------
 # Top-level renderer
-# ---------------------------------------------------------------------
+# ------------------------------------------------------------------
 
 def _render_landing_html(*, calls: list, showcase: dict, is_empty_state: bool) -> str:
-    nav     = _landing_render_nav()
-    hero    = _landing_render_hero()
-    agents  = _landing_render_agent_showcase()
-    how     = _landing_render_how_it_works()
-    metrics = _landing_render_metrics_bar(showcase)
-    feats   = _landing_render_features()
-    history = _render_call_history_table(calls, is_empty_state)
-    footer  = _landing_render_footer()
+    loader   = _landing_render_loader()
+    nav      = _landing_render_nav()
+    hero     = _landing_render_hero()
+    metrics  = _landing_render_metric_strip(showcase)
+    agents   = _landing_render_agent_showcase()
+    timeline = _landing_render_timeline()
+    feats    = _landing_render_features()
+    phone    = _landing_render_phone_demo()
+    table    = _render_call_history_table(calls, is_empty_state)
+    footer   = _landing_render_footer()
 
     css = _landing_render_css()
-    dashboard_css = _render_css()  # for the call-history table styling
+    dashboard_css = _render_css()
     js = _landing_render_js(calls)
 
     return f"""<!doctype html>
@@ -1831,43 +1848,68 @@ def _render_landing_html(*, calls: list, showcase: dict, is_empty_state: bool) -
 <style>{dashboard_css}{css}</style>
 </head>
 <body class="landing">
+{loader}
 {nav}
+{metrics}
 <main class="landing-main">
   {hero}
   {agents}
-  {how}
-  {metrics}
+  {timeline}
   {feats}
+  {phone}
   <section id="dashboard" class="dashboard-anchor">
     <div class="section-head">
-      <h2>Operations dashboard</h2>
-      <p class="muted">Live call history with containment, sentiment and cost per call.</p>
+      <span class="section-eyebrow">Operations</span>
+      <h2>Live data, not a screenshot</h2>
+      <p class="muted">Real call history with containment, sentiment and cost per call.</p>
     </div>
-    {history}
+    <details class="data-collapse" open>
+      <summary>
+        <span class="data-collapse-label">See live data</span>
+        <span class="data-collapse-icon" aria-hidden="true">▾</span>
+      </summary>
+      <div class="data-collapse-body">{table}</div>
+    </details>
   </section>
 </main>
 {footer}
 <div id="toast" role="status" aria-live="polite"></div>
+<audio id="audio-player" preload="none" aria-label="Demo audio player"></audio>
 <script>{js}</script>
 </body>
 </html>
 """
 
 
-# ---------------------------------------------------------------------
-# Section renderers (landing-only)
-# ---------------------------------------------------------------------
+# ------------------------------------------------------------------
+# Section renderers
+# ------------------------------------------------------------------
+
+def _landing_render_loader() -> str:
+    """Cinematic loader: black screen, then C-Y-N-E-A appears letter
+    by letter in cyan with a glow, pulses once, fades out."""
+    letters = "".join(f'<span aria-hidden="true">{c}</span>' for c in "CYNEA")
+    return f"""
+<div class="cynea-loader" id="cyneaLoader" aria-hidden="true">
+  <div class="cynea-loader-inner">
+    <div class="cynea-loader-text">{letters}</div>
+    <div class="cynea-loader-tag">VOICE ENGINE</div>
+  </div>
+</div>
+"""
+
 
 def _landing_render_nav() -> str:
     return """
-<nav class="nav" id="topnav">
+<nav class="nav landing-nav" id="topnav">
   <a class="nav-brand" href="#top">
     <span class="brand-mark">CYNEA</span>
     <span class="brand-tag">VOICE ENGINE</span>
   </a>
   <ul class="nav-links">
-    <li><a href="#features">Features</a></li>
     <li><a href="#agents">Agents</a></li>
+    <li><a href="#timeline">How it works</a></li>
+    <li><a href="#features">Features</a></li>
     <li><a href="#dashboard">Dashboard</a></li>
     <li><a href="https://github.com/Mars2390/cynea-voice-engine" target="_blank" rel="noopener">GitHub</a></li>
   </ul>
@@ -1877,25 +1919,122 @@ def _landing_render_nav() -> str:
 
 
 def _landing_render_hero() -> str:
+    convo_lines = "".join(
+        f'<div class="convo-line" data-speaker="{html.escape(c["speaker"])}" '
+        f'data-text="{html.escape(c["text"])}"></div>'
+        for c in LANDING_HERO_CONVO
+    )
     return f"""
-<section class="hero-marketing" id="top">
-  <div class="hero-bg" aria-hidden="true"></div>
-  <div class="hero-inner">
-    <span class="pill pill-cyan">Open source · MIT</span>
-    <h1 class="hero-title">{html.escape(LANDING_HEADLINE)}</h1>
-    <p class="hero-sub">{html.escape(LANDING_SUBTITLE)}</p>
-    <div class="hero-ctas">
-      <a class="btn btn-primary" href="#dashboard">See dashboard</a>
-      <button class="btn btn-outline play-btn" type="button"
-              data-audio="kwame_test_1.mp3"
-              data-label="Kwame demo">
-        <span class="play-icon" aria-hidden="true">▶</span>
-        Hear Kwame demo
-      </button>
+<section class="hero-cinematic" id="top">
+  <div class="hero-bg" aria-hidden="true">
+    <div class="hero-grid-bg"></div>
+    <div class="hero-orb hero-orb-1"></div>
+    <div class="hero-orb hero-orb-2"></div>
+    <div class="hero-scanline"></div>
+  </div>
+  <div class="hero-grid">
+    <div class="hero-text">
+      <span class="pill pill-cyan">Open source · MIT · Built in Kenya</span>
+      <h1 class="hero-title">
+        <span class="hero-line-1">{html.escape(LANDING_HEADLINE_LEAD)}</span>
+        <span class="hero-line-2">{html.escape(LANDING_HEADLINE_ACCENT)}</span>
+      </h1>
+      <p class="hero-sub">{html.escape(LANDING_SUBTITLE)}</p>
+      <div class="hero-ctas">
+        <a class="btn btn-primary btn-glow" href="#dashboard">
+          Explore dashboard <span aria-hidden="true">→</span>
+        </a>
+        <button class="btn btn-outline btn-glow play-btn" type="button"
+                data-audio="kwame_turn_00.mp3"
+                data-audio-fallback="kwame_turn_01.mp3"
+                data-error="Kwame demo audio not available"
+                data-label="Kwame demo">
+          <span class="play-icon" aria-hidden="true">▶</span>
+          Hear Kwame demo
+        </button>
+      </div>
+      <div class="hero-trust">
+        <span>Hospitality · Banking · Telco · Government</span>
+        <span class="dim">· Africa's Talking · Twilio · Plivo · SIP</span>
+      </div>
     </div>
-    <div class="hero-trust">
-      <span>Designed for hotels, banks, telcos and call centers</span>
-      <span class="dim">· Africa's Talking · Twilio · Plivo · SIP</span>
+    <div class="hero-card-wrap">
+      <div class="hero-card" data-tilt id="heroDemo">
+        <div class="hero-card-glare" aria-hidden="true"></div>
+        <div class="hero-card-inner">
+          <header class="hero-card-head">
+            <span class="hero-card-title">Live call · Adinkra Hotel</span>
+            <span class="pill pill-green pill-sm">
+              <span class="pulse-dot"></span> Connected
+            </span>
+          </header>
+          <div class="convo" data-typewriter>
+            {convo_lines}
+          </div>
+          <footer class="hero-card-foot mono small">
+            <span>00:18</span><span class="dim"> · 8 kHz μ-law</span>
+          </footer>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+"""
+
+
+def _landing_render_metric_strip(showcase: dict) -> str:
+    """Sticky strip directly under the nav. Each metric animates when
+    it scrolls into view (count-up, circular progress, sparkline grow,
+    pulse on)."""
+    calls_handled = int(showcase.get("calls_handled") or 0)
+    containment = float(showcase.get("containment_rate") or 0)
+    cost_cents = float(showcase.get("cost_cents") or 0)
+    active_agents = int(showcase.get("active_agents") or 0)
+
+    # Circular progress — 26-radius circle, circumference ~163.36
+    circumference = 163.36
+    dash_offset = circumference * (1.0 - max(0.0, min(1.0, containment)))
+
+    return f"""
+<section class="metric-strip" id="metric-strip" aria-label="Cynea Voice Engine showcase metrics">
+  <div class="metric-strip-inner">
+    <div class="metric-cell">
+      <div class="metric-num mono"
+           data-counter="{calls_handled}" data-format="int">0</div>
+      <div class="metric-label muted">Calls handled</div>
+    </div>
+    <div class="metric-cell metric-circle-cell">
+      <div class="metric-circle">
+        <svg viewBox="0 0 60 60" aria-hidden="true">
+          <circle cx="30" cy="30" r="26" fill="none" stroke="#1E1E1E" stroke-width="4"/>
+          <circle cx="30" cy="30" r="26" fill="none" stroke="#00D4FF" stroke-width="4"
+                  stroke-linecap="round"
+                  stroke-dasharray="{circumference:.2f}"
+                  stroke-dashoffset="{circumference:.2f}"
+                  data-progress-target="{dash_offset:.2f}"
+                  transform="rotate(-90 30 30)" />
+        </svg>
+        <span class="metric-circle-text mono"
+              data-counter="{containment * 100:.1f}" data-format="pct">0%</span>
+      </div>
+      <div class="metric-label muted">Containment</div>
+    </div>
+    <div class="metric-cell">
+      <div class="metric-num mono"
+           data-counter="{cost_cents:.1f}" data-format="cents">0¢</div>
+      <svg class="metric-sparkline" viewBox="0 0 80 24" preserveAspectRatio="none" aria-hidden="true">
+        <polyline points="0,20 12,18 24,16 36,14 48,11 60,9 72,7 80,6"
+                  fill="none" stroke="#00D4FF" stroke-width="1.5"
+                  stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      <div class="metric-label muted">Cost / call</div>
+    </div>
+    <div class="metric-cell">
+      <div class="metric-num mono">
+        <span class="pulse-dot pulse-dot-large"></span>
+        <span data-counter="{active_agents}" data-format="int">0</span>
+      </div>
+      <div class="metric-label muted">Active agents</div>
     </div>
   </div>
 </section>
@@ -1905,38 +2044,49 @@ def _landing_render_hero() -> str:
 def _landing_render_agent_showcase() -> str:
     cards = []
     for agent in LANDING_AGENTS:
+        accent = agent["accent"]
         cards.append(f"""
-<article class="agent-showcase">
-  <header class="agent-showcase-head">
-    <div class="agent-name-row">
-      <span class="agent-icon" aria-hidden="true">{_landing_icon('user')}</span>
-      <h3>{html.escape(agent['name'])}</h3>
-      <span class="pill pill-green pill-sm">
+<article class="agent-card-cinematic reveal" data-tilt
+         style="--accent:{accent};--accent-soft:{accent}33;--accent-glow:{accent}55">
+  <div class="agent-card-glare" aria-hidden="true"></div>
+  <div class="agent-card-inner">
+    <header class="agent-card-head">
+      <div class="agent-avatar" aria-hidden="true"
+           style="--accent:{accent}">
+        <span>{html.escape(agent['initials'])}</span>
+      </div>
+      <div class="agent-id">
+        <h3>{html.escape(agent['name'])}</h3>
+        <p class="muted">{html.escape(agent['role'])} · {html.escape(agent['country'])}</p>
+      </div>
+      <span class="pill pill-green pill-sm pulse-pill">
         <span class="pulse-dot"></span> Ready for calls
       </span>
+    </header>
+    <p class="agent-summary">{html.escape(agent['summary'])}</p>
+    <dl class="agent-meta">
+      <dt>Voice</dt><dd>{html.escape(agent['voice_label'])}</dd>
+      <dt>Industry</dt><dd>{html.escape(agent['role'])}</dd>
+      <dt>Country</dt><dd>{html.escape(agent['country'])}</dd>
+    </dl>
+    <div class="agent-actions">
+      <button class="btn btn-primary btn-glow play-btn" type="button"
+              data-audio="{html.escape(agent['audio_file'])}"
+              data-audio-fallback="{html.escape(agent.get('audio_fallback') or '')}"
+              data-error="{html.escape(agent.get('audio_error') or 'Demo audio not available')}"
+              data-label="{html.escape(agent['name'])} demo">
+        <span class="play-icon" aria-hidden="true">▶</span>
+        Hear demo
+      </button>
+      <a class="btn btn-ghost" href="#dashboard">View metrics</a>
     </div>
-    <p class="agent-role muted">{html.escape(agent['role'])} · {html.escape(agent['country'])}</p>
-  </header>
-  <p class="agent-summary">{html.escape(agent['summary'])}</p>
-  <dl class="agent-meta">
-    <dt>Voice</dt><dd>{html.escape(agent['voice_label'])}</dd>
-    <dt>Industry</dt><dd>{html.escape(agent['role'])}</dd>
-    <dt>Country</dt><dd>{html.escape(agent['country'])}</dd>
-  </dl>
-  <div class="agent-actions">
-    <button class="btn btn-primary play-btn" type="button"
-            data-audio="{html.escape(agent['audio_file'])}"
-            data-label="{html.escape(agent['name'])} demo">
-      <span class="play-icon" aria-hidden="true">▶</span>
-      Hear demo
-    </button>
-    <a class="btn btn-ghost" href="#dashboard">View metrics</a>
   </div>
 </article>
 """)
     return f"""
 <section class="agents-section" id="agents">
   <div class="section-head">
+    <span class="section-eyebrow">Agents</span>
     <h2>Two agents shipping today</h2>
     <p class="muted">Both run on the same engine. Add a third by writing one Python file plus a JSON config.</p>
   </div>
@@ -1945,57 +2095,28 @@ def _landing_render_agent_showcase() -> str:
 """
 
 
-def _landing_render_how_it_works() -> str:
+def _landing_render_timeline() -> str:
     cards = []
-    for s in LANDING_HOW_IT_WORKS:
+    for i, s in enumerate(LANDING_HOW_STEPS):
         cards.append(f"""
-<article class="step-card">
-  <div class="step-num mono">{html.escape(s['step'])}</div>
-  <div class="step-icon">{_landing_icon(s['icon'])}</div>
+<article class="timeline-step reveal" style="--reveal-delay:{i * 120}ms">
+  <div class="timeline-dot" aria-hidden="true"></div>
+  <div class="timeline-num mono">{html.escape(s['step'])}</div>
+  <div class="timeline-icon">{_landing_icon(s['icon'])}</div>
   <h3>{html.escape(s['title'])}</h3>
   <p class="muted">{html.escape(s['body'])}</p>
 </article>
 """)
     return f"""
-<section class="how-section">
+<section class="timeline-section" id="timeline">
   <div class="section-head">
-    <h2>How it works</h2>
-    <p class="muted">From quiet repo to live phone number in three steps.</p>
+    <span class="section-eyebrow">How it works</span>
+    <h2>From quiet repo to live phone number</h2>
+    <p class="muted">Three steps. Same engine, any client.</p>
   </div>
-  <div class="how-grid">{"".join(cards)}</div>
-</section>
-"""
-
-
-def _landing_render_metrics_bar(showcase: dict) -> str:
-    """Big counter strip. Counter target lives on data-final; the
-    counter animation only fires when the strip scrolls into view."""
-    calls_handled = int(showcase.get("calls_handled") or 0)
-    containment = float(showcase.get("containment_rate") or 0)
-    cost_cents = float(showcase.get("cost_cents") or 0)
-    active_agents = int(showcase.get("active_agents") or 0)
-
-    return f"""
-<section class="metrics-strip" id="live-metrics">
-  <div class="metric">
-    <div class="metric-value mono"
-         data-counter="{calls_handled}" data-format="int">0</div>
-    <div class="metric-label muted">Calls handled</div>
-  </div>
-  <div class="metric">
-    <div class="metric-value mono"
-         data-counter="{containment * 100:.1f}" data-format="pct">0%</div>
-    <div class="metric-label muted">Containment rate</div>
-  </div>
-  <div class="metric">
-    <div class="metric-value mono"
-         data-counter="{cost_cents:.1f}" data-format="cents">0¢</div>
-    <div class="metric-label muted">Cost per call</div>
-  </div>
-  <div class="metric">
-    <div class="metric-value mono"
-         data-counter="{active_agents}" data-format="int">0</div>
-    <div class="metric-label muted">Active agents</div>
+  <div class="timeline">
+    <div class="timeline-rail" aria-hidden="true"></div>
+    {"".join(cards)}
   </div>
 </section>
 """
@@ -2003,9 +2124,10 @@ def _landing_render_metrics_bar(showcase: dict) -> str:
 
 def _landing_render_features() -> str:
     cards = []
-    for title, body, icon in LANDING_FEATURES:
+    for i, (title, body, icon) in enumerate(LANDING_FEATURES):
         cards.append(f"""
-<article class="feature-card">
+<article class="feature-card-cinematic reveal" style="--reveal-delay:{i * 80}ms">
+  <div class="feature-card-glow" aria-hidden="true"></div>
   <div class="feature-icon">{_landing_icon(icon)}</div>
   <h3>{html.escape(title)}</h3>
   <p class="muted">{html.escape(body)}</p>
@@ -2014,330 +2136,961 @@ def _landing_render_features() -> str:
     return f"""
 <section class="features-section" id="features">
   <div class="section-head">
-    <h2>Built for African business</h2>
-    <p class="muted">Eight choices we made differently from US-first voice AI platforms.</p>
+    <span class="section-eyebrow">Features</span>
+    <h2>Eight choices we made differently</h2>
+    <p class="muted">Where US-first voice AI platforms get Africa wrong, and where we get it right.</p>
   </div>
   <div class="features-grid">{"".join(cards)}</div>
 </section>
 """
 
 
-def _landing_render_footer() -> str:
+def _landing_render_phone_demo() -> str:
+    convo_lines = "".join(
+        f'<div class="phone-line phone-line-{("agent" if c["speaker"]=="Kwame" else "caller")}" '
+        f'data-speaker="{html.escape(c["speaker"])}" '
+        f'data-text="{html.escape(c["text"])}"></div>'
+        for c in LANDING_PHONE_CONVO
+    )
     return f"""
+<section class="phone-demo reveal" id="phone-demo">
+  <div class="section-head">
+    <span class="section-eyebrow">Try it</span>
+    <h2>This is what your customer hears</h2>
+    <p class="muted">Click play. The audio is generated by the same engine that powers the dashboard above.</p>
+  </div>
+  <div class="phone-stage">
+    <div class="phone">
+      <div class="phone-frame">
+        <div class="phone-notch" aria-hidden="true"></div>
+        <div class="phone-screen">
+          <div class="phone-status mono small">CYNEA · 16:42 · 4G</div>
+          <div class="phone-callee">
+            <div class="agent-avatar" style="--accent:#00D4FF" aria-hidden="true"><span>K</span></div>
+            <div class="phone-callee-id">
+              <div class="phone-name">Kwame</div>
+              <div class="phone-role muted">Adinkra Hotel · 00:18</div>
+            </div>
+            <span class="pill pill-green pill-sm">
+              <span class="pulse-dot"></span> Live
+            </span>
+          </div>
+          <div class="phone-convo" data-typewriter>{convo_lines}</div>
+          <div class="phone-controls">
+            <button class="phone-play play-btn" type="button"
+                    data-audio="kwame_turn_00.mp3"
+                    data-audio-fallback="kwame_turn_01.mp3"
+                    data-error="Audio not available offline"
+                    data-label="Kwame call audio"
+                    aria-label="Play call audio">
+              <span class="phone-play-icon" data-state="play" aria-hidden="true">▶</span>
+              <span class="phone-play-label">Play actual call audio</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <aside class="phone-sidecar">
+      <h3>Try it yourself</h3>
+      <p class="muted">Real phone-line integration ships with Africa's Talking and Twilio. Drop in your number and route inbound calls.</p>
+      <div class="phone-cta-row">
+        <code class="phone-number mono">+233 ___ _______</code>
+        <span class="muted small">placeholder · talk to us for production routing</span>
+      </div>
+      <div class="phone-feature-row">
+        <div class="phone-feature">
+          <strong class="mono">800ms</strong>
+          <span class="muted small">P95 response latency</span>
+        </div>
+        <div class="phone-feature">
+          <strong class="mono">87%</strong>
+          <span class="muted small">Containment rate</span>
+        </div>
+        <div class="phone-feature">
+          <strong class="mono">4.2¢</strong>
+          <span class="muted small">Avg cost / call</span>
+        </div>
+      </div>
+    </aside>
+  </div>
+</section>
+"""
+
+
+def _landing_render_footer() -> str:
+    return """
 <footer class="landing-footer">
   <div class="footer-inner">
-    <div>
-      <span class="brand-mark small">CYNEA</span>
+    <div class="footer-brand">
+      <span class="brand-mark large">CYNEA</span>
       <span class="brand-tag">VOICE ENGINE</span>
     </div>
-    <div class="footer-links">
-      <a href="https://github.com/Mars2390/cynea-voice-engine" target="_blank" rel="noopener">GitHub</a>
-      <a href="#features">Features</a>
-      <a href="#agents">Agents</a>
-      <a href="#dashboard">Dashboard</a>
-    </div>
-    <div class="footer-tag dim">
-      Cynea AI — Made in Kenya · Built for African business
+    <div class="footer-cols">
+      <div class="footer-col">
+        <h4>Engine</h4>
+        <a href="#agents">Agents</a>
+        <a href="#features">Features</a>
+        <a href="#dashboard">Dashboard</a>
+      </div>
+      <div class="footer-col">
+        <h4>Project</h4>
+        <a href="https://github.com/Mars2390/cynea-voice-engine" target="_blank" rel="noopener">GitHub</a>
+        <a href="https://github.com/Mars2390/cynea-voice-engine/blob/main/README.md" target="_blank" rel="noopener">README</a>
+        <a href="https://github.com/Mars2390/cynea-voice-engine/issues" target="_blank" rel="noopener">Issues</a>
+      </div>
+      <div class="footer-col">
+        <h4>Cynea AI</h4>
+        <span class="muted small">Made in Kenya</span>
+        <span class="muted small">Built for African business</span>
+        <span class="dim small">© 2026 Cynea AI</span>
+      </div>
     </div>
   </div>
 </footer>
 """
 
 
-# ---------------------------------------------------------------------
-# Inline SVG icons (Lucide-style stroke icons, ~2 KB total)
-# ---------------------------------------------------------------------
+# ------------------------------------------------------------------
+# Inline SVG icons (Lucide-style)
+# ------------------------------------------------------------------
 
 def _landing_icon(name: str) -> str:
     icons = {
-        "user":   '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>',
         "globe":  '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15 15 0 0 1 0 20M12 2a15 15 0 0 0 0 20"/></svg>',
         "speech": '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>',
         "bolt":   '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>',
         "chart":  '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="20" x2="21" y2="20"/><rect x="6" y="10" width="3" height="10"/><rect x="11" y="6" width="3" height="14"/><rect x="16" y="13" width="3" height="7"/></svg>',
-        "cloud":  '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M17.5 19a4.5 4.5 0 1 0-1-8.9A6 6 0 0 0 4.5 12 4 4 0 0 0 5 19h12.5z"/></svg>',
-        "phone":  '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92V21a1 1 0 0 1-1.09 1 19.91 19.91 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6A19.91 19.91 0 0 1 3.21 4.09 1 1 0 0 1 4.2 3h4.09a1 1 0 0 1 1 .76 12.4 12.4 0 0 0 .65 2.62 1 1 0 0 1-.23 1L8 8.91a16 16 0 0 0 6 6l1.51-1.69a1 1 0 0 1 1-.23 12.4 12.4 0 0 0 2.62.65 1 1 0 0 1 .87 1.28z"/></svg>',
         "trend":  '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/></svg>',
         "clock":  '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>',
         "upload": '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>',
         "sliders":'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><line x1="4" y1="21" x2="4" y2="14"/><line x1="4" y1="10" x2="4" y2="3"/><line x1="12" y1="21" x2="12" y2="12"/><line x1="12" y1="8" x2="12" y2="3"/><line x1="20" y1="21" x2="20" y2="16"/><line x1="20" y1="12" x2="20" y2="3"/><line x1="1" y1="14" x2="7" y2="14"/><line x1="9" y1="8" x2="15" y2="8"/><line x1="17" y1="16" x2="23" y2="16"/></svg>',
+        "phone":  '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92V21a1 1 0 0 1-1.09 1 19.91 19.91 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6A19.91 19.91 0 0 1 3.21 4.09 1 1 0 0 1 4.2 3h4.09a1 1 0 0 1 1 .76 12.4 12.4 0 0 0 .65 2.62 1 1 0 0 1-.23 1L8 8.91a16 16 0 0 0 6 6l1.51-1.69a1 1 0 0 1 1-.23 12.4 12.4 0 0 0 2.62.65 1 1 0 0 1 .87 1.28z"/></svg>',
     }
     return icons.get(name, '')
 
 
-# ---------------------------------------------------------------------
-# Landing CSS (appended to the dashboard CSS)
-# ---------------------------------------------------------------------
+# ------------------------------------------------------------------
+# CSS — landing-only styles, layered over dashboard CSS
+# ------------------------------------------------------------------
 
 def _landing_render_css() -> str:
-    c = _COLORS
-    return f"""
-/* === LANDING PAGE STYLES (additive on top of dashboard CSS) === */
+    """Cinematic landing CSS. Plain triple-quoted string — no f-string
+    so { } in selectors don't need escaping. All color tokens are
+    hardcoded to keep the file readable."""
+    return r"""
+/* === LANDING (cinematic) — appended on top of dashboard CSS === */
 
-html {{ scroll-behavior: smooth; }}
-body.landing {{ overflow-x: hidden; }}
-body.landing main.landing-main {{ max-width: 1240px; margin: 0 auto; padding: 0 32px 80px; }}
+html { scroll-behavior: smooth; }
+body.landing { overflow-x: hidden; background: #050505; }
+body.landing main.landing-main { max-width: 1240px; margin: 0 auto; padding: 0 32px 80px; }
 
-/* navigation bar */
-.nav {{
+/* Respect users who asked to slow down. */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* ── loader overlay ─────────────────────────────────────────────── */
+.cynea-loader {
+  position: fixed; inset: 0; z-index: 9999;
+  background: #050505;
+  display: flex; align-items: center; justify-content: center;
+  animation: loaderFade 0.5s ease 1.9s forwards;
+  pointer-events: auto;
+}
+.cynea-loader-inner { text-align: center; }
+.cynea-loader-text {
+  font-family: 'Syne', sans-serif; font-weight: 800;
+  font-size: clamp(56px, 12vw, 120px);
+  letter-spacing: 0.18em; color: #00D4FF;
+  display: inline-flex; gap: 0.04em;
+  filter: drop-shadow(0 0 24px rgba(0,212,255,0.5));
+}
+.cynea-loader-text span {
+  display: inline-block;
+  opacity: 0; transform: translateY(8px); filter: blur(6px);
+  animation: letterIn 0.5s ease forwards, letterPulse 0.7s ease 1.0s 1;
+}
+.cynea-loader-text span:nth-child(1) { animation-delay: 0.5s, 1.0s; }
+.cynea-loader-text span:nth-child(2) { animation-delay: 0.6s, 1.0s; }
+.cynea-loader-text span:nth-child(3) { animation-delay: 0.7s, 1.0s; }
+.cynea-loader-text span:nth-child(4) { animation-delay: 0.8s, 1.0s; }
+.cynea-loader-text span:nth-child(5) { animation-delay: 0.9s, 1.0s; }
+.cynea-loader-tag {
+  font-family: 'Syne', sans-serif; font-weight: 600;
+  font-size: 12px; letter-spacing: 0.32em; color: #5F5F5F;
+  margin-top: 18px;
+  opacity: 0;
+  animation: letterIn 0.6s ease 1.4s forwards;
+}
+@keyframes letterIn {
+  0%   { opacity: 0; transform: translateY(8px); filter: blur(6px); }
+  100% { opacity: 1; transform: translateY(0); filter: blur(0); }
+}
+@keyframes letterPulse {
+  0%   { transform: scale(1); text-shadow: 0 0 12px rgba(0,212,255,0.6); }
+  50%  { transform: scale(1.06); text-shadow: 0 0 36px rgba(0,212,255,0.9), 0 0 60px rgba(0,212,255,0.4); }
+  100% { transform: scale(1); text-shadow: 0 0 12px rgba(0,212,255,0.6); }
+}
+@keyframes loaderFade {
+  to { opacity: 0; pointer-events: none; visibility: hidden; }
+}
+.cynea-loader.done { display: none !important; }
+
+/* Body fades in once the loader has played. */
+body.landing main.landing-main,
+body.landing > nav.landing-nav,
+body.landing > .metric-strip,
+body.landing > footer.landing-footer {
+  animation: contentFadeIn 0.6s ease 1.6s both;
+}
+@keyframes contentFadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+/* ── nav ────────────────────────────────────────────────────────── */
+.landing-nav {
   position: sticky; top: 0; z-index: 50;
   display: flex; align-items: center; gap: 16px;
-  padding: 16px 32px;
-  background: {c['bg']}E6;
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  border-bottom: 1px solid {c['border']};
-}}
-.nav-brand {{
-  display: inline-flex; align-items: baseline; gap: 10px;
-  text-decoration: none;
-}}
-.nav-links {{
+  padding: 14px 32px;
+  background: rgba(5,5,5,0.85);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border-bottom: 1px solid #1E1E1E;
+}
+.nav-brand { display: inline-flex; align-items: baseline; gap: 10px; text-decoration: none; }
+.nav-links {
   list-style: none; padding: 0; margin: 0 auto;
   display: flex; gap: 28px;
-}}
-.nav-links a {{
-  color: {c['muted']}; text-decoration: none; font-weight: 500;
-  font-size: 14px;
+}
+.nav-links a {
+  color: #8A8A8A; text-decoration: none; font-weight: 500; font-size: 14px;
   transition: color 120ms ease;
-}}
-.nav-links a:hover {{ color: {c['text']}; }}
-.btn-outline {{
-  background: transparent; color: {c['accent']};
-  border: 1px solid {c['accent']}; font-weight: 600;
-  text-decoration: none; padding: 8px 16px;
-  border-radius: 999px;
-}}
-.btn-outline:hover {{ background: {c['accent']}14; }}
-@media (max-width: 720px) {{
-  .nav-links {{ display: none; }}
-}}
+}
+.nav-links a:hover { color: #F5F5F5; }
+.btn-outline {
+  background: transparent; color: #00D4FF;
+  border: 1px solid #00D4FF; font-weight: 600;
+  text-decoration: none; padding: 8px 16px; border-radius: 999px;
+}
+.btn-outline:hover { background: rgba(0,212,255,0.08); }
+.btn-glow { transition: box-shadow 200ms ease, transform 120ms ease, background 200ms ease; }
+.btn-primary.btn-glow:hover { box-shadow: 0 0 0 1px #00D4FF, 0 0 30px rgba(0,212,255,0.45); }
+.btn-outline.btn-glow:hover { box-shadow: 0 0 0 1px #00D4FF, 0 0 24px rgba(0,212,255,0.25); }
+@media (max-width: 720px) { .nav-links { display: none; } }
 
-.section-head {{ text-align: center; margin: 0 auto 32px; max-width: 720px; }}
-.section-head h2 {{
+/* ── section heads ──────────────────────────────────────────────── */
+.section-head { text-align: center; margin: 0 auto 36px; max-width: 720px; }
+.section-eyebrow {
+  display: inline-block; font-family: 'JetBrains Mono', monospace; font-weight: 600;
+  font-size: 11px; letter-spacing: 0.18em; color: #00D4FF;
+  text-transform: uppercase; margin-bottom: 10px;
+}
+.section-head h2 {
   font-family: 'Syne', sans-serif; font-weight: 700;
-  font-size: 32px; letter-spacing: -0.01em; margin: 0 0 12px;
-}}
-.section-head p {{ font-size: 15px; }}
+  font-size: 36px; letter-spacing: -0.01em; margin: 0 0 12px;
+}
+.section-head p { font-size: 15px; }
 
-/* hero */
-.hero-marketing {{
-  position: relative;
-  padding: 88px 0 96px;
-  text-align: center;
-  isolation: isolate;
-}}
-.hero-bg {{
-  position: absolute; inset: -10% -10% 0 -10%; z-index: -1;
-  background:
-    radial-gradient(800px 400px at 30% 30%, {c['accent']}22, transparent 60%),
-    radial-gradient(900px 500px at 70% 60%, {c['accent']}14, transparent 65%);
-  filter: blur(20px);
-  animation: heroDrift 14s ease-in-out infinite alternate;
-}}
-@keyframes heroDrift {{
-  0%   {{ transform: translate3d(-2%, 0, 0) scale(1); }}
-  100% {{ transform: translate3d(2%, -2%, 0) scale(1.05); }}
-}}
-.hero-inner {{ max-width: 820px; margin: 0 auto; }}
-.pill-cyan {{ color: {c['accent']}; border-color: {c['accent']}33; background: {c['accent']}14; }}
-.pill-sm {{ font-size: 10px; padding: 3px 8px; }}
-.hero-title {{
+/* ── hero ───────────────────────────────────────────────────────── */
+.hero-cinematic {
+  position: relative; padding: 80px 0 96px; isolation: isolate;
+}
+.hero-bg { position: absolute; inset: -10% -10% 0 -10%; z-index: -1; overflow: hidden; }
+.hero-grid-bg {
+  position: absolute; inset: 0;
+  background-image:
+    linear-gradient(rgba(0,212,255,0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0,212,255,0.05) 1px, transparent 1px);
+  background-size: 44px 44px;
+  mask-image: radial-gradient(ellipse 700px 500px at 30% 30%, black 30%, transparent 80%);
+  -webkit-mask-image: radial-gradient(ellipse 700px 500px at 30% 30%, black 30%, transparent 80%);
+  opacity: 0.7;
+}
+.hero-orb {
+  position: absolute; border-radius: 50%; filter: blur(60px);
+  pointer-events: none;
+}
+.hero-orb-1 {
+  width: 520px; height: 520px;
+  left: -8%; top: 10%;
+  background: radial-gradient(circle, rgba(0,212,255,0.28), transparent 60%);
+  animation: orbDrift 14s ease-in-out infinite alternate;
+}
+.hero-orb-2 {
+  width: 460px; height: 460px;
+  right: -6%; top: 30%;
+  background: radial-gradient(circle, rgba(167,139,250,0.18), transparent 60%);
+  animation: orbDrift 18s ease-in-out infinite alternate-reverse;
+}
+@keyframes orbDrift {
+  from { transform: translate3d(-2%, 0, 0) scale(1); }
+  to   { transform: translate3d(2%, -2%, 0) scale(1.06); }
+}
+.hero-scanline {
+  position: absolute; left: 0; right: 0; top: 0; height: 2px;
+  background: linear-gradient(90deg, transparent, rgba(0,212,255,0.5), transparent);
+  filter: blur(1px);
+  animation: scanline 6s linear infinite;
+}
+@keyframes scanline {
+  0%   { transform: translateY(0); opacity: 0; }
+  10%  { opacity: 1; }
+  100% { transform: translateY(640px); opacity: 0; }
+}
+
+.hero-grid {
+  display: grid; grid-template-columns: 1.1fr 1fr; gap: 48px;
+  align-items: center;
+}
+@media (max-width: 1000px) { .hero-grid { grid-template-columns: 1fr; gap: 32px; } }
+
+.hero-text { max-width: 600px; }
+.hero-title {
   font-family: 'Syne', sans-serif; font-weight: 800;
-  font-size: clamp(40px, 6vw, 64px); line-height: 1.05;
-  letter-spacing: -0.02em; margin: 18px 0 16px;
-  background: linear-gradient(180deg, {c['text']} 0%, {c['accent']} 220%);
+  font-size: clamp(40px, 6vw, 68px); line-height: 1.02;
+  letter-spacing: -0.02em; margin: 18px 0 18px;
+}
+.hero-line-1 { display: block; color: #F5F5F5; }
+.hero-line-2 {
+  display: block;
+  background: linear-gradient(110deg, #00D4FF 0%, #A78BFA 60%, #00D4FF 110%);
   -webkit-background-clip: text; background-clip: text;
   -webkit-text-fill-color: transparent;
-}}
-.hero-sub {{
-  font-size: 17px; color: {c['muted']}; max-width: 640px;
-  margin: 0 auto 32px;
-}}
-.hero-ctas {{
-  display: inline-flex; gap: 12px; flex-wrap: wrap; justify-content: center;
-  margin-bottom: 32px;
-}}
-.play-btn {{ display: inline-flex; align-items: center; gap: 8px; }}
-.play-icon {{ font-size: 11px; }}
-.hero-trust {{ font-size: 12px; color: {c['muted']}; }}
+  background-size: 200% auto;
+  animation: gradientShift 8s ease-in-out infinite;
+}
+@keyframes gradientShift {
+  0%   { background-position: 0% 50%; }
+  50%  { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+.hero-sub { font-size: 17px; color: #8A8A8A; max-width: 540px; margin: 0 0 28px; }
+.hero-ctas { display: inline-flex; gap: 12px; flex-wrap: wrap; margin-bottom: 28px; }
+.play-btn { display: inline-flex; align-items: center; gap: 8px; }
+.play-icon { font-size: 11px; }
+.hero-trust { font-size: 12px; color: #8A8A8A; }
 
-/* agents showcase */
-.agents-section {{ padding: 64px 0; }}
-.agent-showcase-grid {{
-  display: grid; gap: 20px;
+/* hero floating card */
+.hero-card-wrap { perspective: 1200px; }
+.hero-card {
+  background: linear-gradient(160deg, #111111 0%, #0E0E0E 100%);
+  border: 1px solid #1E1E1E; border-radius: 18px;
+  padding: 0; position: relative; overflow: hidden;
+  transform-style: preserve-3d;
+  transition: transform 200ms ease;
+  box-shadow: 0 30px 80px rgba(0,212,255,0.08), 0 60px 120px rgba(0,0,0,0.6);
+}
+.hero-card-glare {
+  position: absolute; inset: 0; pointer-events: none;
+  background: linear-gradient(180deg, rgba(0,212,255,0.08), transparent 40%);
+}
+.hero-card-inner { padding: 22px; position: relative; z-index: 1; }
+.hero-card-head {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 16px; padding-bottom: 14px;
+  border-bottom: 1px solid #1E1E1E;
+}
+.hero-card-title {
+  font-family: 'JetBrains Mono', monospace; font-size: 12px;
+  color: #8A8A8A; letter-spacing: 0.05em;
+}
+.hero-card-foot {
+  margin-top: 16px; padding-top: 14px;
+  border-top: 1px solid #1E1E1E;
+  display: flex; gap: 4px;
+}
+.convo { display: flex; flex-direction: column; gap: 10px; min-height: 220px; }
+.convo-line {
+  font-size: 14px; line-height: 1.5; min-height: 22px;
+}
+.convo-speaker {
+  color: #00D4FF; font-weight: 600;
+  font-family: 'JetBrains Mono', monospace; font-size: 12px;
+  margin-right: 6px;
+}
+.convo-line[data-speaker="Caller"] .convo-speaker { color: #A78BFA; }
+.convo-text {
+  color: #F5F5F5;
+}
+.convo-text::after {
+  content: "▎"; color: #00D4FF; margin-left: 2px;
+  animation: caretBlink 1s steps(2) infinite;
+}
+.convo-text.done::after { display: none; }
+@keyframes caretBlink {
+  0%, 50% { opacity: 1; }
+  50.01%, 100% { opacity: 0; }
+}
+
+/* ── sticky metric strip ────────────────────────────────────────── */
+.metric-strip {
+  position: sticky; top: 60px; z-index: 30;
+  background: rgba(5,5,5,0.92);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border-top: 1px solid #1E1E1E;
+  border-bottom: 1px solid #1E1E1E;
+}
+.metric-strip-inner {
+  max-width: 1240px; margin: 0 auto;
+  padding: 14px 32px;
+  display: grid; grid-template-columns: repeat(4, 1fr); gap: 0;
+}
+.metric-cell {
+  text-align: center;
+  border-right: 1px solid #1E1E1E;
+  padding: 0 16px;
+  display: flex; flex-direction: column; align-items: center; gap: 6px;
+}
+.metric-cell:last-child { border-right: none; }
+.metric-num {
+  font-size: 24px; color: #00D4FF; font-weight: 500;
+  font-feature-settings: "tnum" 1; letter-spacing: -0.02em;
+  display: inline-flex; align-items: center; gap: 8px;
+}
+.metric-label {
+  font-size: 10px; text-transform: uppercase; letter-spacing: 0.12em;
+  font-weight: 600;
+}
+.metric-circle-cell { padding: 4px 16px; }
+.metric-circle {
+  position: relative; width: 56px; height: 56px;
+}
+.metric-circle svg { width: 100%; height: 100%; }
+.metric-circle svg circle {
+  transition: stroke-dashoffset 1200ms cubic-bezier(.25,.8,.3,1);
+}
+.metric-circle-text {
+  position: absolute; inset: 0;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 12px; color: #F5F5F5;
+}
+.metric-sparkline { width: 80px; height: 16px; opacity: 0.85; }
+.pulse-dot-large { width: 10px; height: 10px; }
+@media (max-width: 720px) {
+  .metric-strip-inner { grid-template-columns: repeat(2, 1fr); gap: 12px 0; padding: 10px 16px; }
+  .metric-cell { border-right: none; }
+}
+
+/* ── agent showcase ─────────────────────────────────────────────── */
+.agents-section { padding: 88px 0; }
+.agent-showcase-grid {
+  display: grid; gap: 24px;
   grid-template-columns: repeat(2, 1fr);
-}}
-@media (max-width: 800px) {{ .agent-showcase-grid {{ grid-template-columns: 1fr; }} }}
-.agent-showcase {{
-  background: linear-gradient(160deg, {c['card']} 0%, {c['bg3']} 100%);
-  border: 1px solid {c['border']}; border-radius: 16px;
-  padding: 26px; position: relative; overflow: hidden;
-}}
-.agent-showcase::before {{
-  content: ""; position: absolute; inset: 0; pointer-events: none;
-  background: linear-gradient(180deg, {c['accent']}10, transparent 35%);
-}}
-.agent-showcase-head {{ margin-bottom: 14px; }}
-.agent-name-row {{ display: flex; align-items: center; gap: 12px; }}
-.agent-icon {{
-  width: 36px; height: 36px; flex-shrink: 0;
-  display: inline-flex; align-items: center; justify-content: center;
-  border: 1px solid {c['border_strong']}; border-radius: 10px;
-  color: {c['accent']}; background: {c['bg2']};
-}}
-.agent-icon svg {{ width: 20px; height: 20px; }}
-.agent-name-row h3 {{ font-family: 'Syne', sans-serif; font-weight: 700; font-size: 22px; margin: 0; }}
-.agent-role {{ margin: 6px 0 0 48px; font-size: 13px; }}
-.agent-summary {{ font-size: 14px; margin: 0 0 16px; }}
-.agent-meta {{ display: grid; grid-template-columns: 96px 1fr; gap: 6px 14px; margin: 0 0 18px; font-size: 13px; }}
-.agent-meta dt {{ color: {c['muted']}; }}
-.agent-meta dd {{ margin: 0; font-family: 'JetBrains Mono', monospace; font-size: 12px; }}
-.agent-actions {{ display: flex; gap: 10px; flex-wrap: wrap; }}
-.pulse-dot {{
-  width: 7px; height: 7px; border-radius: 50%;
-  background: {c['green']}; display: inline-block;
-  box-shadow: 0 0 0 0 {c['green']}AA;
-  animation: pulse 1.6s infinite;
-}}
+  perspective: 1500px;
+}
+@media (max-width: 900px) { .agent-showcase-grid { grid-template-columns: 1fr; } }
 
-/* how it works */
-.how-section {{ padding: 64px 0; }}
-.how-grid {{
-  display: grid; gap: 16px;
+.agent-card-cinematic {
+  background: linear-gradient(160deg, #111111 0%, #0E0E0E 100%);
+  border: 1px solid #1E1E1E; border-radius: 20px;
+  padding: 0; position: relative; overflow: hidden;
+  transform-style: preserve-3d;
+  transition: transform 220ms cubic-bezier(.25,.8,.3,1),
+              box-shadow 320ms ease,
+              border-color 320ms ease;
+  box-shadow: 0 1px 0 rgba(255,255,255,0.04) inset, 0 30px 60px rgba(0,0,0,0.4);
+}
+.agent-card-cinematic:hover {
+  border-color: var(--accent-soft);
+  box-shadow: 0 1px 0 rgba(255,255,255,0.06) inset,
+              0 0 0 1px var(--accent-soft),
+              0 30px 80px var(--accent-glow);
+}
+.agent-card-glare {
+  position: absolute; inset: 0; pointer-events: none;
+  background: linear-gradient(160deg, var(--accent-soft), transparent 35%);
+  opacity: 0.7;
+}
+.agent-card-inner { padding: 28px; position: relative; z-index: 1; }
+.agent-card-head { display: flex; align-items: center; gap: 14px; margin-bottom: 18px; flex-wrap: wrap; }
+.agent-avatar {
+  width: 56px; height: 56px; border-radius: 50%;
+  flex-shrink: 0;
+  background: linear-gradient(135deg, var(--accent), rgba(255,255,255,0.05));
+  display: inline-flex; align-items: center; justify-content: center;
+  font-family: 'Syne', sans-serif; font-weight: 800; font-size: 24px;
+  color: #050505;
+  box-shadow: 0 0 0 2px rgba(255,255,255,0.06), 0 0 30px var(--accent-soft, rgba(0,212,255,0.3));
+}
+.agent-id { flex: 1; min-width: 0; }
+.agent-id h3 { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 22px; margin: 0; }
+.pulse-pill { white-space: nowrap; }
+.agent-summary { font-size: 14px; margin: 0 0 18px; color: #F5F5F5; }
+.agent-meta {
+  display: grid; grid-template-columns: 96px 1fr; gap: 6px 14px;
+  margin: 0 0 22px; font-size: 13px;
+}
+.agent-meta dt { color: #8A8A8A; }
+.agent-meta dd { margin: 0; font-family: 'JetBrains Mono', monospace; font-size: 12px; }
+.agent-actions { display: flex; gap: 10px; flex-wrap: wrap; }
+.pulse-dot {
+  width: 7px; height: 7px; border-radius: 50%;
+  background: #10B981; display: inline-block;
+  box-shadow: 0 0 0 0 rgba(16,185,129,0.7);
+  animation: pulse 1.6s infinite;
+}
+.pulse-dot-large {
+  background: #10B981;
+  box-shadow: 0 0 0 0 rgba(16,185,129,0.7);
+  animation: pulse 1.6s infinite;
+}
+
+/* ── timeline ───────────────────────────────────────────────────── */
+.timeline-section { padding: 64px 0; }
+.timeline {
+  display: grid; gap: 24px;
   grid-template-columns: repeat(3, 1fr);
-}}
-@media (max-width: 900px) {{ .how-grid {{ grid-template-columns: 1fr; }} }}
-.step-card {{
-  background: {c['card']}; border: 1px solid {c['border']};
-  border-radius: 14px; padding: 28px;
   position: relative;
-}}
-.step-num {{
-  font-family: 'JetBrains Mono', monospace; font-weight: 600;
-  color: {c['accent']}; font-size: 13px; letter-spacing: 0.1em;
-}}
-.step-icon {{
+}
+.timeline-rail {
+  position: absolute; top: 78px; left: 12%; right: 12%;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, rgba(0,212,255,0.4), rgba(0,212,255,0.4), transparent);
+  pointer-events: none;
+}
+@media (max-width: 900px) {
+  .timeline { grid-template-columns: 1fr; }
+  .timeline-rail { display: none; }
+}
+.timeline-step {
+  background: #111111; border: 1px solid #1E1E1E;
+  border-radius: 16px; padding: 28px;
+  position: relative;
+}
+.timeline-dot {
+  position: absolute; top: -10px; left: 28px;
+  width: 18px; height: 18px; border-radius: 50%;
+  background: #00D4FF; box-shadow: 0 0 0 4px #050505, 0 0 20px rgba(0,212,255,0.6);
+}
+.timeline-num { color: #00D4FF; font-size: 13px; letter-spacing: 0.1em; font-weight: 600; }
+.timeline-icon {
   width: 44px; height: 44px; margin: 14px 0 18px;
   display: inline-flex; align-items: center; justify-content: center;
-  border: 1px solid {c['border_strong']}; border-radius: 12px;
-  color: {c['accent']}; background: {c['bg2']};
-}}
-.step-icon svg {{ width: 22px; height: 22px; }}
-.step-card h3 {{ font-family: 'Syne', sans-serif; font-weight: 700; font-size: 18px; margin: 0 0 8px; }}
+  border: 1px solid #2A2A2A; border-radius: 12px;
+  color: #00D4FF; background: #0E0E0E;
+}
+.timeline-icon svg { width: 22px; height: 22px; }
+.timeline-step h3 { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 18px; margin: 0 0 8px; }
 
-/* metrics strip */
-.metrics-strip {{
-  display: grid; grid-template-columns: repeat(4, 1fr);
-  gap: 0;
-  margin: 32px 0 64px;
-  padding: 28px 0;
-  background: {c['card']};
-  border: 1px solid {c['border']}; border-radius: 16px;
-  position: relative; overflow: hidden;
-}}
-.metrics-strip::before {{
-  content: ""; position: absolute; inset: 0; pointer-events: none;
-  background: linear-gradient(90deg, {c['accent']}10, transparent 30%, transparent 70%, {c['accent']}10);
-}}
-@media (max-width: 720px) {{ .metrics-strip {{ grid-template-columns: repeat(2, 1fr); gap: 16px; padding: 16px 0; }} }}
-.metric {{
-  text-align: center;
-  border-right: 1px solid {c['border']};
-  padding: 0 16px;
-}}
-.metric:last-child {{ border-right: none; }}
-@media (max-width: 720px) {{ .metric {{ border-right: none; }} }}
-.metric-value {{
-  font-size: clamp(28px, 4vw, 40px); font-weight: 500;
-  color: {c['accent']}; letter-spacing: -0.02em;
-  font-feature-settings: "tnum" 1;
-}}
-.metric-label {{
-  font-size: 12px; text-transform: uppercase;
-  letter-spacing: 0.08em; margin-top: 8px;
-}}
-
-/* features grid */
-.features-section {{ padding: 64px 0; }}
-.features-grid {{
+/* ── features ───────────────────────────────────────────────────── */
+.features-section { padding: 88px 0; }
+.features-grid {
   display: grid; gap: 16px;
-  grid-template-columns: repeat(4, 1fr);
-}}
-@media (max-width: 1000px) {{ .features-grid {{ grid-template-columns: repeat(2, 1fr); }} }}
-@media (max-width: 540px)  {{ .features-grid {{ grid-template-columns: 1fr; }} }}
-.feature-card {{
-  background: {c['card']}; border: 1px solid {c['border']};
-  border-radius: 14px; padding: 22px;
-  transition: border-color 200ms ease, transform 200ms ease;
-}}
-.feature-card:hover {{ border-color: {c['accent']}55; transform: translateY(-2px); }}
-.feature-icon {{
-  width: 36px; height: 36px;
+  grid-template-columns: repeat(3, 1fr);
+}
+@media (max-width: 1000px) { .features-grid { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 540px)  { .features-grid { grid-template-columns: 1fr; } }
+.feature-card-cinematic {
+  position: relative; overflow: hidden;
+  background: #111111; border: 1px solid #1E1E1E;
+  border-radius: 14px; padding: 24px;
+  transition: border-color 220ms ease, transform 220ms ease, box-shadow 220ms ease;
+}
+.feature-card-cinematic:hover {
+  border-color: rgba(0,212,255,0.45);
+  transform: translateY(-3px);
+  box-shadow: 0 0 0 1px rgba(0,212,255,0.25), 0 18px 44px rgba(0,212,255,0.12);
+}
+.feature-card-glow {
+  position: absolute; inset: 0; pointer-events: none; opacity: 0;
+  background: radial-gradient(280px 180px at 50% 0%, rgba(0,212,255,0.15), transparent 70%);
+  transition: opacity 220ms ease;
+}
+.feature-card-cinematic:hover .feature-card-glow { opacity: 1; }
+.feature-icon {
+  width: 38px; height: 38px;
   display: inline-flex; align-items: center; justify-content: center;
-  border: 1px solid {c['border_strong']}; border-radius: 10px;
-  color: {c['accent']}; background: {c['bg2']};
-  margin-bottom: 12px;
-}}
-.feature-icon svg {{ width: 18px; height: 18px; }}
-.feature-card h3 {{ font-family: 'Syne', sans-serif; font-weight: 700; font-size: 15px; margin: 0 0 8px; }}
-.feature-card p {{ font-size: 13px; margin: 0; }}
+  border: 1px solid #2A2A2A; border-radius: 10px;
+  color: #00D4FF; background: #0E0E0E;
+  margin-bottom: 14px; position: relative; z-index: 1;
+}
+.feature-icon svg { width: 18px; height: 18px; }
+.feature-card-cinematic h3 {
+  font-family: 'Syne', sans-serif; font-weight: 700; font-size: 16px;
+  margin: 0 0 8px; position: relative; z-index: 1;
+}
+.feature-card-cinematic p { font-size: 13px; margin: 0; position: relative; z-index: 1; }
 
-/* dashboard anchor */
-.dashboard-anchor {{ padding: 64px 0 0; scroll-margin-top: 80px; }}
+/* ── phone demo ─────────────────────────────────────────────────── */
+.phone-demo { padding: 88px 0; }
+.phone-stage {
+  display: grid; grid-template-columns: 360px 1fr; gap: 56px;
+  align-items: center; max-width: 1000px; margin: 0 auto;
+}
+@media (max-width: 900px) { .phone-stage { grid-template-columns: 1fr; gap: 32px; } }
 
-/* footer */
-.landing-footer {{
-  border-top: 1px solid {c['border']};
-  padding: 32px 0;
-  margin-top: 32px;
-}}
-.footer-inner {{
-  max-width: 1240px; margin: 0 auto; padding: 0 32px;
+.phone {
+  width: 320px; height: 640px; margin: 0 auto;
+  position: relative; perspective: 1200px;
+}
+.phone-frame {
+  width: 100%; height: 100%;
+  background: linear-gradient(180deg, #0a0a0a, #050505);
+  border-radius: 44px;
+  border: 1px solid #1E1E1E;
+  padding: 12px;
+  box-shadow:
+    0 0 0 4px #1E1E1E,
+    0 30px 80px rgba(0,212,255,0.18),
+    0 60px 120px rgba(0,0,0,0.7);
+  position: relative; overflow: hidden;
+  transform: rotateY(-4deg) rotateX(2deg);
+}
+.phone-notch {
+  position: absolute; top: 12px; left: 50%; transform: translateX(-50%);
+  width: 110px; height: 22px; background: #050505;
+  border-radius: 0 0 14px 14px; z-index: 2;
+}
+.phone-screen {
+  width: 100%; height: 100%; border-radius: 32px;
+  background: linear-gradient(180deg, #050505 0%, #0E0E0E 100%);
+  padding: 36px 16px 16px; display: flex; flex-direction: column; gap: 12px;
+}
+.phone-status { color: #5F5F5F; text-align: center; padding: 4px 0 8px; letter-spacing: 0.1em; }
+.phone-callee {
+  display: flex; align-items: center; gap: 10px;
+  padding: 12px; border: 1px solid #1E1E1E; border-radius: 12px;
+  background: #0E0E0E;
+}
+.phone-callee .agent-avatar { width: 36px; height: 36px; font-size: 16px; }
+.phone-callee-id { flex: 1; min-width: 0; }
+.phone-name { font-weight: 600; font-size: 14px; }
+.phone-role { font-size: 11px; }
+.phone-convo {
+  flex: 1; display: flex; flex-direction: column; gap: 8px;
+  overflow: hidden;
+}
+.phone-line {
+  font-size: 12px; line-height: 1.45;
+  padding: 8px 12px; border-radius: 14px; max-width: 80%;
+  word-wrap: break-word;
+}
+.phone-line-agent {
+  background: rgba(0,212,255,0.12); color: #F5F5F5;
+  border: 1px solid rgba(0,212,255,0.22);
+  align-self: flex-start;
+}
+.phone-line-caller {
+  background: #161616; color: #F5F5F5;
+  border: 1px solid #1E1E1E;
+  align-self: flex-end;
+}
+.phone-line .convo-text::after { font-size: 11px; }
+.phone-controls { padding-top: 8px; }
+.phone-play {
+  width: 100%; padding: 12px; border-radius: 999px;
+  background: #00D4FF; color: #001218; border: none;
+  font-family: inherit; font-weight: 600; font-size: 13px;
+  cursor: pointer;
+  display: inline-flex; align-items: center; justify-content: center; gap: 10px;
+  transition: filter 200ms ease, transform 120ms ease;
+}
+.phone-play:hover { filter: brightness(1.05); }
+.phone-play:active { transform: translateY(1px); }
+.phone-play[data-playing="true"] .phone-play-icon::before { content: "❚❚"; }
+.phone-play[data-playing="true"] .phone-play-icon { content: ""; }
+
+.phone-sidecar h3 {
+  font-family: 'Syne', sans-serif; font-weight: 700; font-size: 24px; margin: 0 0 12px;
+}
+.phone-sidecar p { font-size: 14px; margin: 0 0 20px; }
+.phone-cta-row {
+  display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+  padding: 14px 16px; border: 1px solid #1E1E1E; border-radius: 12px;
+  background: #0E0E0E; margin-bottom: 24px;
+}
+.phone-number { font-size: 16px; color: #00D4FF; }
+.phone-feature-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+.phone-feature {
+  padding: 12px; border: 1px solid #1E1E1E; border-radius: 12px;
+  background: #0E0E0E; text-align: center;
+}
+.phone-feature strong { display: block; color: #00D4FF; font-size: 18px; margin-bottom: 4px; }
+
+/* ── reveal-on-scroll ───────────────────────────────────────────── */
+.reveal {
+  opacity: 0; transform: translateY(24px);
+  transition: opacity 700ms cubic-bezier(.2,.8,.2,1) var(--reveal-delay, 0ms),
+              transform 700ms cubic-bezier(.2,.8,.2,1) var(--reveal-delay, 0ms);
+}
+.reveal.visible { opacity: 1; transform: translateY(0); }
+
+/* ── data collapse ──────────────────────────────────────────────── */
+.dashboard-anchor { padding: 64px 0 0; scroll-margin-top: 132px; }
+.data-collapse {
+  border: 1px solid #1E1E1E; border-radius: 14px;
+  background: #111111; padding: 0; overflow: hidden;
+}
+.data-collapse summary {
+  cursor: pointer; padding: 18px 22px;
   display: flex; align-items: center; justify-content: space-between;
-  gap: 16px; flex-wrap: wrap;
-}}
-.footer-links {{ display: flex; gap: 18px; }}
-.footer-links a {{ color: {c['muted']}; text-decoration: none; font-size: 13px; }}
-.footer-links a:hover {{ color: {c['text']}; }}
-.footer-tag {{ font-size: 12px; }}
+  font-family: 'Syne', sans-serif; font-weight: 700; font-size: 14px;
+  text-transform: uppercase; letter-spacing: 0.08em;
+  list-style: none;
+  border-bottom: 1px solid transparent;
+  transition: border-color 200ms ease;
+}
+.data-collapse summary::-webkit-details-marker { display: none; }
+.data-collapse[open] summary { border-bottom-color: #1E1E1E; }
+.data-collapse-icon { color: #00D4FF; font-size: 14px; transition: transform 200ms ease; }
+.data-collapse[open] .data-collapse-icon { transform: rotate(180deg); }
+.data-collapse-body { padding: 0; }
+.data-collapse-body .panel { border: none; border-radius: 0; margin-bottom: 0; }
+.data-collapse-body .panel-head { display: none; }
 
-/* anchor scroll-margin so sticky nav doesn't cover headings */
-#agents, #features, #dashboard {{ scroll-margin-top: 72px; }}
+/* ── footer ─────────────────────────────────────────────────────── */
+.landing-footer {
+  border-top: 1px solid #1E1E1E;
+  padding: 56px 0 32px;
+  margin-top: 32px;
+  background: #050505;
+}
+.footer-inner {
+  max-width: 1240px; margin: 0 auto; padding: 0 32px;
+  display: grid; grid-template-columns: 1.5fr 2fr; gap: 32px;
+  align-items: flex-start;
+}
+@media (max-width: 720px) { .footer-inner { grid-template-columns: 1fr; } }
+.footer-brand { display: flex; align-items: baseline; gap: 12px; }
+.brand-mark.large { font-size: 28px; }
+.footer-cols {
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px;
+}
+@media (max-width: 540px) { .footer-cols { grid-template-columns: 1fr 1fr; } }
+.footer-col h4 {
+  font-family: 'Syne', sans-serif; font-weight: 700;
+  font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase;
+  color: #8A8A8A; margin: 0 0 12px;
+}
+.footer-col a, .footer-col span {
+  display: block; color: #F5F5F5; text-decoration: none; font-size: 13px;
+  margin-bottom: 8px;
+}
+.footer-col a:hover { color: #00D4FF; }
+.footer-col span.dim { color: #5F5F5F; }
+
+/* anchor scroll-margin so sticky nav + metric strip don't cover headings */
+#agents, #timeline, #features, #dashboard, #phone-demo {
+  scroll-margin-top: 140px;
+}
+
+/* ── print stylesheet ───────────────────────────────────────────── */
+@media print {
+  @page { margin: 14mm; }
+  body { background: white !important; color: #111 !important; }
+  .cynea-loader, .hero-bg, .hero-orb, .hero-scanline, .pulse-dot, .pulse-dot-large,
+  .hero-card-glare, .agent-card-glare, .feature-card-glow,
+  .nav-links, .btn, #toast, #audio-player {
+    display: none !important;
+  }
+  body.landing main.landing-main { animation: none !important; opacity: 1 !important; }
+  .landing-nav { position: static !important; background: white !important; border-color: #ddd !important; }
+  .metric-strip { position: static !important; background: white !important; border-color: #ddd !important; }
+  .hero-line-1, .hero-line-2 { color: #111 !important; -webkit-text-fill-color: #111 !important; }
+  .agent-card-cinematic, .feature-card-cinematic, .timeline-step, .phone-frame,
+  .data-collapse, .hero-card {
+    background: white !important; border-color: #ddd !important; box-shadow: none !important;
+    color: #111 !important;
+  }
+  .muted, .dim, .section-eyebrow, .timeline-num, .phone-number {
+    color: #555 !important;
+  }
+  .reveal { opacity: 1 !important; transform: none !important; }
+}
 """
 
 
-# ---------------------------------------------------------------------
-# Landing JS — adds counter-on-scroll + audio play handlers on top of
-# the existing dashboard JS (sortable table, expand-on-click, toast).
-# ---------------------------------------------------------------------
+# ------------------------------------------------------------------
+# JS — landing-only handlers, layered on top of dashboard JS
+# ------------------------------------------------------------------
 
 def _landing_render_js(calls: list) -> str:
     base = _render_js(calls)
-    extras = """
-// -- audio play buttons (Hear Demo) -----------------------------------
-document.querySelectorAll('.play-btn').forEach(btn => {
-  btn.addEventListener('click', async (ev) => {
-    ev.preventDefault();
-    const src = btn.getAttribute('data-audio');
-    const label = btn.getAttribute('data-label') || 'Demo';
-    if (!src) { showToast('No audio configured for ' + label); return; }
-    try {
-      const audio = new Audio(src);
-      // Probe by attempting to play; the browser will surface the
-      // error via the rejected promise if the file 404s.
-      await audio.play();
-      showToast('Playing ' + label);
-    } catch (err) {
-      showToast(label + ' audio not generated yet — run examples/hear_kwame.py');
+    extras = r"""
+// ====================================================================
+// Cinematic landing JS
+// ====================================================================
+
+// -- loader cleanup ---------------------------------------------------
+(function() {
+  const loader = document.getElementById('cyneaLoader');
+  if (!loader) return;
+  let removed = false;
+  const remove = () => {
+    if (removed) return;
+    removed = true;
+    loader.classList.add('done');
+  };
+  loader.addEventListener('animationend', (e) => {
+    if (e.animationName === 'loaderFade') remove();
+  });
+  // Safety net: never let the loader stick around after 3 s.
+  setTimeout(remove, 3000);
+})();
+
+// -- shared playDemo ------------------------------------------------
+function playDemo(audioFile, fallback, errorMsg) {
+  const player = document.getElementById('audio-player');
+  if (!player) { showToast(errorMsg || 'Audio player not available', 3000); return; }
+  if (!audioFile) { showToast(errorMsg || 'No audio configured', 3000); return; }
+
+  // Clear any "playing" state from previous buttons.
+  document.querySelectorAll('.phone-play, .play-btn').forEach(b => b.removeAttribute('data-playing'));
+
+  const tryPlay = (src, onFail) => {
+    player.src = src;
+    let bailed = false;
+    const fail = () => { if (bailed) return; bailed = true; onFail(); };
+    const onError = () => { player.removeEventListener('error', onError); fail(); };
+    player.addEventListener('error', onError, { once: true });
+    const playPromise = player.play();
+    if (playPromise && typeof playPromise.catch === 'function') {
+      playPromise.catch(() => fail());
     }
+  };
+
+  try { player.pause(); player.currentTime = 0; } catch (e) {}
+  tryPlay(audioFile, () => {
+    if (fallback) tryPlay(fallback, () => showToast(errorMsg || 'Audio not available', 3000));
+    else showToast(errorMsg || 'Audio not available', 3000);
+  });
+}
+
+// Wire every play-btn (hero CTA, agent cards, phone demo) to playDemo.
+document.querySelectorAll('.play-btn').forEach(btn => {
+  btn.addEventListener('click', (ev) => {
+    ev.preventDefault();
+    btn.setAttribute('data-playing', 'true');
+    playDemo(
+      btn.getAttribute('data-audio'),
+      btn.getAttribute('data-audio-fallback'),
+      btn.getAttribute('data-error') || ((btn.getAttribute('data-label') || 'Demo') + ' audio not available')
+    );
   });
 });
 
-// -- counter-on-scroll for the metrics strip --------------------------
+// Reset any per-button "playing" UI when audio ends or pauses.
 (function() {
-  const counters = document.querySelectorAll('.metric-value[data-counter]');
-  if (!counters.length) return;
+  const player = document.getElementById('audio-player');
+  if (!player) return;
+  const clearPlaying = () => {
+    document.querySelectorAll('[data-playing]').forEach(b => b.removeAttribute('data-playing'));
+  };
+  ['ended', 'pause'].forEach(ev => player.addEventListener(ev, clearPlaying));
+})();
+
+// -- 3D card tilt -----------------------------------------------------
+(function() {
+  const cards = document.querySelectorAll('[data-tilt]');
+  if (!cards.length) return;
+  cards.forEach(card => {
+    let rect = null;
+    const update = () => { rect = card.getBoundingClientRect(); };
+    card.addEventListener('mouseenter', update);
+    card.addEventListener('mousemove', (e) => {
+      if (!rect) update();
+      const x = ((e.clientX - rect.left) / rect.width  - 0.5) * 2;  // -1..1
+      const y = ((e.clientY - rect.top)  / rect.height - 0.5) * 2;
+      card.style.transform = `perspective(1100px) rotateY(${x * 5}deg) rotateX(${-y * 5}deg) translateZ(0)`;
+    });
+    card.addEventListener('mouseleave', () => {
+      card.style.transform = 'perspective(1100px) rotateY(0deg) rotateX(0deg)';
+      rect = null;
+    });
+  });
+})();
+
+// -- typewriter -------------------------------------------------------
+function startTypewriter(container, opts) {
+  const lines = container.querySelectorAll('[data-text]');
+  if (!lines.length) return;
+  const speed = (opts && opts.speed)   || 26;   // ms per char
+  const linePause = (opts && opts.linePause) || 700;
+  const loopPause = (opts && opts.loopPause) || 3500;
+  let i = 0;
+
+  function buildLine(line) {
+    const speaker = line.dataset.speaker || '';
+    line.innerHTML =
+      (speaker ? '<span class="convo-speaker">' + speaker + ':</span> ' : '') +
+      '<span class="convo-text"></span>';
+    return line.querySelector('.convo-text');
+  }
+
+  function nextLine() {
+    if (i >= lines.length) {
+      // Loop the conversation.
+      setTimeout(() => {
+        lines.forEach(l => l.innerHTML = '');
+        i = 0;
+        nextLine();
+      }, loopPause);
+      return;
+    }
+    const target = buildLine(lines[i]);
+    const text = lines[i].dataset.text || '';
+    let j = 0;
+    function typeChar() {
+      if (j >= text.length) {
+        target.classList.add('done');
+        i++;
+        setTimeout(nextLine, linePause);
+        return;
+      }
+      target.textContent += text[j++];
+      setTimeout(typeChar, speed);
+    }
+    typeChar();
+  }
+  nextLine();
+}
+
+// Trigger each typewriter container the first time it scrolls into view.
+(function() {
+  const containers = document.querySelectorAll('[data-typewriter]');
+  if (!containers.length) return;
+  if (!('IntersectionObserver' in window)) {
+    containers.forEach(c => startTypewriter(c));
+    return;
+  }
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (!e.isIntersecting) return;
+      io.unobserve(e.target);
+      startTypewriter(e.target);
+    });
+  }, { threshold: 0.25 });
+  containers.forEach(c => io.observe(c));
+})();
+
+// -- reveal-on-scroll -------------------------------------------------
+(function() {
+  const els = document.querySelectorAll('.reveal');
+  if (!els.length) return;
+  if (!('IntersectionObserver' in window)) {
+    els.forEach(el => el.classList.add('visible'));
+    return;
+  }
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('visible');
+        io.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.15 });
+  els.forEach(el => io.observe(el));
+})();
+
+// -- counter-on-scroll for the metric strip --------------------------
+(function() {
+  const counters = document.querySelectorAll('[data-counter]');
+  const circles = document.querySelectorAll('[data-progress-target]');
+  if (!counters.length && !circles.length) return;
   const fired = new WeakSet();
 
   const animateCounter = (el) => {
@@ -2362,25 +3115,35 @@ document.querySelectorAll('.play-btn').forEach(btn => {
     requestAnimationFrame(step);
   };
 
+  const animateCircle = (el) => {
+    const target = parseFloat(el.getAttribute('data-progress-target') || '0');
+    // Trigger transition by reading layout, then writing the target value.
+    el.getBoundingClientRect();
+    el.setAttribute('stroke-dashoffset', target.toFixed(2));
+  };
+
   if ('IntersectionObserver' in window) {
     const io = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
         if (entry.isIntersecting && !fired.has(entry.target)) {
           fired.add(entry.target);
-          animateCounter(entry.target);
+          if (entry.target.hasAttribute('data-counter')) animateCounter(entry.target);
+          if (entry.target.hasAttribute('data-progress-target')) animateCircle(entry.target);
         }
       });
     }, { threshold: 0.4 });
     counters.forEach(el => io.observe(el));
+    circles.forEach(el => io.observe(el));
   } else {
     counters.forEach(animateCounter);
+    circles.forEach(animateCircle);
   }
 })();
 
-// -- nav active link highlighting on scroll ---------------------------
+// -- nav active link highlight on scroll ------------------------------
 (function() {
-  const sections = ['agents', 'features', 'dashboard']
-    .map(id => document.getElementById(id)).filter(Boolean);
+  const ids = ['agents', 'timeline', 'features', 'dashboard'];
+  const sections = ids.map(id => document.getElementById(id)).filter(Boolean);
   const links = document.querySelectorAll('.nav-links a[href^="#"]');
   if (!sections.length || !('IntersectionObserver' in window)) return;
   const io = new IntersectionObserver((entries) => {

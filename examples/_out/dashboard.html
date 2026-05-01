@@ -3,10 +3,10 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Cynea Voice Engine — Kwame @ Adinkra Hotel</title>
+<title>Cynea Voice Engine — Operations Center</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=DM+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=DM+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
 *, *::before, *::after { box-sizing: border-box; }
 html, body { margin: 0; padding: 0; background: #050505; color: #F5F5F5; }
@@ -15,93 +15,243 @@ body {
   font-size: 14px; line-height: 1.5;
   -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale;
   min-height: 100vh;
+  background:
+    radial-gradient(1200px 600px at 0% -10%, #00D4FF0F, transparent 60%),
+    radial-gradient(1000px 500px at 100% -10%, #00D4FF06, transparent 60%),
+    #050505;
 }
-main { max-width: 1180px; margin: 0 auto; padding: 56px 32px 80px; }
+main { max-width: 1240px; margin: 0 auto; padding: 40px 32px 80px; }
 
+/* ── header ─────────────────────────────────────────────────────── */
 .hero { margin-bottom: 28px; }
-.brand { display: flex; align-items: center; gap: 10px; margin-bottom: 22px; }
-.brand-name {
-  font-family: 'Syne', sans-serif; font-weight: 700; letter-spacing: 0.02em;
-  font-size: 14px; color: #00D4FF; text-transform: uppercase;
+.brand-row {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 28px;
 }
-.dot-accent {
-  width: 10px; height: 10px; border-radius: 50%;
-  background: #00D4FF;
-  box-shadow: 0 0 12px #00D4FF88;
+.brand { display: flex; align-items: baseline; gap: 12px; }
+.brand-mark {
+  font-family: 'Syne', sans-serif; font-weight: 800;
+  font-size: 22px; letter-spacing: 0.18em;
+  color: #00D4FF;
+  text-shadow: 0 0 20px #00D4FF66;
 }
+.brand-mark.small { font-size: 13px; letter-spacing: 0.16em; }
+.brand-tag {
+  font-family: 'Syne', sans-serif; font-weight: 600;
+  font-size: 11px; letter-spacing: 0.32em; color: #8A8A8A;
+}
+.hero-controls { display: flex; gap: 8px; align-items: center; }
+.clock {
+  font-family: 'JetBrains Mono', monospace; font-size: 13px; font-weight: 500;
+  color: #8A8A8A; padding: 6px 10px;
+  border: 1px solid #1E1E1E; border-radius: 8px;
+  background: #0E0E0E;
+  font-feature-settings: "tnum" 1;
+}
+.btn {
+  font-family: inherit; font-weight: 500; font-size: 13px;
+  padding: 7px 14px; border-radius: 8px; cursor: pointer;
+  border: 1px solid #1E1E1E; background: #0E0E0E; color: #F5F5F5;
+  transition: border-color 120ms ease, background 120ms ease, transform 120ms ease;
+}
+.btn:hover { border-color: #00D4FF77; }
+.btn:active { transform: translateY(1px); }
+.btn-primary {
+  background: #00D4FF; color: #001218;
+  border-color: #00D4FF;
+  font-weight: 600;
+}
+.btn-primary:hover { filter: brightness(1.05); border-color: #00D4FF; }
+.btn-ghost { background: transparent; }
+
+.hero-title { display: flex; align-items: center; gap: 14px; }
 h1 {
   font-family: 'Syne', sans-serif; font-weight: 800;
-  font-size: 44px; line-height: 1.1; margin: 0 0 8px;
+  font-size: 44px; line-height: 1.05; margin: 0 0 8px;
   letter-spacing: -0.01em;
 }
-.subtitle {
-  font-size: 18px; color: #F5F5F5; margin: 0 0 4px;
-  font-weight: 500;
-}
-.subtitle .sep { color: #777777; margin: 0 8px; }
+.subtitle { font-size: 17px; margin: 0 0 4px; font-weight: 500; }
+.subtitle .sep { color: #5F5F5F; margin: 0 8px; }
 .daterange {
-  font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-family: 'JetBrains Mono', monospace;
   font-size: 12px; color: #8A8A8A; margin: 0;
 }
 
-.banner {
-  margin: 16px 0 24px; padding: 12px 16px;
-  border: 1px solid #00D4FF33; background: #00D4FF10;
-  color: #00D4FF; border-radius: 10px;
-  font-size: 13px;
+.pill {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 4px 10px; border-radius: 999px;
+  font-size: 11px; font-weight: 600; letter-spacing: 0.05em;
+  text-transform: uppercase; border: 1px solid; line-height: 1;
 }
-.banner code {
-  font-family: 'JetBrains Mono', monospace; font-size: 12px;
-  background: #0E0E0E; padding: 1px 6px; border-radius: 4px;
-}
+.pill-green { color: #10B981; border-color: #10B98133; background: #10B98114; }
+.pill-amber { color: #F59E0B; border-color: #F59E0B33; background: #F59E0B14; }
+.pill-muted { color: #8A8A8A; border-color: #8A8A8A33; background: #8A8A8A14; }
 
-/* metric cards */
-.cards {
-  display: grid; gap: 16px;
+/* ── KPI cards ──────────────────────────────────────────────────── */
+.kpis {
+  display: grid; gap: 16px; margin: 32px 0;
   grid-template-columns: repeat(4, minmax(0, 1fr));
-  margin: 24px 0 40px;
 }
-@media (max-width: 900px) { .cards { grid-template-columns: repeat(2, 1fr); } }
-@media (max-width: 520px) { .cards { grid-template-columns: 1fr; } }
+@media (max-width: 1000px) { .kpis { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 540px) { .kpis { grid-template-columns: 1fr; } }
 
 .card {
-  background: #111111; border: 1px solid #1E1E1E;
-  border-radius: 14px; padding: 22px 22px 20px;
-  position: relative; overflow: hidden;
+  background: #111111;
+  border: 1px solid #1E1E1E;
+  border-radius: 14px;
+  padding: 20px;
+  position: relative;
+  overflow: hidden;
 }
-.card::before {
+.kpi {
+  padding: 22px 22px 18px;
+  background: linear-gradient(160deg, #111111 0%, #161616 100%);
+}
+.kpi::before {
   content: ""; position: absolute; inset: 0; pointer-events: none;
-  background: linear-gradient(180deg, #00D4FF06, transparent 40%);
+  background: linear-gradient(180deg, #00D4FF08, transparent 50%);
 }
-.card .label {
-  font-size: 12px; text-transform: uppercase; letter-spacing: 0.08em;
+.kpi .label {
+  font-size: 11px; text-transform: uppercase; letter-spacing: 0.12em;
   color: #8A8A8A; font-weight: 600;
 }
-.card .value {
+.kpi .value {
   font-family: 'JetBrains Mono', monospace; font-weight: 500;
-  font-size: 32px; margin: 10px 0 6px;
-  font-feature-settings: "tnum" 1; letter-spacing: -0.01em;
+  font-size: 36px; margin: 12px 0 6px; letter-spacing: -0.02em;
+  font-feature-settings: "tnum" 1;
+  transition: opacity 240ms ease;
 }
-.card .sub { font-size: 12px; color: #777777; }
+.kpi-foot { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; }
+.trend {
+  font-family: 'JetBrains Mono', monospace; font-size: 12px; font-weight: 500;
+}
+.sub { font-size: 12px; color: #5F5F5F; text-align: right; }
 
-/* panels */
+.meter {
+  position: relative; height: 4px; margin-top: 12px;
+  background: #2A2A2A; border-radius: 999px; overflow: visible;
+}
+.meter-bar {
+  height: 100%; border-radius: 999px;
+  transition: width 800ms cubic-bezier(.2,.8,.2,1);
+}
+.meter-target {
+  position: absolute; top: -3px; width: 2px; height: 10px;
+  background: #F59E0B;
+}
+
+/* ── live monitor ────────────────────────────────────────────────── */
+.monitor { padding: 0; margin-bottom: 24px; }
+.monitor-grid {
+  display: grid; grid-template-columns: repeat(4, 1fr);
+  gap: 0;
+}
+@media (max-width: 900px) { .monitor-grid { grid-template-columns: repeat(2, 1fr); } }
+.monitor-cell {
+  padding: 18px 22px;
+  border-right: 1px solid #1E1E1E;
+}
+.monitor-cell:last-child { border-right: none; }
+.monitor-label { font-size: 11px; text-transform: uppercase; letter-spacing: 0.1em; color: #8A8A8A; font-weight: 600; }
+.monitor-value {
+  display: flex; align-items: baseline; gap: 8px;
+  margin-top: 8px;
+}
+.value-num {
+  font-family: 'JetBrains Mono', monospace; font-size: 22px; font-weight: 500;
+}
+.monitor-sub { font-size: 11px; color: #5F5F5F; margin-top: 4px; }
+.pulse {
+  width: 8px; height: 8px; border-radius: 50%; background: #10B981;
+  box-shadow: 0 0 0 0 #10B981AA;
+  animation: pulse 1.6s infinite;
+}
+@keyframes pulse {
+  0% { box-shadow: 0 0 0 0 #10B981AA; }
+  70% { box-shadow: 0 0 0 12px transparent; }
+  100% { box-shadow: 0 0 0 0 transparent; }
+}
+
+/* ── panels ──────────────────────────────────────────────────────── */
 .panel {
   background: #111111; border: 1px solid #1E1E1E;
-  border-radius: 14px; padding: 0; margin-bottom: 28px;
+  border-radius: 14px; padding: 0; margin-bottom: 24px;
 }
 .panel-head {
   display: flex; align-items: baseline; justify-content: space-between;
   padding: 18px 22px 12px; border-bottom: 1px solid #1E1E1E;
 }
-.panel h2 {
+.panel-head h2 {
   font-family: 'Syne', sans-serif; font-weight: 700;
-  font-size: 16px; margin: 0; letter-spacing: 0.02em;
+  font-size: 14px; margin: 0; letter-spacing: 0.06em;
   text-transform: uppercase;
 }
 .muted { color: #8A8A8A; font-size: 13px; }
-.dim { color: #777777; }
+.dim { color: #5F5F5F; }
+.small { font-size: 11px; }
 
-/* table */
+/* ── charts ──────────────────────────────────────────────────────── */
+.charts-grid {
+  display: grid; gap: 16px; margin-bottom: 24px;
+  grid-template-columns: 1.1fr 1.1fr 1fr;
+}
+@media (max-width: 1000px) { .charts-grid { grid-template-columns: 1fr; } }
+.chart-card { padding: 0; }
+.chart-body { padding: 18px 22px 22px; min-height: 200px; }
+.bar-chart { display: flex; align-items: flex-end; gap: 10px; height: 160px; }
+.bar-col { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 6px; height: 100%; }
+.bar-track { flex: 1; width: 100%; display: flex; align-items: flex-end; }
+.bar-fill {
+  width: 100%; border-radius: 4px 4px 0 0; opacity: 0.85;
+  transition: height 700ms cubic-bezier(.2,.8,.2,1);
+  box-shadow: inset 0 -1px 0 0 #00D4FF33;
+}
+.bar-x { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: #8A8A8A; }
+
+.line-chart { width: 100%; height: 160px; }
+.chart-pie-wrap { display: flex; align-items: center; gap: 18px; }
+.pie {
+  width: 130px; height: 130px; border-radius: 50%;
+  position: relative; flex-shrink: 0;
+}
+.pie-hole {
+  position: absolute; inset: 24px; border-radius: 50%;
+  background: #111111;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  text-align: center;
+}
+.pie-total { font-size: 16px; }
+.pie-legend { list-style: none; padding: 0; margin: 0; flex: 1; }
+.pie-legend li {
+  display: grid; grid-template-columns: 12px 1fr auto; gap: 8px;
+  align-items: center; padding: 4px 0;
+}
+.legend-dot { width: 10px; height: 10px; border-radius: 50%; }
+
+/* ── agent cards ─────────────────────────────────────────────────── */
+.agent-grid {
+  display: grid; gap: 16px; margin-bottom: 24px;
+  grid-template-columns: 1fr 1fr;
+}
+@media (max-width: 800px) { .agent-grid { grid-template-columns: 1fr; } }
+.agent-card { padding: 22px; }
+.agent-head { display: flex; align-items: baseline; gap: 12px; margin-bottom: 18px; }
+.agent-head h2 {
+  font-family: 'Syne', sans-serif; font-weight: 700; font-size: 18px; margin: 0;
+}
+.agent-stats {
+  display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-bottom: 16px;
+}
+.value-md { font-size: 22px; font-weight: 500; margin-top: 2px; }
+.agent-bar {
+  position: relative; height: 6px;
+  background: #2A2A2A; border-radius: 999px;
+}
+.agent-bar-fill { height: 100%; border-radius: 999px; transition: width 800ms ease; }
+.agent-bar-target { position: absolute; top: -3px; width: 2px; height: 12px; background: #F59E0B; }
+.agent-foot { margin-top: 6px; }
+
+/* ── call history table ──────────────────────────────────────────── */
 .table-wrap { overflow-x: auto; }
 table { width: 100%; border-collapse: collapse; }
 thead th {
@@ -109,107 +259,635 @@ thead th {
   letter-spacing: 0.08em; color: #8A8A8A; font-weight: 600;
   padding: 14px 22px; border-bottom: 1px solid #1E1E1E;
   background: #0E0E0E;
+  cursor: pointer; user-select: none;
 }
+thead th[aria-sort="ascending"], thead th[aria-sort="descending"] { color: #00D4FF; }
 thead th.num { text-align: right; }
 tbody td {
   padding: 12px 22px; font-size: 13px;
   border-bottom: 1px solid #1E1E1E;
   vertical-align: middle;
 }
-tbody tr:nth-child(odd) td { background: rgba(255,255,255,0.012); }
-tbody tr:hover td { background: #00D4FF08; }
-tbody tr:last-child td { border-bottom: none; }
-.num {
-  text-align: right; font-family: 'JetBrains Mono', monospace;
-  font-feature-settings: "tnum" 1;
+.call-row { cursor: pointer; }
+.call-row:hover td { background: #00D4FF08; }
+.call-row.expanded td { background: #00D4FF10; }
+.call-detail td {
+  background: #0E0E0E; padding: 18px 22px;
+  border-bottom: 1px solid #1E1E1E;
 }
-.mono {
-  font-family: 'JetBrains Mono', monospace;
-  font-feature-settings: "tnum" 1;
-  font-size: 12px;
+.detail-grid {
+  display: grid; grid-template-columns: 1.4fr 1fr; gap: 22px;
 }
+@media (max-width: 800px) { .detail-grid { grid-template-columns: 1fr; } }
+.detail-kvs { display: grid; grid-template-columns: 1fr 1fr; gap: 6px 18px; }
+.kv { display: flex; justify-content: space-between; gap: 8px; padding: 4px 0; border-bottom: 1px dashed #1E1E1E; }
+.kv:last-child { border-bottom: none; }
+.detail-section-label {
+  font-size: 11px; text-transform: uppercase; letter-spacing: 0.1em;
+  color: #8A8A8A; font-weight: 600; margin-bottom: 8px;
+}
+.cost-row { display: grid; grid-template-columns: 80px 1fr 60px; gap: 10px; align-items: center; padding: 4px 0; }
+.cost-bar { background: #2A2A2A; height: 6px; border-radius: 999px; overflow: hidden; }
+.cost-bar > div { height: 100%; transition: width 600ms ease; }
 
-.empty {
-  padding: 44px 22px; text-align: center; color: #8A8A8A;
-  font-size: 14px;
-}
+.num { text-align: right; font-family: 'JetBrains Mono', monospace; font-feature-settings: "tnum" 1; }
+.mono { font-family: 'JetBrains Mono', monospace; font-feature-settings: "tnum" 1; }
 
-/* fleet summary */
-.fleet {
-  list-style: none; margin: 0; padding: 8px 22px 18px;
-  display: grid; gap: 0;
-  grid-template-columns: 1fr 1fr;
+/* sentiment bar in row */
+.sbar {
+  position: relative; width: 110px; height: 8px; display: inline-block;
+  background: #2A2A2A; border-radius: 999px; vertical-align: middle;
 }
-@media (max-width: 720px) { .fleet { grid-template-columns: 1fr; } }
-.fleet li {
-  display: flex; justify-content: space-between; align-items: baseline;
-  padding: 14px 0; border-bottom: 1px solid #1E1E1E;
-}
-.fleet li:nth-last-child(-n+1):nth-child(odd) { border-bottom: none; }
-.fleet li:last-child { border-bottom: none; }
-.value-sm { font-size: 14px; color: #F5F5F5; }
+.sbar-axis { position: absolute; left: 50%; top: -2px; bottom: -2px; width: 1px; background: #2A2A2A; }
+.sbar-fill { position: absolute; top: 0; bottom: 0; border-radius: 999px; }
+.sbar-pos { left: 50%; }
+.sbar-neg { right: 50%; }
 
-/* sentiment badge */
+.empty { padding: 44px 22px; text-align: center; color: #8A8A8A; }
+
 .badge {
   display: inline-flex; align-items: center; gap: 6px;
   padding: 4px 10px; border-radius: 999px;
   font-size: 12px; font-weight: 500;
-  border: 1px solid; line-height: 1;
-  font-family: 'DM Sans', sans-serif;
+  border: 1px solid; line-height: 1; font-family: 'DM Sans', sans-serif;
 }
-.badge .dot {
-  width: 6px; height: 6px; border-radius: 50%;
-  display: inline-block;
-}
+.badge .dot { width: 6px; height: 6px; border-radius: 50%; display: inline-block; }
 
+/* ── export row ──────────────────────────────────────────────────── */
+.export-row {
+  display: flex; gap: 10px; align-items: center; flex-wrap: wrap;
+  margin: 16px 0 32px;
+}
+.export-row .small { margin-left: auto; }
+
+/* ── footer ──────────────────────────────────────────────────────── */
 footer {
   display: flex; justify-content: space-between; align-items: center;
-  margin-top: 56px; padding-top: 22px;
+  margin-top: 32px; padding-top: 18px;
   border-top: 1px solid #1E1E1E;
   font-size: 12px;
 }
+
+/* ── toast ───────────────────────────────────────────────────────── */
+#toast {
+  position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%);
+  background: #00D4FF; color: #001218; padding: 10px 16px;
+  border-radius: 999px; font-weight: 600; font-size: 13px;
+  opacity: 0; pointer-events: none; transition: opacity 200ms ease;
+  z-index: 100;
+}
+#toast.show { opacity: 1; }
+
+/* ── demo mode highlight ────────────────────────────────────────── */
+body.demo-mode .pill-amber {
+  box-shadow: 0 0 0 1px #F59E0B, 0 0 18px #F59E0B55;
+}
+body.demo-mode .hero::after {
+  content: ""; position: absolute; inset: 0;
+  background: repeating-linear-gradient(
+    -45deg, transparent 0 18px, #F59E0B06 18px 19px
+  );
+  pointer-events: none;
+}
+.hero { position: relative; }
+
+/* ── print stylesheet ────────────────────────────────────────────── */
+@media print {
+  @page { margin: 14mm; }
+  body { background: white; color: #111; }
+  .hero-controls, .export-row, #toast { display: none !important; }
+  .card, .panel, .pie-hole {
+    background: white !important; border-color: #ddd !important; color: #111 !important;
+  }
+  .kpi::before, .hero::after, body { background: white !important; }
+  .label, .muted, .dim, .sub, .bar-x, thead th, .monitor-label, .agent-foot, .small {
+    color: #555 !important;
+  }
+  .value, .value-num, .value-md, .pie-total, .mono, .num, .brand-mark, .brand-tag {
+    color: #111 !important; text-shadow: none !important;
+  }
+  .pill, .badge { color: #111 !important; background: white !important; border-color: #888 !important; }
+  .meter, .agent-bar, .sbar, .cost-bar { background: #eee !important; }
+  .meter-bar, .agent-bar-fill, .sbar-fill, .cost-bar > div { background: #444 !important; }
+  thead th { background: #f5f5f5 !important; color: #111 !important; }
+  tbody td, .call-detail td { background: white !important; border-color: #ddd !important; }
+  .pulse { display: none; }
+  h1 { color: #111 !important; }
+  .panel, .card, .kpi { break-inside: avoid; }
+  .charts-grid { break-inside: avoid; }
+}
 </style>
 </head>
-<body>
+<body class="demo-mode">
 <main>
-  <header class="hero">
+  
+<header class="hero">
+  <div class="brand-row">
     <div class="brand">
-      <div class="dot-accent"></div>
-      <span class="brand-name">Cynea Voice Engine</span>
+      <span class="brand-mark">CYNEA</span>
+      <span class="brand-tag">VOICE ENGINE</span>
     </div>
-    <h1>Operations Dashboard</h1>
-    <p class="subtitle">Kwame <span class="sep">·</span> Adinkra Hotel</p>
-    <p class="daterange">May 01, 2026 → May 02, 2026</p>
+    <div class="hero-controls">
+      <span class="clock" id="clock" aria-label="Current local time">--:--:--</span>
+      <button class="btn btn-ghost" id="refreshBtn" type="button" title="Reload data">↻ Refresh</button>
+      <button class="btn btn-ghost" id="demoToggle" type="button" title="Toggle demo overlay">Demo mode</button>
+    </div>
+  </div>
+  <div class="hero-title">
+    <h1>Voice AI Operations Center</h1>
+    <span class="pill pill-amber">Demo data</span>
+  </div>
+  <p class="subtitle">Multi-agent fleet <span class="sep">·</span> Adinkra Hotel &amp; KCB Bank</p>
+  <p class="daterange">Apr 26 → Apr 27, 2026</p>
+</header>
+
+  <section class="kpis"><article class="card kpi" data-animate-value>  <div class="label">Total calls handled</div>  <div class="value" style="color:#00D4FF" data-final="15">15</div>  <div class="kpi-foot">    <span class="trend" style="color:#10B981">▲ +1</span>    <span class="sub">Since deployment</span>  </div>  </article><article class="card kpi" data-animate-value>  <div class="label">Containment rate</div>  <div class="value" style="color:#10B981" data-final="86.7%">86.7%</div>  <div class="kpi-foot">    <span class="trend" style="color:#10B981">▲ +1.8pp</span>    <span class="sub">Target ≥ 80%</span>  </div>  
+          <div class="meter">
+            <div class="meter-bar" style="width:86.7%;background:#10B981"></div>
+            <div class="meter-target" style="left:80.0%" title="Target 80%"></div>
+          </div>
+        </article><article class="card kpi" data-animate-value>  <div class="label">Avg cost / call</div>  <div class="value" style="color:#00D4FF" data-final="10.1¢">10.1¢</div>  <div class="kpi-foot">    <span class="trend" style="color:#EF4444">▲ +0.86¢</span>    <span class="sub">All-in unit economics</span>  </div>  </article><article class="card kpi" data-animate-value>  <div class="label">Customer satisfaction</div>  <div class="value" style="color:#EF4444" data-final="63/100">63/100</div>  <div class="kpi-foot">    <span class="trend" style="color:#10B981">▲ +0.09</span>    <span class="sub">Avg sentiment +0.26</span>  </div>  </article></section>
+  
+<section class="panel monitor">
+  <header class="panel-head">
+    <h2>Live monitor</h2>
+    <span class="muted">Real-time</span>
   </header>
+  <div class="monitor-grid">
+    <div class="monitor-cell">
+      <div class="monitor-label">Active calls</div>
+      <div class="monitor-value">
+        <span class="pulse"></span>
+        <span class="value-num">0</span>
+      </div>
+      <div class="monitor-sub">Live integration coming online</div>
+    </div>
+    <div class="monitor-cell">
+      <div class="monitor-label">Agents online</div>
+      <div class="monitor-value"><span class="value-num">2</span></div>
+      <div class="monitor-sub">Kwame + Amina, plus your custom personas</div>
+    </div>
+    <div class="monitor-cell">
+      <div class="monitor-label">Uptime (30d)</div>
+      <div class="monitor-value"><span class="value-num">99.9%</span></div>
+      <div class="monitor-sub">Within SLO window</div>
+    </div>
+    <div class="monitor-cell">
+      <div class="monitor-label">P95 response latency</div>
+      <div class="monitor-value"><span class="value-num">820ms</span></div>
+      <div class="monitor-sub">Includes STT → LLM → TTS path</div>
+    </div>
+  </div>
+</section>
 
   
+<section class="charts-grid">
+  <article class="card chart-card">
+    <header class="panel-head"><h2>Call volume</h2><span class="muted">Last 7 days</span></header>
+    <div class="chart-body"><div class="bar-chart"><div class="bar-col"><div class="bar-track"><div class="bar-fill" style="height:100.0%;background:#00D4FF" title="Sun: 9 calls"></div></div><div class="bar-x">Sun</div></div><div class="bar-col"><div class="bar-track"><div class="bar-fill" style="height:66.7%;background:#00D4FF" title="Mon: 6 calls"></div></div><div class="bar-x">Mon</div></div><div class="bar-col"><div class="bar-track"><div class="bar-fill" style="height:0.0%;background:#00D4FF" title="Tue: 0 calls"></div></div><div class="bar-x">Tue</div></div><div class="bar-col"><div class="bar-track"><div class="bar-fill" style="height:0.0%;background:#00D4FF" title="Wed: 0 calls"></div></div><div class="bar-x">Wed</div></div><div class="bar-col"><div class="bar-track"><div class="bar-fill" style="height:0.0%;background:#00D4FF" title="Thu: 0 calls"></div></div><div class="bar-x">Thu</div></div><div class="bar-col"><div class="bar-track"><div class="bar-fill" style="height:0.0%;background:#00D4FF" title="Fri: 0 calls"></div></div><div class="bar-x">Fri</div></div><div class="bar-col"><div class="bar-track"><div class="bar-fill" style="height:0.0%;background:#00D4FF" title="Sat: 0 calls"></div></div><div class="bar-x">Sat</div></div></div></div>
+  </article>
+  <article class="card chart-card">
+    <header class="panel-head"><h2>Sentiment trend</h2><span class="muted">Daily average</span></header>
+    <div class="chart-body">
+<svg viewBox="0 0 360 140" preserveAspectRatio="xMidYMid meet" class="line-chart" role="img" aria-label="Sentiment trend chart">
+  <line x1="28" x2="348" y1="116.0" y2="116.0" stroke="#1E1E1E" stroke-width="1" stroke-dasharray="2 4"/><line x1="28" x2="348" y1="66.0" y2="66.0" stroke="#1E1E1E" stroke-width="1" stroke-dasharray="2 4"/><line x1="28" x2="348" y1="16.0" y2="16.0" stroke="#1E1E1E" stroke-width="1" stroke-dasharray="2 4"/>
+  <text x="22" y="119.0" text-anchor="end" fill="#8A8A8A" font-size="10" font-family="JetBrains Mono, monospace">-1.0</text><text x="22" y="69.0" text-anchor="end" fill="#8A8A8A" font-size="10" font-family="JetBrains Mono, monospace">+0.0</text><text x="22" y="19.0" text-anchor="end" fill="#8A8A8A" font-size="10" font-family="JetBrains Mono, monospace">+1.0</text>
+  <polyline points="28.0,53.5 81.3,52.3 134.7,66.0 188.0,66.0 241.3,66.0 294.7,66.0 348.0,66.0" fill="none" stroke="#00D4FF" stroke-width="2" />
+  <circle cx="28.0" cy="53.5" r="3" fill="#00D4FF" /><circle cx="81.3" cy="52.3" r="3" fill="#00D4FF" /><circle cx="134.7" cy="66.0" r="3" fill="#00D4FF" /><circle cx="188.0" cy="66.0" r="3" fill="#00D4FF" /><circle cx="241.3" cy="66.0" r="3" fill="#00D4FF" /><circle cx="294.7" cy="66.0" r="3" fill="#00D4FF" /><circle cx="348.0" cy="66.0" r="3" fill="#00D4FF" />
+  <text x="28.0" y="134" text-anchor="middle" fill="#8A8A8A" font-size="10" font-family="JetBrains Mono, monospace">Sun</text><text x="81.3" y="134" text-anchor="middle" fill="#8A8A8A" font-size="10" font-family="JetBrains Mono, monospace">Mon</text><text x="134.7" y="134" text-anchor="middle" fill="#8A8A8A" font-size="10" font-family="JetBrains Mono, monospace">Tue</text><text x="188.0" y="134" text-anchor="middle" fill="#8A8A8A" font-size="10" font-family="JetBrains Mono, monospace">Wed</text><text x="241.3" y="134" text-anchor="middle" fill="#8A8A8A" font-size="10" font-family="JetBrains Mono, monospace">Thu</text><text x="294.7" y="134" text-anchor="middle" fill="#8A8A8A" font-size="10" font-family="JetBrains Mono, monospace">Fri</text><text x="348.0" y="134" text-anchor="middle" fill="#8A8A8A" font-size="10" font-family="JetBrains Mono, monospace">Sat</text>
+</svg>
+</div>
+  </article>
+  <article class="card chart-card">
+    <header class="panel-head"><h2>Cost breakdown</h2><span class="muted">Whole window</span></header>
+    <div class="chart-body chart-pie-wrap">
+<div class="pie" style="background:conic-gradient(#0088AA 0.00deg 0.00deg, #00D4FF 0.00deg 140.18deg, #A78BFA 140.18deg 140.18deg, #F59E0B 140.18deg 360.00deg)">
+  <div class="pie-hole">
+    <div class="pie-total mono">152.2¢</div>
+    <div class="muted small">total</div>
+  </div>
+</div>
+<ul class="pie-legend"><li><span class="legend-dot" style="background:#0088AA"></span><span class="muted small">STT</span><span class="mono small">0%</span></li><li><span class="legend-dot" style="background:#00D4FF"></span><span class="muted small">LLM</span><span class="mono small">39%</span></li><li><span class="legend-dot" style="background:#A78BFA"></span><span class="muted small">TTS</span><span class="mono small">0%</span></li><li><span class="legend-dot" style="background:#F59E0B"></span><span class="muted small">Telephony</span><span class="mono small">61%</span></li></ul>
+</div>
+  </article>
+</section>
 
-  <section class="cards">
-    <article class="card"><div class="label">Total calls</div><div class="value" style="color:#00D4FF">1</div><div class="sub">Since deployment</div></article><article class="card"><div class="label">Containment rate</div><div class="value" style="color:#10B981">100.0%</div><div class="sub">&gt;80% target</div></article><article class="card"><div class="label">Avg cost / call</div><div class="value" style="color:#00D4FF">4.2¢</div><div class="sub">Per-provider breakdown in CSV</div></article><article class="card"><div class="label">Avg sentiment</div><div class="value" style="color:#10B981">▲ +0.20</div><div class="sub">Range −1 to +1</div></article>
-  </section>
+  <section class="agent-grid">
+<article class="card agent-card">
+  <header class="agent-head">
+    <span class="brand-mark small" style="color:#00D4FF">CYNEA</span>
+    <h2>Amina · Customer service (Kenya)</h2>
+  </header>
+  <div class="agent-stats">
+    <div class="agent-stat">
+      <div class="muted small">Calls</div>
+      <div class="value-md mono">7</div>
+    </div>
+    <div class="agent-stat">
+      <div class="muted small">Avg sentiment</div>
+      <div class="value-md mono" style="color:#10B981">+0.21</div>
+    </div>
+    <div class="agent-stat">
+      <div class="muted small">Containment</div>
+      <div class="value-md mono" style="color:#F59E0B">71.4%</div>
+    </div>
+    <div class="agent-stat">
+      <div class="muted small">Avg duration</div>
+      <div class="value-md mono">1m 48s</div>
+    </div>
+  </div>
+  <div class="agent-bar">
+    <div class="agent-bar-fill" style="width:71.4%;background:#F59E0B"></div>
+    <div class="agent-bar-target" style="left:80%" title="Containment target 80%"></div>
+  </div>
+  <div class="agent-foot muted small">Containment vs 80% target</div>
+</article>
 
-  <section class="panel">
-    <header class="panel-head">
-      <h2>Recent calls</h2>
-      <span class="muted">1 total</span>
-    </header>
-    <div class="table-wrap"><table><thead><tr><th>Call ID</th><th class="num">Duration</th><th class="num">User</th><th class="num">Agent</th><th class="num">Interrupt</th><th>Sentiment</th><th class="num">Cost</th></tr></thead><tbody><tr><td class="mono">demo-cal</td><td class="num">14.4s</td><td class="num">5</td><td class="num">6</td><td class="num">1</td><td><span class="badge" style="color:#10B981;border-color:#10B98133;background:#10B98114"><span class="dot" style="background:#10B981"></span>Positive · +0.20</span></td><td class="num">4.2¢</td></tr></tbody></table></div>
-  </section>
-
-  <section class="panel">
-    <header class="panel-head">
-      <h2>Fleet summary</h2>
-      <span class="muted">All-time</span>
-    </header>
-    <ul class="fleet"><li><span class="muted">Calls handled</span><span class="mono value-sm">1</span></li><li><span class="muted">Avg duration</span><span class="mono value-sm">14.4s</span></li><li><span class="muted">Total cost</span><span class="mono value-sm">4.2¢</span></li><li><span class="muted">Avg sentiment</span><span class="mono value-sm">+0.20</span></li><li><span class="muted">Containment rate</span><span class="mono value-sm">100.0%</span></li><li><span class="muted">Resolution rate</span><span class="mono value-sm">100.0%</span></li><li><span class="muted">Interruptions / call</span><span class="mono value-sm">1.00</span></li></ul>
-  </section>
+<article class="card agent-card">
+  <header class="agent-head">
+    <span class="brand-mark small" style="color:#00D4FF">CYNEA</span>
+    <h2>Kwame · Hospitality (Ghana)</h2>
+  </header>
+  <div class="agent-stats">
+    <div class="agent-stat">
+      <div class="muted small">Calls</div>
+      <div class="value-md mono">8</div>
+    </div>
+    <div class="agent-stat">
+      <div class="muted small">Avg sentiment</div>
+      <div class="value-md mono" style="color:#10B981">+0.31</div>
+    </div>
+    <div class="agent-stat">
+      <div class="muted small">Containment</div>
+      <div class="value-md mono" style="color:#10B981">100.0%</div>
+    </div>
+    <div class="agent-stat">
+      <div class="muted small">Avg duration</div>
+      <div class="value-md mono">45s</div>
+    </div>
+  </div>
+  <div class="agent-bar">
+    <div class="agent-bar-fill" style="width:100.0%;background:#10B981"></div>
+    <div class="agent-bar-target" style="left:80%" title="Containment target 80%"></div>
+  </div>
+  <div class="agent-foot muted small">Containment vs 80% target</div>
+</article>
+</section>
+  <section class="panel"><header class="panel-head"><h2>Call history</h2><span class="muted">15 calls · click a row to expand</span></header><div class="table-wrap"><table id="callsTable"><thead><tr><th data-sort="time" aria-sort="descending">Time ⇅</th><th data-sort="agent">Agent ⇅</th><th data-sort="caller">Caller ⇅</th><th data-sort="duration" class="num">Duration ⇅</th><th data-sort="turns" class="num">Turns ⇅</th><th data-sort="sentiment">Sentiment ⇅</th><th data-sort="cost" class="num">Cost ⇅</th><th data-sort="status">Status ⇅</th></tr></thead><tbody><tr class="call-row" data-time="1777289652" data-agent="Kwame" data-caller="John" data-duration="27" data-turns="7" data-sentiment="0.150" data-cost="4.1940" data-status="Resolved"><td class="mono">Apr 27 · 14:34</td><td>Kwame</td><td>John</td><td class="num">27s</td><td class="num">7</td><td><div class="sbar"><div class="sbar-axis"></div><div class="sbar-fill sbar-pos" style="width:7.5%;background:#8A8A8A"></div></div><span class="mono small">+0.15</span></td><td class="num">4.2¢</td><td><span class="pill" style="color:#10B981;border-color:#10B98133;background:#10B98114">Resolved</span></td></tr>
+<tr class="call-detail" hidden>
+  <td colspan="8">
+    <div class="detail-grid">
+      <div class="detail-kvs"><div class="kv"><span class="muted">Call ID</span><span class="mono">call-015-john</span></div><div class="kv"><span class="muted">Status</span><span class="mono">Resolved</span></div><div class="kv"><span class="muted">Sentiment score</span><span class="mono">+0.150</span></div><div class="kv"><span class="muted">STT seconds</span><span class="mono">10.8</span></div><div class="kv"><span class="muted">Telephony seconds</span><span class="mono">27.0</span></div><div class="kv"><span class="muted">LLM input tokens</span><span class="mono">90</span></div><div class="kv"><span class="muted">LLM output tokens</span><span class="mono">72</span></div><div class="kv"><span class="muted">TTS characters</span><span class="mono">260</span></div><div class="kv"><span class="muted">Interruptions</span><span class="mono">0</span></div><div class="kv"><span class="muted">Containment</span><span class="mono">Yes</span></div><div class="kv"><span class="muted">Resolution</span><span class="mono">Yes</span></div><div class="kv"><span class="muted">Handoff reason</span><span class="mono">—</span></div></div>
+      <div class="detail-cost">
+        <div class="detail-section-label">Cost breakdown</div>
+        <div class="cost-row"><span class="muted small">STT</span><div class="cost-bar"><div style="width:0.0%;background:#0088AA"></div></div><span class="mono small">0.00¢</span></div><div class="cost-row"><span class="muted small">LLM</span><div class="cost-bar"><div style="width:46.4%;background:#00D4FF"></div></div><span class="mono small">1.94¢</span></div><div class="cost-row"><span class="muted small">TTS</span><div class="cost-bar"><div style="width:0.0%;background:#A78BFA"></div></div><span class="mono small">0.00¢</span></div><div class="cost-row"><span class="muted small">Telephony</span><div class="cost-bar"><div style="width:53.6%;background:#F59E0B"></div></div><span class="mono small">2.25¢</span></div>
+      </div>
+    </div>
+  </td>
+</tr>
+<tr class="call-row" data-time="1777279682" data-agent="Amina" data-caller="Mary" data-duration="94" data-turns="17" data-sentiment="0.400" data-cost="12.6573" data-status="Resolved"><td class="mono">Apr 27 · 11:48</td><td>Amina</td><td>Mary</td><td class="num">1m 34s</td><td class="num">17</td><td><div class="sbar"><div class="sbar-axis"></div><div class="sbar-fill sbar-pos" style="width:20.0%;background:#10B981"></div></div><span class="mono small">+0.40</span></td><td class="num">12.7¢</td><td><span class="pill" style="color:#10B981;border-color:#10B98133;background:#10B98114">Resolved</span></td></tr>
+<tr class="call-detail" hidden>
+  <td colspan="8">
+    <div class="detail-grid">
+      <div class="detail-kvs"><div class="kv"><span class="muted">Call ID</span><span class="mono">call-014-mary</span></div><div class="kv"><span class="muted">Status</span><span class="mono">Resolved</span></div><div class="kv"><span class="muted">Sentiment score</span><span class="mono">+0.400</span></div><div class="kv"><span class="muted">STT seconds</span><span class="mono">37.6</span></div><div class="kv"><span class="muted">Telephony seconds</span><span class="mono">94.0</span></div><div class="kv"><span class="muted">LLM input tokens</span><span class="mono">240</span></div><div class="kv"><span class="muted">LLM output tokens</span><span class="mono">162</span></div><div class="kv"><span class="muted">TTS characters</span><span class="mono">585</span></div><div class="kv"><span class="muted">Interruptions</span><span class="mono">1</span></div><div class="kv"><span class="muted">Containment</span><span class="mono">Yes</span></div><div class="kv"><span class="muted">Resolution</span><span class="mono">Yes</span></div><div class="kv"><span class="muted">Handoff reason</span><span class="mono">—</span></div></div>
+      <div class="detail-cost">
+        <div class="detail-section-label">Cost breakdown</div>
+        <div class="cost-row"><span class="muted small">STT</span><div class="cost-bar"><div style="width:0.0%;background:#0088AA"></div></div><span class="mono small">0.00¢</span></div><div class="cost-row"><span class="muted small">LLM</span><div class="cost-bar"><div style="width:38.1%;background:#00D4FF"></div></div><span class="mono small">4.82¢</span></div><div class="cost-row"><span class="muted small">TTS</span><div class="cost-bar"><div style="width:0.0%;background:#A78BFA"></div></div><span class="mono small">0.00¢</span></div><div class="cost-row"><span class="muted small">Telephony</span><div class="cost-bar"><div style="width:61.9%;background:#F59E0B"></div></div><span class="mono small">7.83¢</span></div>
+      </div>
+    </div>
+  </td>
+</tr>
+<tr class="call-row" data-time="1777269712" data-agent="Kwame" data-caller="James" data-duration="51" data-turns="11" data-sentiment="0.350" data-cost="7.3460" data-status="Resolved"><td class="mono">Apr 27 · 09:01</td><td>Kwame</td><td>James</td><td class="num">51s</td><td class="num">11</td><td><div class="sbar"><div class="sbar-axis"></div><div class="sbar-fill sbar-pos" style="width:17.5%;background:#10B981"></div></div><span class="mono small">+0.35</span></td><td class="num">7.3¢</td><td><span class="pill" style="color:#10B981;border-color:#10B98133;background:#10B98114">Resolved</span></td></tr>
+<tr class="call-detail" hidden>
+  <td colspan="8">
+    <div class="detail-grid">
+      <div class="detail-kvs"><div class="kv"><span class="muted">Call ID</span><span class="mono">call-013-james</span></div><div class="kv"><span class="muted">Status</span><span class="mono">Resolved</span></div><div class="kv"><span class="muted">Sentiment score</span><span class="mono">+0.350</span></div><div class="kv"><span class="muted">STT seconds</span><span class="mono">20.4</span></div><div class="kv"><span class="muted">Telephony seconds</span><span class="mono">51.0</span></div><div class="kv"><span class="muted">LLM input tokens</span><span class="mono">150</span></div><div class="kv"><span class="muted">LLM output tokens</span><span class="mono">108</span></div><div class="kv"><span class="muted">TTS characters</span><span class="mono">390</span></div><div class="kv"><span class="muted">Interruptions</span><span class="mono">0</span></div><div class="kv"><span class="muted">Containment</span><span class="mono">Yes</span></div><div class="kv"><span class="muted">Resolution</span><span class="mono">Yes</span></div><div class="kv"><span class="muted">Handoff reason</span><span class="mono">—</span></div></div>
+      <div class="detail-cost">
+        <div class="detail-section-label">Cost breakdown</div>
+        <div class="cost-row"><span class="muted small">STT</span><div class="cost-bar"><div style="width:0.0%;background:#0088AA"></div></div><span class="mono small">0.00¢</span></div><div class="cost-row"><span class="muted small">LLM</span><div class="cost-bar"><div style="width:42.1%;background:#00D4FF"></div></div><span class="mono small">3.10¢</span></div><div class="cost-row"><span class="muted small">TTS</span><div class="cost-bar"><div style="width:0.0%;background:#A78BFA"></div></div><span class="mono small">0.00¢</span></div><div class="cost-row"><span class="muted small">Telephony</span><div class="cost-bar"><div style="width:57.9%;background:#F59E0B"></div></div><span class="mono small">4.25¢</span></div>
+      </div>
+    </div>
+  </td>
+</tr>
+<tr class="call-row" data-time="1777260552" data-agent="Amina" data-caller="Lucy" data-duration="76" data-turns="13" data-sentiment="0.200" data-cost="10.0053" data-status="Resolved"><td class="mono">Apr 27 · 06:29</td><td>Amina</td><td>Lucy</td><td class="num">1m 16s</td><td class="num">13</td><td><div class="sbar"><div class="sbar-axis"></div><div class="sbar-fill sbar-pos" style="width:10.0%;background:#10B981"></div></div><span class="mono small">+0.20</span></td><td class="num">10.0¢</td><td><span class="pill" style="color:#10B981;border-color:#10B98133;background:#10B98114">Resolved</span></td></tr>
+<tr class="call-detail" hidden>
+  <td colspan="8">
+    <div class="detail-grid">
+      <div class="detail-kvs"><div class="kv"><span class="muted">Call ID</span><span class="mono">call-012-lucy</span></div><div class="kv"><span class="muted">Status</span><span class="mono">Resolved</span></div><div class="kv"><span class="muted">Sentiment score</span><span class="mono">+0.200</span></div><div class="kv"><span class="muted">STT seconds</span><span class="mono">30.4</span></div><div class="kv"><span class="muted">Telephony seconds</span><span class="mono">76.0</span></div><div class="kv"><span class="muted">LLM input tokens</span><span class="mono">180</span></div><div class="kv"><span class="muted">LLM output tokens</span><span class="mono">126</span></div><div class="kv"><span class="muted">TTS characters</span><span class="mono">455</span></div><div class="kv"><span class="muted">Interruptions</span><span class="mono">0</span></div><div class="kv"><span class="muted">Containment</span><span class="mono">Yes</span></div><div class="kv"><span class="muted">Resolution</span><span class="mono">Yes</span></div><div class="kv"><span class="muted">Handoff reason</span><span class="mono">—</span></div></div>
+      <div class="detail-cost">
+        <div class="detail-section-label">Cost breakdown</div>
+        <div class="cost-row"><span class="muted small">STT</span><div class="cost-bar"><div style="width:0.0%;background:#0088AA"></div></div><span class="mono small">0.00¢</span></div><div class="cost-row"><span class="muted small">LLM</span><div class="cost-bar"><div style="width:36.7%;background:#00D4FF"></div></div><span class="mono small">3.67¢</span></div><div class="cost-row"><span class="muted small">TTS</span><div class="cost-bar"><div style="width:0.0%;background:#A78BFA"></div></div><span class="mono small">0.00¢</span></div><div class="cost-row"><span class="muted small">Telephony</span><div class="cost-bar"><div style="width:63.3%;background:#F59E0B"></div></div><span class="mono small">6.33¢</span></div>
+      </div>
+    </div>
+  </td>
+</tr>
+<tr class="call-row" data-time="1777250582" data-agent="Kwame" data-caller="Daniel" data-duration="38" data-turns="9" data-sentiment="0.500" data-cost="5.6867" data-status="Resolved"><td class="mono">Apr 27 · 03:43</td><td>Kwame</td><td>Daniel</td><td class="num">38s</td><td class="num">9</td><td><div class="sbar"><div class="sbar-axis"></div><div class="sbar-fill sbar-pos" style="width:25.0%;background:#10B981"></div></div><span class="mono small">+0.50</span></td><td class="num">5.7¢</td><td><span class="pill" style="color:#10B981;border-color:#10B98133;background:#10B98114">Resolved</span></td></tr>
+<tr class="call-detail" hidden>
+  <td colspan="8">
+    <div class="detail-grid">
+      <div class="detail-kvs"><div class="kv"><span class="muted">Call ID</span><span class="mono">call-011-daniel</span></div><div class="kv"><span class="muted">Status</span><span class="mono">Resolved</span></div><div class="kv"><span class="muted">Sentiment score</span><span class="mono">+0.500</span></div><div class="kv"><span class="muted">STT seconds</span><span class="mono">15.2</span></div><div class="kv"><span class="muted">Telephony seconds</span><span class="mono">38.0</span></div><div class="kv"><span class="muted">LLM input tokens</span><span class="mono">120</span></div><div class="kv"><span class="muted">LLM output tokens</span><span class="mono">90</span></div><div class="kv"><span class="muted">TTS characters</span><span class="mono">325</span></div><div class="kv"><span class="muted">Interruptions</span><span class="mono">0</span></div><div class="kv"><span class="muted">Containment</span><span class="mono">Yes</span></div><div class="kv"><span class="muted">Resolution</span><span class="mono">Yes</span></div><div class="kv"><span class="muted">Handoff reason</span><span class="mono">—</span></div></div>
+      <div class="detail-cost">
+        <div class="detail-section-label">Cost breakdown</div>
+        <div class="cost-row"><span class="muted small">STT</span><div class="cost-bar"><div style="width:0.0%;background:#0088AA"></div></div><span class="mono small">0.00¢</span></div><div class="cost-row"><span class="muted small">LLM</span><div class="cost-bar"><div style="width:44.3%;background:#00D4FF"></div></div><span class="mono small">2.52¢</span></div><div class="cost-row"><span class="muted small">TTS</span><div class="cost-bar"><div style="width:0.0%;background:#A78BFA"></div></div><span class="mono small">0.00¢</span></div><div class="cost-row"><span class="muted small">Telephony</span><div class="cost-bar"><div style="width:55.7%;background:#F59E0B"></div></div><span class="mono small">3.17¢</span></div>
+      </div>
+    </div>
+  </td>
+</tr>
+<tr class="call-row" data-time="1777240612" data-agent="Amina" data-caller="Sarah" data-duration="211" data-turns="29" data-sentiment="0.050" data-cost="25.8633" data-status="Escalated"><td class="mono">Apr 27 · 00:56</td><td>Amina</td><td>Sarah</td><td class="num">3m 31s</td><td class="num">29</td><td><div class="sbar"><div class="sbar-axis"></div><div class="sbar-fill sbar-pos" style="width:2.5%;background:#8A8A8A"></div></div><span class="mono small">+0.05</span></td><td class="num">25.9¢</td><td><span class="pill" style="color:#F59E0B;border-color:#F59E0B33;background:#F59E0B14">Escalated</span></td></tr>
+<tr class="call-detail" hidden>
+  <td colspan="8">
+    <div class="detail-grid">
+      <div class="detail-kvs"><div class="kv"><span class="muted">Call ID</span><span class="mono">call-010-sarah</span></div><div class="kv"><span class="muted">Status</span><span class="mono">Escalated</span></div><div class="kv"><span class="muted">Sentiment score</span><span class="mono">+0.050</span></div><div class="kv"><span class="muted">STT seconds</span><span class="mono">84.4</span></div><div class="kv"><span class="muted">Telephony seconds</span><span class="mono">211.0</span></div><div class="kv"><span class="muted">LLM input tokens</span><span class="mono">420</span></div><div class="kv"><span class="muted">LLM output tokens</span><span class="mono">270</span></div><div class="kv"><span class="muted">TTS characters</span><span class="mono">975</span></div><div class="kv"><span class="muted">Interruptions</span><span class="mono">1</span></div><div class="kv"><span class="muted">Containment</span><span class="mono">No</span></div><div class="kv"><span class="muted">Resolution</span><span class="mono">No</span></div><div class="kv"><span class="muted">Handoff reason</span><span class="mono">fraud reported</span></div></div>
+      <div class="detail-cost">
+        <div class="detail-section-label">Cost breakdown</div>
+        <div class="cost-row"><span class="muted small">STT</span><div class="cost-bar"><div style="width:0.0%;background:#0088AA"></div></div><span class="mono small">0.00¢</span></div><div class="cost-row"><span class="muted small">LLM</span><div class="cost-bar"><div style="width:32.0%;background:#00D4FF"></div></div><span class="mono small">8.28¢</span></div><div class="cost-row"><span class="muted small">TTS</span><div class="cost-bar"><div style="width:0.0%;background:#A78BFA"></div></div><span class="mono small">0.00¢</span></div><div class="cost-row"><span class="muted small">Telephony</span><div class="cost-bar"><div style="width:68.0%;background:#F59E0B"></div></div><span class="mono small">17.58¢</span></div>
+      </div>
+    </div>
+  </td>
+</tr>
+<tr class="call-row" data-time="1777231452" data-agent="Kwame" data-caller="Peter" data-duration="89" data-turns="15" data-sentiment="0.300" data-cost="11.6647" data-status="Resolved"><td class="mono">Apr 26 · 22:24</td><td>Kwame</td><td>Peter</td><td class="num">1m 29s</td><td class="num">15</td><td><div class="sbar"><div class="sbar-axis"></div><div class="sbar-fill sbar-pos" style="width:15.0%;background:#10B981"></div></div><span class="mono small">+0.30</span></td><td class="num">11.7¢</td><td><span class="pill" style="color:#10B981;border-color:#10B98133;background:#10B98114">Resolved</span></td></tr>
+<tr class="call-detail" hidden>
+  <td colspan="8">
+    <div class="detail-grid">
+      <div class="detail-kvs"><div class="kv"><span class="muted">Call ID</span><span class="mono">call-009-peter</span></div><div class="kv"><span class="muted">Status</span><span class="mono">Resolved</span></div><div class="kv"><span class="muted">Sentiment score</span><span class="mono">+0.300</span></div><div class="kv"><span class="muted">STT seconds</span><span class="mono">35.6</span></div><div class="kv"><span class="muted">Telephony seconds</span><span class="mono">89.0</span></div><div class="kv"><span class="muted">LLM input tokens</span><span class="mono">210</span></div><div class="kv"><span class="muted">LLM output tokens</span><span class="mono">144</span></div><div class="kv"><span class="muted">TTS characters</span><span class="mono">520</span></div><div class="kv"><span class="muted">Interruptions</span><span class="mono">1</span></div><div class="kv"><span class="muted">Containment</span><span class="mono">Yes</span></div><div class="kv"><span class="muted">Resolution</span><span class="mono">Yes</span></div><div class="kv"><span class="muted">Handoff reason</span><span class="mono">—</span></div></div>
+      <div class="detail-cost">
+        <div class="detail-section-label">Cost breakdown</div>
+        <div class="cost-row"><span class="muted small">STT</span><div class="cost-bar"><div style="width:0.0%;background:#0088AA"></div></div><span class="mono small">0.00¢</span></div><div class="cost-row"><span class="muted small">LLM</span><div class="cost-bar"><div style="width:36.4%;background:#00D4FF"></div></div><span class="mono small">4.25¢</span></div><div class="cost-row"><span class="muted small">TTS</span><div class="cost-bar"><div style="width:0.0%;background:#A78BFA"></div></div><span class="mono small">0.00¢</span></div><div class="cost-row"><span class="muted small">Telephony</span><div class="cost-bar"><div style="width:63.6%;background:#F59E0B"></div></div><span class="mono small">7.42¢</span></div>
+      </div>
+    </div>
+  </td>
+</tr>
+<tr class="call-row" data-time="1777221482" data-agent="Amina" data-caller="Grace" data-duration="49" data-turns="10" data-sentiment="0.450" data-cost="6.9633" data-status="Resolved"><td class="mono">Apr 26 · 19:38</td><td>Amina</td><td>Grace</td><td class="num">49s</td><td class="num">10</td><td><div class="sbar"><div class="sbar-axis"></div><div class="sbar-fill sbar-pos" style="width:22.5%;background:#10B981"></div></div><span class="mono small">+0.45</span></td><td class="num">7.0¢</td><td><span class="pill" style="color:#10B981;border-color:#10B98133;background:#10B98114">Resolved</span></td></tr>
+<tr class="call-detail" hidden>
+  <td colspan="8">
+    <div class="detail-grid">
+      <div class="detail-kvs"><div class="kv"><span class="muted">Call ID</span><span class="mono">call-008-grace</span></div><div class="kv"><span class="muted">Status</span><span class="mono">Resolved</span></div><div class="kv"><span class="muted">Sentiment score</span><span class="mono">+0.450</span></div><div class="kv"><span class="muted">STT seconds</span><span class="mono">19.6</span></div><div class="kv"><span class="muted">Telephony seconds</span><span class="mono">49.0</span></div><div class="kv"><span class="muted">LLM input tokens</span><span class="mono">150</span></div><div class="kv"><span class="muted">LLM output tokens</span><span class="mono">90</span></div><div class="kv"><span class="muted">TTS characters</span><span class="mono">325</span></div><div class="kv"><span class="muted">Interruptions</span><span class="mono">0</span></div><div class="kv"><span class="muted">Containment</span><span class="mono">Yes</span></div><div class="kv"><span class="muted">Resolution</span><span class="mono">Yes</span></div><div class="kv"><span class="muted">Handoff reason</span><span class="mono">—</span></div></div>
+      <div class="detail-cost">
+        <div class="detail-section-label">Cost breakdown</div>
+        <div class="cost-row"><span class="muted small">STT</span><div class="cost-bar"><div style="width:0.0%;background:#0088AA"></div></div><span class="mono small">0.00¢</span></div><div class="cost-row"><span class="muted small">LLM</span><div class="cost-bar"><div style="width:41.4%;background:#00D4FF"></div></div><span class="mono small">2.88¢</span></div><div class="cost-row"><span class="muted small">TTS</span><div class="cost-bar"><div style="width:0.0%;background:#A78BFA"></div></div><span class="mono small">0.00¢</span></div><div class="cost-row"><span class="muted small">Telephony</span><div class="cost-bar"><div style="width:58.6%;background:#F59E0B"></div></div><span class="mono small">4.08¢</span></div>
+      </div>
+    </div>
+  </td>
+</tr>
+<tr class="call-row" data-time="1777211512" data-agent="Kwame" data-caller="Kofi" data-duration="58" data-turns="13" data-sentiment="0.620" data-cost="8.5053" data-status="Resolved"><td class="mono">Apr 26 · 16:51</td><td>Kwame</td><td>Kofi</td><td class="num">58s</td><td class="num">13</td><td><div class="sbar"><div class="sbar-axis"></div><div class="sbar-fill sbar-pos" style="width:31.0%;background:#10B981"></div></div><span class="mono small">+0.62</span></td><td class="num">8.5¢</td><td><span class="pill" style="color:#10B981;border-color:#10B98133;background:#10B98114">Resolved</span></td></tr>
+<tr class="call-detail" hidden>
+  <td colspan="8">
+    <div class="detail-grid">
+      <div class="detail-kvs"><div class="kv"><span class="muted">Call ID</span><span class="mono">call-007-kofi</span></div><div class="kv"><span class="muted">Status</span><span class="mono">Resolved</span></div><div class="kv"><span class="muted">Sentiment score</span><span class="mono">+0.620</span></div><div class="kv"><span class="muted">STT seconds</span><span class="mono">23.2</span></div><div class="kv"><span class="muted">Telephony seconds</span><span class="mono">58.0</span></div><div class="kv"><span class="muted">LLM input tokens</span><span class="mono">180</span></div><div class="kv"><span class="muted">LLM output tokens</span><span class="mono">126</span></div><div class="kv"><span class="muted">TTS characters</span><span class="mono">455</span></div><div class="kv"><span class="muted">Interruptions</span><span class="mono">0</span></div><div class="kv"><span class="muted">Containment</span><span class="mono">Yes</span></div><div class="kv"><span class="muted">Resolution</span><span class="mono">Yes</span></div><div class="kv"><span class="muted">Handoff reason</span><span class="mono">—</span></div></div>
+      <div class="detail-cost">
+        <div class="detail-section-label">Cost breakdown</div>
+        <div class="cost-row"><span class="muted small">STT</span><div class="cost-bar"><div style="width:0.0%;background:#0088AA"></div></div><span class="mono small">0.00¢</span></div><div class="cost-row"><span class="muted small">LLM</span><div class="cost-bar"><div style="width:43.2%;background:#00D4FF"></div></div><span class="mono small">3.67¢</span></div><div class="cost-row"><span class="muted small">TTS</span><div class="cost-bar"><div style="width:0.0%;background:#A78BFA"></div></div><span class="mono small">0.00¢</span></div><div class="cost-row"><span class="muted small">Telephony</span><div class="cost-bar"><div style="width:56.8%;background:#F59E0B"></div></div><span class="mono small">4.83¢</span></div>
+      </div>
+    </div>
+  </td>
+</tr>
+<tr class="call-row" data-time="1777202352" data-agent="Amina" data-caller="Njeri" data-duration="154" data-turns="25" data-sentiment="-0.300" data-cost="19.9613" data-status="Escalated"><td class="mono">Apr 26 · 14:19</td><td>Amina</td><td>Njeri</td><td class="num">2m 34s</td><td class="num">25</td><td><div class="sbar"><div class="sbar-axis"></div><div class="sbar-fill sbar-neg" style="width:15.0%;background:#EF4444"></div></div><span class="mono small">-0.30</span></td><td class="num">20.0¢</td><td><span class="pill" style="color:#F59E0B;border-color:#F59E0B33;background:#F59E0B14">Escalated</span></td></tr>
+<tr class="call-detail" hidden>
+  <td colspan="8">
+    <div class="detail-grid">
+      <div class="detail-kvs"><div class="kv"><span class="muted">Call ID</span><span class="mono">call-006-njeri</span></div><div class="kv"><span class="muted">Status</span><span class="mono">Escalated</span></div><div class="kv"><span class="muted">Sentiment score</span><span class="mono">-0.300</span></div><div class="kv"><span class="muted">STT seconds</span><span class="mono">61.6</span></div><div class="kv"><span class="muted">Telephony seconds</span><span class="mono">154.0</span></div><div class="kv"><span class="muted">LLM input tokens</span><span class="mono">360</span></div><div class="kv"><span class="muted">LLM output tokens</span><span class="mono">234</span></div><div class="kv"><span class="muted">TTS characters</span><span class="mono">845</span></div><div class="kv"><span class="muted">Interruptions</span><span class="mono">2</span></div><div class="kv"><span class="muted">Containment</span><span class="mono">No</span></div><div class="kv"><span class="muted">Resolution</span><span class="mono">No</span></div><div class="kv"><span class="muted">Handoff reason</span><span class="mono">angry caller</span></div></div>
+      <div class="detail-cost">
+        <div class="detail-section-label">Cost breakdown</div>
+        <div class="cost-row"><span class="muted small">STT</span><div class="cost-bar"><div style="width:0.0%;background:#0088AA"></div></div><span class="mono small">0.00¢</span></div><div class="cost-row"><span class="muted small">LLM</span><div class="cost-bar"><div style="width:35.7%;background:#00D4FF"></div></div><span class="mono small">7.13¢</span></div><div class="cost-row"><span class="muted small">TTS</span><div class="cost-bar"><div style="width:0.0%;background:#A78BFA"></div></div><span class="mono small">0.00¢</span></div><div class="cost-row"><span class="muted small">Telephony</span><div class="cost-bar"><div style="width:64.3%;background:#F59E0B"></div></div><span class="mono small">12.83¢</span></div>
+      </div>
+    </div>
+  </td>
+</tr>
+<tr class="call-row" data-time="1777192382" data-agent="Kwame" data-caller="Otieno" data-duration="22" data-turns="6" data-sentiment="-0.050" data-cost="3.5613" data-status="Abandoned"><td class="mono">Apr 26 · 11:33</td><td>Kwame</td><td>Otieno</td><td class="num">22s</td><td class="num">6</td><td><div class="sbar"><div class="sbar-axis"></div><div class="sbar-fill sbar-neg" style="width:2.5%;background:#8A8A8A"></div></div><span class="mono small">-0.05</span></td><td class="num">3.6¢</td><td><span class="pill" style="color:#EF4444;border-color:#EF444433;background:#EF444414">Abandoned</span></td></tr>
+<tr class="call-detail" hidden>
+  <td colspan="8">
+    <div class="detail-grid">
+      <div class="detail-kvs"><div class="kv"><span class="muted">Call ID</span><span class="mono">call-005-otieno</span></div><div class="kv"><span class="muted">Status</span><span class="mono">Abandoned</span></div><div class="kv"><span class="muted">Sentiment score</span><span class="mono">-0.050</span></div><div class="kv"><span class="muted">STT seconds</span><span class="mono">8.8</span></div><div class="kv"><span class="muted">Telephony seconds</span><span class="mono">22.0</span></div><div class="kv"><span class="muted">LLM input tokens</span><span class="mono">90</span></div><div class="kv"><span class="muted">LLM output tokens</span><span class="mono">54</span></div><div class="kv"><span class="muted">TTS characters</span><span class="mono">195</span></div><div class="kv"><span class="muted">Interruptions</span><span class="mono">0</span></div><div class="kv"><span class="muted">Containment</span><span class="mono">Yes</span></div><div class="kv"><span class="muted">Resolution</span><span class="mono">No</span></div><div class="kv"><span class="muted">Handoff reason</span><span class="mono">—</span></div></div>
+      <div class="detail-cost">
+        <div class="detail-section-label">Cost breakdown</div>
+        <div class="cost-row"><span class="muted small">STT</span><div class="cost-bar"><div style="width:0.0%;background:#0088AA"></div></div><span class="mono small">0.00¢</span></div><div class="cost-row"><span class="muted small">LLM</span><div class="cost-bar"><div style="width:48.5%;background:#00D4FF"></div></div><span class="mono small">1.73¢</span></div><div class="cost-row"><span class="muted small">TTS</span><div class="cost-bar"><div style="width:0.0%;background:#A78BFA"></div></div><span class="mono small">0.00¢</span></div><div class="cost-row"><span class="muted small">Telephony</span><div class="cost-bar"><div style="width:51.5%;background:#F59E0B"></div></div><span class="mono small">1.83¢</span></div>
+      </div>
+    </div>
+  </td>
+</tr>
+<tr class="call-row" data-time="1777182412" data-agent="Amina" data-caller="Wanjiku" data-duration="105" data-turns="19" data-sentiment="0.100" data-cost="14.1500" data-status="Resolved"><td class="mono">Apr 26 · 08:46</td><td>Amina</td><td>Wanjiku</td><td class="num">1m 45s</td><td class="num">19</td><td><div class="sbar"><div class="sbar-axis"></div><div class="sbar-fill sbar-pos" style="width:5.0%;background:#8A8A8A"></div></div><span class="mono small">+0.10</span></td><td class="num">14.2¢</td><td><span class="pill" style="color:#10B981;border-color:#10B98133;background:#10B98114">Resolved</span></td></tr>
+<tr class="call-detail" hidden>
+  <td colspan="8">
+    <div class="detail-grid">
+      <div class="detail-kvs"><div class="kv"><span class="muted">Call ID</span><span class="mono">call-004-wanjiku</span></div><div class="kv"><span class="muted">Status</span><span class="mono">Resolved</span></div><div class="kv"><span class="muted">Sentiment score</span><span class="mono">+0.100</span></div><div class="kv"><span class="muted">STT seconds</span><span class="mono">42.0</span></div><div class="kv"><span class="muted">Telephony seconds</span><span class="mono">105.0</span></div><div class="kv"><span class="muted">LLM input tokens</span><span class="mono">270</span></div><div class="kv"><span class="muted">LLM output tokens</span><span class="mono">180</span></div><div class="kv"><span class="muted">TTS characters</span><span class="mono">650</span></div><div class="kv"><span class="muted">Interruptions</span><span class="mono">1</span></div><div class="kv"><span class="muted">Containment</span><span class="mono">Yes</span></div><div class="kv"><span class="muted">Resolution</span><span class="mono">Yes</span></div><div class="kv"><span class="muted">Handoff reason</span><span class="mono">—</span></div></div>
+      <div class="detail-cost">
+        <div class="detail-section-label">Cost breakdown</div>
+        <div class="cost-row"><span class="muted small">STT</span><div class="cost-bar"><div style="width:0.0%;background:#0088AA"></div></div><span class="mono small">0.00¢</span></div><div class="cost-row"><span class="muted small">LLM</span><div class="cost-bar"><div style="width:38.2%;background:#00D4FF"></div></div><span class="mono small">5.40¢</span></div><div class="cost-row"><span class="muted small">TTS</span><div class="cost-bar"><div style="width:0.0%;background:#A78BFA"></div></div><span class="mono small">0.00¢</span></div><div class="cost-row"><span class="muted small">Telephony</span><div class="cost-bar"><div style="width:61.8%;background:#F59E0B"></div></div><span class="mono small">8.75¢</span></div>
+      </div>
+    </div>
+  </td>
+</tr>
+<tr class="call-row" data-time="1777173252" data-agent="Kwame" data-caller="Adwoa" data-duration="31" data-turns="9" data-sentiment="0.180" data-cost="5.1033" data-status="Resolved"><td class="mono">Apr 26 · 06:14</td><td>Kwame</td><td>Adwoa</td><td class="num">31s</td><td class="num">9</td><td><div class="sbar"><div class="sbar-axis"></div><div class="sbar-fill sbar-pos" style="width:9.0%;background:#8A8A8A"></div></div><span class="mono small">+0.18</span></td><td class="num">5.1¢</td><td><span class="pill" style="color:#10B981;border-color:#10B98133;background:#10B98114">Resolved</span></td></tr>
+<tr class="call-detail" hidden>
+  <td colspan="8">
+    <div class="detail-grid">
+      <div class="detail-kvs"><div class="kv"><span class="muted">Call ID</span><span class="mono">call-003-adwoa</span></div><div class="kv"><span class="muted">Status</span><span class="mono">Resolved</span></div><div class="kv"><span class="muted">Sentiment score</span><span class="mono">+0.180</span></div><div class="kv"><span class="muted">STT seconds</span><span class="mono">12.4</span></div><div class="kv"><span class="muted">Telephony seconds</span><span class="mono">31.0</span></div><div class="kv"><span class="muted">LLM input tokens</span><span class="mono">120</span></div><div class="kv"><span class="muted">LLM output tokens</span><span class="mono">90</span></div><div class="kv"><span class="muted">TTS characters</span><span class="mono">325</span></div><div class="kv"><span class="muted">Interruptions</span><span class="mono">0</span></div><div class="kv"><span class="muted">Containment</span><span class="mono">Yes</span></div><div class="kv"><span class="muted">Resolution</span><span class="mono">Yes</span></div><div class="kv"><span class="muted">Handoff reason</span><span class="mono">—</span></div></div>
+      <div class="detail-cost">
+        <div class="detail-section-label">Cost breakdown</div>
+        <div class="cost-row"><span class="muted small">STT</span><div class="cost-bar"><div style="width:0.0%;background:#0088AA"></div></div><span class="mono small">0.00¢</span></div><div class="cost-row"><span class="muted small">LLM</span><div class="cost-bar"><div style="width:49.4%;background:#00D4FF"></div></div><span class="mono small">2.52¢</span></div><div class="cost-row"><span class="muted small">TTS</span><div class="cost-bar"><div style="width:0.0%;background:#A78BFA"></div></div><span class="mono small">0.00¢</span></div><div class="cost-row"><span class="muted small">Telephony</span><div class="cost-bar"><div style="width:50.6%;background:#F59E0B"></div></div><span class="mono small">2.58¢</span></div>
+      </div>
+    </div>
+  </td>
+</tr>
+<tr class="call-row" data-time="1777163282" data-agent="Amina" data-caller="Kojo" data-duration="68" data-turns="15" data-sentiment="0.550" data-cost="9.9147" data-status="Resolved"><td class="mono">Apr 26 · 03:28</td><td>Amina</td><td>Kojo</td><td class="num">1m 08s</td><td class="num">15</td><td><div class="sbar"><div class="sbar-axis"></div><div class="sbar-fill sbar-pos" style="width:27.5%;background:#10B981"></div></div><span class="mono small">+0.55</span></td><td class="num">9.9¢</td><td><span class="pill" style="color:#10B981;border-color:#10B98133;background:#10B98114">Resolved</span></td></tr>
+<tr class="call-detail" hidden>
+  <td colspan="8">
+    <div class="detail-grid">
+      <div class="detail-kvs"><div class="kv"><span class="muted">Call ID</span><span class="mono">call-002-kojo</span></div><div class="kv"><span class="muted">Status</span><span class="mono">Resolved</span></div><div class="kv"><span class="muted">Sentiment score</span><span class="mono">+0.550</span></div><div class="kv"><span class="muted">STT seconds</span><span class="mono">27.2</span></div><div class="kv"><span class="muted">Telephony seconds</span><span class="mono">68.0</span></div><div class="kv"><span class="muted">LLM input tokens</span><span class="mono">210</span></div><div class="kv"><span class="muted">LLM output tokens</span><span class="mono">144</span></div><div class="kv"><span class="muted">TTS characters</span><span class="mono">520</span></div><div class="kv"><span class="muted">Interruptions</span><span class="mono">0</span></div><div class="kv"><span class="muted">Containment</span><span class="mono">Yes</span></div><div class="kv"><span class="muted">Resolution</span><span class="mono">Yes</span></div><div class="kv"><span class="muted">Handoff reason</span><span class="mono">—</span></div></div>
+      <div class="detail-cost">
+        <div class="detail-section-label">Cost breakdown</div>
+        <div class="cost-row"><span class="muted small">STT</span><div class="cost-bar"><div style="width:0.0%;background:#0088AA"></div></div><span class="mono small">0.00¢</span></div><div class="cost-row"><span class="muted small">LLM</span><div class="cost-bar"><div style="width:42.8%;background:#00D4FF"></div></div><span class="mono small">4.25¢</span></div><div class="cost-row"><span class="muted small">TTS</span><div class="cost-bar"><div style="width:0.0%;background:#A78BFA"></div></div><span class="mono small">0.00¢</span></div><div class="cost-row"><span class="muted small">Telephony</span><div class="cost-bar"><div style="width:57.2%;background:#F59E0B"></div></div><span class="mono small">5.67¢</span></div>
+      </div>
+    </div>
+  </td>
+</tr>
+<tr class="call-row" data-time="1777153312" data-agent="Kwame" data-caller="Ama" data-duration="42" data-turns="11" data-sentiment="0.400" data-cost="6.5960" data-status="Resolved"><td class="mono">Apr 26 · 00:41</td><td>Kwame</td><td>Ama</td><td class="num">42s</td><td class="num">11</td><td><div class="sbar"><div class="sbar-axis"></div><div class="sbar-fill sbar-pos" style="width:20.0%;background:#10B981"></div></div><span class="mono small">+0.40</span></td><td class="num">6.6¢</td><td><span class="pill" style="color:#10B981;border-color:#10B98133;background:#10B98114">Resolved</span></td></tr>
+<tr class="call-detail" hidden>
+  <td colspan="8">
+    <div class="detail-grid">
+      <div class="detail-kvs"><div class="kv"><span class="muted">Call ID</span><span class="mono">call-001-ama</span></div><div class="kv"><span class="muted">Status</span><span class="mono">Resolved</span></div><div class="kv"><span class="muted">Sentiment score</span><span class="mono">+0.400</span></div><div class="kv"><span class="muted">STT seconds</span><span class="mono">16.8</span></div><div class="kv"><span class="muted">Telephony seconds</span><span class="mono">42.0</span></div><div class="kv"><span class="muted">LLM input tokens</span><span class="mono">150</span></div><div class="kv"><span class="muted">LLM output tokens</span><span class="mono">108</span></div><div class="kv"><span class="muted">TTS characters</span><span class="mono">390</span></div><div class="kv"><span class="muted">Interruptions</span><span class="mono">1</span></div><div class="kv"><span class="muted">Containment</span><span class="mono">Yes</span></div><div class="kv"><span class="muted">Resolution</span><span class="mono">Yes</span></div><div class="kv"><span class="muted">Handoff reason</span><span class="mono">—</span></div></div>
+      <div class="detail-cost">
+        <div class="detail-section-label">Cost breakdown</div>
+        <div class="cost-row"><span class="muted small">STT</span><div class="cost-bar"><div style="width:0.0%;background:#0088AA"></div></div><span class="mono small">0.00¢</span></div><div class="cost-row"><span class="muted small">LLM</span><div class="cost-bar"><div style="width:46.9%;background:#00D4FF"></div></div><span class="mono small">3.10¢</span></div><div class="cost-row"><span class="muted small">TTS</span><div class="cost-bar"><div style="width:0.0%;background:#A78BFA"></div></div><span class="mono small">0.00¢</span></div><div class="cost-row"><span class="muted small">Telephony</span><div class="cost-bar"><div style="width:53.1%;background:#F59E0B"></div></div><span class="mono small">3.50¢</span></div>
+      </div>
+    </div>
+  </td>
+</tr>
+</tbody></table></div></section>
+  
+<section class="export-row">
+  <button class="btn btn-primary" id="exportPdf" type="button">Export report (PDF)</button>
+  <button class="btn" id="exportCsv" type="button">Download CSV</button>
+  <button class="btn btn-ghost" id="shareLink" type="button">Share dashboard</button>
+  <span class="muted small">Reports include call detail, agent performance, and cost breakdown.</span>
+</section>
 
   <footer>
-    <div>
-      <strong>Cynea AI</strong><span class="dim"> — Made in Kenya</span>
-    </div>
-    <div class="dim">Generated May 02, 2026 · 00:00</div>
+    <div><strong>Cynea AI</strong><span class="dim"> — Made in Kenya · May 02, 2026 · 00:41</span></div>
+    <div class="dim">Voice Engine v0.1 · Tender preview</div>
   </footer>
 </main>
+<div id="toast" role="status" aria-live="polite"></div>
+<script>
+'use strict';
+window.__cyneaCalls = [{"call_id": "call-001-ama", "agent": "kwame_adinkra", "started_at": 1777153312.958505, "ended_at": 1777153354.958505, "duration_s": 42, "user_turns": 5, "assistant_turns": 6, "interruptions": 1, "sentiment_score": 0.4, "containment": true, "resolution": true, "handoff_reason": null, "stt_seconds": 16.8, "telephony_seconds": 42.0, "llm_input_tokens": 150, "llm_output_tokens": 108, "tts_characters": 390, "cost_total_cents": 6.596, "cost_breakdown": {"stt_cents": 0.0, "llm_cents": 3.096, "tts_cents": 0.0, "telephony_cents": 3.5}}, {"call_id": "call-002-kojo", "agent": "amina_kcb", "started_at": 1777163282.958505, "ended_at": 1777163350.958505, "duration_s": 68, "user_turns": 7, "assistant_turns": 8, "interruptions": 0, "sentiment_score": 0.55, "containment": true, "resolution": true, "handoff_reason": null, "stt_seconds": 27.2, "telephony_seconds": 68.0, "llm_input_tokens": 210, "llm_output_tokens": 144, "tts_characters": 520, "cost_total_cents": 9.9147, "cost_breakdown": {"stt_cents": 0.0, "llm_cents": 4.248, "tts_cents": 0.0, "telephony_cents": 5.6667}}, {"call_id": "call-003-adwoa", "agent": "kwame_adinkra", "started_at": 1777173252.958505, "ended_at": 1777173283.958505, "duration_s": 31, "user_turns": 4, "assistant_turns": 5, "interruptions": 0, "sentiment_score": 0.18, "containment": true, "resolution": true, "handoff_reason": null, "stt_seconds": 12.4, "telephony_seconds": 31.0, "llm_input_tokens": 120, "llm_output_tokens": 90, "tts_characters": 325, "cost_total_cents": 5.1033, "cost_breakdown": {"stt_cents": 0.0, "llm_cents": 2.52, "tts_cents": 0.0, "telephony_cents": 2.5833}}, {"call_id": "call-004-wanjiku", "agent": "amina_kcb", "started_at": 1777182412.958505, "ended_at": 1777182517.958505, "duration_s": 105, "user_turns": 9, "assistant_turns": 10, "interruptions": 1, "sentiment_score": 0.1, "containment": true, "resolution": true, "handoff_reason": null, "stt_seconds": 42.0, "telephony_seconds": 105.0, "llm_input_tokens": 270, "llm_output_tokens": 180, "tts_characters": 650, "cost_total_cents": 14.15, "cost_breakdown": {"stt_cents": 0.0, "llm_cents": 5.4, "tts_cents": 0.0, "telephony_cents": 8.75}}, {"call_id": "call-005-otieno", "agent": "kwame_adinkra", "started_at": 1777192382.958505, "ended_at": 1777192404.958505, "duration_s": 22, "user_turns": 3, "assistant_turns": 3, "interruptions": 0, "sentiment_score": -0.05, "containment": true, "resolution": false, "handoff_reason": null, "stt_seconds": 8.8, "telephony_seconds": 22.0, "llm_input_tokens": 90, "llm_output_tokens": 54, "tts_characters": 195, "cost_total_cents": 3.5613, "cost_breakdown": {"stt_cents": 0.0, "llm_cents": 1.728, "tts_cents": 0.0, "telephony_cents": 1.8333}}, {"call_id": "call-006-njeri", "agent": "amina_kcb", "started_at": 1777202352.958505, "ended_at": 1777202506.958505, "duration_s": 154, "user_turns": 12, "assistant_turns": 13, "interruptions": 2, "sentiment_score": -0.3, "containment": false, "resolution": false, "handoff_reason": "angry caller", "stt_seconds": 61.6, "telephony_seconds": 154.0, "llm_input_tokens": 360, "llm_output_tokens": 234, "tts_characters": 845, "cost_total_cents": 19.9613, "cost_breakdown": {"stt_cents": 0.0, "llm_cents": 7.128, "tts_cents": 0.0, "telephony_cents": 12.8333}}, {"call_id": "call-007-kofi", "agent": "kwame_adinkra", "started_at": 1777211512.958505, "ended_at": 1777211570.958505, "duration_s": 58, "user_turns": 6, "assistant_turns": 7, "interruptions": 0, "sentiment_score": 0.62, "containment": true, "resolution": true, "handoff_reason": null, "stt_seconds": 23.2, "telephony_seconds": 58.0, "llm_input_tokens": 180, "llm_output_tokens": 126, "tts_characters": 455, "cost_total_cents": 8.5053, "cost_breakdown": {"stt_cents": 0.0, "llm_cents": 3.672, "tts_cents": 0.0, "telephony_cents": 4.8333}}, {"call_id": "call-008-grace", "agent": "amina_kcb", "started_at": 1777221482.958505, "ended_at": 1777221531.958505, "duration_s": 49, "user_turns": 5, "assistant_turns": 5, "interruptions": 0, "sentiment_score": 0.45, "containment": true, "resolution": true, "handoff_reason": null, "stt_seconds": 19.6, "telephony_seconds": 49.0, "llm_input_tokens": 150, "llm_output_tokens": 90, "tts_characters": 325, "cost_total_cents": 6.9633, "cost_breakdown": {"stt_cents": 0.0, "llm_cents": 2.88, "tts_cents": 0.0, "telephony_cents": 4.0833}}, {"call_id": "call-009-peter", "agent": "kwame_adinkra", "started_at": 1777231452.958505, "ended_at": 1777231541.958505, "duration_s": 89, "user_turns": 7, "assistant_turns": 8, "interruptions": 1, "sentiment_score": 0.3, "containment": true, "resolution": true, "handoff_reason": null, "stt_seconds": 35.6, "telephony_seconds": 89.0, "llm_input_tokens": 210, "llm_output_tokens": 144, "tts_characters": 520, "cost_total_cents": 11.6647, "cost_breakdown": {"stt_cents": 0.0, "llm_cents": 4.248, "tts_cents": 0.0, "telephony_cents": 7.4167}}, {"call_id": "call-010-sarah", "agent": "amina_kcb", "started_at": 1777240612.958505, "ended_at": 1777240823.958505, "duration_s": 211, "user_turns": 14, "assistant_turns": 15, "interruptions": 1, "sentiment_score": 0.05, "containment": false, "resolution": false, "handoff_reason": "fraud reported", "stt_seconds": 84.4, "telephony_seconds": 211.0, "llm_input_tokens": 420, "llm_output_tokens": 270, "tts_characters": 975, "cost_total_cents": 25.8633, "cost_breakdown": {"stt_cents": 0.0, "llm_cents": 8.28, "tts_cents": 0.0, "telephony_cents": 17.5833}}, {"call_id": "call-011-daniel", "agent": "kwame_adinkra", "started_at": 1777250582.958505, "ended_at": 1777250620.958505, "duration_s": 38, "user_turns": 4, "assistant_turns": 5, "interruptions": 0, "sentiment_score": 0.5, "containment": true, "resolution": true, "handoff_reason": null, "stt_seconds": 15.2, "telephony_seconds": 38.0, "llm_input_tokens": 120, "llm_output_tokens": 90, "tts_characters": 325, "cost_total_cents": 5.6867, "cost_breakdown": {"stt_cents": 0.0, "llm_cents": 2.52, "tts_cents": 0.0, "telephony_cents": 3.1667}}, {"call_id": "call-012-lucy", "agent": "amina_kcb", "started_at": 1777260552.958505, "ended_at": 1777260628.958505, "duration_s": 76, "user_turns": 6, "assistant_turns": 7, "interruptions": 0, "sentiment_score": 0.2, "containment": true, "resolution": true, "handoff_reason": null, "stt_seconds": 30.4, "telephony_seconds": 76.0, "llm_input_tokens": 180, "llm_output_tokens": 126, "tts_characters": 455, "cost_total_cents": 10.0053, "cost_breakdown": {"stt_cents": 0.0, "llm_cents": 3.672, "tts_cents": 0.0, "telephony_cents": 6.3333}}, {"call_id": "call-013-james", "agent": "kwame_adinkra", "started_at": 1777269712.958505, "ended_at": 1777269763.958505, "duration_s": 51, "user_turns": 5, "assistant_turns": 6, "interruptions": 0, "sentiment_score": 0.35, "containment": true, "resolution": true, "handoff_reason": null, "stt_seconds": 20.4, "telephony_seconds": 51.0, "llm_input_tokens": 150, "llm_output_tokens": 108, "tts_characters": 390, "cost_total_cents": 7.346, "cost_breakdown": {"stt_cents": 0.0, "llm_cents": 3.096, "tts_cents": 0.0, "telephony_cents": 4.25}}, {"call_id": "call-014-mary", "agent": "amina_kcb", "started_at": 1777279682.958505, "ended_at": 1777279776.958505, "duration_s": 94, "user_turns": 8, "assistant_turns": 9, "interruptions": 1, "sentiment_score": 0.4, "containment": true, "resolution": true, "handoff_reason": null, "stt_seconds": 37.6, "telephony_seconds": 94.0, "llm_input_tokens": 240, "llm_output_tokens": 162, "tts_characters": 585, "cost_total_cents": 12.6573, "cost_breakdown": {"stt_cents": 0.0, "llm_cents": 4.824, "tts_cents": 0.0, "telephony_cents": 7.8333}}, {"call_id": "call-015-john", "agent": "kwame_adinkra", "started_at": 1777289652.958505, "ended_at": 1777289679.958505, "duration_s": 27, "user_turns": 3, "assistant_turns": 4, "interruptions": 0, "sentiment_score": 0.15, "containment": true, "resolution": true, "handoff_reason": null, "stt_seconds": 10.8, "telephony_seconds": 27.0, "llm_input_tokens": 90, "llm_output_tokens": 72, "tts_characters": 260, "cost_total_cents": 4.194, "cost_breakdown": {"stt_cents": 0.0, "llm_cents": 1.944, "tts_cents": 0.0, "telephony_cents": 2.25}}];
+
+// -- live clock --------------------------------------------------------
+function tickClock() {
+  const el = document.getElementById('clock');
+  if (!el) return;
+  const now = new Date();
+  el.textContent = now.toLocaleTimeString();
+}
+tickClock();
+setInterval(tickClock, 1000);
+
+// -- refresh -----------------------------------------------------------
+const refreshBtn = document.getElementById('refreshBtn');
+if (refreshBtn) refreshBtn.addEventListener('click', () => location.reload());
+
+// -- demo-mode body toggle --------------------------------------------
+const demoBtn = document.getElementById('demoToggle');
+if (demoBtn) demoBtn.addEventListener('click', () => {
+  document.body.classList.toggle('demo-mode');
+  showToast(document.body.classList.contains('demo-mode')
+    ? 'Demo highlight on' : 'Demo highlight off');
+});
+
+// -- expand-on-click rows ---------------------------------------------
+document.querySelectorAll('tr.call-row').forEach(row => {
+  row.addEventListener('click', () => {
+    const detail = row.nextElementSibling;
+    if (!detail || !detail.classList.contains('call-detail')) return;
+    const expanded = row.classList.toggle('expanded');
+    detail.hidden = !expanded;
+  });
+});
+
+// -- sortable table ---------------------------------------------------
+(function setupSort() {
+  const table = document.getElementById('callsTable');
+  if (!table) return;
+  const headers = table.querySelectorAll('thead th[data-sort]');
+  headers.forEach(h => h.addEventListener('click', () => {
+    const key = h.getAttribute('data-sort');
+    const current = h.getAttribute('aria-sort');
+    const dir = current === 'ascending' ? 'descending' : 'ascending';
+    headers.forEach(o => o.setAttribute('aria-sort', 'none'));
+    h.setAttribute('aria-sort', dir);
+
+    const tbody = table.tBodies[0];
+    // Pair each call-row with its detail row so we move them together.
+    const pairs = [];
+    Array.from(tbody.rows).forEach(r => {
+      if (r.classList.contains('call-row')) pairs.push([r, r.nextElementSibling]);
+    });
+
+    const numeric = (v) => { const n = parseFloat(v); return isNaN(n) ? -Infinity : n; };
+    const numericKeys = new Set(['time', 'duration', 'turns', 'sentiment', 'cost']);
+
+    pairs.sort((a, b) => {
+      const av = a[0].getAttribute('data-' + key) || '';
+      const bv = b[0].getAttribute('data-' + key) || '';
+      let cmp;
+      if (numericKeys.has(key)) cmp = numeric(av) - numeric(bv);
+      else cmp = av.localeCompare(bv);
+      return dir === 'ascending' ? cmp : -cmp;
+    });
+
+    pairs.forEach(([row, detail]) => {
+      tbody.appendChild(row);
+      if (detail && detail.classList.contains('call-detail')) tbody.appendChild(detail);
+    });
+  }));
+})();
+
+// -- export PDF (just print) ------------------------------------------
+const pdfBtn = document.getElementById('exportPdf');
+if (pdfBtn) pdfBtn.addEventListener('click', () => window.print());
+
+// -- export CSV -------------------------------------------------------
+const csvBtn = document.getElementById('exportCsv');
+if (csvBtn) csvBtn.addEventListener('click', () => {
+  const calls = window.__cyneaCalls || [];
+  if (!calls.length) { showToast('No calls to export'); return; }
+  const headers = [
+    'call_id','agent','started_at','duration_s','user_turns','assistant_turns',
+    'interruptions','sentiment_score','containment','resolution',
+    'handoff_reason','cost_total_cents'
+  ];
+  const csvLines = [headers.join(',')];
+  calls.forEach(c => {
+    const row = headers.map(h => {
+      const v = c[h];
+      if (v === null || v === undefined) return '';
+      const s = String(v);
+      return /[",\n]/.test(s) ? '"' + s.replace(/"/g, '""') + '"' : s;
+    });
+    csvLines.push(row.join(','));
+  });
+  const blob = new Blob([csvLines.join('\n')], { type: 'text/csv;charset=utf-8' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = 'cynea-calls.csv';
+  document.body.appendChild(a); a.click();
+  setTimeout(() => { URL.revokeObjectURL(url); a.remove(); }, 0);
+  showToast('CSV downloaded');
+});
+
+// -- share link -------------------------------------------------------
+const shareBtn = document.getElementById('shareLink');
+if (shareBtn) shareBtn.addEventListener('click', async () => {
+  const url = location.href;
+  try {
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      await navigator.clipboard.writeText(url);
+      showToast('Link copied to clipboard');
+    } else {
+      window.prompt('Copy this dashboard link:', url);
+    }
+  } catch (e) {
+    window.prompt('Copy this dashboard link:', url);
+  }
+});
+
+// -- toast ------------------------------------------------------------
+let toastTimer = null;
+function showToast(msg) {
+  const el = document.getElementById('toast');
+  if (!el) return;
+  el.textContent = msg;
+  el.classList.add('show');
+  if (toastTimer) clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => el.classList.remove('show'), 1800);
+}
+
+// -- KPI count-up animation ------------------------------------------
+(function animateKpis() {
+  const cards = document.querySelectorAll('[data-animate-value]');
+  cards.forEach(card => {
+    const valEl = card.querySelector('.value');
+    if (!valEl) return;
+    const final = valEl.getAttribute('data-final') || valEl.textContent;
+    const m = final.match(/^(-?[\d,]+\.?\d*)(.*)$/);
+    if (!m) return;
+    const target = parseFloat(m[1].replace(/,/g, ''));
+    if (isNaN(target)) return;
+    const suffix = m[2];
+    const isInt = !final.includes('.');
+    const start = performance.now();
+    const dur = 700;
+    function step(now) {
+      const t = Math.min(1, (now - start) / dur);
+      const eased = 1 - Math.pow(1 - t, 3);
+      const v = target * eased;
+      valEl.textContent = (isInt ? Math.round(v).toLocaleString() : v.toFixed(1)) + suffix;
+      if (t < 1) requestAnimationFrame(step);
+      else valEl.textContent = final;  // final exact value
+    }
+    requestAnimationFrame(step);
+  });
+})();
+</script>
 </body>
 </html>

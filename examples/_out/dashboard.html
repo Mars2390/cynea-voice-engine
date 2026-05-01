@@ -1,0 +1,215 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Cynea Voice Engine — Kwame @ Adinkra Hotel</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=DM+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; background: #050505; color: #F5F5F5; }
+body {
+  font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  font-size: 14px; line-height: 1.5;
+  -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale;
+  min-height: 100vh;
+}
+main { max-width: 1180px; margin: 0 auto; padding: 56px 32px 80px; }
+
+.hero { margin-bottom: 28px; }
+.brand { display: flex; align-items: center; gap: 10px; margin-bottom: 22px; }
+.brand-name {
+  font-family: 'Syne', sans-serif; font-weight: 700; letter-spacing: 0.02em;
+  font-size: 14px; color: #00D4FF; text-transform: uppercase;
+}
+.dot-accent {
+  width: 10px; height: 10px; border-radius: 50%;
+  background: #00D4FF;
+  box-shadow: 0 0 12px #00D4FF88;
+}
+h1 {
+  font-family: 'Syne', sans-serif; font-weight: 800;
+  font-size: 44px; line-height: 1.1; margin: 0 0 8px;
+  letter-spacing: -0.01em;
+}
+.subtitle {
+  font-size: 18px; color: #F5F5F5; margin: 0 0 4px;
+  font-weight: 500;
+}
+.subtitle .sep { color: #777777; margin: 0 8px; }
+.daterange {
+  font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 12px; color: #8A8A8A; margin: 0;
+}
+
+.banner {
+  margin: 16px 0 24px; padding: 12px 16px;
+  border: 1px solid #00D4FF33; background: #00D4FF10;
+  color: #00D4FF; border-radius: 10px;
+  font-size: 13px;
+}
+.banner code {
+  font-family: 'JetBrains Mono', monospace; font-size: 12px;
+  background: #0E0E0E; padding: 1px 6px; border-radius: 4px;
+}
+
+/* metric cards */
+.cards {
+  display: grid; gap: 16px;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  margin: 24px 0 40px;
+}
+@media (max-width: 900px) { .cards { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 520px) { .cards { grid-template-columns: 1fr; } }
+
+.card {
+  background: #111111; border: 1px solid #1E1E1E;
+  border-radius: 14px; padding: 22px 22px 20px;
+  position: relative; overflow: hidden;
+}
+.card::before {
+  content: ""; position: absolute; inset: 0; pointer-events: none;
+  background: linear-gradient(180deg, #00D4FF06, transparent 40%);
+}
+.card .label {
+  font-size: 12px; text-transform: uppercase; letter-spacing: 0.08em;
+  color: #8A8A8A; font-weight: 600;
+}
+.card .value {
+  font-family: 'JetBrains Mono', monospace; font-weight: 500;
+  font-size: 32px; margin: 10px 0 6px;
+  font-feature-settings: "tnum" 1; letter-spacing: -0.01em;
+}
+.card .sub { font-size: 12px; color: #777777; }
+
+/* panels */
+.panel {
+  background: #111111; border: 1px solid #1E1E1E;
+  border-radius: 14px; padding: 0; margin-bottom: 28px;
+}
+.panel-head {
+  display: flex; align-items: baseline; justify-content: space-between;
+  padding: 18px 22px 12px; border-bottom: 1px solid #1E1E1E;
+}
+.panel h2 {
+  font-family: 'Syne', sans-serif; font-weight: 700;
+  font-size: 16px; margin: 0; letter-spacing: 0.02em;
+  text-transform: uppercase;
+}
+.muted { color: #8A8A8A; font-size: 13px; }
+.dim { color: #777777; }
+
+/* table */
+.table-wrap { overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; }
+thead th {
+  text-align: left; font-size: 11px; text-transform: uppercase;
+  letter-spacing: 0.08em; color: #8A8A8A; font-weight: 600;
+  padding: 14px 22px; border-bottom: 1px solid #1E1E1E;
+  background: #0E0E0E;
+}
+thead th.num { text-align: right; }
+tbody td {
+  padding: 12px 22px; font-size: 13px;
+  border-bottom: 1px solid #1E1E1E;
+  vertical-align: middle;
+}
+tbody tr:nth-child(odd) td { background: rgba(255,255,255,0.012); }
+tbody tr:hover td { background: #00D4FF08; }
+tbody tr:last-child td { border-bottom: none; }
+.num {
+  text-align: right; font-family: 'JetBrains Mono', monospace;
+  font-feature-settings: "tnum" 1;
+}
+.mono {
+  font-family: 'JetBrains Mono', monospace;
+  font-feature-settings: "tnum" 1;
+  font-size: 12px;
+}
+
+.empty {
+  padding: 44px 22px; text-align: center; color: #8A8A8A;
+  font-size: 14px;
+}
+
+/* fleet summary */
+.fleet {
+  list-style: none; margin: 0; padding: 8px 22px 18px;
+  display: grid; gap: 0;
+  grid-template-columns: 1fr 1fr;
+}
+@media (max-width: 720px) { .fleet { grid-template-columns: 1fr; } }
+.fleet li {
+  display: flex; justify-content: space-between; align-items: baseline;
+  padding: 14px 0; border-bottom: 1px solid #1E1E1E;
+}
+.fleet li:nth-last-child(-n+1):nth-child(odd) { border-bottom: none; }
+.fleet li:last-child { border-bottom: none; }
+.value-sm { font-size: 14px; color: #F5F5F5; }
+
+/* sentiment badge */
+.badge {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 4px 10px; border-radius: 999px;
+  font-size: 12px; font-weight: 500;
+  border: 1px solid; line-height: 1;
+  font-family: 'DM Sans', sans-serif;
+}
+.badge .dot {
+  width: 6px; height: 6px; border-radius: 50%;
+  display: inline-block;
+}
+
+footer {
+  display: flex; justify-content: space-between; align-items: center;
+  margin-top: 56px; padding-top: 22px;
+  border-top: 1px solid #1E1E1E;
+  font-size: 12px;
+}
+</style>
+</head>
+<body>
+<main>
+  <header class="hero">
+    <div class="brand">
+      <div class="dot-accent"></div>
+      <span class="brand-name">Cynea Voice Engine</span>
+    </div>
+    <h1>Operations Dashboard</h1>
+    <p class="subtitle">Kwame <span class="sep">·</span> Adinkra Hotel</p>
+    <p class="daterange">May 01, 2026</p>
+  </header>
+
+  
+
+  <section class="cards">
+    <article class="card"><div class="label">Total calls</div><div class="value" style="color:#00D4FF">1</div><div class="sub">Since deployment</div></article><article class="card"><div class="label">Containment rate</div><div class="value" style="color:#10B981">100.0%</div><div class="sub">&gt;80% target</div></article><article class="card"><div class="label">Avg cost / call</div><div class="value" style="color:#00D4FF">4.2¢</div><div class="sub">Per-provider breakdown in CSV</div></article><article class="card"><div class="label">Avg sentiment</div><div class="value" style="color:#10B981">▲ +0.20</div><div class="sub">Range −1 to +1</div></article>
+  </section>
+
+  <section class="panel">
+    <header class="panel-head">
+      <h2>Recent calls</h2>
+      <span class="muted">1 total</span>
+    </header>
+    <div class="table-wrap"><table><thead><tr><th>Call ID</th><th class="num">Duration</th><th class="num">User</th><th class="num">Agent</th><th class="num">Interrupt</th><th>Sentiment</th><th class="num">Cost</th></tr></thead><tbody><tr><td class="mono">demo-cal</td><td class="num">0.5s</td><td class="num">5</td><td class="num">6</td><td class="num">1</td><td><span class="badge" style="color:#10B981;border-color:#10B98133;background:#10B98114"><span class="dot" style="background:#10B981"></span>Positive · +0.20</span></td><td class="num">4.2¢</td></tr></tbody></table></div>
+  </section>
+
+  <section class="panel">
+    <header class="panel-head">
+      <h2>Fleet summary</h2>
+      <span class="muted">All-time</span>
+    </header>
+    <ul class="fleet"><li><span class="muted">Calls handled</span><span class="mono value-sm">1</span></li><li><span class="muted">Avg duration</span><span class="mono value-sm">0.5s</span></li><li><span class="muted">Total cost</span><span class="mono value-sm">4.2¢</span></li><li><span class="muted">Avg sentiment</span><span class="mono value-sm">+0.20</span></li><li><span class="muted">Containment rate</span><span class="mono value-sm">100.0%</span></li><li><span class="muted">Resolution rate</span><span class="mono value-sm">100.0%</span></li><li><span class="muted">Interruptions / call</span><span class="mono value-sm">1.00</span></li></ul>
+  </section>
+
+  <footer>
+    <div>
+      <strong>Cynea AI</strong><span class="dim"> — Made in Kenya</span>
+    </div>
+    <div class="dim">Generated May 01, 2026 · 23:25</div>
+  </footer>
+</main>
+</body>
+</html>

@@ -1,52 +1,47 @@
-# pyproject.toml
+[project]
+name = "cynea-voice-engine"
+version = "0.1.0"
+description = "AI Voice Agent Platform for African Businesses"
+authors = [
+    {name = "Cynea AI", email = "engineering@cynea.ai"}
+]
+readme = "README.md"
+requires-python = ">=3.10"
+license = {text = "MIT"}
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+    "Topic :: Communications :: Telephony",
+]
+keywords = ["voice-ai", "africa", "telephony", "call-center", "speech-to-text", "text-to-speech"]
+dependencies = [
+    "fastapi>=0.108",
+    "uvicorn>=0.22",
+    "litellm>=1.65",
+    "openai",
+    "twilio>=8.9",
+    "aiohttp",
+    "httpx[http2]",
+    "websockets>=15",
+    "redis>=5.0.1",
+    "pydub",
+    "numpy>=1.26",
+    "scipy>=1.11",
+    "tiktoken"
+]
+
+[project.urls]
+Homepage = "https://cynea.ai"
+Documentation = "https://docs.cynea.ai"
+Repository = "https://github.com/Mars2390/cynea-voice-engine"
+Issues = "https://github.com/Mars2390/cynea-voice-engine/issues"
 
 [build-system]
-requires      = ["setuptools>=61.0.0", "wheel"]
+requires = ["setuptools>=68.0"]
 build-backend = "setuptools.build_meta"
-
-[project]
-name = "cynea"
-version = "0.10.21"
-readme = "README.md"
-authors = [
-    { name = "Prateek Sachan", email = "ps@prateeksachan.com" }
-]
-license = { file = "LICENSE" }
-classifiers = [
-    "License :: OSI Approved :: MIT License",
-    "Programming Language :: Python",
-    "Programming Language :: Python :: 3",
-]
-dynamic = ["dependencies"]
-requires-python = ">=3.10"
-
-[project.optional-dependencies]
-dev = ["pip-tools", "pre-commit", "pytest", "pytest-asyncio", "ruff"]
-
-[tool.setuptools]
-package-dir = {"cynea" = "cynea"}
-
-[tool.setuptools.dynamic]
-dependencies = {file = ["requirements.txt"]}
-
-[tool.ruff]
-line-length = 120
-target-version = "py310"
-
-[tool.ruff.lint]
-# Start minimal, grow over time. Uncomment rules as the codebase is cleaned up.
-# Roadmap: F541 → UP → F401 → F841 → I (isort) → E (pycodestyle)
-select = [
-    "E721",  # type comparison (use isinstance)
-    "F811",  # redefined unused name
-    "ISC",   # implicit string concatenation bugs
-]
-
-[tool.commitizen]
-name = "cz_conventional_commits"
-version_provider = "pep621"
-tag_format = "$version"
-version_files = [
-    "cynea/__init__.py:__version__",
-]
-update_changelog_on_bump = false

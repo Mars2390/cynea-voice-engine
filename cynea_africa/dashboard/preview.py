@@ -1702,9 +1702,12 @@ LANDING_AGENTS = [
         "role": "Hotel Receptionist",
         "country": "Ghana",
         "voice_label": "British male · en-GB-RyanNeural",
-        "audio_file": "kwame_turn_00.mp3",
-        "audio_fallback": "kwame_turn_01.mp3",
-        "audio_error": "Kwame demo audio not available",
+        # ElevenLabs-synthesized greeting from examples/hear_kwame.py.
+        # Fallback to test_2 (the "let me check" line) when the greeting
+        # file is missing.
+        "audio_file": "kwame_test_1.mp3",
+        "audio_fallback": "kwame_test_2.mp3",
+        "audio_error": "Kwame demo audio not available — run examples/hear_kwame.py",
         "summary": (
             "Handles bookings, room availability, restaurant hours, and "
             "small talk for hospitality clients."
@@ -1947,9 +1950,9 @@ def _landing_render_hero() -> str:
           Explore dashboard <span aria-hidden="true">→</span>
         </a>
         <button class="btn btn-outline btn-glow play-btn" type="button"
-                data-audio="kwame_turn_00.mp3"
-                data-audio-fallback="kwame_turn_01.mp3"
-                data-error="Kwame demo audio not available"
+                data-audio="kwame_test_1.mp3"
+                data-audio-fallback="kwame_test_2.mp3"
+                data-error="Kwame demo audio not available — run examples/hear_kwame.py"
                 data-label="Kwame demo">
           <span class="play-icon" aria-hidden="true">▶</span>
           Hear Kwame demo
@@ -2229,9 +2232,9 @@ def _landing_render_phone_demo() -> str:
           <div class="phone-convo" data-typewriter>{convo_lines}</div>
           <div class="phone-controls">
             <button class="phone-play play-btn" type="button"
-                    data-audio="kwame_turn_00.mp3"
-                    data-audio-fallback="kwame_turn_01.mp3"
-                    data-error="Audio not available offline"
+                    data-audio="kwame_test_1.mp3"
+                    data-audio-fallback="kwame_test_2.mp3"
+                    data-error="Audio not available offline — run examples/hear_kwame.py"
                     data-label="Kwame call audio"
                     aria-label="Play call audio">
               <span class="phone-play-icon" data-state="play" aria-hidden="true">▶</span>
@@ -3356,63 +3359,184 @@ function startTypewriter(container, opts) {
 
 // -- interactive chat widget ------------------------------------------
 //
-// State lives in window.__cyneaChat. Single typewriter timer; if a new
-// message starts, the previous one finalises immediately to avoid two
-// concurrent type-streams in the same bubble.
+// Stateful flow machine. Each FLOW is an ordered list of steps; each
+// step has its own keywords, response text, audio file, and chip set
+// to show after the response. The router first tries to advance the
+// active flow; if the user goes off-script, it exits the flow and
+// re-routes from the top.
+//
+// Concurrency guard: the input + send button disable while a turn is
+// in progress (typing indicator + typewriter). Submits during that
+// window are dropped silently — preferable to queuing because the
+// user almost always meant to amend their previous message, not stack
+// a second one.
 
 (function() {
   const messagesEl = document.getElementById('chat-messages');
   const form = document.getElementById('chat-form');
   const input = document.getElementById('chat-input');
   const send = document.getElementById('chat-send');
-  const chips = document.querySelectorAll('.chat-chip');
+  const chipsEl = document.getElementById('chat-chips');
   const player = document.getElementById('audio-player');
-  if (!messagesEl || !form || !input) return;
+  if (!messagesEl || !form || !input || !chipsEl) return;
 
-  // Keyword router. First match wins. lower-case both sides.
-  const RESPONSE_MAP = [
-    {
-      keywords: ['book', 'booking', 'reserve', 'reservation', 'room', 'check in', 'check-in'],
-      text: "Ah, lovely! When would you like to check in? We have standard, deluxe, and executive suites available.",
-      audio: "kwame_turn_01.mp3",
+  // ── Flow definitions ──────────────────────────────────────────────
+  // chips_after[i] is the chip set shown AFTER the response from
+  // step[i]. Length must equal steps.length.
+  const FLOWS = {
+    booking: {
+      chips_after: [
+        ["This Friday, deluxe room", "Saturday, standard please", "What about cancellations?"],
+        ["Yes please, hold it", "Maybe later", "Tell me about breakfast"],
+        [],   // step 2 is the closer — let the user respond freely
+      ],
+      steps: [
+        {
+          keywords: ['book', 'booking', 'reserve', 'reservation', 'room', 'rooms',
+                     'check in', 'check-in', 'stay', 'night', 'nights'],
+          text: "Ah, lovely! When would you like to check in? We have standard at $80, deluxe at $120, and executive suites at $200 per night.",
+          audio: "kwame_test_2.mp3",
+        },
+        {
+          keywords: ['friday','saturday','sunday','monday','tuesday','wednesday','thursday',
+                     'tonight','tomorrow','next week','this weekend','weekend',
+                     'standard','deluxe','executive','suite','single','double',
+                     'this week'],
+          text: "Let me check... yes, we have a deluxe room available this Friday. That's $120 per night, breakfast included. Shall I hold the booking for you?",
+          audio: "kwame_test_3.mp3",
+        },
+        {
+          keywords: ['yes','please','confirm','go ahead','sure','ok','okay','yep',
+                     'alright','do it','book it','hold it','hold the','let\\'s do it'],
+          text: "Perfect. I'll need your full name, phone number, and email address. And a deposit equal to the first night to secure the booking.",
+          audio: null,
+        },
+      ],
     },
-    {
-      keywords: ['rate', 'rates', 'price', 'prices', 'cost', 'how much', 'cedis', 'dollars'],
-      text: "Our standard room is $80 per night, deluxe is $120, and the executive suite is $200. Breakfast is included with all rooms.",
-      audio: "kwame_turn_02.mp3",
+    pricing: {
+      chips_after: [["I'd like to book a room", "Do you have a pool?", "What's included with breakfast?"]],
+      steps: [
+        {
+          keywords: ['rate','rates','price','prices','cost','how much','dollar','dollars',
+                     'cedis','expensive','cheap','rooms cost'],
+          text: "Our standard room is $80 per night, deluxe is $120, and the executive suite with ocean view is $200. All include complimentary breakfast and WiFi.",
+          audio: null,
+        },
+      ],
     },
-    {
-      keywords: ['pool', 'amenity', 'amenities', 'facility', 'facilities', 'wifi', 'gym', 'fitness', 'restaurant', 'breakfast'],
-      text: "Yes, we have a swimming pool open from 7am to 9pm, a restaurant serving Ghanaian and continental dishes, free WiFi, and a fitness center. Anything specific you'd like to know about?",
-      audio: "kwame_turn_03.mp3",
+    amenities: {
+      chips_after: [["I'd like to book a room", "What are your rates?", "What time is breakfast?"]],
+      steps: [
+        {
+          keywords: ['pool','amenity','amenities','facility','facilities','wifi',
+                     'gym','fitness','restaurant','shuttle','airport','have a',
+                     'do you have'],
+          text: "Yes! We have a swimming pool open from 7am to 9pm, a restaurant serving Ghanaian and continental dishes, free WiFi throughout, a fitness center, and airport shuttle service for $25 each way.",
+          audio: null,
+        },
+      ],
     },
-    {
-      keywords: ['complaint', 'unhappy', 'problem', 'dirty', 'rude', 'angry', 'broken', 'cold', 'noisy'],
-      text: "I'm really sorry to hear that. That's not the experience we want you to have. Let me connect you with my manager who can resolve this for you right away.",
-      audio: "kwame_turn_04.mp3",
+    complaint: {
+      chips_after: [[]],
+      steps: [
+        {
+          keywords: ['complaint','complaints','unhappy','problem','problems','dirty',
+                     'rude','angry','broken','cold','noisy','disgusting','terrible',
+                     'awful','worst','disappointed','frustrated','upset',
+                     'manager','speak to'],
+          text: "I'm really sorry to hear that. That's not the experience we want for our guests. Let me connect you with my manager right away to resolve this. What's the best number to reach you?",
+          audio: null,
+        },
+      ],
     },
-  ];
+  };
+
   const DEFAULT_RESPONSE = {
     text: "Let me check on that for you. Is there anything else I can help with in the meantime?",
-    audio: "kwame_turn_05.mp3",
+    audio: null,
   };
+
   const GREETING = {
     text: "Hello? Yes, Adinkra Hotel. Kwame speaking. How can I help you today?",
-    audio: "kwame_turn_00.mp3",
+    audio: "kwame_test_1.mp3",
+    chips: null,  // we use INITIAL_CHIPS for the opener
   };
 
+  const INITIAL_CHIPS = [
+    "I'd like to book a room",
+    "What are your rates?",
+    "Do you have a pool?",
+    "I have a complaint",
+  ];
+
+  // ── Mutable state ─────────────────────────────────────────────────
   let typewriterTimer = null;
-  let activeText = null;        // ref to the textNode being typed
-  let activeFinalText = null;   // full text the typewriter is heading to
+  let activeText = null;
+  let activeFinalText = null;
+  let activeChipsAfter = null;   // chips to install when typewriter completes
   let firstUserInteraction = true;
   let autoplayHintShown = false;
+  let isProcessing = false;
+  let conversationFlow = null;   // null | 'booking' | 'pricing' | ...
+  let conversationStep = 0;
 
+  // ── Routing ───────────────────────────────────────────────────────
   function routeMessage(text) {
     const t = (text || '').toLowerCase();
-    for (const r of RESPONSE_MAP) {
-      if (r.keywords.some((k) => t.includes(k))) return r;
+
+    // 1. Mid-flow: try to advance to the next step.
+    if (conversationFlow) {
+      const flow = FLOWS[conversationFlow];
+      const nextIdx = conversationStep + 1;
+      const nextStep = flow.steps[nextIdx];
+      if (nextStep && nextStep.keywords.some((k) => t.includes(k))) {
+        conversationStep = nextIdx;
+        const isLast = nextIdx === flow.steps.length - 1;
+        const response = Object.assign({}, nextStep, {
+          chips: (flow.chips_after[nextIdx] && flow.chips_after[nextIdx].length)
+                  ? flow.chips_after[nextIdx]
+                  : INITIAL_CHIPS,
+        });
+        if (isLast) { conversationFlow = null; conversationStep = 0; }
+        return response;
+      }
+      // Off-script — exit the flow and re-route from the top.
+      conversationFlow = null;
+      conversationStep = 0;
     }
-    return DEFAULT_RESPONSE;
+
+    // 2. Top-level routing — pick a flow whose first step matches.
+    for (const name in FLOWS) {
+      if (!Object.prototype.hasOwnProperty.call(FLOWS, name)) continue;
+      const flow = FLOWS[name];
+      const firstStep = flow.steps[0];
+      if (firstStep.keywords.some((k) => t.includes(k))) {
+        conversationFlow = (flow.steps.length > 1) ? name : null;
+        conversationStep = 0;
+        return Object.assign({}, firstStep, {
+          chips: (flow.chips_after[0] && flow.chips_after[0].length)
+                  ? flow.chips_after[0]
+                  : INITIAL_CHIPS,
+        });
+      }
+    }
+
+    // 3. No match — default response, keep state.
+    return Object.assign({}, DEFAULT_RESPONSE, { chips: INITIAL_CHIPS });
+  }
+
+  // ── Chips ─────────────────────────────────────────────────────────
+  function setActiveChips(items) {
+    chipsEl.innerHTML = '';
+    (items || []).forEach((msg) => {
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'chat-chip';
+      btn.dataset.message = msg;
+      btn.textContent = msg;
+      btn.addEventListener('click', () => sendUserMessage(msg));
+      chipsEl.appendChild(btn);
+    });
   }
 
   function scrollToBottom() {
@@ -3420,11 +3544,19 @@ function startTypewriter(container, opts) {
   }
 
   function finalisePendingTypewriter() {
+    // Always called from inside appendKwameMessage() right before it
+    // starts a new typewriter, so we DO NOT release the busy lock —
+    // the upcoming tick() loop owns that. We do flush any pending
+    // chip-update so the prior message's chips don't get clobbered.
     if (!typewriterTimer) return;
     clearTimeout(typewriterTimer);
     typewriterTimer = null;
     if (activeText && activeFinalText !== null) {
       activeText.textContent = activeFinalText;
+    }
+    if (activeChipsAfter) {
+      setActiveChips(activeChipsAfter);
+      activeChipsAfter = null;
     }
     activeText = null;
     activeFinalText = null;
@@ -3465,6 +3597,7 @@ function startTypewriter(container, opts) {
 
     activeText = textEl;
     activeFinalText = response.text;
+    activeChipsAfter = response.chips || null;
 
     let i = 0;
     function tick() {
@@ -3474,6 +3607,11 @@ function startTypewriter(container, opts) {
         activeFinalText = null;
         if (replayBtn) replayBtn.style.opacity = '1';
         if (allowAutoplay && response.audio) playChatAudio(response.audio, replayBtn);
+        if (activeChipsAfter) {
+          setActiveChips(activeChipsAfter);
+          activeChipsAfter = null;
+        }
+        setBusy(false);
         return;
       }
       textEl.textContent += response.text.charAt(i++);
@@ -3482,6 +3620,12 @@ function startTypewriter(container, opts) {
     }
     typewriterTimer = setTimeout(tick, 30);
     scrollToBottom();
+  }
+
+  function setBusy(busy) {
+    isProcessing = busy;
+    if (input) input.disabled = busy;
+    if (send) send.disabled = busy;
   }
 
   function showTypingIndicator() {
@@ -3538,13 +3682,18 @@ function startTypewriter(container, opts) {
   function sendUserMessage(text) {
     text = (text || '').trim();
     if (!text) return;
-    firstUserInteraction = false;  // any keypress / click counts
+    if (isProcessing) return;       // drop submits while a turn is in flight
+    setBusy(true);
+    firstUserInteraction = false;
     appendUserMessage(text);
     showTypingIndicator();
     const delay = 1100 + Math.floor(Math.random() * 800);  // 1.1-1.9s
     setTimeout(() => {
       hideTypingIndicator();
       const response = routeMessage(text);
+      // appendKwameMessage will release the busy lock after the
+      // typewriter completes (or finalisePendingTypewriter does it
+      // early if a new message starts).
       appendKwameMessage(response);
     }, delay);
   }
@@ -3554,17 +3703,7 @@ function startTypewriter(container, opts) {
     e.preventDefault();
     sendUserMessage(input.value);
     input.value = '';
-    input.focus();
-  });
-
-  // Wire chips
-  chips.forEach((chip) => {
-    chip.addEventListener('click', () => {
-      const msg = chip.getAttribute('data-message') || chip.textContent;
-      input.value = msg;
-      sendUserMessage(msg);
-      input.value = '';
-    });
+    if (!isProcessing) input.focus();
   });
 
   // Wire replay buttons (event delegation)
@@ -3575,9 +3714,17 @@ function startTypewriter(container, opts) {
     playChatAudio(target.dataset.audio, target);
   });
 
-  // Initial greeting after 1 second. Audio autoplay is allowed but
-  // gracefully handled if the browser blocks it.
-  setTimeout(() => appendKwameMessage(GREETING), 1000);
+  // Install initial chips (replaces any server-rendered placeholders
+  // and binds proper click handlers).
+  setActiveChips(INITIAL_CHIPS);
+
+  // Initial greeting after 1 second. Audio autoplay may be blocked;
+  // the showAutoplayHint() path handles that case. The greeting
+  // intentionally does NOT engage the busy lock — the user should be
+  // able to type a chip selection while Kwame's opener is still typing.
+  setTimeout(() => {
+    appendKwameMessage(Object.assign({}, GREETING, { chips: INITIAL_CHIPS }));
+  }, 1000);
 })();
 
 // -- nav active link highlight on scroll ------------------------------

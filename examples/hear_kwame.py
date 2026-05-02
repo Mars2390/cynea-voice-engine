@@ -43,9 +43,16 @@ SPEED = 0.95   # Carried through the SynthesisRequest; ElevenLabs' turbo
                # the value through for parity with the Edge path.
 
 PHRASES = [
-    "Hello? Yes, Adinkra Hotel. Kwame speaking. How can I help?",
-    "Ah, let me check... yes, we have a double room available for Friday. Two adults?",
-    "It's four hundred and eighty cedis per night, breakfast included. Want me to hold it?",
+    # Booking step 1 — greeting (mapped to kwame_test_1.mp3 by the
+    # landing-page chat widget).
+    "Hello? Yes, Adinkra Hotel. Kwame speaking. How can I help you today?",
+    # Booking step 2 — room inquiry response (kwame_test_2.mp3).
+    # Numerics spelled out so ElevenLabs renders them naturally; the
+    # turbo model otherwise reads "$80" as "eighty dollar sign" on
+    # some pronunciations.
+    "Ah, lovely! When would you like to check in? We have standard at eighty dollars, deluxe at one hundred twenty, and executive suites at two hundred per night.",
+    # Booking step 3 — availability + price + hold offer (kwame_test_3.mp3).
+    "Let me check... yes, we have a deluxe room available this Friday. That's one hundred twenty dollars per night, breakfast included. Shall I hold the booking for you?",
 ]
 
 # Output dir — examples/_out/ so the landing page's relative audio

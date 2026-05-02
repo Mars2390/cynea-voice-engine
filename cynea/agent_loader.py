@@ -78,6 +78,16 @@ try:
 except ImportError:
     pass
 
+try:
+    from cynea_africa.persona.kofi import (
+        KOFI_SYSTEM_PROMPT,
+        KOFI_VOICE_CONFIG,
+        KOFI_FIRST_MESSAGE,
+    )
+    _register("kofi", KOFI_SYSTEM_PROMPT, KOFI_VOICE_CONFIG, KOFI_FIRST_MESSAGE)
+except ImportError:
+    pass
+
 
 # ---------------------------------------------------------------------
 # Validation

@@ -1852,6 +1852,8 @@ def _render_landing_html(*, calls: list, showcase: dict, is_empty_state: bool) -
 <style>{dashboard_css}{css}</style>
 </head>
 <body class="landing">
+<div id="cynea-scroll-progress" aria-hidden="true"></div>
+<div id="cynea-cursor-glow" aria-hidden="true"></div>
 {loader}
 {nav}
 {metrics}
@@ -1865,8 +1867,8 @@ def _render_landing_html(*, calls: list, showcase: dict, is_empty_state: bool) -
   <section id="dashboard" class="dashboard-anchor">
     <div class="section-head">
       <span class="section-eyebrow">Operations</span>
-      <h2>Live data, not a screenshot</h2>
-      <p class="muted">Real call history with containment, sentiment and cost per call.</p>
+      <h2>Operations dashboard</h2>
+      <p class="muted">Call history with containment, sentiment, and cost per call — exportable on demand.</p>
     </div>
     <details class="data-collapse" open>
       <summary>
@@ -1878,6 +1880,9 @@ def _render_landing_html(*, calls: list, showcase: dict, is_empty_state: bool) -
   </section>
 </main>
 {footer}
+<button id="cynea-back-to-top" type="button" aria-label="Back to top" hidden>
+  <span aria-hidden="true">↑</span>
+</button>
 <div id="toast" role="status" aria-live="polite"></div>
 <audio id="audio-player" preload="none" aria-label="Demo audio player"></audio>
 <script>{js}</script>
@@ -2245,11 +2250,11 @@ def _landing_render_phone_demo() -> str:
       </div>
     </div>
     <aside class="phone-sidecar">
-      <h3>Try it yourself</h3>
-      <p class="muted">Real phone-line integration ships with Africa's Talking and Twilio. Drop in your number and route inbound calls.</p>
+      <h3>Engineered for African telephony</h3>
+      <p class="muted">Production-ready integrations with Africa's Talking, Twilio, Plivo and SIP. Route inbound calls to your agents in minutes, not weeks.</p>
       <div class="phone-cta-row">
-        <code class="phone-number mono">+233 ___ _______</code>
-        <span class="muted small">placeholder · talk to us for production routing</span>
+        <a class="btn btn-primary btn-glow" href="#agents">Book a demo</a>
+        <a class="btn btn-ghost" href="https://github.com/Mars2390/cynea-voice-engine" target="_blank" rel="noopener">View on GitHub</a>
       </div>
       <div class="phone-feature-row">
         <div class="phone-feature">
@@ -3118,6 +3123,180 @@ body.landing > footer.landing-footer {
 @media print {
   .chat-demo-section { display: none !important; }
 }
+
+/* ── polish layer ───────────────────────────────────────────────── */
+/* All animations below honour prefers-reduced-motion via the global
+   override at the top of this stylesheet. New keyframes use only
+   transform + opacity so the GPU compositor can drive them at 60fps. */
+
+/* scroll progress bar — fixed 2px line at the very top */
+#cynea-scroll-progress {
+  position: fixed; top: 0; left: 0; right: 0; height: 2px;
+  background: linear-gradient(90deg, #00D4FF 0%, #A78BFA 100%);
+  width: 0%;
+  z-index: 60;
+  pointer-events: none;
+  transition: width 80ms linear;
+  box-shadow: 0 0 8px rgba(0,212,255,0.6);
+}
+
+/* cursor glow — desktop only; CSS hides it on touch / coarse pointer */
+#cynea-cursor-glow {
+  position: fixed; top: 0; left: 0;
+  width: 480px; height: 480px;
+  margin-left: -240px; margin-top: -240px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(0,212,255,0.10) 0%, rgba(0,212,255,0) 60%);
+  pointer-events: none;
+  z-index: 1;
+  opacity: 0;
+  transform: translate3d(50vw, 50vh, 0);
+  transition: opacity 200ms ease;
+  mix-blend-mode: screen;
+}
+@media (hover: hover) and (pointer: fine) {
+  #cynea-cursor-glow.active { opacity: 1; }
+}
+@media (hover: none), (pointer: coarse), (max-width: 720px) {
+  #cynea-cursor-glow { display: none !important; }
+}
+
+/* back-to-top button */
+#cynea-back-to-top {
+  position: fixed; right: 22px; bottom: 22px;
+  width: 44px; height: 44px; border-radius: 50%;
+  background: #00D4FF; color: #001218;
+  border: none; cursor: pointer;
+  font-size: 18px; line-height: 1;
+  display: inline-flex; align-items: center; justify-content: center;
+  z-index: 55;
+  opacity: 0; transform: translate3d(0, 14px, 0);
+  transition: opacity 220ms ease, transform 220ms ease, filter 120ms ease;
+  box-shadow: 0 0 0 1px rgba(0,212,255,0.45), 0 12px 36px rgba(0,212,255,0.35);
+}
+#cynea-back-to-top[hidden] { display: none; }
+#cynea-back-to-top.visible { opacity: 1; transform: translate3d(0, 0, 0); }
+#cynea-back-to-top:hover { filter: brightness(1.06); transform: translate3d(0, -2px, 0); }
+#cynea-back-to-top:active { transform: translate3d(0, 0, 0); }
+
+/* nav underline-slide on hover */
+.nav-links a {
+  position: relative;
+  padding-bottom: 2px;
+}
+.nav-links a::after {
+  content: ""; position: absolute; left: 0; bottom: -2px;
+  width: 100%; height: 1px;
+  background: #00D4FF;
+  transform: scaleX(0); transform-origin: left center;
+  transition: transform 260ms cubic-bezier(.2,.8,.2,1);
+}
+.nav-links a:hover::after { transform: scaleX(1); }
+
+/* button micro-interactions — subtle scale + lift on hover */
+.btn { transition: transform 180ms cubic-bezier(.2,.8,.2,1), box-shadow 220ms ease, filter 120ms ease, background 200ms ease; }
+.btn:hover { transform: translateY(-1px) scale(1.025); }
+.btn:active { transform: translateY(0) scale(1); }
+
+/* brand glow pulse — only fires on the static (post-loader) wordmark */
+@keyframes brandGlowPulse {
+  0%, 100% { text-shadow: 0 0 18px rgba(0,212,255,0.4); }
+  50%      { text-shadow: 0 0 30px rgba(0,212,255,0.75), 0 0 60px rgba(0,212,255,0.25); }
+}
+.landing-nav .brand-mark,
+.landing-footer .brand-mark.large {
+  animation: brandGlowPulse 4.5s ease-in-out infinite;
+}
+
+/* hero floating-card subtle glow on the typewritten text */
+.hero-card .convo-text { text-shadow: 0 0 12px rgba(0,212,255,0.18); }
+
+/* agent-card border shimmer — a slow conic sweep behind the card */
+.agent-card-cinematic::before {
+  content: ""; position: absolute; inset: -1px;
+  border-radius: inherit;
+  background: conic-gradient(
+    from 0deg,
+    transparent 0deg,
+    var(--accent-soft) 60deg,
+    transparent 120deg,
+    transparent 360deg
+  );
+  opacity: 0;
+  transition: opacity 400ms ease;
+  z-index: 0;
+  pointer-events: none;
+  animation: agentShimmer 8s linear infinite;
+}
+.agent-card-cinematic:hover::before { opacity: 0.5; }
+@keyframes agentShimmer {
+  to { transform: rotate(360deg); }
+}
+
+/* metrics strip — subtle background pattern */
+.metric-strip-inner::before {
+  content: ""; position: absolute; inset: 0; pointer-events: none;
+  background-image:
+    linear-gradient(rgba(0,212,255,0.025) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0,212,255,0.025) 1px, transparent 1px);
+  background-size: 24px 24px;
+  opacity: 0.5;
+}
+.metric-strip { position: sticky; }
+.metric-strip-inner { position: relative; }
+.metric-num { font-weight: 600; }
+
+/* features — glass-morphism + icon hover bounce */
+.feature-card-cinematic {
+  background: linear-gradient(160deg, rgba(17,17,17,0.85) 0%, rgba(14,14,14,0.85) 100%);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+.feature-icon { transition: transform 320ms cubic-bezier(.2,.8,.2,1); }
+.feature-card-cinematic:hover .feature-icon { transform: rotate(-6deg) scale(1.08); }
+
+/* phone mockup — top reflection highlight */
+.phone-frame::before {
+  content: ""; position: absolute; inset: 0;
+  border-radius: inherit;
+  background: linear-gradient(180deg, rgba(255,255,255,0.06) 0%, rgba(255,255,255,0) 25%);
+  pointer-events: none;
+  z-index: 3;
+}
+
+/* hero parallax — applied via JS by setting --parallax-y on .hero-bg */
+.hero-bg { will-change: transform; transform: translate3d(0, var(--parallax-y, 0px), 0); }
+
+/* reveal stagger — child cards within a section fade up one after another */
+.agent-showcase-grid > .reveal:nth-child(1) { transition-delay: 0ms; }
+.agent-showcase-grid > .reveal:nth-child(2) { transition-delay: 120ms; }
+.features-grid > .reveal:nth-child(1) { transition-delay: 0ms; }
+.features-grid > .reveal:nth-child(2) { transition-delay: 80ms; }
+.features-grid > .reveal:nth-child(3) { transition-delay: 160ms; }
+.features-grid > .reveal:nth-child(4) { transition-delay: 240ms; }
+.features-grid > .reveal:nth-child(5) { transition-delay: 320ms; }
+.features-grid > .reveal:nth-child(6) { transition-delay: 400ms; }
+
+/* reveal — add a subtle scale-in on top of the existing translateY */
+.reveal { transform: translateY(24px) scale(0.985); }
+.reveal.visible { transform: translateY(0) scale(1); }
+
+/* online dot — slightly more natural pulse cadence */
+.pulse-dot {
+  animation: pulseDotNatural 1.8s cubic-bezier(.4,0,.6,1) infinite;
+}
+@keyframes pulseDotNatural {
+  0%   { box-shadow: 0 0 0 0 rgba(16,185,129,0.7); }
+  60%  { box-shadow: 0 0 0 9px rgba(16,185,129,0); }
+  100% { box-shadow: 0 0 0 0 rgba(16,185,129,0); }
+}
+
+/* hide all polish layers on print */
+@media print {
+  #cynea-scroll-progress, #cynea-cursor-glow, #cynea-back-to-top { display: none !important; }
+  .agent-card-cinematic::before, .phone-frame::before, .metric-strip-inner::before { display: none !important; }
+  .feature-card-cinematic { backdrop-filter: none !important; }
+}
 """
 
 
@@ -3725,6 +3904,106 @@ function startTypewriter(container, opts) {
   setTimeout(() => {
     appendKwameMessage(Object.assign({}, GREETING, { chips: INITIAL_CHIPS }));
   }, 1000);
+})();
+
+// -- polish layer -----------------------------------------------------
+//
+// Scroll progress bar, back-to-top button, hero parallax, and a soft
+// cursor-glow that follows the mouse on desktop. Every handler is
+// gated on prefers-reduced-motion (reduce) returning false; reduced-
+// motion users get the static page with no parallax and instant
+// scroll restore.
+
+(function() {
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  // -- shared scroll state, updated once per RAF ----------------------
+  const progressEl = document.getElementById('cynea-scroll-progress');
+  const backTopEl  = document.getElementById('cynea-back-to-top');
+  const heroBg     = document.querySelector('.hero-cinematic .hero-bg');
+
+  let lastScrollY = 0;
+  let scrollScheduled = false;
+
+  function readScroll() {
+    scrollScheduled = false;
+    const y = window.scrollY || window.pageYOffset || 0;
+    const docH = Math.max(1, document.documentElement.scrollHeight - window.innerHeight);
+    const pct = Math.max(0, Math.min(100, (y / docH) * 100));
+
+    if (progressEl) {
+      progressEl.style.width = pct.toFixed(2) + '%';
+    }
+
+    if (backTopEl) {
+      const shouldShow = y > 500;
+      if (shouldShow && backTopEl.hidden) {
+        backTopEl.hidden = false;
+        // Force reflow before adding the class so the transition runs.
+        void backTopEl.offsetWidth;
+        backTopEl.classList.add('visible');
+      } else if (!shouldShow && !backTopEl.hidden) {
+        backTopEl.classList.remove('visible');
+        // Hide after the transition so :focus traps don't leak.
+        setTimeout(() => { if ((window.scrollY || 0) <= 500) backTopEl.hidden = true; }, 250);
+      }
+    }
+
+    if (heroBg && !reduceMotion) {
+      // Background drifts at 30% of scroll speed — subtle parallax.
+      const offset = Math.max(-200, -y * 0.3);
+      heroBg.style.setProperty('--parallax-y', offset.toFixed(1) + 'px');
+    }
+
+    lastScrollY = y;
+  }
+
+  function onScroll() {
+    if (scrollScheduled) return;
+    scrollScheduled = true;
+    requestAnimationFrame(readScroll);
+  }
+
+  window.addEventListener('scroll', onScroll, { passive: true });
+  window.addEventListener('resize', onScroll, { passive: true });
+  readScroll();  // initial paint
+
+  // -- back-to-top click ----------------------------------------------
+  if (backTopEl) {
+    backTopEl.addEventListener('click', () => {
+      window.scrollTo({
+        top: 0,
+        behavior: reduceMotion ? 'auto' : 'smooth',
+      });
+    });
+  }
+
+  // -- cursor glow (desktop only — CSS handles the visibility gate) ---
+  const glowEl = document.getElementById('cynea-cursor-glow');
+  if (glowEl && !reduceMotion) {
+    let glowX = window.innerWidth / 2;
+    let glowY = window.innerHeight / 2;
+    let glowScheduled = false;
+
+    function paintGlow() {
+      glowScheduled = false;
+      glowEl.style.transform =
+        'translate3d(' + glowX.toFixed(0) + 'px, ' + glowY.toFixed(0) + 'px, 0)';
+    }
+
+    window.addEventListener('mousemove', (e) => {
+      glowX = e.clientX;
+      glowY = e.clientY;
+      glowEl.classList.add('active');
+      if (glowScheduled) return;
+      glowScheduled = true;
+      requestAnimationFrame(paintGlow);
+    }, { passive: true });
+
+    window.addEventListener('mouseleave', () => {
+      glowEl.classList.remove('active');
+    });
+  }
 })();
 
 // -- nav active link highlight on scroll ------------------------------

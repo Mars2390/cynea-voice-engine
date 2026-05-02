@@ -2672,7 +2672,6 @@ def _landing_render_hero() -> str:
   </div>
   <div class="hero-grid">
     <div class="hero-text">
-      <span class="pill pill-cyan">Open source · MIT · Built in Kenya</span>
       <h1 class="hero-title">
         <span class="hero-line-1">{html.escape(LANDING_HEADLINE_LEAD)}</span>
         <span class="hero-line-2">{html.escape(LANDING_HEADLINE_ACCENT)}</span>

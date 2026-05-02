@@ -2913,10 +2913,11 @@ def _landing_render_nav() -> str:
     <span class="brand-tag">VOICE ENGINE</span>
   </a>
   <ul class="nav-links">
-    <li><a href="#agents">Agents</a></li>
-    <li><a href="#timeline">How it works</a></li>
+    <li><a href="product_tour.html">Product Tour</a></li>
+    <li><a href="demo_call_flow.html">Demo</a></li>
+    <li><a href="help_center.html">Help</a></li>
     <li><a href="#features">Features</a></li>
-    <li><a href="#dashboard">Dashboard</a></li>
+    <li><a href="agent_manager.html">Dashboard</a></li>
     <li><a href="https://github.com/Mars2390/cynea-voice-engine" target="_blank" rel="noopener">GitHub</a></li>
   </ul>
   <a class="nav-signin" href="signin.html">Sign in</a>

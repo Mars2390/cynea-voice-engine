@@ -1,0 +1,62 @@
+ADINKRA HOTEL - ROOMS & SERVICES SCRIPT
+========================================
+
+ROOM TYPES:
+- Standard Room: /night. Single bed, city view, WiFi, TV, air conditioning.
+- Deluxe Room: /night. Queen bed, ocean view, WiFi, TV, mini-bar, balcony.
+- Executive Suite: /night. King bed, panoramic ocean view, WiFi, TV, mini-bar, living area, private balcony.
+- Family Room: /night. Two queen beds, garden view, WiFi, TV, kids play area.
+
+AMENITIES:
+- Swimming pool (7am - 9pm)
+- Restaurant: Ghanaian & continental cuisine (breakfast 6:30-10am, lunch 12-3pm, dinner 6-10pm)
+- Free WiFi throughout the property
+- Airport shuttle:  each way (30 mins from Kotoka International Airport)
+- 24-hour front desk
+- Free parking
+- Fitness center
+- Business center with printing services
+- Complimentary breakfast for all guests
+
+POLICIES:
+- Check-in: 2:00 PM
+- Check-out: 11:00 AM
+- Early check-in or late check-out:  extra (subject to availability)
+- Cancellation: Free up to 48 hours before check-in
+- Late cancellation (within 48 hours): 50% of first night
+- No-show: Full first night charged
+
+PAYMENT:
+- Visa, Mastercard, Mobile Money, and cash accepted
+- Deposit equal to first night required at booking
+
+LOCATION:
+- Central Accra, 10 minutes from Labadi Beach
+- 5 minutes from Makola Market
+- 30 minutes from Kotoka International Airport
+- Near Independence Square, Kwame Nkrumah Memorial Park
+
+FAQs:
+Q: What time is breakfast?
+A: Breakfast is served daily from 6:30am to 10:00am. Complimentary for all guests.
+
+Q: Do you have airport pickup?
+A: Yes, airport shuttle is  each way. Please book at least 2 hours in advance.
+
+Q: Is there WiFi?
+A: Yes, free high-speed WiFi is available throughout the hotel.
+
+Q: Can I bring my pet?
+A: We allow small pets in standard and family rooms. A  cleaning fee applies.
+
+Q: Do you have a restaurant?
+A: Yes, our restaurant serves Ghanaian and continental dishes. Open for breakfast, lunch, and dinner.
+
+Q: Is parking free?
+A: Yes, we offer free parking for all guests.
+
+Q: Can I cancel my booking?
+A: Free cancellation up to 48 hours before check-in. Within 48 hours, 50% of first night is charged.
+
+Q: What time is check-in and check-out?
+A: Check-in from 2:00 PM. Check-out by 11:00 AM. Early/late options available for .

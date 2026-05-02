@@ -1242,11 +1242,118 @@ function playVoice(btn) {
 // ─────────────────────────────────────────────────────────────────
 // "Calls today" gentle live ticker (every 8 s, +1) — purely cosmetic.
 // ─────────────────────────────────────────────────────────────────
-(function tickStat() {
-  const el = document.getElementById('callsTodayStat');
-  if (!el) return;
-  let v = parseInt((el.textContent || '247').replace(/[^0-9]/g, ''), 10) || 247;
-  setInterval(() => { v += 1; el.textContent = v.toLocaleString(); }, 8000);
+// Live simulator — bumps the global "Calls Today" stat and each
+// agent's per-card calls counter at realistic intervals, plus a
+// brief "ringing" pulse on a random active agent every couple of
+// minutes. State sits at window.CALL_CENTER_STATE for inspection.
+// All numbers are sample data, no backend.
+// ─────────────────────────────────────────────────────────────────
+(function() {
+  const callsTodayEl = document.getElementById('callsTodayStat');
+  const STATE = window.CALL_CENTER_STATE = {
+    callsToday: callsTodayEl ? (parseInt((callsTodayEl.textContent || '247').replace(/[^0-9]/g, ''), 10) || 247) : 247,
+    callsHandled: AGENTS.reduce((m, a) => (m[a.name] = a.callsToday, m), {}),
+  };
+
+  function bumpGlobalCallsToday() {
+    STATE.callsToday += 1;
+    if (callsTodayEl) {
+      callsTodayEl.textContent = STATE.callsToday.toLocaleString();
+      // Brief flash so it doesn't feel like a clock just incrementing.
+      callsTodayEl.style.transition = 'color 320ms ease';
+      callsTodayEl.style.color = '#10B981';
+      setTimeout(() => { callsTodayEl.style.color = ''; }, 600);
+    }
+  }
+
+  function jitter(minMs, maxMs) { return minMs + Math.random() * (maxMs - minMs); }
+
+  // Bump a random ACTIVE agent's per-card calls counter every 60-120 s.
+  // Also re-renders the table row so both views stay in sync.
+  function bumpRandomAgent() {
+    const activeAgents = AGENTS.filter((a) => a.status === 'active');
+    if (!activeAgents.length) return scheduleAgentBump();
+    const target = activeAgents[Math.floor(Math.random() * activeAgents.length)];
+    target.callsToday += 1;
+    STATE.callsHandled[target.name] = target.callsToday;
+
+    // Update the matching agent card.
+    document.querySelectorAll('.am-agent-card').forEach((card) => {
+      const nameEl = card.querySelector('.am-agent-id h4');
+      if (!nameEl || nameEl.textContent !== target.name) return;
+      const valEls = card.querySelectorAll('.am-agent-stat-value');
+      // First .am-agent-stat-value is "calls today" per renderAgentCards.
+      if (valEls.length) {
+        valEls[0].textContent = target.callsToday;
+        valEls[0].style.transition = 'color 400ms ease';
+        valEls[0].style.color = '#10B981';
+        setTimeout(() => { valEls[0].style.color = ''; }, 700);
+      }
+    });
+
+    // Re-render the table row for this agent (preserves sort).
+    const tbody = document.getElementById('agentTableBody');
+    if (tbody) {
+      Array.from(tbody.querySelectorAll('tr')).forEach((tr) => {
+        const nameCell = tr.querySelector('.row-name');
+        if (!nameCell || !nameCell.textContent.includes(target.name)) return;
+        const cells = tr.querySelectorAll('td');
+        // Column 4 is "Calls today" (zero-indexed cells[3]).
+        if (cells[3]) {
+          cells[3].textContent = target.callsToday;
+          cells[3].style.background = 'rgba(16,185,129,0.10)';
+          setTimeout(() => { cells[3].style.background = ''; }, 1200);
+        }
+      });
+    }
+
+    bumpGlobalCallsToday();
+    scheduleAgentBump();
+  }
+  function scheduleAgentBump() {
+    setTimeout(bumpRandomAgent, jitter(60000, 120000));
+  }
+
+  // Brief "ringing" pulse on a random active agent every 90-180 s. The
+  // active status pill flashes amber for ~3 s, then back to green.
+  function ringingPulse() {
+    const cards = Array.from(document.querySelectorAll('.am-agent-card'));
+    const activeCards = cards.filter((c) => {
+      const pill = c.querySelector('.am-agent-status');
+      return pill && pill.classList.contains('active');
+    });
+    if (!activeCards.length) return scheduleRinging();
+    const card = activeCards[Math.floor(Math.random() * activeCards.length)];
+    const pill = card.querySelector('.am-agent-status');
+    const dot = card.querySelector('.am-agent-status-dot');
+    const label = pill && pill.lastChild && pill.lastChild.nodeType === 3
+      ? pill.lastChild : null;
+    if (!pill || !label) return scheduleRinging();
+    const original = label.textContent;
+    pill.style.color = '#F59E0B';
+    pill.style.borderColor = 'rgba(245,158,11,0.30)';
+    pill.style.background = 'rgba(245,158,11,0.12)';
+    if (dot) dot.style.background = '#F59E0B';
+    label.textContent = ' Ringing';
+    setTimeout(() => {
+      pill.style.color = '';
+      pill.style.borderColor = '';
+      pill.style.background = '';
+      if (dot) dot.style.background = '';
+      label.textContent = original;
+    }, 3000);
+    scheduleRinging();
+  }
+  function scheduleRinging() {
+    setTimeout(ringingPulse, jitter(90000, 180000));
+  }
+
+  // Kick everything off with random initial delays so the page doesn't
+  // fire all three at once.
+  setTimeout(bumpGlobalCallsToday, jitter(8000, 18000));
+  setInterval(bumpGlobalCallsToday, jitter(20000, 35000));   // gentle background
+  scheduleAgentBump();
+  scheduleRinging();
 })();
 </script>
 </body>

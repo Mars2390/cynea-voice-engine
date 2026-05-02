@@ -33,6 +33,19 @@ import sys
 from collections import OrderedDict
 from typing import Optional
 
+# Kwame's full engineered system prompt — injected into the chat
+# widget's JS so the Groq integration can send the real persona
+# context, not a stripped-down sales-demo prompt. Falls back to a
+# tiny placeholder if the persona module isn't on the path.
+try:
+    from cynea_africa.persona.kwame import KWAME_SYSTEM_PROMPT as _KWAME_PROMPT
+except ImportError:
+    _KWAME_PROMPT = (
+        "You are Kwame, the AI assistant on the front desk at Adinkra Hotel "
+        "in Accra, Ghana. Be warm, brief, and helpful. Identify as the AI "
+        "on your opening turn; after that, speak naturally."
+    )
+
 
 # ---------------------------------------------------------------------
 # Cynea brand tokens (kept here so this file is self-contained even if
@@ -2104,6 +2117,26 @@ body.demo-mode .hero::after {{
   .cc-feed-actor {{ grid-column: 1 / -1; }}
 }}
 
+/* simulator transitions — slide-in for new queue rows, fade-out for
+   the row that just got "connected", green flash for new feed entries */
+.cc-queue-row.cc-sim-new {{
+  opacity: 0; transform: translateX(20px);
+  transition: opacity 320ms ease, transform 320ms cubic-bezier(.2,.8,.2,1);
+}}
+.cc-queue-row.cc-sim-new:not(.cc-sim-leaving) {{
+  /* trigger transition from JS via requestAnimationFrame removing the class */
+}}
+.cc-queue-row, .cc-feed-row {{
+  transition: opacity 320ms ease, transform 320ms ease, background 600ms ease;
+}}
+.cc-queue-row.cc-sim-leaving, .cc-feed-row.cc-sim-leaving {{
+  opacity: 0; transform: translateX(-20px);
+}}
+.cc-feed-row.cc-sim-flash {{
+  background: rgba(16,185,129,0.10);
+  box-shadow: inset 3px 0 0 0 #10B981;
+}}
+
 /* print ───────────────────────────────────────────────────────────── */
 @media print {{
   .cc-bar, .cc-roi-savings-num {{
@@ -2377,6 +2410,242 @@ function showToast(msg, duration) {{
     refresh();
     setInterval(refresh, 1000);
   }}
+}})();
+
+// -- live call-center simulator ---------------------------------------
+//
+// Rotates queue rows, agent on-call cycles, and the call-log feed at
+// realistic intervals so the dashboard feels like a breathing call
+// center. Auto-detects which DOM hooks are present, so it's safe to
+// run on the landing page (no-ops there) and the dashboard alike.
+//
+// Numbers are pseudo-data — no real ops behind them. State lives at
+// `window.CALL_CENTER_STATE` for inspection.
+
+(function() {{
+  if (window.__cyneaSimulatorRunning) return;
+  const queueListEl = document.querySelector('#cc-queue .cc-queue-list');
+  const feedListEl  = document.querySelector('#cc-feed .cc-feed-list');
+  const agentBoardEl = document.getElementById('cc-agent-board');
+  if (!queueListEl && !feedListEl && !agentBoardEl) return;
+  window.__cyneaSimulatorRunning = true;
+
+  // ── State ────────────────────────────────────────────────────────
+  const STATE = window.CALL_CENTER_STATE = {{
+    queueIdSeq: 1000,
+    feedIdSeq:  2000,
+    callsToday: 247,
+  }};
+
+  const DEPT_LIST = ['Hotel Desk', 'Banking', 'Restaurant', 'Support'];
+  const CALL_TYPES = {{
+    'Hotel Desk':  ['Booking', 'Inquiry', 'Reservation change'],
+    'Banking':     ['Balance inquiry', 'Card lost', 'Transfer'],
+    'Restaurant':  ['Order', 'Delivery'],
+    'Support':     ['Inquiry', 'Tech help'],
+  }};
+
+  const ACTION_TEMPLATES = [
+    {{actor: 'Kwame',  text: 'booked deluxe room for {{phone}} — ${{amt}}',         amt: () => [80,120,200][Math.floor(Math.random()*3)] }},
+    {{actor: 'Kwame',  text: 'confirmed reservation for {{phone}}',                amt: null }},
+    {{actor: 'Kwame',  text: 'took restaurant booking for {{phone}} — {{n}} guests', amt: () => 4 + Math.floor(Math.random()*8) }},
+    {{actor: 'Amina',  text: 'resolved balance inquiry for {{phone}}',             amt: null }},
+    {{actor: 'Amina',  text: 'blocked lost card for {{phone}}',                    amt: null }},
+    {{actor: 'Amina',  text: 'processed M-Pesa reversal for {{phone}} — KES {{amt}}', amt: () => [1000,2000,5000][Math.floor(Math.random()*3)] }},
+    {{actor: 'Kofi',   text: 'took jollof order for {{phone}} — {{amt}} cedis',    amt: () => [35,50,65,85][Math.floor(Math.random()*4)] }},
+    {{actor: 'Kofi',   text: 'took banku order for {{phone}} — {{amt}} cedis',     amt: () => [25,45,60][Math.floor(Math.random()*3)] }},
+    {{actor: 'Kofi',   text: 'confirmed delivery for {{phone}} — {{amt}} min ETA', amt: () => [20,25,30,35][Math.floor(Math.random()*4)] }},
+    {{actor: 'Adwoa',  text: 'escalated complaint to human manager',               amt: null }},
+    {{actor: 'Adwoa',  text: 'logged complaint about WiFi outage',                 amt: null }},
+  ];
+
+  function pick(arr) {{ return arr[Math.floor(Math.random() * arr.length)]; }}
+  function ghanaPhone() {{
+    const c = pick(['20', '24', '50', '54', '57']);
+    const a = String(Math.floor(100 + Math.random()*900));
+    const b = String(Math.floor(1000 + Math.random()*9000));
+    return '+233 ' + c + ' ' + a + ' ' + b;
+  }}
+  function kenyaPhone() {{
+    const c = pick(['71', '72', '79']);
+    const a = String(Math.floor(100 + Math.random()*900));
+    const b = String(Math.floor(1000 + Math.random()*9000));
+    return '+254 ' + c + ' ' + a + ' ' + b;
+  }}
+  function callerPhone(dept) {{ return dept === 'Banking' ? kenyaPhone() : ghanaPhone(); }}
+  function nowHHMMSS() {{
+    const t = new Date();
+    return String(t.getHours()).padStart(2,'0') + ':' +
+           String(t.getMinutes()).padStart(2,'0') + ':' +
+           String(t.getSeconds()).padStart(2,'0');
+  }}
+  function jitter(minMs, maxMs) {{ return minMs + Math.random() * (maxMs - minMs); }}
+
+  // ── Queue rotation ───────────────────────────────────────────────
+  // Maintain 1-4 rows. Every 30-75 s either add a new caller (slide
+  // in from right) or "connect" the oldest (fade out, simulating
+  // pickup). Keeps wait times monotonically increasing on each row.
+
+  function renumberQueue() {{
+    if (!queueListEl) return;
+    const rows = queueListEl.querySelectorAll('.cc-queue-row');
+    rows.forEach((row, i) => {{
+      const pos = row.querySelector('.cc-queue-pos');
+      if (pos) pos.textContent = '#' + (i + 1);
+    }});
+    // Update the "waiting" mirror counter.
+    const mirror = document.querySelector('[data-cc-counter="waiting-mirror"]');
+    if (mirror) mirror.textContent = String(rows.length);
+    const main = document.querySelector('[data-cc-counter="waiting"]');
+    if (main) main.textContent = String(rows.length);
+  }}
+
+  function addQueueRow() {{
+    if (!queueListEl) return;
+    const rows = queueListEl.querySelectorAll('.cc-queue-row');
+    if (rows.length >= 4) return;  // cap
+    const dept = pick(DEPT_LIST);
+    const phone = callerPhone(dept);
+    const row = document.createElement('div');
+    row.className = 'cc-queue-row cc-sim-new';
+    row.setAttribute('data-cc-sim', 'true');
+    row.innerHTML =
+      '<span class="cc-queue-pos mono">#' + (rows.length + 1) + '</span>' +
+      '<span class="cc-queue-caller mono">' + phone + '</span>' +
+      '<span class="cc-queue-dept muted small">' + dept + '</span>' +
+      '<span class="cc-queue-wait mono" data-cc-wait="0">0s</span>';
+    queueListEl.appendChild(row);
+    requestAnimationFrame(() => row.classList.remove('cc-sim-new'));
+    // Hook the new row's wait counter into the existing 1s ticker.
+    let s = 0;
+    const waitEl = row.querySelector('[data-cc-wait]');
+    const t = setInterval(() => {{
+      if (!row.isConnected) {{ clearInterval(t); return; }}
+      s += 1;
+      if (waitEl) waitEl.textContent = s + 's';
+    }}, 1000);
+    renumberQueue();
+  }}
+
+  function removeOldestQueueRow() {{
+    if (!queueListEl) return;
+    const first = queueListEl.querySelector('.cc-queue-row');
+    if (!first) return;
+    first.classList.add('cc-sim-leaving');
+    setTimeout(() => {{
+      first.remove();
+      renumberQueue();
+    }}, 320);
+  }}
+
+  function rotateQueue() {{
+    const rows = queueListEl ? queueListEl.querySelectorAll('.cc-queue-row').length : 0;
+    // Rough policy: 50% add, 50% connect, biased toward keeping ~2-3 in queue.
+    const r = Math.random();
+    if (rows <= 1) addQueueRow();
+    else if (rows >= 4) removeOldestQueueRow();
+    else if (r < 0.6) addQueueRow();
+    else removeOldestQueueRow();
+    setTimeout(rotateQueue, jitter(30000, 75000));
+  }}
+  if (queueListEl) setTimeout(rotateQueue, jitter(20000, 45000));
+
+  // ── Call log feed rotation ───────────────────────────────────────
+  // Prepend a new call-log entry every 45-120 s. Keep max 20 visible.
+  // New entries flash green briefly.
+
+  function prependFeedRow() {{
+    if (!feedListEl) return;
+    const tmpl = pick(ACTION_TEMPLATES);
+    const phone = tmpl.text.includes('{{phone}}') ? callerPhone(pick(DEPT_LIST)) : '';
+    let detail = tmpl.text.replace('{{phone}}', phone);
+    if (tmpl.amt) {{
+      const v = tmpl.amt();
+      detail = detail.replace('{{amt}}', String(v)).replace('{{n}}', String(v));
+    }}
+    const row = document.createElement('div');
+    row.className = 'cc-feed-row cc-sim-flash';
+    row.innerHTML =
+      '<span class="cc-feed-time mono">' + nowHHMMSS() + '</span>' +
+      '<span class="cc-feed-actor mono">' + tmpl.actor + '</span>' +
+      '<span class="cc-feed-msg">' + detail + '</span>';
+    feedListEl.insertBefore(row, feedListEl.firstChild);
+    setTimeout(() => row.classList.remove('cc-sim-flash'), 1600);
+    // Trim to 20.
+    const allRows = feedListEl.querySelectorAll('.cc-feed-row');
+    for (let i = 20; i < allRows.length; i++) {{
+      allRows[i].classList.add('cc-sim-leaving');
+      setTimeout((el => () => el.remove())(allRows[i]), 320);
+    }}
+    // Bump global counter.
+    STATE.callsToday += 1;
+    document.querySelectorAll('[data-cc-counter="calls_today"]').forEach((el) => {{
+      el.textContent = STATE.callsToday.toLocaleString();
+    }});
+  }}
+
+  function rotateFeed() {{
+    prependFeedRow();
+    setTimeout(rotateFeed, jitter(45000, 120000));
+  }}
+  if (feedListEl) setTimeout(rotateFeed, jitter(20000, 45000));
+
+  // ── Agent on-call cycling ────────────────────────────────────────
+  // Periodically: pick an on_call agent, briefly mark wrap-up, then
+  // re-engage with a new caller. Visual cue: the timer resets, the
+  // pill flashes amber for ~2 s, then back to green "On call".
+
+  function cycleAgent() {{
+    if (!agentBoardEl) {{ setTimeout(cycleAgent, 60000); return; }}
+    const onCallAgents = agentBoardEl.querySelectorAll('article.cc-agent[data-status="on_call"]');
+    if (onCallAgents.length) {{
+      const target = pick(Array.from(onCallAgents));
+      const pill = target.querySelector('.cc-status-pill');
+      const dot  = target.querySelector('.cc-status-dot');
+      const timer = target.querySelector('[data-cc-timer]');
+      const callerEl = target.querySelector('.cc-agent-caller');
+      // Flash to "Wrap up" briefly.
+      if (pill) {{
+        pill.style.color = '#F59E0B';
+        pill.style.borderColor = 'rgba(245,158,11,0.25)';
+        pill.style.background = 'rgba(245,158,11,0.10)';
+        if (dot) dot.style.background = '#F59E0B';
+        const labelNode = pill.lastChild;
+        const original = labelNode && labelNode.nodeType === 3 ? labelNode.textContent : 'On call';
+        if (labelNode && labelNode.nodeType === 3) labelNode.textContent = 'Wrap up';
+        setTimeout(() => {{
+          pill.style.color = '#10B981';
+          pill.style.borderColor = 'rgba(16,185,129,0.25)';
+          pill.style.background = 'rgba(16,185,129,0.10)';
+          if (dot) dot.style.background = '#10B981';
+          if (labelNode && labelNode.nodeType === 3) labelNode.textContent = original;
+          // Reset timer to 0 + new caller.
+          if (timer) {{
+            timer.setAttribute('data-cc-timer', '0');
+            timer.textContent = '0m 00s';
+          }}
+          if (callerEl) {{
+            const dept = target.querySelector('.cc-agent-id p')
+              ? target.querySelector('.cc-agent-id p').textContent : '';
+            callerEl.textContent = callerPhone(dept);
+          }}
+          // Bump that agent's "today" counter.
+          const todaySpan = target.querySelector('.cc-agent-foot .mono');
+          if (todaySpan) {{
+            const m = todaySpan.textContent.match(/(\\d+)/);
+            const n = m ? parseInt(m[1], 10) + 1 : 1;
+            todaySpan.textContent = n + ' calls';
+          }}
+          STATE.callsToday += 1;
+          document.querySelectorAll('[data-cc-counter="calls_today"]').forEach((el) => {{
+            el.textContent = STATE.callsToday.toLocaleString();
+          }});
+        }}, 2200);
+      }}
+    }}
+    setTimeout(cycleAgent, jitter(60000, 180000));
+  }}
+  if (agentBoardEl) setTimeout(cycleAgent, jitter(30000, 90000));
 }})();
 """
 
@@ -2863,8 +3132,17 @@ def _landing_render_chat_widget() -> str:
       <span class="pulse-dot" aria-hidden="true"></span>
       <div class="chat-header-id">
         <div class="chat-header-title">Adinkra Hotel, Accra</div>
-        <div class="chat-header-status muted">Kwame · Online · AI assistant</div>
+        <div class="chat-header-status muted">
+          Kwame ·
+          <span class="chat-mode-badge" id="chat-mode-badge"
+                title="Click ⚙ to enable Live AI">
+            <span class="chat-mode-dot" data-mode="demo"></span>Demo Mode
+          </span>
+        </div>
       </div>
+      <button class="chat-mode-cog" id="chat-mode-cog" type="button"
+              aria-label="Configure Live AI"
+              title="Configure Live AI (Groq API key)">⚙</button>
     </header>
     <div class="chat-messages" id="chat-messages" role="log" aria-live="polite"></div>
     <div class="chat-chips" id="chat-chips" aria-label="Suggested questions">{chips_html}</div>
@@ -3865,6 +4143,43 @@ body.landing > footer.landing-footer {
   .chat-demo-section { display: none !important; }
 }
 
+/* Chat header mode badge + ⚙ cog — green for Live AI, gray for Demo,
+   red for Offline. The dot is set via [data-mode] attribute. */
+.chat-header { position: relative; }
+.chat-mode-badge {
+  display: inline-flex; align-items: center; gap: 5px;
+  font-size: 11px; font-weight: 500;
+}
+.chat-mode-dot {
+  width: 6px; height: 6px; border-radius: 50%;
+  background: #8A8A8A;
+  flex-shrink: 0;
+}
+.chat-mode-dot[data-mode="live"] {
+  background: #10B981;
+  box-shadow: 0 0 6px rgba(16,185,129,0.8);
+  animation: chatModeLivePulse 2s cubic-bezier(.4,0,.6,1) infinite;
+}
+.chat-mode-dot[data-mode="demo"]    { background: #8A8A8A; }
+.chat-mode-dot[data-mode="offline"] { background: #EF4444; }
+@keyframes chatModeLivePulse {
+  0%, 100% { box-shadow: 0 0 6px rgba(16,185,129,0.8); }
+  50%      { box-shadow: 0 0 12px rgba(16,185,129,1); }
+}
+.chat-mode-cog {
+  position: absolute; top: 12px; right: 12px;
+  width: 26px; height: 26px;
+  background: transparent; color: #8A8A8A;
+  border: 1px solid transparent; border-radius: 6px;
+  cursor: pointer; font-size: 14px; line-height: 1;
+  display: inline-flex; align-items: center; justify-content: center;
+  transition: color 120ms ease, border-color 120ms ease, background 120ms ease;
+}
+.chat-mode-cog:hover {
+  color: #00D4FF; border-color: rgba(0,212,255,0.35);
+  background: rgba(0,212,255,0.08);
+}
+
 /* ── polish layer ───────────────────────────────────────────────── */
 /* All animations below honour prefers-reduced-motion via the global
    override at the top of this stylesheet. New keyframes use only
@@ -4047,6 +4362,14 @@ body.landing > footer.landing-footer {
 
 def _landing_render_js(calls: list) -> str:
     base = _render_js(calls)
+    # Inject Kwame's full engineered prompt as a JS const so the chat
+    # widget can send it to Groq verbatim. json.dumps escapes every
+    # quote, newline, and bracket — safe for embedding in any JS string
+    # context.
+    prompt_const = (
+        "// Kwame's system prompt — injected from cynea_africa.persona.kwame\n"
+        "const CHAT_KWAME_SYSTEM_PROMPT = " + json.dumps(_KWAME_PROMPT) + ";\n\n"
+    )
     extras = r"""
 // ====================================================================
 // Cinematic landing JS
@@ -4599,23 +4922,165 @@ function startTypewriter(container, opts) {
     }
   }
 
-  function sendUserMessage(text) {
+  // ── Groq integration ──────────────────────────────────────────────
+  //
+  // Real LLM responses via Groq's free-tier llama-3.3-70b-versatile.
+  // The API key is read from localStorage ('cynea_groq_key') or from
+  // window.CYNEA_CONFIG.groqKey. Anyone who opens this page in a
+  // browser can read that key from DevTools — never deploy this with
+  // a key pre-loaded on a public domain.
+  //
+  // Fallback chain on every turn:
+  //   1. Groq API           → real LLM response
+  //   2. FLOWS state machine → keyword-matched response (offline)
+  //   3. DEFAULT_RESPONSE    → final safety net (always returns SOMETHING)
+  //
+  // Mode badge updates per turn so the operator can see whether the
+  // last response was from the live LLM or the fallback router.
+
+  const GROQ_ENDPOINT = 'https://api.groq.com/openai/v1/chat/completions';
+  const GROQ_MODEL = 'llama-3.3-70b-versatile';
+  const GROQ_HISTORY_LIMIT = 10;
+  const conversationMessages = [];   // {role, content} per turn
+
+  function getGroqKey() {
+    try {
+      return (
+        (localStorage.getItem('cynea_groq_key') || '') ||
+        ((window.CYNEA_CONFIG && window.CYNEA_CONFIG.groqKey) || '')
+      ).trim();
+    } catch (_) { return ''; }
+  }
+
+  function setLiveMode(mode) {
+    const badge = document.getElementById('chat-mode-badge');
+    if (!badge) return;
+    const dot = badge.querySelector('.chat-mode-dot');
+    if (dot) dot.setAttribute('data-mode', mode);
+    const label = mode === 'live' ? 'Live AI'
+                : mode === 'offline' ? 'Offline'
+                : 'Demo Mode';
+    // Preserve the dot child, replace the label text.
+    badge.innerHTML = '';
+    const newDot = document.createElement('span');
+    newDot.className = 'chat-mode-dot';
+    newDot.setAttribute('data-mode', mode);
+    badge.appendChild(newDot);
+    badge.appendChild(document.createTextNode(label));
+  }
+
+  async function callGroq(historyMessages) {
+    const key = getGroqKey();
+    if (!key) throw new Error('no_key');
+    const body = {
+      model: GROQ_MODEL,
+      messages: [
+        { role: 'system', content: CHAT_KWAME_SYSTEM_PROMPT.replace(/\{client_name\}/g, 'Adinkra Hotel') },
+        ...historyMessages.slice(-GROQ_HISTORY_LIMIT),
+      ],
+      temperature: 0.7,
+      max_tokens: 220,
+    };
+    let res;
+    try {
+      res = await fetch(GROQ_ENDPOINT, {
+        method: 'POST',
+        headers: {
+          'Authorization': 'Bearer ' + key,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(body),
+      });
+    } catch (err) {
+      throw new Error('network');
+    }
+    if (!res.ok) {
+      if (res.status === 401 || res.status === 403) throw new Error('auth');
+      if (res.status === 429) throw new Error('rate_limited');
+      throw new Error('http_' + res.status);
+    }
+    let json;
+    try { json = await res.json(); } catch (_) { throw new Error('parse'); }
+    const content = (
+      json && json.choices && json.choices[0] &&
+      json.choices[0].message && json.choices[0].message.content
+    ) || '';
+    if (!content.trim()) throw new Error('empty');
+    return content.trim();
+  }
+
+  // Initial mode probe — if a key is set, optimistically claim Live AI.
+  setLiveMode(getGroqKey() ? 'live' : 'demo');
+
+  // ⚙ cog: paste / clear the Groq key. Stored in localStorage.
+  const cogBtn = document.getElementById('chat-mode-cog');
+  if (cogBtn) {
+    cogBtn.addEventListener('click', () => {
+      const current = getGroqKey();
+      const masked = current ? current.slice(0, 8) + '...' : 'none';
+      const next = window.prompt(
+        'Paste your Groq API key to enable Live AI.\n\n' +
+        'Stored in your browser localStorage. Anyone who opens this page can read it via DevTools — never use a production key here.\n\n' +
+        'Current: ' + masked + '\n' +
+        '(Leave blank and OK to clear.)',
+        ''
+      );
+      if (next === null) return;
+      try {
+        if (next.trim() === '') {
+          localStorage.removeItem('cynea_groq_key');
+          setLiveMode('demo');
+          showToast('Groq key cleared — using Demo Mode.', 3000);
+        } else {
+          localStorage.setItem('cynea_groq_key', next.trim());
+          setLiveMode('live');
+          showToast('Groq key saved. Live AI enabled.', 3000);
+        }
+      } catch (_) {
+        showToast('Could not access localStorage.', 3000);
+      }
+    });
+  }
+
+  async function sendUserMessage(text) {
     text = (text || '').trim();
     if (!text) return;
     if (isProcessing) return;       // drop submits while a turn is in flight
     setBusy(true);
     firstUserInteraction = false;
     appendUserMessage(text);
+    conversationMessages.push({ role: 'user', content: text });
     showTypingIndicator();
-    const delay = 1100 + Math.floor(Math.random() * 800);  // 1.1-1.9s
+
+    // Groq attempt — only if a key is configured.
+    let response = null;
+    if (getGroqKey()) {
+      try {
+        const aiText = await callGroq(conversationMessages);
+        response = { text: aiText, audio: null, chips: INITIAL_CHIPS };
+        setLiveMode('live');
+      } catch (err) {
+        // Network → mark Offline; auth/rate/etc → still Demo (key set
+        // but unusable now). We always fall through to the keyword
+        // router so the user gets *something*.
+        if (err && err.message === 'network') setLiveMode('offline');
+        else if (err && err.message === 'no_key') setLiveMode('demo');
+        else setLiveMode('demo');
+      }
+    } else {
+      setLiveMode('demo');
+    }
+
+    // Smooth out the apparent latency: keep a 1.1-1.9 s typing
+    // indicator window even on a fast Groq response, so the chat
+    // doesn't pop a reply in 200 ms.
+    const minDelay = 1100 + Math.floor(Math.random() * 800);
     setTimeout(() => {
       hideTypingIndicator();
-      const response = routeMessage(text);
-      // appendKwameMessage will release the busy lock after the
-      // typewriter completes (or finalisePendingTypewriter does it
-      // early if a new message starts).
-      appendKwameMessage(response);
-    }, delay);
+      const final = response || routeMessage(text);
+      conversationMessages.push({ role: 'assistant', content: final.text });
+      appendKwameMessage(final);
+    }, minDelay);
   }
 
   // Wire form
@@ -4766,7 +5231,7 @@ function startTypewriter(container, opts) {
   sections.forEach(s => io.observe(s));
 })();
 """
-    return base + "\n" + extras
+    return base + "\n" + prompt_const + extras
 
 
 # =====================================================================

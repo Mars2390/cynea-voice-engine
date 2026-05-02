@@ -368,11 +368,18 @@ def _render_html(
     cost_pie = _aggregate_cost_breakdown(calls)
 
     header_html   = _render_header(generated_at, date_range, client_name, agent_display_name, is_sample_data, is_empty_state)
+    cc_bar_html   = _render_callcenter_bar()
+    cc_board_html = _render_agent_status_board()
+    cc_queue_html = _render_call_queue()
     kpi_html      = _render_kpi_row(summary, calls, is_empty_state)
     monitor_html  = _render_live_monitor(agent_breakdown)
+    cc_dept_html  = _render_department_cards()
+    cc_roi_html   = _render_roi_calculator()
+    cc_heat_html  = _render_call_heatmap()
     table_html    = _render_call_history_table(calls, is_empty_state)
     charts_html   = _render_charts(daily_volume, daily_sentiment, cost_pie, is_empty_state)
     agents_html   = _render_agent_cards(agent_breakdown, is_empty_state)
+    cc_feed_html  = _render_call_feed()
     export_html   = _render_export_section()
 
     css = _render_css()
@@ -394,10 +401,17 @@ def _render_html(
 <body class="{body_class}">
 <main>
   {header_html}
+  {cc_bar_html}
+  {cc_board_html}
+  {cc_queue_html}
   {kpi_html}
   {monitor_html}
+  {cc_dept_html}
+  {cc_roi_html}
+  {cc_heat_html}
   {charts_html}
   {agents_html}
+  {cc_feed_html}
   {table_html}
   {export_html}
   <footer>
@@ -866,6 +880,347 @@ def _render_export_section() -> str:
   <button class="btn" id="exportCsv" type="button">Download CSV</button>
   <button class="btn btn-ghost" id="shareLink" type="button">Share dashboard</button>
   <span class="muted small">Reports include call detail, agent performance, and cost breakdown.</span>
+</section>
+"""
+
+
+# =====================================================================
+# Call-center extension — operations preview
+# =====================================================================
+# Adds seven sections to the dashboard composition (`_render_html`):
+#
+#   1. Operations bar     ─ live-feel metric strip (active, today,
+#                            waiting, avg wait, local clock)
+#   2. Agent status board ─ four agents with live timers and status pills
+#   3. Call queue         ─ waiting callers with ticking wait times
+#   4. Department cards   ─ per-vertical KPIs with mini sparklines
+#   5. ROI calculator     ─ four-agent cost comparison
+#   6. Hourly heatmap     ─ 24-bar today-pattern (Ghana business hours)
+#   7. Real-time call log ─ scrolling feed with relative timestamps
+#
+# All numbers are sample data; the page header was deliberately changed
+# from "Live Operations" to "Operations Center" so we don't claim live
+# ops we aren't yet running. The animated tickers create the *feel* of
+# a live operation without making the false claim.
+#
+# CSS is scoped under .cc-* selectors so nothing leaks into the
+# landing page (which inlines the dashboard CSS but doesn't render
+# these elements).
+
+# ---------------------------------------------------------------------
+# Sample data — patch in place to retell the story for a different
+# vertical (e.g. all-banking, all-telco) without touching the renderers.
+# ---------------------------------------------------------------------
+
+DASHBOARD_CC_TITLE = "Operations Center"
+
+DASHBOARD_CC_AGENTS = [
+    {"key": "kwame", "name": "Kwame", "initials": "K", "dept": "Hotel Desk",
+     "accent": "#00D4FF", "status": "on_call",
+     "caller": "+233 54 XXX XXXX", "duration_s": 754, "calls_today": 32},
+    {"key": "amina", "name": "Amina", "initials": "A", "dept": "Banking",
+     "accent": "#A78BFA", "status": "on_call",
+     "caller": "+254 72 XXX XXXX", "duration_s": 312, "calls_today": 41},
+    {"key": "kofi",  "name": "Kofi",  "initials": "K", "dept": "Support",
+     "accent": "#10B981", "status": "available",
+     "caller": None, "duration_s": 0, "calls_today": 18},
+    {"key": "adwoa", "name": "Adwoa", "initials": "A", "dept": "Complaints",
+     "accent": "#F59E0B", "status": "break",
+     "caller": None, "duration_s": 0, "calls_today": 9},
+]
+
+DASHBOARD_CC_QUEUE = [
+    {"position": 1, "caller": "+233 24 XXX XXXX", "wait_s": 47, "dept": "Hotel Desk"},
+    {"position": 2, "caller": "+254 71 XXX XXXX", "wait_s": 22, "dept": "Banking"},
+    {"position": 3, "caller": "+233 50 XXX XXXX", "wait_s": 8,  "dept": "Support"},
+]
+
+DASHBOARD_CC_DEPARTMENTS = [
+    {"name": "Hotel Desk", "calls": 124, "containment": 0.94, "sentiment":  0.31, "accent": "#00D4FF",
+     "spark": [3, 5, 8, 14, 22, 28, 32, 35, 31, 26, 22, 18]},
+    {"name": "Banking",    "calls": 89,  "containment": 0.88, "sentiment":  0.24, "accent": "#A78BFA",
+     "spark": [2, 4, 6, 10, 16, 22, 26, 28, 25, 21, 17, 13]},
+    {"name": "Support",    "calls": 34,  "containment": 0.76, "sentiment":  0.12, "accent": "#10B981",
+     "spark": [1, 2, 3,  5,  7,  9, 11, 12, 11,  9,  7,  6]},
+    {"name": "Complaints", "calls": 12,  "containment": 0.45, "sentiment": -0.08, "accent": "#F59E0B",
+     "spark": [0, 1, 1,  2,  3,  3,  4,  4,  3,  3,  2,  2]},
+]
+
+# Real-time call feed — `ts_offset_s` is seconds before "now" so the
+# JS timestamp filler can render relative timestamps that match the
+# page-load wall clock.
+DASHBOARD_CC_FEED = [
+    {"ts_offset_s":   6, "actor": "Kwame",  "msg": "booked deluxe room for Mr. Osei — $120"},
+    {"ts_offset_s":  39, "actor": "Amina",  "msg": "resolved balance inquiry for +254 71 XXX XXXX"},
+    {"ts_offset_s": 123, "actor": "Kofi",   "msg": "answered FAQ about business hours"},
+    {"ts_offset_s": 167, "actor": "Adwoa",  "msg": "escalated complaint to human manager"},
+    {"ts_offset_s": 245, "actor": "Kwame",  "msg": "confirmed reservation for Adinkra Hotel"},
+    {"ts_offset_s": 318, "actor": "Amina",  "msg": "blocked lost card for +254 72 XXX XXXX"},
+    {"ts_offset_s": 390, "actor": "Kofi",   "msg": "explained data bundle options"},
+    {"ts_offset_s": 451, "actor": "Kwame",  "msg": "took restaurant booking for 4 guests"},
+    {"ts_offset_s": 522, "actor": "Amina",  "msg": "processed M-Pesa reversal — KES 2,000"},
+    {"ts_offset_s": 605, "actor": "Adwoa",  "msg": "logged complaint about WiFi outage"},
+]
+
+# 24 hourly buckets — Ghana business pattern, peak 10:00-14:00.
+DASHBOARD_CC_HEATMAP = [
+    2,  1,  1,  0,  0,  1,
+    3,  5,  8, 14, 22, 28,
+    32, 35, 31, 26, 22, 18,
+    14, 11,  8,  5,  3,  2,
+]
+
+
+# ---------------------------------------------------------------------
+# Helpers
+# ---------------------------------------------------------------------
+
+def _format_call_duration(seconds: int) -> str:
+    m, s = divmod(int(seconds), 60)
+    return f"{m}m {s:02d}s"
+
+
+_CC_STATUS_LABEL = {"on_call": "On call", "available": "Available", "break": "On break"}
+_CC_STATUS_COLOR = {"on_call": "#10B981", "available": "#F59E0B", "break": "#EF4444"}
+
+
+# ---------------------------------------------------------------------
+# Section renderers
+# ---------------------------------------------------------------------
+
+def _render_callcenter_bar() -> str:
+    return f"""
+<section class="cc-bar" id="cc-bar">
+  <div class="cc-bar-title">
+    <span class="brand-mark small">CYNEA</span>
+    <h2>{html.escape(DASHBOARD_CC_TITLE)}</h2>
+    <span class="pill pill-green pill-sm">
+      <span class="pulse-dot"></span> Online
+    </span>
+  </div>
+  <div class="cc-bar-stats">
+    <div class="cc-bar-stat">
+      <span class="cc-stat-label">Active agents</span>
+      <span class="cc-stat-value mono" data-cc-counter="active_agents">4</span>
+    </div>
+    <div class="cc-bar-stat">
+      <span class="cc-stat-label">Calls today</span>
+      <span class="cc-stat-value mono" data-cc-counter="calls_today">247</span>
+    </div>
+    <div class="cc-bar-stat">
+      <span class="cc-stat-label">Waiting</span>
+      <span class="cc-stat-value mono" data-cc-counter="waiting">3</span>
+    </div>
+    <div class="cc-bar-stat">
+      <span class="cc-stat-label">Avg wait</span>
+      <span class="cc-stat-value mono" data-cc-counter="avg_wait">12s</span>
+    </div>
+    <div class="cc-bar-stat cc-bar-clock">
+      <span class="cc-stat-label">Local time</span>
+      <span class="cc-stat-value mono" id="cc-local-clock">--:--:--</span>
+    </div>
+  </div>
+</section>
+"""
+
+
+def _render_agent_status_board() -> str:
+    cards = []
+    for a in DASHBOARD_CC_AGENTS:
+        status = a["status"]
+        label = _CC_STATUS_LABEL[status]
+        color = _CC_STATUS_COLOR[status]
+        timer = (
+            f'<div class="cc-agent-timer mono" data-cc-timer="{a["duration_s"]}">'
+            f'{_format_call_duration(a["duration_s"])}'
+            f'</div>'
+        ) if status == "on_call" else (
+            f'<div class="cc-agent-timer cc-agent-timer-idle mono">—</div>'
+        )
+        caller = (
+            f'<div class="cc-agent-caller mono small">{html.escape(a["caller"])}</div>'
+            if a.get("caller") else
+            f'<div class="cc-agent-caller muted small">awaiting next call</div>'
+        )
+        cards.append(f"""
+<article class="cc-agent panel" data-status="{status}" style="--accent:{a['accent']}">
+  <header class="cc-agent-head">
+    <div class="agent-avatar" style="--accent:{a['accent']}" aria-hidden="true">
+      <span>{html.escape(a['initials'])}</span>
+    </div>
+    <div class="cc-agent-id">
+      <h3>{html.escape(a['name'])}</h3>
+      <p class="muted small">{html.escape(a['dept'])}</p>
+    </div>
+    <span class="cc-status-pill"
+          style="color:{color};border-color:{color}33;background:{color}14">
+      <span class="cc-status-dot" style="background:{color}"></span>{label}
+    </span>
+  </header>
+  {caller}
+  {timer}
+  <footer class="cc-agent-foot muted small">
+    <span>Today</span>
+    <span class="mono">{a['calls_today']} calls</span>
+  </footer>
+</article>
+""")
+    return f"""
+<section class="cc-section" id="cc-agent-board">
+  <header class="cc-section-head">
+    <h2>Agent status</h2>
+    <span class="muted">Four agents · four departments</span>
+  </header>
+  <div class="cc-agent-grid">{"".join(cards)}</div>
+</section>
+"""
+
+
+def _render_call_queue() -> str:
+    rows = []
+    for q in DASHBOARD_CC_QUEUE:
+        rows.append(f"""
+<div class="cc-queue-row">
+  <span class="cc-queue-pos mono">#{q['position']}</span>
+  <span class="cc-queue-caller mono">{html.escape(q['caller'])}</span>
+  <span class="cc-queue-dept muted small">{html.escape(q['dept'])}</span>
+  <span class="cc-queue-wait mono" data-cc-wait="{q['wait_s']}">{q['wait_s']}s</span>
+</div>
+""")
+    return f"""
+<section class="cc-section panel" id="cc-queue">
+  <header class="panel-head">
+    <h2>Call queue</h2>
+    <span class="muted"><span class="mono" data-cc-counter="waiting-mirror">{len(DASHBOARD_CC_QUEUE)}</span> waiting</span>
+  </header>
+  <div class="cc-queue-list">{"".join(rows)}</div>
+</section>
+"""
+
+
+def _render_department_cards() -> str:
+    cards = []
+    for d in DASHBOARD_CC_DEPARTMENTS:
+        s_color = (
+            "#10B981" if d["sentiment"] >= 0.2 else
+            "#EF4444" if d["sentiment"] <= -0.2 else
+            "#8A8A8A"
+        )
+        c_color = (
+            "#10B981" if d["containment"] >= 0.8 else
+            "#F59E0B" if d["containment"] >= 0.6 else
+            "#EF4444"
+        )
+        max_v = max(d["spark"]) or 1
+        spark = "".join(
+            f'<div class="cc-spark-bar" style="height:{(v/max_v)*100:.0f}%; background:{d["accent"]}"></div>'
+            for v in d["spark"]
+        )
+        cards.append(f"""
+<article class="cc-dept-card panel" style="--accent:{d['accent']}">
+  <header class="cc-dept-head">
+    <h3>{html.escape(d['name'])}</h3>
+    <span class="cc-dept-badge"
+          style="background:{d['accent']}14;color:{d['accent']};border-color:{d['accent']}33">
+      {d['calls']} calls
+    </span>
+  </header>
+  <div class="cc-dept-stats">
+    <div class="cc-dept-stat">
+      <span class="muted small">Containment</span>
+      <span class="mono" style="color:{c_color}">{d['containment'] * 100:.0f}%</span>
+    </div>
+    <div class="cc-dept-stat">
+      <span class="muted small">Sentiment</span>
+      <span class="mono" style="color:{s_color}">{d['sentiment']:+.2f}</span>
+    </div>
+  </div>
+  <div class="cc-spark" aria-hidden="true">{spark}</div>
+</article>
+""")
+    return f"""
+<section class="cc-section" id="cc-departments">
+  <header class="cc-section-head">
+    <h2>Department performance</h2>
+    <span class="muted">Today</span>
+  </header>
+  <div class="cc-dept-grid">{"".join(cards)}</div>
+</section>
+"""
+
+
+def _render_roi_calculator() -> str:
+    return """
+<section class="cc-section panel cc-roi" id="cc-roi">
+  <header class="panel-head">
+    <h2>Cost comparison</h2>
+    <span class="muted">Monthly · four-agent operation · 10,000 minutes</span>
+  </header>
+  <div class="cc-roi-body">
+    <div class="cc-roi-side cc-roi-human">
+      <div class="cc-roi-label muted small">Human agents</div>
+      <div class="cc-roi-formula mono">4 agents × $800</div>
+      <div class="cc-roi-amount mono">$3,200<span class="muted small"> / month</span></div>
+    </div>
+    <div class="cc-roi-vs muted">vs</div>
+    <div class="cc-roi-side cc-roi-cynea">
+      <div class="cc-roi-label small" style="color:#00D4FF">Cynea AI</div>
+      <div class="cc-roi-formula mono">4 agents × $0.04 × 10,000 min</div>
+      <div class="cc-roi-amount mono" style="color:#00D4FF">$400<span class="muted small"> / month</span></div>
+    </div>
+  </div>
+  <div class="cc-roi-savings">
+    <div class="cc-roi-savings-label muted small">Monthly savings</div>
+    <div class="cc-roi-savings-num mono">$2,800</div>
+    <div class="cc-roi-savings-pct">87.5% reduction · annual savings <span class="mono">$33,600</span></div>
+  </div>
+</section>
+"""
+
+
+def _render_call_heatmap() -> str:
+    max_v = max(DASHBOARD_CC_HEATMAP) or 1
+    bars = []
+    for hour, value in enumerate(DASHBOARD_CC_HEATMAP):
+        height_pct = (value / max_v) * 100
+        # Intensity drives opacity for the heat effect.
+        intensity = value / max_v
+        opacity = 0.35 + 0.65 * intensity
+        label = f"{hour:02d}"
+        bars.append(f"""
+<div class="cc-heat-col" data-hour="{hour}" data-value="{value}" title="{label}:00 — {value} calls">
+  <div class="cc-heat-bar" style="height:{height_pct:.0f}%; opacity:{opacity:.2f}"></div>
+  <div class="cc-heat-label mono">{label}</div>
+</div>
+""")
+    return f"""
+<section class="cc-section panel cc-heatmap" id="cc-heatmap">
+  <header class="panel-head">
+    <h2>Call volume by hour</h2>
+    <span class="muted">Today · 24-hour</span>
+  </header>
+  <div class="cc-heat-chart">{"".join(bars)}</div>
+</section>
+"""
+
+
+def _render_call_feed() -> str:
+    rows = []
+    for entry in DASHBOARD_CC_FEED:
+        rows.append(f"""
+<div class="cc-feed-row" data-cc-feed-offset="{entry['ts_offset_s']}">
+  <span class="cc-feed-time mono"></span>
+  <span class="cc-feed-actor mono">{html.escape(entry['actor'])}</span>
+  <span class="cc-feed-msg">{html.escape(entry['msg'])}</span>
+</div>
+""")
+    return f"""
+<section class="cc-section panel cc-feed" id="cc-feed">
+  <header class="panel-head">
+    <h2>Real-time call log</h2>
+    <span class="muted">Last hour</span>
+  </header>
+  <div class="cc-feed-list">{"".join(rows)}</div>
 </section>
 """
 
@@ -1476,6 +1831,298 @@ body.demo-mode .hero::after {{
   .panel, .card, .kpi {{ break-inside: avoid; }}
   .charts-grid {{ break-inside: avoid; }}
 }}
+
+/* ── call-center extension ──────────────────────────────────────── */
+/* All selectors prefixed `.cc-` so the styles never collide with the
+   landing page (which inlines this stylesheet but doesn't render the
+   call-center sections).                                             */
+
+.cc-section {{ margin-bottom: 24px; }}
+.cc-section-head {{
+  display: flex; align-items: baseline; justify-content: space-between;
+  padding: 4px 4px 14px; margin: 0 4px;
+}}
+.cc-section-head h2 {{
+  font-family: 'Syne', sans-serif; font-weight: 700;
+  font-size: 14px; margin: 0; letter-spacing: 0.06em;
+  text-transform: uppercase;
+}}
+
+/* operations bar ─────────────────────────────────────────────────── */
+.cc-bar {{
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 24px; flex-wrap: wrap;
+  margin: 24px 0;
+  padding: 18px 22px;
+  background: linear-gradient(160deg, {c['card']} 0%, {c['bg3']} 100%);
+  border: 1px solid {c['border']}; border-radius: 14px;
+  position: relative; overflow: hidden;
+}}
+.cc-bar::before {{
+  content: ""; position: absolute; inset: 0; pointer-events: none;
+  background-image:
+    linear-gradient({c['accent']}0F 1px, transparent 1px),
+    linear-gradient(90deg, {c['accent']}0F 1px, transparent 1px);
+  background-size: 24px 24px;
+  opacity: 0.5;
+}}
+.cc-bar-title {{
+  display: flex; align-items: center; gap: 12px;
+  position: relative; z-index: 1;
+}}
+.cc-bar-title h2 {{
+  font-family: 'Syne', sans-serif; font-weight: 700;
+  font-size: 18px; margin: 0; letter-spacing: 0.02em;
+}}
+.cc-bar-stats {{
+  display: flex; gap: 28px; flex-wrap: wrap;
+  position: relative; z-index: 1;
+}}
+.cc-bar-stat {{ display: flex; flex-direction: column; gap: 2px; min-width: 86px; }}
+.cc-stat-label {{
+  font-size: 11px; text-transform: uppercase; letter-spacing: 0.08em;
+  color: {c['muted']}; font-weight: 600;
+}}
+.cc-stat-value {{
+  font-size: 22px; font-weight: 600; color: {c['accent']};
+  font-feature-settings: "tnum" 1; letter-spacing: -0.01em;
+}}
+.cc-bar-clock .cc-stat-value {{ color: {c['text']}; }}
+@media (max-width: 720px) {{
+  .cc-bar-stats {{ gap: 16px; }}
+  .cc-bar-stat {{ min-width: 70px; }}
+  .cc-stat-value {{ font-size: 18px; }}
+}}
+
+/* agent status board ─────────────────────────────────────────────── */
+.cc-agent-grid {{
+  display: grid; gap: 16px;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}}
+@media (max-width: 1000px) {{ .cc-agent-grid {{ grid-template-columns: repeat(2, 1fr); }} }}
+@media (max-width: 540px)  {{ .cc-agent-grid {{ grid-template-columns: 1fr; }} }}
+.cc-agent {{
+  padding: 18px;
+  background: linear-gradient(160deg, {c['card']} 0%, {c['bg3']} 100%);
+  border: 1px solid {c['border']}; border-radius: 14px;
+  position: relative; overflow: hidden;
+}}
+.cc-agent::before {{
+  content: ""; position: absolute; inset: 0; pointer-events: none;
+  background: linear-gradient(180deg, var(--accent, #00D4FF)0F, transparent 40%);
+}}
+.cc-agent-head {{
+  display: flex; align-items: center; gap: 10px;
+  margin-bottom: 12px; position: relative; z-index: 1;
+}}
+.cc-agent-head .agent-avatar {{ width: 38px; height: 38px; font-size: 16px; }}
+.cc-agent-id {{ flex: 1; min-width: 0; }}
+.cc-agent-id h3 {{ font-family: 'Syne', sans-serif; font-weight: 700; font-size: 15px; margin: 0; }}
+.cc-agent-id p {{ margin: 2px 0 0; }}
+.cc-status-pill {{
+  display: inline-flex; align-items: center; gap: 5px;
+  padding: 3px 8px; border-radius: 999px;
+  font-size: 10px; font-weight: 600; letter-spacing: 0.06em;
+  text-transform: uppercase; border: 1px solid; line-height: 1;
+  white-space: nowrap;
+}}
+.cc-status-dot {{ width: 6px; height: 6px; border-radius: 50%; display: inline-block; }}
+.cc-agent-caller {{ font-size: 12px; margin-bottom: 6px; position: relative; z-index: 1; }}
+.cc-agent-timer {{
+  font-size: 22px; font-weight: 600; color: {c['accent']};
+  font-feature-settings: "tnum" 1; letter-spacing: -0.01em;
+  margin-bottom: 12px; position: relative; z-index: 1;
+}}
+.cc-agent-timer-idle {{ color: {c['dim']}; font-weight: 500; }}
+.cc-agent-foot {{
+  display: flex; justify-content: space-between; align-items: baseline;
+  padding-top: 10px;
+  border-top: 1px solid {c['border']};
+  position: relative; z-index: 1;
+}}
+
+/* call queue ─────────────────────────────────────────────────────── */
+.cc-queue-list {{ padding: 10px 22px 18px; }}
+.cc-queue-row {{
+  display: grid;
+  grid-template-columns: 36px 1fr auto auto;
+  gap: 14px; align-items: center;
+  padding: 12px 0;
+  border-bottom: 1px solid {c['border']};
+  font-size: 13px;
+}}
+.cc-queue-row:last-child {{ border-bottom: none; }}
+.cc-queue-pos {{ color: {c['accent']}; font-weight: 600; }}
+.cc-queue-caller {{ color: {c['text']}; }}
+.cc-queue-dept {{ font-size: 11px; }}
+.cc-queue-wait {{
+  color: {c['amber']}; font-weight: 600;
+  min-width: 48px; text-align: right;
+}}
+
+/* department cards ───────────────────────────────────────────────── */
+.cc-dept-grid {{
+  display: grid; gap: 16px;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}}
+@media (max-width: 1000px) {{ .cc-dept-grid {{ grid-template-columns: repeat(2, 1fr); }} }}
+@media (max-width: 540px)  {{ .cc-dept-grid {{ grid-template-columns: 1fr; }} }}
+.cc-dept-card {{
+  padding: 18px; border-radius: 14px;
+  background: {c['card']}; border: 1px solid {c['border']};
+}}
+.cc-dept-head {{
+  display: flex; justify-content: space-between; align-items: center;
+  margin-bottom: 12px;
+}}
+.cc-dept-head h3 {{ font-family: 'Syne', sans-serif; font-weight: 700; font-size: 14px; margin: 0; }}
+.cc-dept-badge {{
+  padding: 3px 8px; border-radius: 999px;
+  font-size: 11px; font-weight: 600;
+  border: 1px solid;
+}}
+.cc-dept-stats {{
+  display: flex; justify-content: space-between; gap: 16px;
+  padding: 8px 0 12px;
+}}
+.cc-dept-stat {{ display: flex; flex-direction: column; gap: 2px; }}
+.cc-dept-stat .mono {{ font-size: 16px; font-weight: 600; }}
+.cc-spark {{
+  display: flex; align-items: flex-end; gap: 3px;
+  height: 32px; padding-top: 4px;
+  border-top: 1px solid {c['border']};
+}}
+.cc-spark-bar {{
+  flex: 1; min-height: 3px;
+  border-radius: 2px 2px 0 0;
+  opacity: 0.85;
+}}
+
+/* ROI ─────────────────────────────────────────────────────────────── */
+.cc-roi {{ padding: 0; }}
+.cc-roi-body {{
+  display: grid; grid-template-columns: 1fr auto 1fr;
+  gap: 24px; align-items: stretch;
+  padding: 22px;
+}}
+@media (max-width: 720px) {{
+  .cc-roi-body {{ grid-template-columns: 1fr; gap: 12px; }}
+  .cc-roi-vs {{ display: none; }}
+}}
+.cc-roi-side {{
+  padding: 18px;
+  background: {c['bg2']}; border: 1px solid {c['border']};
+  border-radius: 12px;
+  display: flex; flex-direction: column; gap: 6px;
+}}
+.cc-roi-cynea {{
+  border-color: {c['accent']}33;
+  background: linear-gradient(160deg, {c['bg2']} 0%, {c['accent']}0E 100%);
+}}
+.cc-roi-label {{
+  text-transform: uppercase; letter-spacing: 0.08em; font-weight: 600;
+}}
+.cc-roi-formula {{ font-size: 12px; color: {c['muted']}; }}
+.cc-roi-amount {{
+  font-size: 32px; font-weight: 600; letter-spacing: -0.02em;
+  font-feature-settings: "tnum" 1;
+}}
+.cc-roi-vs {{
+  align-self: center;
+  font-family: 'Syne', sans-serif; font-weight: 700;
+  font-size: 14px; letter-spacing: 0.16em;
+  text-transform: uppercase; color: {c['muted']};
+}}
+.cc-roi-savings {{
+  border-top: 1px solid {c['border']};
+  padding: 18px 22px 22px;
+  text-align: center;
+}}
+.cc-roi-savings-label {{
+  text-transform: uppercase; letter-spacing: 0.08em; font-weight: 600;
+}}
+.cc-roi-savings-num {{
+  font-size: 56px; font-weight: 700; color: {c['green']};
+  letter-spacing: -0.02em; line-height: 1;
+  margin: 6px 0 8px;
+  font-feature-settings: "tnum" 1;
+}}
+.cc-roi-savings-pct {{ color: {c['text']}; font-size: 13px; }}
+
+/* heatmap ─────────────────────────────────────────────────────────── */
+.cc-heatmap {{ padding: 0; }}
+.cc-heat-chart {{
+  display: grid; grid-template-columns: repeat(24, 1fr); gap: 4px;
+  padding: 18px 22px 22px;
+  align-items: end;
+  height: 200px;
+}}
+.cc-heat-col {{
+  display: flex; flex-direction: column; align-items: center; gap: 4px;
+  height: 100%;
+}}
+.cc-heat-bar {{
+  width: 100%;
+  background: linear-gradient(180deg, {c['accent']} 0%, {c['accent_dim']} 100%);
+  border-radius: 3px 3px 0 0;
+  transition: opacity 200ms ease;
+}}
+.cc-heat-col:hover .cc-heat-bar {{ opacity: 1 !important; }}
+.cc-heat-label {{ font-size: 9px; color: {c['muted']}; }}
+@media (max-width: 720px) {{
+  .cc-heat-label {{ display: none; }}
+  .cc-heat-chart {{ height: 140px; padding: 14px 16px 18px; }}
+}}
+
+/* real-time call log ─────────────────────────────────────────────── */
+.cc-feed {{ padding: 0; }}
+.cc-feed-list {{
+  max-height: 320px; overflow-y: auto;
+  padding: 8px 22px 18px;
+  scrollbar-width: thin; scrollbar-color: {c['border_strong']} transparent;
+}}
+.cc-feed-list::-webkit-scrollbar {{ width: 6px; }}
+.cc-feed-list::-webkit-scrollbar-thumb {{ background: {c['border_strong']}; border-radius: 999px; }}
+.cc-feed-row {{
+  display: grid; grid-template-columns: 86px 78px 1fr;
+  gap: 14px; align-items: baseline;
+  padding: 10px 0;
+  border-bottom: 1px solid {c['border']};
+  font-size: 13px;
+  animation: ccFeedIn 320ms ease;
+}}
+.cc-feed-row:last-child {{ border-bottom: none; }}
+.cc-feed-time {{ color: {c['muted']}; font-size: 11px; }}
+.cc-feed-actor {{ color: {c['accent']}; font-size: 12px; }}
+.cc-feed-msg {{ color: {c['text']}; }}
+@keyframes ccFeedIn {{
+  from {{ opacity: 0; transform: translateY(-4px); }}
+  to   {{ opacity: 1; transform: translateY(0); }}
+}}
+@media (max-width: 720px) {{
+  .cc-feed-row {{ grid-template-columns: 70px 1fr; }}
+  .cc-feed-actor {{ grid-column: 1 / -1; }}
+}}
+
+/* print ───────────────────────────────────────────────────────────── */
+@media print {{
+  .cc-bar, .cc-roi-savings-num {{
+    background: white !important; color: #111 !important;
+  }}
+  .cc-heat-bar, .cc-spark-bar {{
+    background: #444 !important;
+  }}
+  .cc-status-pill, .cc-dept-badge {{
+    background: white !important; color: #111 !important; border-color: #888 !important;
+  }}
+  .cc-agent::before, .cc-bar::before {{ display: none !important; }}
+  .cc-agent, .cc-dept-card, .cc-feed, .cc-queue, .cc-roi, .cc-heatmap {{
+    background: white !important; color: #111 !important; border-color: #ddd !important;
+  }}
+  .cc-roi-side, .cc-roi-cynea {{ background: #fafafa !important; }}
+  .cc-stat-value, .cc-agent-timer, .cc-roi-amount, .cc-roi-savings-num {{ color: #111 !important; }}
+  .cc-feed-list {{ max-height: none !important; overflow: visible !important; }}
+}}
 """
 
 
@@ -1650,6 +2297,86 @@ function showToast(msg, duration) {{
     }}
     requestAnimationFrame(step);
   }});
+}})();
+
+// -- call-center extension ---------------------------------------------
+// Live tickers for the dashboard's operations sections. Every handler
+// is gated on its target element existing, so this code is a no-op on
+// the landing page (which inlines this script but doesn't render any
+// of the cc-* elements).
+
+(function() {{
+  // ── Local clock with seconds (cc-bar). Separate id from the main
+  // dashboard clock so neither steps on the other.
+  const clockEl = document.getElementById('cc-local-clock');
+  if (clockEl) {{
+    const tick = () => {{ clockEl.textContent = new Date().toLocaleTimeString(); }};
+    tick(); setInterval(tick, 1000);
+  }}
+
+  // ── Agent on-call timers — each ticks up every second.
+  const timers = document.querySelectorAll('[data-cc-timer]');
+  timers.forEach((el) => {{
+    let s = parseInt(el.getAttribute('data-cc-timer'), 10) || 0;
+    setInterval(() => {{
+      s += 1;
+      const m = Math.floor(s / 60);
+      const sec = s % 60;
+      el.textContent = m + 'm ' + String(sec).padStart(2, '0') + 's';
+    }}, 1000);
+  }});
+
+  // ── Queue wait timers — increment every second so the wait grows
+  // realistically while the page is open.
+  const waits = document.querySelectorAll('[data-cc-wait]');
+  waits.forEach((el) => {{
+    let s = parseInt(el.getAttribute('data-cc-wait'), 10) || 0;
+    setInterval(() => {{
+      s += 1;
+      el.textContent = s + 's';
+    }}, 1000);
+  }});
+
+  // ── Calls-today counter: bump by 1 every ~8 seconds. Subtle enough
+  // that a CTO won't notice the regularity, lively enough to feel real.
+  const callsTodayEls = document.querySelectorAll('[data-cc-counter="calls_today"]');
+  if (callsTodayEls.length) {{
+    let v = parseInt((callsTodayEls[0].textContent || '247').replace(/[^0-9]/g, ''), 10) || 247;
+    setInterval(() => {{
+      v += 1;
+      callsTodayEls.forEach((el) => {{ el.textContent = v.toLocaleString(); }});
+    }}, 8000);
+  }}
+
+  // ── Avg-wait jitter: re-sample every 5 seconds in a believable band.
+  const avgWaitEls = document.querySelectorAll('[data-cc-counter="avg_wait"]');
+  if (avgWaitEls.length) {{
+    setInterval(() => {{
+      const v = 10 + Math.floor(Math.random() * 6);  // 10-15 seconds
+      avgWaitEls.forEach((el) => {{ el.textContent = v + 's'; }});
+    }}, 5000);
+  }}
+
+  // ── Real-time feed: render each row's timestamp as `HH:MM:SS` based
+  // on `now - data-cc-feed-offset` so the times scroll forward at wall-
+  // clock pace. Refresh once a second so the seconds field stays live.
+  const feedRows = document.querySelectorAll('[data-cc-feed-offset]');
+  if (feedRows.length) {{
+    const refresh = () => {{
+      const now = Date.now();
+      feedRows.forEach((row) => {{
+        const offset = parseInt(row.getAttribute('data-cc-feed-offset'), 10) || 0;
+        const t = new Date(now - offset * 1000);
+        const hh = String(t.getHours()).padStart(2, '0');
+        const mm = String(t.getMinutes()).padStart(2, '0');
+        const ss = String(t.getSeconds()).padStart(2, '0');
+        const slot = row.querySelector('.cc-feed-time');
+        if (slot) slot.textContent = hh + ':' + mm + ':' + ss;
+      }});
+    }};
+    refresh();
+    setInterval(refresh, 1000);
+  }}
 }})();
 """
 

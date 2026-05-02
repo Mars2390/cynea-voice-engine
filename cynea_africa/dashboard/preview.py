@@ -3407,7 +3407,7 @@ function startTypewriter(container, opts) {
         },
         {
           keywords: ['yes','please','confirm','go ahead','sure','ok','okay','yep',
-                     'alright','do it','book it','hold it','hold the','let\\'s do it'],
+                     'alright','do it','book it','hold it','hold the',"let's do it"],
           text: "Perfect. I'll need your full name, phone number, and email address. And a deposit equal to the first night to secure the booking.",
           audio: null,
         },

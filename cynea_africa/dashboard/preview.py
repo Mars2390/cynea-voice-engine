@@ -2650,7 +2650,8 @@ def _landing_render_nav() -> str:
     <li><a href="#dashboard">Dashboard</a></li>
     <li><a href="https://github.com/Mars2390/cynea-voice-engine" target="_blank" rel="noopener">GitHub</a></li>
   </ul>
-  <a class="btn btn-outline" id="bookDemo" href="#agents">Book a demo</a>
+  <a class="nav-signin" href="signin.html">Sign in</a>
+  <a class="btn btn-outline" id="bookDemo" href="agent_manager.html">Get started</a>
 </nav>
 """
 
@@ -2678,8 +2679,8 @@ def _landing_render_hero() -> str:
       </h1>
       <p class="hero-sub">{html.escape(LANDING_SUBTITLE)}</p>
       <div class="hero-ctas">
-        <a class="btn btn-primary btn-glow" href="#dashboard">
-          Explore dashboard <span aria-hidden="true">→</span>
+        <a class="btn btn-primary btn-glow" href="agent_manager.html">
+          See dashboard <span aria-hidden="true">→</span>
         </a>
         <button class="btn btn-outline btn-glow play-btn" type="button"
                 data-audio="kwame_test_1.mp3"
@@ -3162,6 +3163,20 @@ body.landing > footer.landing-footer {
   text-decoration: none; padding: 8px 16px; border-radius: 999px;
 }
 .btn-outline:hover { background: rgba(0,212,255,0.08); }
+.nav-signin {
+  color: #F5F5F5; text-decoration: none; font-weight: 500;
+  font-size: 14px; padding: 6px 4px;
+  margin-right: 4px;
+  position: relative;
+}
+.nav-signin::after {
+  content: ""; position: absolute; left: 0; right: 0; bottom: -2px;
+  height: 1px; background: #00D4FF;
+  transform: scaleX(0); transform-origin: left center;
+  transition: transform 240ms cubic-bezier(.2,.8,.2,1);
+}
+.nav-signin:hover::after { transform: scaleX(1); }
+@media (max-width: 540px) { .nav-signin { display: none; } }
 .btn-glow { transition: box-shadow 200ms ease, transform 120ms ease, background 200ms ease; }
 .btn-primary.btn-glow:hover { box-shadow: 0 0 0 1px #00D4FF, 0 0 30px rgba(0,212,255,0.45); }
 .btn-outline.btn-glow:hover { box-shadow: 0 0 0 1px #00D4FF, 0 0 24px rgba(0,212,255,0.25); }

@@ -1001,6 +1001,169 @@ body.landing > footer.landing-footer {
   }
   .reveal { opacity: 1 !important; transform: none !important; }
 }
+
+/* ── interactive chat widget ────────────────────────────────────── */
+.chat-demo-section { padding: 88px 0; }
+.chat-demo {
+  width: 100%; max-width: 375px; height: 700px;
+  margin: 0 auto;
+  background: #1a1a1a;
+  border: 1px solid #1E1E1E;
+  border-radius: 24px;
+  display: flex; flex-direction: column;
+  overflow: hidden;
+  box-shadow:
+    0 0 0 1px rgba(255,255,255,0.03) inset,
+    0 30px 80px rgba(0,212,255,0.10),
+    0 60px 120px rgba(0,0,0,0.6);
+}
+@media (max-width: 540px) {
+  .chat-demo { height: 620px; max-width: 100%; border-radius: 20px; }
+}
+
+.chat-header {
+  display: flex; align-items: center; gap: 10px;
+  padding: 16px 18px;
+  background: #0E0E0E;
+  border-bottom: 1px solid #1E1E1E;
+}
+.chat-header-id { line-height: 1.2; }
+.chat-header-title {
+  font-family: 'Syne', sans-serif; font-weight: 700; font-size: 14px;
+  color: #F5F5F5;
+}
+.chat-header-status { font-size: 11px; }
+
+.chat-messages {
+  flex: 1; min-height: 0;
+  overflow-y: auto;
+  padding: 16px;
+  display: flex; flex-direction: column; gap: 10px;
+  scroll-behavior: smooth;
+  scrollbar-width: thin; scrollbar-color: #2A2A2A transparent;
+}
+.chat-messages::-webkit-scrollbar { width: 6px; }
+.chat-messages::-webkit-scrollbar-thumb { background: #2A2A2A; border-radius: 999px; }
+
+.chat-msg {
+  max-width: 82%;
+  padding: 10px 14px; border-radius: 16px;
+  font-size: 13px; line-height: 1.45;
+  position: relative;
+  animation: chatMsgIn 240ms cubic-bezier(.2,.8,.2,1);
+  word-wrap: break-word;
+}
+@keyframes chatMsgIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.chat-msg-kwame {
+  align-self: flex-start;
+  background: #2a2a2a; color: #F5F5F5;
+  border: 1px solid #1E1E1E;
+  border-bottom-left-radius: 4px;
+  padding-right: 36px;
+}
+.chat-msg-user {
+  align-self: flex-end;
+  background: #00D4FF; color: #001218;
+  border-bottom-right-radius: 4px;
+  font-weight: 500;
+}
+.chat-msg-replay {
+  position: absolute; right: 6px; bottom: 6px;
+  width: 22px; height: 22px; border-radius: 50%;
+  background: rgba(0,212,255,0.15); color: #00D4FF;
+  border: none; cursor: pointer;
+  font-size: 9px; line-height: 1;
+  display: inline-flex; align-items: center; justify-content: center;
+  transition: background 120ms ease;
+}
+.chat-msg-replay:hover { background: rgba(0,212,255,0.30); }
+.chat-msg-replay[data-playing="true"] { background: #00D4FF; color: #001218; }
+
+.chat-typing {
+  align-self: flex-start;
+  display: inline-flex; align-items: center; gap: 4px;
+  padding: 12px 14px;
+  background: #2a2a2a; border: 1px solid #1E1E1E;
+  border-radius: 16px;
+}
+.chat-typing span {
+  width: 6px; height: 6px; border-radius: 50%;
+  background: #8A8A8A;
+  animation: chatTypePulse 1.2s infinite;
+}
+.chat-typing span:nth-child(2) { animation-delay: 0.18s; }
+.chat-typing span:nth-child(3) { animation-delay: 0.36s; }
+@keyframes chatTypePulse {
+  0%, 60%, 100% { opacity: 0.3; transform: translateY(0); }
+  30%           { opacity: 1;   transform: translateY(-3px); }
+}
+
+.chat-chips {
+  padding: 10px 14px 0;
+  display: flex; gap: 8px; overflow-x: auto;
+  scrollbar-width: none;
+}
+.chat-chips::-webkit-scrollbar { display: none; }
+.chat-chip {
+  flex-shrink: 0;
+  padding: 6px 12px; border-radius: 999px;
+  background: transparent; color: #00D4FF;
+  border: 1px solid rgba(0,212,255,0.40);
+  font-family: inherit; font-size: 12px;
+  cursor: pointer; white-space: nowrap;
+  transition: background 150ms ease, border-color 150ms ease;
+}
+.chat-chip:hover { background: rgba(0,212,255,0.12); border-color: #00D4FF; }
+.chat-chip:active { transform: translateY(1px); }
+
+.chat-input-row {
+  display: flex; gap: 8px;
+  padding: 12px 14px 14px;
+  border-top: 1px solid #1E1E1E;
+  margin-top: 10px;
+}
+.chat-input {
+  flex: 1; min-width: 0;
+  background: #0E0E0E; color: #F5F5F5;
+  border: 1px solid #1E1E1E; border-radius: 999px;
+  padding: 10px 16px;
+  font-family: inherit; font-size: 13px;
+  outline: none;
+  transition: border-color 150ms ease, box-shadow 150ms ease;
+}
+.chat-input:focus {
+  border-color: #00D4FF;
+  box-shadow: 0 0 0 3px rgba(0,212,255,0.15);
+}
+.chat-input::placeholder { color: #5F5F5F; }
+.chat-send {
+  width: 40px; height: 40px; border-radius: 50%;
+  background: #00D4FF; color: #001218;
+  border: none; cursor: pointer;
+  font-size: 18px; flex-shrink: 0;
+  display: inline-flex; align-items: center; justify-content: center;
+  transition: filter 120ms ease, transform 120ms ease;
+}
+.chat-send:hover { filter: brightness(1.05); }
+.chat-send:active { transform: translateY(1px); }
+.chat-send:disabled { opacity: 0.4; cursor: not-allowed; }
+
+.chat-autoplay-hint {
+  align-self: center; max-width: 90%;
+  padding: 8px 12px; border-radius: 12px;
+  background: rgba(0,212,255,0.08);
+  border: 1px dashed rgba(0,212,255,0.35);
+  color: #00D4FF;
+  font-size: 11px; text-align: center;
+}
+
+/* Print: collapse the widget; the dashboard table tells the story */
+@media print {
+  .chat-demo-section { display: none !important; }
+}
 </style>
 </head>
 <body class="landing">
@@ -1214,6 +1377,34 @@ body.landing > footer.landing-footer {
 </section>
 
   
+<section class="chat-demo-section reveal" id="chat-demo">
+  <div class="section-head">
+    <span class="section-eyebrow">Try it now</span>
+    <h2>Talk to Kwame, live</h2>
+    <p class="muted">No sign-up. Type a question or tap a suggestion. Kwame replies with the same engine that powers production.</p>
+  </div>
+  <div class="chat-demo">
+    <header class="chat-header">
+      <span class="pulse-dot" aria-hidden="true"></span>
+      <div class="chat-header-id">
+        <div class="chat-header-title">Adinkra Hotel, Accra</div>
+        <div class="chat-header-status muted">Kwame · Online · AI assistant</div>
+      </div>
+    </header>
+    <div class="chat-messages" id="chat-messages" role="log" aria-live="polite"></div>
+    <div class="chat-chips" id="chat-chips" aria-label="Suggested questions"><button type="button" class="chat-chip" data-message="I&#x27;d like to book a room">I&#x27;d like to book a room</button><button type="button" class="chat-chip" data-message="What are your rates?">What are your rates?</button><button type="button" class="chat-chip" data-message="Do you have a pool?">Do you have a pool?</button><button type="button" class="chat-chip" data-message="I have a complaint">I have a complaint</button></div>
+    <form class="chat-input-row" id="chat-form" autocomplete="off">
+      <input class="chat-input" id="chat-input" type="text" inputmode="text"
+             placeholder="Ask Kwame anything…" aria-label="Type a message"
+             maxlength="200">
+      <button class="chat-send" id="chat-send" type="submit" aria-label="Send" title="Send">
+        <span aria-hidden="true">→</span>
+      </button>
+    </form>
+  </div>
+</section>
+
+  
 <section class="timeline-section" id="timeline">
   <div class="section-head">
     <span class="section-eyebrow">How it works</span>
@@ -1376,7 +1567,7 @@ body.landing > footer.landing-footer {
         <span class="data-collapse-label">See live data</span>
         <span class="data-collapse-icon" aria-hidden="true">▾</span>
       </summary>
-      <div class="data-collapse-body"><section class="panel"><header class="panel-head"><h2>Call history</h2><span class="muted">15 calls · click a row to expand</span></header><div class="table-wrap"><table id="callsTable"><thead><tr><th data-sort="time" aria-sort="descending">Time ⇅</th><th data-sort="agent">Agent ⇅</th><th data-sort="caller">Caller ⇅</th><th data-sort="duration" class="num">Duration ⇅</th><th data-sort="turns" class="num">Turns ⇅</th><th data-sort="sentiment">Sentiment ⇅</th><th data-sort="cost" class="num">Cost ⇅</th><th data-sort="status">Status ⇅</th></tr></thead><tbody><tr class="call-row" data-time="1777322150" data-agent="Kwame" data-caller="John" data-duration="27" data-turns="7" data-sentiment="0.150" data-cost="4.1940" data-status="Resolved"><td class="mono">Apr 27 · 23:35</td><td>Kwame</td><td>John</td><td class="num">27s</td><td class="num">7</td><td><div class="sbar"><div class="sbar-axis"></div><div class="sbar-fill sbar-pos" style="width:7.5%;background:#8A8A8A"></div></div><span class="mono small">+0.15</span></td><td class="num">4.2¢</td><td><span class="pill" style="color:#10B981;border-color:#10B98133;background:#10B98114">Resolved</span></td></tr>
+      <div class="data-collapse-body"><section class="panel"><header class="panel-head"><h2>Call history</h2><span class="muted">15 calls · click a row to expand</span></header><div class="table-wrap"><table id="callsTable"><thead><tr><th data-sort="time" aria-sort="descending">Time ⇅</th><th data-sort="agent">Agent ⇅</th><th data-sort="caller">Caller ⇅</th><th data-sort="duration" class="num">Duration ⇅</th><th data-sort="turns" class="num">Turns ⇅</th><th data-sort="sentiment">Sentiment ⇅</th><th data-sort="cost" class="num">Cost ⇅</th><th data-sort="status">Status ⇅</th></tr></thead><tbody><tr class="call-row" data-time="1777323095" data-agent="Kwame" data-caller="John" data-duration="27" data-turns="7" data-sentiment="0.150" data-cost="4.1940" data-status="Resolved"><td class="mono">Apr 27 · 23:51</td><td>Kwame</td><td>John</td><td class="num">27s</td><td class="num">7</td><td><div class="sbar"><div class="sbar-axis"></div><div class="sbar-fill sbar-pos" style="width:7.5%;background:#8A8A8A"></div></div><span class="mono small">+0.15</span></td><td class="num">4.2¢</td><td><span class="pill" style="color:#10B981;border-color:#10B98133;background:#10B98114">Resolved</span></td></tr>
 <tr class="call-detail" hidden>
   <td colspan="8">
     <div class="detail-grid">
@@ -1388,7 +1579,7 @@ body.landing > footer.landing-footer {
     </div>
   </td>
 </tr>
-<tr class="call-row" data-time="1777312180" data-agent="Amina" data-caller="Mary" data-duration="94" data-turns="17" data-sentiment="0.400" data-cost="12.6573" data-status="Resolved"><td class="mono">Apr 27 · 20:49</td><td>Amina</td><td>Mary</td><td class="num">1m 34s</td><td class="num">17</td><td><div class="sbar"><div class="sbar-axis"></div><div class="sbar-fill sbar-pos" style="width:20.0%;background:#10B981"></div></div><span class="mono small">+0.40</span></td><td class="num">12.7¢</td><td><span class="pill" style="color:#10B981;border-color:#10B98133;background:#10B98114">Resolved</span></td></tr>
+<tr class="call-row" data-time="1777313125" data-agent="Amina" data-caller="Mary" data-duration="94" data-turns="17" data-sentiment="0.400" data-cost="12.6573" data-status="Resolved"><td class="mono">Apr 27 · 21:05</td><td>Amina</td><td>Mary</td><td class="num">1m 34s</td><td class="num">17</td><td><div class="sbar"><div class="sbar-axis"></div><div class="sbar-fill sbar-pos" style="width:20.0%;background:#10B981"></div></div><span class="mono small">+0.40</span></td><td class="num">12.7¢</td><td><span class="pill" style="color:#10B981;border-color:#10B98133;background:#10B98114">Resolved</span></td></tr>
 <tr class="call-detail" hidden>
   <td colspan="8">
     <div class="detail-grid">
@@ -1400,7 +1591,7 @@ body.landing > footer.landing-footer {
     </div>
   </td>
 </tr>
-<tr class="call-row" data-time="1777302210" data-agent="Kwame" data-caller="James" data-duration="51" data-turns="11" data-sentiment="0.350" data-cost="7.3460" data-status="Resolved"><td class="mono">Apr 27 · 18:03</td><td>Kwame</td><td>James</td><td class="num">51s</td><td class="num">11</td><td><div class="sbar"><div class="sbar-axis"></div><div class="sbar-fill sbar-pos" style="width:17.5%;background:#10B981"></div></div><span class="mono small">+0.35</span></td><td class="num">7.3¢</td><td><span class="pill" style="color:#10B981;border-color:#10B98133;background:#10B98114">Resolved</span></td></tr>
+<tr class="call-row" data-time="1777303155" data-agent="Kwame" data-caller="James" data-duration="51" data-turns="11" data-sentiment="0.350" data-cost="7.3460" data-status="Resolved"><td class="mono">Apr 27 · 18:19</td><td>Kwame</td><td>James</td><td class="num">51s</td><td class="num">11</td><td><div class="sbar"><div class="sbar-axis"></div><div class="sbar-fill sbar-pos" style="width:17.5%;background:#10B981"></div></div><span class="mono small">+0.35</span></td><td class="num">7.3¢</td><td><span class="pill" style="color:#10B981;border-color:#10B98133;background:#10B98114">Resolved</span></td></tr>
 <tr class="call-detail" hidden>
   <td colspan="8">
     <div class="detail-grid">
@@ -1412,7 +1603,7 @@ body.landing > footer.landing-footer {
     </div>
   </td>
 </tr>
-<tr class="call-row" data-time="1777293050" data-agent="Amina" data-caller="Lucy" data-duration="76" data-turns="13" data-sentiment="0.200" data-cost="10.0053" data-status="Resolved"><td class="mono">Apr 27 · 15:30</td><td>Amina</td><td>Lucy</td><td class="num">1m 16s</td><td class="num">13</td><td><div class="sbar"><div class="sbar-axis"></div><div class="sbar-fill sbar-pos" style="width:10.0%;background:#10B981"></div></div><span class="mono small">+0.20</span></td><td class="num">10.0¢</td><td><span class="pill" style="color:#10B981;border-color:#10B98133;background:#10B98114">Resolved</span></td></tr>
+<tr class="call-row" data-time="1777293995" data-agent="Amina" data-caller="Lucy" data-duration="76" data-turns="13" data-sentiment="0.200" data-cost="10.0053" data-status="Resolved"><td class="mono">Apr 27 · 15:46</td><td>Amina</td><td>Lucy</td><td class="num">1m 16s</td><td class="num">13</td><td><div class="sbar"><div class="sbar-axis"></div><div class="sbar-fill sbar-pos" style="width:10.0%;background:#10B981"></div></div><span class="mono small">+0.20</span></td><td class="num">10.0¢</td><td><span class="pill" style="color:#10B981;border-color:#10B98133;background:#10B98114">Resolved</span></td></tr>
 <tr class="call-detail" hidden>
   <td colspan="8">
     <div class="detail-grid">
@@ -1424,7 +1615,7 @@ body.landing > footer.landing-footer {
     </div>
   </td>
 </tr>
-<tr class="call-row" data-time="1777283080" data-agent="Kwame" data-caller="Daniel" data-duration="38" data-turns="9" data-sentiment="0.500" data-cost="5.6867" data-status="Resolved"><td class="mono">Apr 27 · 12:44</td><td>Kwame</td><td>Daniel</td><td class="num">38s</td><td class="num">9</td><td><div class="sbar"><div class="sbar-axis"></div><div class="sbar-fill sbar-pos" style="width:25.0%;background:#10B981"></div></div><span class="mono small">+0.50</span></td><td class="num">5.7¢</td><td><span class="pill" style="color:#10B981;border-color:#10B98133;background:#10B98114">Resolved</span></td></tr>
+<tr class="call-row" data-time="1777284025" data-agent="Kwame" data-caller="Daniel" data-duration="38" data-turns="9" data-sentiment="0.500" data-cost="5.6867" data-status="Resolved"><td class="mono">Apr 27 · 13:00</td><td>Kwame</td><td>Daniel</td><td class="num">38s</td><td class="num">9</td><td><div class="sbar"><div class="sbar-axis"></div><div class="sbar-fill sbar-pos" style="width:25.0%;background:#10B981"></div></div><span class="mono small">+0.50</span></td><td class="num">5.7¢</td><td><span class="pill" style="color:#10B981;border-color:#10B98133;background:#10B98114">Resolved</span></td></tr>
 <tr class="call-detail" hidden>
   <td colspan="8">
     <div class="detail-grid">
@@ -1436,7 +1627,7 @@ body.landing > footer.landing-footer {
     </div>
   </td>
 </tr>
-<tr class="call-row" data-time="1777273110" data-agent="Amina" data-caller="Sarah" data-duration="211" data-turns="29" data-sentiment="0.050" data-cost="25.8633" data-status="Escalated"><td class="mono">Apr 27 · 09:58</td><td>Amina</td><td>Sarah</td><td class="num">3m 31s</td><td class="num">29</td><td><div class="sbar"><div class="sbar-axis"></div><div class="sbar-fill sbar-pos" style="width:2.5%;background:#8A8A8A"></div></div><span class="mono small">+0.05</span></td><td class="num">25.9¢</td><td><span class="pill" style="color:#F59E0B;border-color:#F59E0B33;background:#F59E0B14">Escalated</span></td></tr>
+<tr class="call-row" data-time="1777274055" data-agent="Amina" data-caller="Sarah" data-duration="211" data-turns="29" data-sentiment="0.050" data-cost="25.8633" data-status="Escalated"><td class="mono">Apr 27 · 10:14</td><td>Amina</td><td>Sarah</td><td class="num">3m 31s</td><td class="num">29</td><td><div class="sbar"><div class="sbar-axis"></div><div class="sbar-fill sbar-pos" style="width:2.5%;background:#8A8A8A"></div></div><span class="mono small">+0.05</span></td><td class="num">25.9¢</td><td><span class="pill" style="color:#F59E0B;border-color:#F59E0B33;background:#F59E0B14">Escalated</span></td></tr>
 <tr class="call-detail" hidden>
   <td colspan="8">
     <div class="detail-grid">
@@ -1448,7 +1639,7 @@ body.landing > footer.landing-footer {
     </div>
   </td>
 </tr>
-<tr class="call-row" data-time="1777263950" data-agent="Kwame" data-caller="Peter" data-duration="89" data-turns="15" data-sentiment="0.300" data-cost="11.6647" data-status="Resolved"><td class="mono">Apr 27 · 07:25</td><td>Kwame</td><td>Peter</td><td class="num">1m 29s</td><td class="num">15</td><td><div class="sbar"><div class="sbar-axis"></div><div class="sbar-fill sbar-pos" style="width:15.0%;background:#10B981"></div></div><span class="mono small">+0.30</span></td><td class="num">11.7¢</td><td><span class="pill" style="color:#10B981;border-color:#10B98133;background:#10B98114">Resolved</span></td></tr>
+<tr class="call-row" data-time="1777264895" data-agent="Kwame" data-caller="Peter" data-duration="89" data-turns="15" data-sentiment="0.300" data-cost="11.6647" data-status="Resolved"><td class="mono">Apr 27 · 07:41</td><td>Kwame</td><td>Peter</td><td class="num">1m 29s</td><td class="num">15</td><td><div class="sbar"><div class="sbar-axis"></div><div class="sbar-fill sbar-pos" style="width:15.0%;background:#10B981"></div></div><span class="mono small">+0.30</span></td><td class="num">11.7¢</td><td><span class="pill" style="color:#10B981;border-color:#10B98133;background:#10B98114">Resolved</span></td></tr>
 <tr class="call-detail" hidden>
   <td colspan="8">
     <div class="detail-grid">
@@ -1460,7 +1651,7 @@ body.landing > footer.landing-footer {
     </div>
   </td>
 </tr>
-<tr class="call-row" data-time="1777253980" data-agent="Amina" data-caller="Grace" data-duration="49" data-turns="10" data-sentiment="0.450" data-cost="6.9633" data-status="Resolved"><td class="mono">Apr 27 · 04:39</td><td>Amina</td><td>Grace</td><td class="num">49s</td><td class="num">10</td><td><div class="sbar"><div class="sbar-axis"></div><div class="sbar-fill sbar-pos" style="width:22.5%;background:#10B981"></div></div><span class="mono small">+0.45</span></td><td class="num">7.0¢</td><td><span class="pill" style="color:#10B981;border-color:#10B98133;background:#10B98114">Resolved</span></td></tr>
+<tr class="call-row" data-time="1777254925" data-agent="Amina" data-caller="Grace" data-duration="49" data-turns="10" data-sentiment="0.450" data-cost="6.9633" data-status="Resolved"><td class="mono">Apr 27 · 04:55</td><td>Amina</td><td>Grace</td><td class="num">49s</td><td class="num">10</td><td><div class="sbar"><div class="sbar-axis"></div><div class="sbar-fill sbar-pos" style="width:22.5%;background:#10B981"></div></div><span class="mono small">+0.45</span></td><td class="num">7.0¢</td><td><span class="pill" style="color:#10B981;border-color:#10B98133;background:#10B98114">Resolved</span></td></tr>
 <tr class="call-detail" hidden>
   <td colspan="8">
     <div class="detail-grid">
@@ -1472,7 +1663,7 @@ body.landing > footer.landing-footer {
     </div>
   </td>
 </tr>
-<tr class="call-row" data-time="1777244010" data-agent="Kwame" data-caller="Kofi" data-duration="58" data-turns="13" data-sentiment="0.620" data-cost="8.5053" data-status="Resolved"><td class="mono">Apr 27 · 01:53</td><td>Kwame</td><td>Kofi</td><td class="num">58s</td><td class="num">13</td><td><div class="sbar"><div class="sbar-axis"></div><div class="sbar-fill sbar-pos" style="width:31.0%;background:#10B981"></div></div><span class="mono small">+0.62</span></td><td class="num">8.5¢</td><td><span class="pill" style="color:#10B981;border-color:#10B98133;background:#10B98114">Resolved</span></td></tr>
+<tr class="call-row" data-time="1777244955" data-agent="Kwame" data-caller="Kofi" data-duration="58" data-turns="13" data-sentiment="0.620" data-cost="8.5053" data-status="Resolved"><td class="mono">Apr 27 · 02:09</td><td>Kwame</td><td>Kofi</td><td class="num">58s</td><td class="num">13</td><td><div class="sbar"><div class="sbar-axis"></div><div class="sbar-fill sbar-pos" style="width:31.0%;background:#10B981"></div></div><span class="mono small">+0.62</span></td><td class="num">8.5¢</td><td><span class="pill" style="color:#10B981;border-color:#10B98133;background:#10B98114">Resolved</span></td></tr>
 <tr class="call-detail" hidden>
   <td colspan="8">
     <div class="detail-grid">
@@ -1484,7 +1675,7 @@ body.landing > footer.landing-footer {
     </div>
   </td>
 </tr>
-<tr class="call-row" data-time="1777234850" data-agent="Amina" data-caller="Njeri" data-duration="154" data-turns="25" data-sentiment="-0.300" data-cost="19.9613" data-status="Escalated"><td class="mono">Apr 26 · 23:20</td><td>Amina</td><td>Njeri</td><td class="num">2m 34s</td><td class="num">25</td><td><div class="sbar"><div class="sbar-axis"></div><div class="sbar-fill sbar-neg" style="width:15.0%;background:#EF4444"></div></div><span class="mono small">-0.30</span></td><td class="num">20.0¢</td><td><span class="pill" style="color:#F59E0B;border-color:#F59E0B33;background:#F59E0B14">Escalated</span></td></tr>
+<tr class="call-row" data-time="1777235795" data-agent="Amina" data-caller="Njeri" data-duration="154" data-turns="25" data-sentiment="-0.300" data-cost="19.9613" data-status="Escalated"><td class="mono">Apr 26 · 23:36</td><td>Amina</td><td>Njeri</td><td class="num">2m 34s</td><td class="num">25</td><td><div class="sbar"><div class="sbar-axis"></div><div class="sbar-fill sbar-neg" style="width:15.0%;background:#EF4444"></div></div><span class="mono small">-0.30</span></td><td class="num">20.0¢</td><td><span class="pill" style="color:#F59E0B;border-color:#F59E0B33;background:#F59E0B14">Escalated</span></td></tr>
 <tr class="call-detail" hidden>
   <td colspan="8">
     <div class="detail-grid">
@@ -1496,7 +1687,7 @@ body.landing > footer.landing-footer {
     </div>
   </td>
 </tr>
-<tr class="call-row" data-time="1777224880" data-agent="Kwame" data-caller="Otieno" data-duration="22" data-turns="6" data-sentiment="-0.050" data-cost="3.5613" data-status="Abandoned"><td class="mono">Apr 26 · 20:34</td><td>Kwame</td><td>Otieno</td><td class="num">22s</td><td class="num">6</td><td><div class="sbar"><div class="sbar-axis"></div><div class="sbar-fill sbar-neg" style="width:2.5%;background:#8A8A8A"></div></div><span class="mono small">-0.05</span></td><td class="num">3.6¢</td><td><span class="pill" style="color:#EF4444;border-color:#EF444433;background:#EF444414">Abandoned</span></td></tr>
+<tr class="call-row" data-time="1777225825" data-agent="Kwame" data-caller="Otieno" data-duration="22" data-turns="6" data-sentiment="-0.050" data-cost="3.5613" data-status="Abandoned"><td class="mono">Apr 26 · 20:50</td><td>Kwame</td><td>Otieno</td><td class="num">22s</td><td class="num">6</td><td><div class="sbar"><div class="sbar-axis"></div><div class="sbar-fill sbar-neg" style="width:2.5%;background:#8A8A8A"></div></div><span class="mono small">-0.05</span></td><td class="num">3.6¢</td><td><span class="pill" style="color:#EF4444;border-color:#EF444433;background:#EF444414">Abandoned</span></td></tr>
 <tr class="call-detail" hidden>
   <td colspan="8">
     <div class="detail-grid">
@@ -1508,7 +1699,7 @@ body.landing > footer.landing-footer {
     </div>
   </td>
 </tr>
-<tr class="call-row" data-time="1777214910" data-agent="Amina" data-caller="Wanjiku" data-duration="105" data-turns="19" data-sentiment="0.100" data-cost="14.1500" data-status="Resolved"><td class="mono">Apr 26 · 17:48</td><td>Amina</td><td>Wanjiku</td><td class="num">1m 45s</td><td class="num">19</td><td><div class="sbar"><div class="sbar-axis"></div><div class="sbar-fill sbar-pos" style="width:5.0%;background:#8A8A8A"></div></div><span class="mono small">+0.10</span></td><td class="num">14.2¢</td><td><span class="pill" style="color:#10B981;border-color:#10B98133;background:#10B98114">Resolved</span></td></tr>
+<tr class="call-row" data-time="1777215855" data-agent="Amina" data-caller="Wanjiku" data-duration="105" data-turns="19" data-sentiment="0.100" data-cost="14.1500" data-status="Resolved"><td class="mono">Apr 26 · 18:04</td><td>Amina</td><td>Wanjiku</td><td class="num">1m 45s</td><td class="num">19</td><td><div class="sbar"><div class="sbar-axis"></div><div class="sbar-fill sbar-pos" style="width:5.0%;background:#8A8A8A"></div></div><span class="mono small">+0.10</span></td><td class="num">14.2¢</td><td><span class="pill" style="color:#10B981;border-color:#10B98133;background:#10B98114">Resolved</span></td></tr>
 <tr class="call-detail" hidden>
   <td colspan="8">
     <div class="detail-grid">
@@ -1520,7 +1711,7 @@ body.landing > footer.landing-footer {
     </div>
   </td>
 </tr>
-<tr class="call-row" data-time="1777205750" data-agent="Kwame" data-caller="Adwoa" data-duration="31" data-turns="9" data-sentiment="0.180" data-cost="5.1033" data-status="Resolved"><td class="mono">Apr 26 · 15:15</td><td>Kwame</td><td>Adwoa</td><td class="num">31s</td><td class="num">9</td><td><div class="sbar"><div class="sbar-axis"></div><div class="sbar-fill sbar-pos" style="width:9.0%;background:#8A8A8A"></div></div><span class="mono small">+0.18</span></td><td class="num">5.1¢</td><td><span class="pill" style="color:#10B981;border-color:#10B98133;background:#10B98114">Resolved</span></td></tr>
+<tr class="call-row" data-time="1777206695" data-agent="Kwame" data-caller="Adwoa" data-duration="31" data-turns="9" data-sentiment="0.180" data-cost="5.1033" data-status="Resolved"><td class="mono">Apr 26 · 15:31</td><td>Kwame</td><td>Adwoa</td><td class="num">31s</td><td class="num">9</td><td><div class="sbar"><div class="sbar-axis"></div><div class="sbar-fill sbar-pos" style="width:9.0%;background:#8A8A8A"></div></div><span class="mono small">+0.18</span></td><td class="num">5.1¢</td><td><span class="pill" style="color:#10B981;border-color:#10B98133;background:#10B98114">Resolved</span></td></tr>
 <tr class="call-detail" hidden>
   <td colspan="8">
     <div class="detail-grid">
@@ -1532,7 +1723,7 @@ body.landing > footer.landing-footer {
     </div>
   </td>
 </tr>
-<tr class="call-row" data-time="1777195780" data-agent="Amina" data-caller="Kojo" data-duration="68" data-turns="15" data-sentiment="0.550" data-cost="9.9147" data-status="Resolved"><td class="mono">Apr 26 · 12:29</td><td>Amina</td><td>Kojo</td><td class="num">1m 08s</td><td class="num">15</td><td><div class="sbar"><div class="sbar-axis"></div><div class="sbar-fill sbar-pos" style="width:27.5%;background:#10B981"></div></div><span class="mono small">+0.55</span></td><td class="num">9.9¢</td><td><span class="pill" style="color:#10B981;border-color:#10B98133;background:#10B98114">Resolved</span></td></tr>
+<tr class="call-row" data-time="1777196725" data-agent="Amina" data-caller="Kojo" data-duration="68" data-turns="15" data-sentiment="0.550" data-cost="9.9147" data-status="Resolved"><td class="mono">Apr 26 · 12:45</td><td>Amina</td><td>Kojo</td><td class="num">1m 08s</td><td class="num">15</td><td><div class="sbar"><div class="sbar-axis"></div><div class="sbar-fill sbar-pos" style="width:27.5%;background:#10B981"></div></div><span class="mono small">+0.55</span></td><td class="num">9.9¢</td><td><span class="pill" style="color:#10B981;border-color:#10B98133;background:#10B98114">Resolved</span></td></tr>
 <tr class="call-detail" hidden>
   <td colspan="8">
     <div class="detail-grid">
@@ -1544,7 +1735,7 @@ body.landing > footer.landing-footer {
     </div>
   </td>
 </tr>
-<tr class="call-row" data-time="1777185810" data-agent="Kwame" data-caller="Ama" data-duration="42" data-turns="11" data-sentiment="0.400" data-cost="6.5960" data-status="Resolved"><td class="mono">Apr 26 · 09:43</td><td>Kwame</td><td>Ama</td><td class="num">42s</td><td class="num">11</td><td><div class="sbar"><div class="sbar-axis"></div><div class="sbar-fill sbar-pos" style="width:20.0%;background:#10B981"></div></div><span class="mono small">+0.40</span></td><td class="num">6.6¢</td><td><span class="pill" style="color:#10B981;border-color:#10B98133;background:#10B98114">Resolved</span></td></tr>
+<tr class="call-row" data-time="1777186755" data-agent="Kwame" data-caller="Ama" data-duration="42" data-turns="11" data-sentiment="0.400" data-cost="6.5960" data-status="Resolved"><td class="mono">Apr 26 · 09:59</td><td>Kwame</td><td>Ama</td><td class="num">42s</td><td class="num">11</td><td><div class="sbar"><div class="sbar-axis"></div><div class="sbar-fill sbar-pos" style="width:20.0%;background:#10B981"></div></div><span class="mono small">+0.40</span></td><td class="num">6.6¢</td><td><span class="pill" style="color:#10B981;border-color:#10B98133;background:#10B98114">Resolved</span></td></tr>
 <tr class="call-detail" hidden>
   <td colspan="8">
     <div class="detail-grid">
@@ -1594,7 +1785,7 @@ body.landing > footer.landing-footer {
 <audio id="audio-player" preload="none" aria-label="Demo audio player"></audio>
 <script>
 'use strict';
-window.__cyneaCalls = [{"call_id": "call-001-ama", "agent": "kwame_adinkra", "started_at": 1777185810.128781, "ended_at": 1777185852.128781, "duration_s": 42, "user_turns": 5, "assistant_turns": 6, "interruptions": 1, "sentiment_score": 0.4, "containment": true, "resolution": true, "handoff_reason": null, "stt_seconds": 16.8, "telephony_seconds": 42.0, "llm_input_tokens": 150, "llm_output_tokens": 108, "tts_characters": 390, "cost_total_cents": 6.596, "cost_breakdown": {"stt_cents": 0.0, "llm_cents": 3.096, "tts_cents": 0.0, "telephony_cents": 3.5}}, {"call_id": "call-002-kojo", "agent": "amina_kcb", "started_at": 1777195780.128781, "ended_at": 1777195848.128781, "duration_s": 68, "user_turns": 7, "assistant_turns": 8, "interruptions": 0, "sentiment_score": 0.55, "containment": true, "resolution": true, "handoff_reason": null, "stt_seconds": 27.2, "telephony_seconds": 68.0, "llm_input_tokens": 210, "llm_output_tokens": 144, "tts_characters": 520, "cost_total_cents": 9.9147, "cost_breakdown": {"stt_cents": 0.0, "llm_cents": 4.248, "tts_cents": 0.0, "telephony_cents": 5.6667}}, {"call_id": "call-003-adwoa", "agent": "kwame_adinkra", "started_at": 1777205750.128781, "ended_at": 1777205781.128781, "duration_s": 31, "user_turns": 4, "assistant_turns": 5, "interruptions": 0, "sentiment_score": 0.18, "containment": true, "resolution": true, "handoff_reason": null, "stt_seconds": 12.4, "telephony_seconds": 31.0, "llm_input_tokens": 120, "llm_output_tokens": 90, "tts_characters": 325, "cost_total_cents": 5.1033, "cost_breakdown": {"stt_cents": 0.0, "llm_cents": 2.52, "tts_cents": 0.0, "telephony_cents": 2.5833}}, {"call_id": "call-004-wanjiku", "agent": "amina_kcb", "started_at": 1777214910.128781, "ended_at": 1777215015.128781, "duration_s": 105, "user_turns": 9, "assistant_turns": 10, "interruptions": 1, "sentiment_score": 0.1, "containment": true, "resolution": true, "handoff_reason": null, "stt_seconds": 42.0, "telephony_seconds": 105.0, "llm_input_tokens": 270, "llm_output_tokens": 180, "tts_characters": 650, "cost_total_cents": 14.15, "cost_breakdown": {"stt_cents": 0.0, "llm_cents": 5.4, "tts_cents": 0.0, "telephony_cents": 8.75}}, {"call_id": "call-005-otieno", "agent": "kwame_adinkra", "started_at": 1777224880.128781, "ended_at": 1777224902.128781, "duration_s": 22, "user_turns": 3, "assistant_turns": 3, "interruptions": 0, "sentiment_score": -0.05, "containment": true, "resolution": false, "handoff_reason": null, "stt_seconds": 8.8, "telephony_seconds": 22.0, "llm_input_tokens": 90, "llm_output_tokens": 54, "tts_characters": 195, "cost_total_cents": 3.5613, "cost_breakdown": {"stt_cents": 0.0, "llm_cents": 1.728, "tts_cents": 0.0, "telephony_cents": 1.8333}}, {"call_id": "call-006-njeri", "agent": "amina_kcb", "started_at": 1777234850.128781, "ended_at": 1777235004.128781, "duration_s": 154, "user_turns": 12, "assistant_turns": 13, "interruptions": 2, "sentiment_score": -0.3, "containment": false, "resolution": false, "handoff_reason": "angry caller", "stt_seconds": 61.6, "telephony_seconds": 154.0, "llm_input_tokens": 360, "llm_output_tokens": 234, "tts_characters": 845, "cost_total_cents": 19.9613, "cost_breakdown": {"stt_cents": 0.0, "llm_cents": 7.128, "tts_cents": 0.0, "telephony_cents": 12.8333}}, {"call_id": "call-007-kofi", "agent": "kwame_adinkra", "started_at": 1777244010.128781, "ended_at": 1777244068.128781, "duration_s": 58, "user_turns": 6, "assistant_turns": 7, "interruptions": 0, "sentiment_score": 0.62, "containment": true, "resolution": true, "handoff_reason": null, "stt_seconds": 23.2, "telephony_seconds": 58.0, "llm_input_tokens": 180, "llm_output_tokens": 126, "tts_characters": 455, "cost_total_cents": 8.5053, "cost_breakdown": {"stt_cents": 0.0, "llm_cents": 3.672, "tts_cents": 0.0, "telephony_cents": 4.8333}}, {"call_id": "call-008-grace", "agent": "amina_kcb", "started_at": 1777253980.128781, "ended_at": 1777254029.128781, "duration_s": 49, "user_turns": 5, "assistant_turns": 5, "interruptions": 0, "sentiment_score": 0.45, "containment": true, "resolution": true, "handoff_reason": null, "stt_seconds": 19.6, "telephony_seconds": 49.0, "llm_input_tokens": 150, "llm_output_tokens": 90, "tts_characters": 325, "cost_total_cents": 6.9633, "cost_breakdown": {"stt_cents": 0.0, "llm_cents": 2.88, "tts_cents": 0.0, "telephony_cents": 4.0833}}, {"call_id": "call-009-peter", "agent": "kwame_adinkra", "started_at": 1777263950.128781, "ended_at": 1777264039.128781, "duration_s": 89, "user_turns": 7, "assistant_turns": 8, "interruptions": 1, "sentiment_score": 0.3, "containment": true, "resolution": true, "handoff_reason": null, "stt_seconds": 35.6, "telephony_seconds": 89.0, "llm_input_tokens": 210, "llm_output_tokens": 144, "tts_characters": 520, "cost_total_cents": 11.6647, "cost_breakdown": {"stt_cents": 0.0, "llm_cents": 4.248, "tts_cents": 0.0, "telephony_cents": 7.4167}}, {"call_id": "call-010-sarah", "agent": "amina_kcb", "started_at": 1777273110.128781, "ended_at": 1777273321.128781, "duration_s": 211, "user_turns": 14, "assistant_turns": 15, "interruptions": 1, "sentiment_score": 0.05, "containment": false, "resolution": false, "handoff_reason": "fraud reported", "stt_seconds": 84.4, "telephony_seconds": 211.0, "llm_input_tokens": 420, "llm_output_tokens": 270, "tts_characters": 975, "cost_total_cents": 25.8633, "cost_breakdown": {"stt_cents": 0.0, "llm_cents": 8.28, "tts_cents": 0.0, "telephony_cents": 17.5833}}, {"call_id": "call-011-daniel", "agent": "kwame_adinkra", "started_at": 1777283080.128781, "ended_at": 1777283118.128781, "duration_s": 38, "user_turns": 4, "assistant_turns": 5, "interruptions": 0, "sentiment_score": 0.5, "containment": true, "resolution": true, "handoff_reason": null, "stt_seconds": 15.2, "telephony_seconds": 38.0, "llm_input_tokens": 120, "llm_output_tokens": 90, "tts_characters": 325, "cost_total_cents": 5.6867, "cost_breakdown": {"stt_cents": 0.0, "llm_cents": 2.52, "tts_cents": 0.0, "telephony_cents": 3.1667}}, {"call_id": "call-012-lucy", "agent": "amina_kcb", "started_at": 1777293050.128781, "ended_at": 1777293126.128781, "duration_s": 76, "user_turns": 6, "assistant_turns": 7, "interruptions": 0, "sentiment_score": 0.2, "containment": true, "resolution": true, "handoff_reason": null, "stt_seconds": 30.4, "telephony_seconds": 76.0, "llm_input_tokens": 180, "llm_output_tokens": 126, "tts_characters": 455, "cost_total_cents": 10.0053, "cost_breakdown": {"stt_cents": 0.0, "llm_cents": 3.672, "tts_cents": 0.0, "telephony_cents": 6.3333}}, {"call_id": "call-013-james", "agent": "kwame_adinkra", "started_at": 1777302210.128781, "ended_at": 1777302261.128781, "duration_s": 51, "user_turns": 5, "assistant_turns": 6, "interruptions": 0, "sentiment_score": 0.35, "containment": true, "resolution": true, "handoff_reason": null, "stt_seconds": 20.4, "telephony_seconds": 51.0, "llm_input_tokens": 150, "llm_output_tokens": 108, "tts_characters": 390, "cost_total_cents": 7.346, "cost_breakdown": {"stt_cents": 0.0, "llm_cents": 3.096, "tts_cents": 0.0, "telephony_cents": 4.25}}, {"call_id": "call-014-mary", "agent": "amina_kcb", "started_at": 1777312180.128781, "ended_at": 1777312274.128781, "duration_s": 94, "user_turns": 8, "assistant_turns": 9, "interruptions": 1, "sentiment_score": 0.4, "containment": true, "resolution": true, "handoff_reason": null, "stt_seconds": 37.6, "telephony_seconds": 94.0, "llm_input_tokens": 240, "llm_output_tokens": 162, "tts_characters": 585, "cost_total_cents": 12.6573, "cost_breakdown": {"stt_cents": 0.0, "llm_cents": 4.824, "tts_cents": 0.0, "telephony_cents": 7.8333}}, {"call_id": "call-015-john", "agent": "kwame_adinkra", "started_at": 1777322150.128781, "ended_at": 1777322177.128781, "duration_s": 27, "user_turns": 3, "assistant_turns": 4, "interruptions": 0, "sentiment_score": 0.15, "containment": true, "resolution": true, "handoff_reason": null, "stt_seconds": 10.8, "telephony_seconds": 27.0, "llm_input_tokens": 90, "llm_output_tokens": 72, "tts_characters": 260, "cost_total_cents": 4.194, "cost_breakdown": {"stt_cents": 0.0, "llm_cents": 1.944, "tts_cents": 0.0, "telephony_cents": 2.25}}];
+window.__cyneaCalls = [{"call_id": "call-001-ama", "agent": "kwame_adinkra", "started_at": 1777186755.770741, "ended_at": 1777186797.770741, "duration_s": 42, "user_turns": 5, "assistant_turns": 6, "interruptions": 1, "sentiment_score": 0.4, "containment": true, "resolution": true, "handoff_reason": null, "stt_seconds": 16.8, "telephony_seconds": 42.0, "llm_input_tokens": 150, "llm_output_tokens": 108, "tts_characters": 390, "cost_total_cents": 6.596, "cost_breakdown": {"stt_cents": 0.0, "llm_cents": 3.096, "tts_cents": 0.0, "telephony_cents": 3.5}}, {"call_id": "call-002-kojo", "agent": "amina_kcb", "started_at": 1777196725.770741, "ended_at": 1777196793.770741, "duration_s": 68, "user_turns": 7, "assistant_turns": 8, "interruptions": 0, "sentiment_score": 0.55, "containment": true, "resolution": true, "handoff_reason": null, "stt_seconds": 27.2, "telephony_seconds": 68.0, "llm_input_tokens": 210, "llm_output_tokens": 144, "tts_characters": 520, "cost_total_cents": 9.9147, "cost_breakdown": {"stt_cents": 0.0, "llm_cents": 4.248, "tts_cents": 0.0, "telephony_cents": 5.6667}}, {"call_id": "call-003-adwoa", "agent": "kwame_adinkra", "started_at": 1777206695.770741, "ended_at": 1777206726.770741, "duration_s": 31, "user_turns": 4, "assistant_turns": 5, "interruptions": 0, "sentiment_score": 0.18, "containment": true, "resolution": true, "handoff_reason": null, "stt_seconds": 12.4, "telephony_seconds": 31.0, "llm_input_tokens": 120, "llm_output_tokens": 90, "tts_characters": 325, "cost_total_cents": 5.1033, "cost_breakdown": {"stt_cents": 0.0, "llm_cents": 2.52, "tts_cents": 0.0, "telephony_cents": 2.5833}}, {"call_id": "call-004-wanjiku", "agent": "amina_kcb", "started_at": 1777215855.770741, "ended_at": 1777215960.770741, "duration_s": 105, "user_turns": 9, "assistant_turns": 10, "interruptions": 1, "sentiment_score": 0.1, "containment": true, "resolution": true, "handoff_reason": null, "stt_seconds": 42.0, "telephony_seconds": 105.0, "llm_input_tokens": 270, "llm_output_tokens": 180, "tts_characters": 650, "cost_total_cents": 14.15, "cost_breakdown": {"stt_cents": 0.0, "llm_cents": 5.4, "tts_cents": 0.0, "telephony_cents": 8.75}}, {"call_id": "call-005-otieno", "agent": "kwame_adinkra", "started_at": 1777225825.770741, "ended_at": 1777225847.770741, "duration_s": 22, "user_turns": 3, "assistant_turns": 3, "interruptions": 0, "sentiment_score": -0.05, "containment": true, "resolution": false, "handoff_reason": null, "stt_seconds": 8.8, "telephony_seconds": 22.0, "llm_input_tokens": 90, "llm_output_tokens": 54, "tts_characters": 195, "cost_total_cents": 3.5613, "cost_breakdown": {"stt_cents": 0.0, "llm_cents": 1.728, "tts_cents": 0.0, "telephony_cents": 1.8333}}, {"call_id": "call-006-njeri", "agent": "amina_kcb", "started_at": 1777235795.770741, "ended_at": 1777235949.770741, "duration_s": 154, "user_turns": 12, "assistant_turns": 13, "interruptions": 2, "sentiment_score": -0.3, "containment": false, "resolution": false, "handoff_reason": "angry caller", "stt_seconds": 61.6, "telephony_seconds": 154.0, "llm_input_tokens": 360, "llm_output_tokens": 234, "tts_characters": 845, "cost_total_cents": 19.9613, "cost_breakdown": {"stt_cents": 0.0, "llm_cents": 7.128, "tts_cents": 0.0, "telephony_cents": 12.8333}}, {"call_id": "call-007-kofi", "agent": "kwame_adinkra", "started_at": 1777244955.770741, "ended_at": 1777245013.770741, "duration_s": 58, "user_turns": 6, "assistant_turns": 7, "interruptions": 0, "sentiment_score": 0.62, "containment": true, "resolution": true, "handoff_reason": null, "stt_seconds": 23.2, "telephony_seconds": 58.0, "llm_input_tokens": 180, "llm_output_tokens": 126, "tts_characters": 455, "cost_total_cents": 8.5053, "cost_breakdown": {"stt_cents": 0.0, "llm_cents": 3.672, "tts_cents": 0.0, "telephony_cents": 4.8333}}, {"call_id": "call-008-grace", "agent": "amina_kcb", "started_at": 1777254925.770741, "ended_at": 1777254974.770741, "duration_s": 49, "user_turns": 5, "assistant_turns": 5, "interruptions": 0, "sentiment_score": 0.45, "containment": true, "resolution": true, "handoff_reason": null, "stt_seconds": 19.6, "telephony_seconds": 49.0, "llm_input_tokens": 150, "llm_output_tokens": 90, "tts_characters": 325, "cost_total_cents": 6.9633, "cost_breakdown": {"stt_cents": 0.0, "llm_cents": 2.88, "tts_cents": 0.0, "telephony_cents": 4.0833}}, {"call_id": "call-009-peter", "agent": "kwame_adinkra", "started_at": 1777264895.770741, "ended_at": 1777264984.770741, "duration_s": 89, "user_turns": 7, "assistant_turns": 8, "interruptions": 1, "sentiment_score": 0.3, "containment": true, "resolution": true, "handoff_reason": null, "stt_seconds": 35.6, "telephony_seconds": 89.0, "llm_input_tokens": 210, "llm_output_tokens": 144, "tts_characters": 520, "cost_total_cents": 11.6647, "cost_breakdown": {"stt_cents": 0.0, "llm_cents": 4.248, "tts_cents": 0.0, "telephony_cents": 7.4167}}, {"call_id": "call-010-sarah", "agent": "amina_kcb", "started_at": 1777274055.770741, "ended_at": 1777274266.770741, "duration_s": 211, "user_turns": 14, "assistant_turns": 15, "interruptions": 1, "sentiment_score": 0.05, "containment": false, "resolution": false, "handoff_reason": "fraud reported", "stt_seconds": 84.4, "telephony_seconds": 211.0, "llm_input_tokens": 420, "llm_output_tokens": 270, "tts_characters": 975, "cost_total_cents": 25.8633, "cost_breakdown": {"stt_cents": 0.0, "llm_cents": 8.28, "tts_cents": 0.0, "telephony_cents": 17.5833}}, {"call_id": "call-011-daniel", "agent": "kwame_adinkra", "started_at": 1777284025.770741, "ended_at": 1777284063.770741, "duration_s": 38, "user_turns": 4, "assistant_turns": 5, "interruptions": 0, "sentiment_score": 0.5, "containment": true, "resolution": true, "handoff_reason": null, "stt_seconds": 15.2, "telephony_seconds": 38.0, "llm_input_tokens": 120, "llm_output_tokens": 90, "tts_characters": 325, "cost_total_cents": 5.6867, "cost_breakdown": {"stt_cents": 0.0, "llm_cents": 2.52, "tts_cents": 0.0, "telephony_cents": 3.1667}}, {"call_id": "call-012-lucy", "agent": "amina_kcb", "started_at": 1777293995.770741, "ended_at": 1777294071.770741, "duration_s": 76, "user_turns": 6, "assistant_turns": 7, "interruptions": 0, "sentiment_score": 0.2, "containment": true, "resolution": true, "handoff_reason": null, "stt_seconds": 30.4, "telephony_seconds": 76.0, "llm_input_tokens": 180, "llm_output_tokens": 126, "tts_characters": 455, "cost_total_cents": 10.0053, "cost_breakdown": {"stt_cents": 0.0, "llm_cents": 3.672, "tts_cents": 0.0, "telephony_cents": 6.3333}}, {"call_id": "call-013-james", "agent": "kwame_adinkra", "started_at": 1777303155.770741, "ended_at": 1777303206.770741, "duration_s": 51, "user_turns": 5, "assistant_turns": 6, "interruptions": 0, "sentiment_score": 0.35, "containment": true, "resolution": true, "handoff_reason": null, "stt_seconds": 20.4, "telephony_seconds": 51.0, "llm_input_tokens": 150, "llm_output_tokens": 108, "tts_characters": 390, "cost_total_cents": 7.346, "cost_breakdown": {"stt_cents": 0.0, "llm_cents": 3.096, "tts_cents": 0.0, "telephony_cents": 4.25}}, {"call_id": "call-014-mary", "agent": "amina_kcb", "started_at": 1777313125.770741, "ended_at": 1777313219.770741, "duration_s": 94, "user_turns": 8, "assistant_turns": 9, "interruptions": 1, "sentiment_score": 0.4, "containment": true, "resolution": true, "handoff_reason": null, "stt_seconds": 37.6, "telephony_seconds": 94.0, "llm_input_tokens": 240, "llm_output_tokens": 162, "tts_characters": 585, "cost_total_cents": 12.6573, "cost_breakdown": {"stt_cents": 0.0, "llm_cents": 4.824, "tts_cents": 0.0, "telephony_cents": 7.8333}}, {"call_id": "call-015-john", "agent": "kwame_adinkra", "started_at": 1777323095.770741, "ended_at": 1777323122.770741, "duration_s": 27, "user_turns": 3, "assistant_turns": 4, "interruptions": 0, "sentiment_score": 0.15, "containment": true, "resolution": true, "handoff_reason": null, "stt_seconds": 10.8, "telephony_seconds": 27.0, "llm_input_tokens": 90, "llm_output_tokens": 72, "tts_characters": 260, "cost_total_cents": 4.194, "cost_breakdown": {"stt_cents": 0.0, "llm_cents": 1.944, "tts_cents": 0.0, "telephony_cents": 2.25}}];
 
 // -- live clock --------------------------------------------------------
 function tickClock() {
@@ -1981,6 +2172,232 @@ function startTypewriter(container, opts) {
     counters.forEach(animateCounter);
     circles.forEach(animateCircle);
   }
+})();
+
+// -- interactive chat widget ------------------------------------------
+//
+// State lives in window.__cyneaChat. Single typewriter timer; if a new
+// message starts, the previous one finalises immediately to avoid two
+// concurrent type-streams in the same bubble.
+
+(function() {
+  const messagesEl = document.getElementById('chat-messages');
+  const form = document.getElementById('chat-form');
+  const input = document.getElementById('chat-input');
+  const send = document.getElementById('chat-send');
+  const chips = document.querySelectorAll('.chat-chip');
+  const player = document.getElementById('audio-player');
+  if (!messagesEl || !form || !input) return;
+
+  // Keyword router. First match wins. lower-case both sides.
+  const RESPONSE_MAP = [
+    {
+      keywords: ['book', 'booking', 'reserve', 'reservation', 'room', 'check in', 'check-in'],
+      text: "Ah, lovely! When would you like to check in? We have standard, deluxe, and executive suites available.",
+      audio: "kwame_turn_01.mp3",
+    },
+    {
+      keywords: ['rate', 'rates', 'price', 'prices', 'cost', 'how much', 'cedis', 'dollars'],
+      text: "Our standard room is $80 per night, deluxe is $120, and the executive suite is $200. Breakfast is included with all rooms.",
+      audio: "kwame_turn_02.mp3",
+    },
+    {
+      keywords: ['pool', 'amenity', 'amenities', 'facility', 'facilities', 'wifi', 'gym', 'fitness', 'restaurant', 'breakfast'],
+      text: "Yes, we have a swimming pool open from 7am to 9pm, a restaurant serving Ghanaian and continental dishes, free WiFi, and a fitness center. Anything specific you'd like to know about?",
+      audio: "kwame_turn_03.mp3",
+    },
+    {
+      keywords: ['complaint', 'unhappy', 'problem', 'dirty', 'rude', 'angry', 'broken', 'cold', 'noisy'],
+      text: "I'm really sorry to hear that. That's not the experience we want you to have. Let me connect you with my manager who can resolve this for you right away.",
+      audio: "kwame_turn_04.mp3",
+    },
+  ];
+  const DEFAULT_RESPONSE = {
+    text: "Let me check on that for you. Is there anything else I can help with in the meantime?",
+    audio: "kwame_turn_05.mp3",
+  };
+  const GREETING = {
+    text: "Hello? Yes, Adinkra Hotel. Kwame speaking. How can I help you today?",
+    audio: "kwame_turn_00.mp3",
+  };
+
+  let typewriterTimer = null;
+  let activeText = null;        // ref to the textNode being typed
+  let activeFinalText = null;   // full text the typewriter is heading to
+  let firstUserInteraction = true;
+  let autoplayHintShown = false;
+
+  function routeMessage(text) {
+    const t = (text || '').toLowerCase();
+    for (const r of RESPONSE_MAP) {
+      if (r.keywords.some((k) => t.includes(k))) return r;
+    }
+    return DEFAULT_RESPONSE;
+  }
+
+  function scrollToBottom() {
+    messagesEl.scrollTop = messagesEl.scrollHeight;
+  }
+
+  function finalisePendingTypewriter() {
+    if (!typewriterTimer) return;
+    clearTimeout(typewriterTimer);
+    typewriterTimer = null;
+    if (activeText && activeFinalText !== null) {
+      activeText.textContent = activeFinalText;
+    }
+    activeText = null;
+    activeFinalText = null;
+  }
+
+  function appendUserMessage(text) {
+    const bubble = document.createElement('div');
+    bubble.className = 'chat-msg chat-msg-user';
+    bubble.textContent = text;
+    messagesEl.appendChild(bubble);
+    scrollToBottom();
+  }
+
+  function appendKwameMessage(response, opts) {
+    finalisePendingTypewriter();
+    const allowAutoplay = !(opts && opts.skipAutoplay);
+    const bubble = document.createElement('div');
+    bubble.className = 'chat-msg chat-msg-kwame';
+    const textEl = document.createElement('span');
+    textEl.className = 'chat-msg-text';
+    bubble.appendChild(textEl);
+
+    // Replay button — shows up after the typewriter finishes.
+    let replayBtn = null;
+    if (response.audio) {
+      replayBtn = document.createElement('button');
+      replayBtn.type = 'button';
+      replayBtn.className = 'chat-msg-replay';
+      replayBtn.title = 'Replay audio';
+      replayBtn.setAttribute('aria-label', 'Replay audio');
+      replayBtn.dataset.audio = response.audio;
+      replayBtn.textContent = '▶';
+      replayBtn.style.opacity = '0';
+      replayBtn.style.transition = 'opacity 200ms ease';
+      bubble.appendChild(replayBtn);
+    }
+    messagesEl.appendChild(bubble);
+
+    activeText = textEl;
+    activeFinalText = response.text;
+
+    let i = 0;
+    function tick() {
+      if (i >= response.text.length) {
+        typewriterTimer = null;
+        activeText = null;
+        activeFinalText = null;
+        if (replayBtn) replayBtn.style.opacity = '1';
+        if (allowAutoplay && response.audio) playChatAudio(response.audio, replayBtn);
+        return;
+      }
+      textEl.textContent += response.text.charAt(i++);
+      scrollToBottom();
+      typewriterTimer = setTimeout(tick, 30);
+    }
+    typewriterTimer = setTimeout(tick, 30);
+    scrollToBottom();
+  }
+
+  function showTypingIndicator() {
+    const el = document.createElement('div');
+    el.className = 'chat-typing';
+    el.id = 'chat-typing';
+    el.innerHTML = '<span></span><span></span><span></span>';
+    messagesEl.appendChild(el);
+    scrollToBottom();
+  }
+  function hideTypingIndicator() {
+    const el = document.getElementById('chat-typing');
+    if (el) el.remove();
+  }
+
+  function showAutoplayHint() {
+    if (autoplayHintShown) return;
+    autoplayHintShown = true;
+    const el = document.createElement('div');
+    el.className = 'chat-autoplay-hint';
+    el.textContent = 'Tap a message ▶ to hear it — your browser blocks audio until you interact.';
+    messagesEl.appendChild(el);
+    scrollToBottom();
+  }
+
+  function playChatAudio(file, replayBtn) {
+    if (!player || !file) return;
+    try { player.pause(); player.currentTime = 0; } catch (e) {}
+
+    // Clear any prior playing-state indicator.
+    document.querySelectorAll('.chat-msg-replay[data-playing="true"]')
+      .forEach((b) => b.removeAttribute('data-playing'));
+    if (replayBtn) replayBtn.setAttribute('data-playing', 'true');
+
+    player.src = file;
+    const onEnd = () => {
+      if (replayBtn) replayBtn.removeAttribute('data-playing');
+      player.removeEventListener('ended', onEnd);
+      player.removeEventListener('pause', onEnd);
+    };
+    player.addEventListener('ended', onEnd);
+    player.addEventListener('pause', onEnd);
+
+    const promise = player.play();
+    if (promise && typeof promise.catch === 'function') {
+      promise.catch(() => {
+        // Browser blocked autoplay (most common on first page load).
+        if (replayBtn) replayBtn.removeAttribute('data-playing');
+        if (firstUserInteraction) showAutoplayHint();
+      });
+    }
+  }
+
+  function sendUserMessage(text) {
+    text = (text || '').trim();
+    if (!text) return;
+    firstUserInteraction = false;  // any keypress / click counts
+    appendUserMessage(text);
+    showTypingIndicator();
+    const delay = 1100 + Math.floor(Math.random() * 800);  // 1.1-1.9s
+    setTimeout(() => {
+      hideTypingIndicator();
+      const response = routeMessage(text);
+      appendKwameMessage(response);
+    }, delay);
+  }
+
+  // Wire form
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();
+    sendUserMessage(input.value);
+    input.value = '';
+    input.focus();
+  });
+
+  // Wire chips
+  chips.forEach((chip) => {
+    chip.addEventListener('click', () => {
+      const msg = chip.getAttribute('data-message') || chip.textContent;
+      input.value = msg;
+      sendUserMessage(msg);
+      input.value = '';
+    });
+  });
+
+  // Wire replay buttons (event delegation)
+  messagesEl.addEventListener('click', (e) => {
+    const target = e.target.closest('.chat-msg-replay');
+    if (!target) return;
+    firstUserInteraction = false;
+    playChatAudio(target.dataset.audio, target);
+  });
+
+  // Initial greeting after 1 second. Audio autoplay is allowed but
+  // gracefully handled if the browser blocks it.
+  setTimeout(() => appendKwameMessage(GREETING), 1000);
 })();
 
 // -- nav active link highlight on scroll ------------------------------

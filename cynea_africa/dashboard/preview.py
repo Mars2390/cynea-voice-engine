@@ -1820,16 +1820,17 @@ def generate_landing_page(
 # ------------------------------------------------------------------
 
 def _render_landing_html(*, calls: list, showcase: dict, is_empty_state: bool) -> str:
-    loader   = _landing_render_loader()
-    nav      = _landing_render_nav()
-    hero     = _landing_render_hero()
-    metrics  = _landing_render_metric_strip(showcase)
-    agents   = _landing_render_agent_showcase()
-    timeline = _landing_render_timeline()
-    feats    = _landing_render_features()
-    phone    = _landing_render_phone_demo()
-    table    = _render_call_history_table(calls, is_empty_state)
-    footer   = _landing_render_footer()
+    loader      = _landing_render_loader()
+    nav         = _landing_render_nav()
+    hero        = _landing_render_hero()
+    metrics     = _landing_render_metric_strip(showcase)
+    agents      = _landing_render_agent_showcase()
+    chat_widget = _landing_render_chat_widget()
+    timeline    = _landing_render_timeline()
+    feats       = _landing_render_features()
+    phone       = _landing_render_phone_demo()
+    table       = _render_call_history_table(calls, is_empty_state)
+    footer      = _landing_render_footer()
 
     css = _landing_render_css()
     dashboard_css = _render_css()
@@ -1854,6 +1855,7 @@ def _render_landing_html(*, calls: list, showcase: dict, is_empty_state: bool) -
 <main class="landing-main">
   {hero}
   {agents}
+  {chat_widget}
   {timeline}
   {feats}
   {phone}
@@ -2091,6 +2093,55 @@ def _landing_render_agent_showcase() -> str:
     <p class="muted">Both run on the same engine. Add a third by writing one Python file plus a JSON config.</p>
   </div>
   <div class="agent-showcase-grid">{"".join(cards)}</div>
+</section>
+"""
+
+
+def _landing_render_chat_widget() -> str:
+    """Interactive chat widget: visitors type a message; Kwame replies
+    via a keyword-routed response map (no backend, no LLM call). The
+    JS layer drives the typewriter, the chip suggestions, and audio
+    playback through the shared <audio id="audio-player"> element.
+    """
+    # Suggested questions surfaced as chips at the bottom of the chat
+    # area. Clicking a chip auto-sends its `data-message`.
+    chips = [
+        "I'd like to book a room",
+        "What are your rates?",
+        "Do you have a pool?",
+        "I have a complaint",
+    ]
+    chips_html = "".join(
+        f'<button type="button" class="chat-chip" '
+        f'data-message="{html.escape(msg)}">{html.escape(msg)}</button>'
+        for msg in chips
+    )
+    return f"""
+<section class="chat-demo-section reveal" id="chat-demo">
+  <div class="section-head">
+    <span class="section-eyebrow">Try it now</span>
+    <h2>Talk to Kwame, live</h2>
+    <p class="muted">No sign-up. Type a question or tap a suggestion. Kwame replies with the same engine that powers production.</p>
+  </div>
+  <div class="chat-demo">
+    <header class="chat-header">
+      <span class="pulse-dot" aria-hidden="true"></span>
+      <div class="chat-header-id">
+        <div class="chat-header-title">Adinkra Hotel, Accra</div>
+        <div class="chat-header-status muted">Kwame · Online · AI assistant</div>
+      </div>
+    </header>
+    <div class="chat-messages" id="chat-messages" role="log" aria-live="polite"></div>
+    <div class="chat-chips" id="chat-chips" aria-label="Suggested questions">{chips_html}</div>
+    <form class="chat-input-row" id="chat-form" autocomplete="off">
+      <input class="chat-input" id="chat-input" type="text" inputmode="text"
+             placeholder="Ask Kwame anything…" aria-label="Type a message"
+             maxlength="200">
+      <button class="chat-send" id="chat-send" type="submit" aria-label="Send" title="Send">
+        <span aria-hidden="true">→</span>
+      </button>
+    </form>
+  </div>
 </section>
 """
 
@@ -2901,6 +2952,169 @@ body.landing > footer.landing-footer {
   }
   .reveal { opacity: 1 !important; transform: none !important; }
 }
+
+/* ── interactive chat widget ────────────────────────────────────── */
+.chat-demo-section { padding: 88px 0; }
+.chat-demo {
+  width: 100%; max-width: 375px; height: 700px;
+  margin: 0 auto;
+  background: #1a1a1a;
+  border: 1px solid #1E1E1E;
+  border-radius: 24px;
+  display: flex; flex-direction: column;
+  overflow: hidden;
+  box-shadow:
+    0 0 0 1px rgba(255,255,255,0.03) inset,
+    0 30px 80px rgba(0,212,255,0.10),
+    0 60px 120px rgba(0,0,0,0.6);
+}
+@media (max-width: 540px) {
+  .chat-demo { height: 620px; max-width: 100%; border-radius: 20px; }
+}
+
+.chat-header {
+  display: flex; align-items: center; gap: 10px;
+  padding: 16px 18px;
+  background: #0E0E0E;
+  border-bottom: 1px solid #1E1E1E;
+}
+.chat-header-id { line-height: 1.2; }
+.chat-header-title {
+  font-family: 'Syne', sans-serif; font-weight: 700; font-size: 14px;
+  color: #F5F5F5;
+}
+.chat-header-status { font-size: 11px; }
+
+.chat-messages {
+  flex: 1; min-height: 0;
+  overflow-y: auto;
+  padding: 16px;
+  display: flex; flex-direction: column; gap: 10px;
+  scroll-behavior: smooth;
+  scrollbar-width: thin; scrollbar-color: #2A2A2A transparent;
+}
+.chat-messages::-webkit-scrollbar { width: 6px; }
+.chat-messages::-webkit-scrollbar-thumb { background: #2A2A2A; border-radius: 999px; }
+
+.chat-msg {
+  max-width: 82%;
+  padding: 10px 14px; border-radius: 16px;
+  font-size: 13px; line-height: 1.45;
+  position: relative;
+  animation: chatMsgIn 240ms cubic-bezier(.2,.8,.2,1);
+  word-wrap: break-word;
+}
+@keyframes chatMsgIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.chat-msg-kwame {
+  align-self: flex-start;
+  background: #2a2a2a; color: #F5F5F5;
+  border: 1px solid #1E1E1E;
+  border-bottom-left-radius: 4px;
+  padding-right: 36px;
+}
+.chat-msg-user {
+  align-self: flex-end;
+  background: #00D4FF; color: #001218;
+  border-bottom-right-radius: 4px;
+  font-weight: 500;
+}
+.chat-msg-replay {
+  position: absolute; right: 6px; bottom: 6px;
+  width: 22px; height: 22px; border-radius: 50%;
+  background: rgba(0,212,255,0.15); color: #00D4FF;
+  border: none; cursor: pointer;
+  font-size: 9px; line-height: 1;
+  display: inline-flex; align-items: center; justify-content: center;
+  transition: background 120ms ease;
+}
+.chat-msg-replay:hover { background: rgba(0,212,255,0.30); }
+.chat-msg-replay[data-playing="true"] { background: #00D4FF; color: #001218; }
+
+.chat-typing {
+  align-self: flex-start;
+  display: inline-flex; align-items: center; gap: 4px;
+  padding: 12px 14px;
+  background: #2a2a2a; border: 1px solid #1E1E1E;
+  border-radius: 16px;
+}
+.chat-typing span {
+  width: 6px; height: 6px; border-radius: 50%;
+  background: #8A8A8A;
+  animation: chatTypePulse 1.2s infinite;
+}
+.chat-typing span:nth-child(2) { animation-delay: 0.18s; }
+.chat-typing span:nth-child(3) { animation-delay: 0.36s; }
+@keyframes chatTypePulse {
+  0%, 60%, 100% { opacity: 0.3; transform: translateY(0); }
+  30%           { opacity: 1;   transform: translateY(-3px); }
+}
+
+.chat-chips {
+  padding: 10px 14px 0;
+  display: flex; gap: 8px; overflow-x: auto;
+  scrollbar-width: none;
+}
+.chat-chips::-webkit-scrollbar { display: none; }
+.chat-chip {
+  flex-shrink: 0;
+  padding: 6px 12px; border-radius: 999px;
+  background: transparent; color: #00D4FF;
+  border: 1px solid rgba(0,212,255,0.40);
+  font-family: inherit; font-size: 12px;
+  cursor: pointer; white-space: nowrap;
+  transition: background 150ms ease, border-color 150ms ease;
+}
+.chat-chip:hover { background: rgba(0,212,255,0.12); border-color: #00D4FF; }
+.chat-chip:active { transform: translateY(1px); }
+
+.chat-input-row {
+  display: flex; gap: 8px;
+  padding: 12px 14px 14px;
+  border-top: 1px solid #1E1E1E;
+  margin-top: 10px;
+}
+.chat-input {
+  flex: 1; min-width: 0;
+  background: #0E0E0E; color: #F5F5F5;
+  border: 1px solid #1E1E1E; border-radius: 999px;
+  padding: 10px 16px;
+  font-family: inherit; font-size: 13px;
+  outline: none;
+  transition: border-color 150ms ease, box-shadow 150ms ease;
+}
+.chat-input:focus {
+  border-color: #00D4FF;
+  box-shadow: 0 0 0 3px rgba(0,212,255,0.15);
+}
+.chat-input::placeholder { color: #5F5F5F; }
+.chat-send {
+  width: 40px; height: 40px; border-radius: 50%;
+  background: #00D4FF; color: #001218;
+  border: none; cursor: pointer;
+  font-size: 18px; flex-shrink: 0;
+  display: inline-flex; align-items: center; justify-content: center;
+  transition: filter 120ms ease, transform 120ms ease;
+}
+.chat-send:hover { filter: brightness(1.05); }
+.chat-send:active { transform: translateY(1px); }
+.chat-send:disabled { opacity: 0.4; cursor: not-allowed; }
+
+.chat-autoplay-hint {
+  align-self: center; max-width: 90%;
+  padding: 8px 12px; border-radius: 12px;
+  background: rgba(0,212,255,0.08);
+  border: 1px dashed rgba(0,212,255,0.35);
+  color: #00D4FF;
+  font-size: 11px; text-align: center;
+}
+
+/* Print: collapse the widget; the dashboard table tells the story */
+@media print {
+  .chat-demo-section { display: none !important; }
+}
 """
 
 
@@ -3138,6 +3352,232 @@ function startTypewriter(container, opts) {
     counters.forEach(animateCounter);
     circles.forEach(animateCircle);
   }
+})();
+
+// -- interactive chat widget ------------------------------------------
+//
+// State lives in window.__cyneaChat. Single typewriter timer; if a new
+// message starts, the previous one finalises immediately to avoid two
+// concurrent type-streams in the same bubble.
+
+(function() {
+  const messagesEl = document.getElementById('chat-messages');
+  const form = document.getElementById('chat-form');
+  const input = document.getElementById('chat-input');
+  const send = document.getElementById('chat-send');
+  const chips = document.querySelectorAll('.chat-chip');
+  const player = document.getElementById('audio-player');
+  if (!messagesEl || !form || !input) return;
+
+  // Keyword router. First match wins. lower-case both sides.
+  const RESPONSE_MAP = [
+    {
+      keywords: ['book', 'booking', 'reserve', 'reservation', 'room', 'check in', 'check-in'],
+      text: "Ah, lovely! When would you like to check in? We have standard, deluxe, and executive suites available.",
+      audio: "kwame_turn_01.mp3",
+    },
+    {
+      keywords: ['rate', 'rates', 'price', 'prices', 'cost', 'how much', 'cedis', 'dollars'],
+      text: "Our standard room is $80 per night, deluxe is $120, and the executive suite is $200. Breakfast is included with all rooms.",
+      audio: "kwame_turn_02.mp3",
+    },
+    {
+      keywords: ['pool', 'amenity', 'amenities', 'facility', 'facilities', 'wifi', 'gym', 'fitness', 'restaurant', 'breakfast'],
+      text: "Yes, we have a swimming pool open from 7am to 9pm, a restaurant serving Ghanaian and continental dishes, free WiFi, and a fitness center. Anything specific you'd like to know about?",
+      audio: "kwame_turn_03.mp3",
+    },
+    {
+      keywords: ['complaint', 'unhappy', 'problem', 'dirty', 'rude', 'angry', 'broken', 'cold', 'noisy'],
+      text: "I'm really sorry to hear that. That's not the experience we want you to have. Let me connect you with my manager who can resolve this for you right away.",
+      audio: "kwame_turn_04.mp3",
+    },
+  ];
+  const DEFAULT_RESPONSE = {
+    text: "Let me check on that for you. Is there anything else I can help with in the meantime?",
+    audio: "kwame_turn_05.mp3",
+  };
+  const GREETING = {
+    text: "Hello? Yes, Adinkra Hotel. Kwame speaking. How can I help you today?",
+    audio: "kwame_turn_00.mp3",
+  };
+
+  let typewriterTimer = null;
+  let activeText = null;        // ref to the textNode being typed
+  let activeFinalText = null;   // full text the typewriter is heading to
+  let firstUserInteraction = true;
+  let autoplayHintShown = false;
+
+  function routeMessage(text) {
+    const t = (text || '').toLowerCase();
+    for (const r of RESPONSE_MAP) {
+      if (r.keywords.some((k) => t.includes(k))) return r;
+    }
+    return DEFAULT_RESPONSE;
+  }
+
+  function scrollToBottom() {
+    messagesEl.scrollTop = messagesEl.scrollHeight;
+  }
+
+  function finalisePendingTypewriter() {
+    if (!typewriterTimer) return;
+    clearTimeout(typewriterTimer);
+    typewriterTimer = null;
+    if (activeText && activeFinalText !== null) {
+      activeText.textContent = activeFinalText;
+    }
+    activeText = null;
+    activeFinalText = null;
+  }
+
+  function appendUserMessage(text) {
+    const bubble = document.createElement('div');
+    bubble.className = 'chat-msg chat-msg-user';
+    bubble.textContent = text;
+    messagesEl.appendChild(bubble);
+    scrollToBottom();
+  }
+
+  function appendKwameMessage(response, opts) {
+    finalisePendingTypewriter();
+    const allowAutoplay = !(opts && opts.skipAutoplay);
+    const bubble = document.createElement('div');
+    bubble.className = 'chat-msg chat-msg-kwame';
+    const textEl = document.createElement('span');
+    textEl.className = 'chat-msg-text';
+    bubble.appendChild(textEl);
+
+    // Replay button — shows up after the typewriter finishes.
+    let replayBtn = null;
+    if (response.audio) {
+      replayBtn = document.createElement('button');
+      replayBtn.type = 'button';
+      replayBtn.className = 'chat-msg-replay';
+      replayBtn.title = 'Replay audio';
+      replayBtn.setAttribute('aria-label', 'Replay audio');
+      replayBtn.dataset.audio = response.audio;
+      replayBtn.textContent = '▶';
+      replayBtn.style.opacity = '0';
+      replayBtn.style.transition = 'opacity 200ms ease';
+      bubble.appendChild(replayBtn);
+    }
+    messagesEl.appendChild(bubble);
+
+    activeText = textEl;
+    activeFinalText = response.text;
+
+    let i = 0;
+    function tick() {
+      if (i >= response.text.length) {
+        typewriterTimer = null;
+        activeText = null;
+        activeFinalText = null;
+        if (replayBtn) replayBtn.style.opacity = '1';
+        if (allowAutoplay && response.audio) playChatAudio(response.audio, replayBtn);
+        return;
+      }
+      textEl.textContent += response.text.charAt(i++);
+      scrollToBottom();
+      typewriterTimer = setTimeout(tick, 30);
+    }
+    typewriterTimer = setTimeout(tick, 30);
+    scrollToBottom();
+  }
+
+  function showTypingIndicator() {
+    const el = document.createElement('div');
+    el.className = 'chat-typing';
+    el.id = 'chat-typing';
+    el.innerHTML = '<span></span><span></span><span></span>';
+    messagesEl.appendChild(el);
+    scrollToBottom();
+  }
+  function hideTypingIndicator() {
+    const el = document.getElementById('chat-typing');
+    if (el) el.remove();
+  }
+
+  function showAutoplayHint() {
+    if (autoplayHintShown) return;
+    autoplayHintShown = true;
+    const el = document.createElement('div');
+    el.className = 'chat-autoplay-hint';
+    el.textContent = 'Tap a message ▶ to hear it — your browser blocks audio until you interact.';
+    messagesEl.appendChild(el);
+    scrollToBottom();
+  }
+
+  function playChatAudio(file, replayBtn) {
+    if (!player || !file) return;
+    try { player.pause(); player.currentTime = 0; } catch (e) {}
+
+    // Clear any prior playing-state indicator.
+    document.querySelectorAll('.chat-msg-replay[data-playing="true"]')
+      .forEach((b) => b.removeAttribute('data-playing'));
+    if (replayBtn) replayBtn.setAttribute('data-playing', 'true');
+
+    player.src = file;
+    const onEnd = () => {
+      if (replayBtn) replayBtn.removeAttribute('data-playing');
+      player.removeEventListener('ended', onEnd);
+      player.removeEventListener('pause', onEnd);
+    };
+    player.addEventListener('ended', onEnd);
+    player.addEventListener('pause', onEnd);
+
+    const promise = player.play();
+    if (promise && typeof promise.catch === 'function') {
+      promise.catch(() => {
+        // Browser blocked autoplay (most common on first page load).
+        if (replayBtn) replayBtn.removeAttribute('data-playing');
+        if (firstUserInteraction) showAutoplayHint();
+      });
+    }
+  }
+
+  function sendUserMessage(text) {
+    text = (text || '').trim();
+    if (!text) return;
+    firstUserInteraction = false;  // any keypress / click counts
+    appendUserMessage(text);
+    showTypingIndicator();
+    const delay = 1100 + Math.floor(Math.random() * 800);  // 1.1-1.9s
+    setTimeout(() => {
+      hideTypingIndicator();
+      const response = routeMessage(text);
+      appendKwameMessage(response);
+    }, delay);
+  }
+
+  // Wire form
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();
+    sendUserMessage(input.value);
+    input.value = '';
+    input.focus();
+  });
+
+  // Wire chips
+  chips.forEach((chip) => {
+    chip.addEventListener('click', () => {
+      const msg = chip.getAttribute('data-message') || chip.textContent;
+      input.value = msg;
+      sendUserMessage(msg);
+      input.value = '';
+    });
+  });
+
+  // Wire replay buttons (event delegation)
+  messagesEl.addEventListener('click', (e) => {
+    const target = e.target.closest('.chat-msg-replay');
+    if (!target) return;
+    firstUserInteraction = false;
+    playChatAudio(target.dataset.audio, target);
+  });
+
+  // Initial greeting after 1 second. Audio autoplay is allowed but
+  // gracefully handled if the browser blocks it.
+  setTimeout(() => appendKwameMessage(GREETING), 1000);
 })();
 
 // -- nav active link highlight on scroll ------------------------------

@@ -108,6 +108,7 @@ main { max-width: 1180px; margin: 0 auto; padding: 48px 32px 80px; }
 /* ── phone mockup ─────────────────────────────────────────────── */
 .phone-wrap {
   width: 100%; max-width: 340px; margin: 0 auto;
+  position: relative;
 }
 .phone {
   width: 100%; aspect-ratio: 320 / 660;
@@ -120,7 +121,36 @@ main { max-width: 1180px; margin: 0 auto; padding: 48px 32px 80px; }
     0 0 0 4px #1E1E1E,
     0 30px 80px rgba(0,212,255,0.18),
     0 60px 120px rgba(0,0,0,0.7);
+  transition: transform 120ms ease;
 }
+.phone.ringing {
+  animation: phoneShake 0.9s ease-in-out infinite;
+}
+@keyframes phoneShake {
+  0%,  100% { transform: translateX(0) rotate(0); }
+  20%       { transform: translateX(-4px) rotate(-0.6deg); }
+  40%       { transform: translateX(4px) rotate(0.6deg); }
+  60%       { transform: translateX(-2px) rotate(-0.3deg); }
+  80%       { transform: translateX(2px) rotate(0.3deg); }
+}
+.phone-rings {
+  position: absolute; top: 50%; left: 50%;
+  width: 100%; height: 100%;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+}
+.phone-rings::before, .phone-rings::after {
+  content: ""; position: absolute; inset: 0;
+  border: 2px solid rgba(0,212,255,0.4);
+  border-radius: 44px;
+  animation: phoneRingExpand 1.4s ease-out infinite;
+}
+.phone-rings::after { animation-delay: 0.7s; }
+@keyframes phoneRingExpand {
+  0%   { transform: scale(1); opacity: 0.7; }
+  100% { transform: scale(1.16); opacity: 0; }
+}
+.phone:not(.ringing) ~ .phone-rings { display: none; }
 .phone-notch {
   position: absolute; top: 12px; left: 50%; transform: translateX(-50%);
   width: 110px; height: 22px; background: #050505;
@@ -129,7 +159,7 @@ main { max-width: 1180px; margin: 0 auto; padding: 48px 32px 80px; }
 .phone-screen {
   width: 100%; height: 100%; border-radius: 32px;
   background: linear-gradient(180deg, #050505 0%, #0E0E0E 100%);
-  padding: 36px 14px 12px; display: flex; flex-direction: column; gap: 8px;
+  padding: 36px 12px 12px; display: flex; flex-direction: column; gap: 8px;
   overflow: hidden;
 }
 .phone-status {
@@ -164,6 +194,60 @@ main { max-width: 1180px; margin: 0 auto; padding: 48px 32px 80px; }
   100% { box-shadow: 0 0 0 0 rgba(16,185,129,0); }
 }
 
+/* ── ringing splash inside the phone screen ──────────────────── */
+.phone-ringing-splash {
+  flex: 1; display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  gap: 14px; padding: 20px;
+}
+.phone-ringing-splash .big-avatar {
+  width: 86px; height: 86px; font-size: 32px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #00D4FF, rgba(255,255,255,0.05));
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'Syne', sans-serif; font-weight: 800;
+  color: #001218;
+  box-shadow:
+    0 0 0 4px rgba(0,212,255,0.12),
+    0 0 0 12px rgba(0,212,255,0.05),
+    0 0 32px rgba(0,212,255,0.5);
+  animation: bigAvatarPulse 1.6s ease-in-out infinite;
+}
+@keyframes bigAvatarPulse {
+  0%, 100% { box-shadow: 0 0 0 4px rgba(0,212,255,0.12), 0 0 0 12px rgba(0,212,255,0.05), 0 0 32px rgba(0,212,255,0.5); }
+  50%      { box-shadow: 0 0 0 4px rgba(0,212,255,0.20), 0 0 0 18px rgba(0,212,255,0.08), 0 0 48px rgba(0,212,255,0.7); }
+}
+.phone-ringing-splash h3 {
+  font-family: 'Syne', sans-serif; font-weight: 700;
+  font-size: 18px; margin: 0;
+}
+.phone-ringing-splash .subline {
+  font-size: 12px; color: #8A8A8A; text-align: center;
+}
+.phone-ringing-splash .ringing-state {
+  font-family: 'JetBrains Mono', monospace; font-size: 11px;
+  color: #00D4FF; letter-spacing: 0.16em; text-transform: uppercase;
+}
+.phone-ringing-splash .ringing-state .dots::after {
+  content: ""; animation: ringingDots 1.4s steps(4) infinite;
+}
+@keyframes ringingDots {
+  0% { content: ""; } 25% { content: "."; } 50% { content: ".."; } 75% { content: "..."; }
+}
+.tap-to-begin {
+  margin-top: 12px;
+  padding: 10px 18px;
+  background: #00D4FF; color: #001218;
+  border-radius: 999px; border: none; cursor: pointer;
+  font-family: inherit; font-weight: 700; font-size: 13px;
+  box-shadow: 0 0 24px rgba(0,212,255,0.5);
+  animation: tapPulse 1.6s ease-in-out infinite;
+}
+@keyframes tapPulse {
+  0%, 100% { transform: scale(1); }
+  50%      { transform: scale(1.04); }
+}
+
 .phone-convo {
   flex: 1; min-height: 0; overflow-y: auto;
   display: flex; flex-direction: column; gap: 6px;
@@ -172,12 +256,14 @@ main { max-width: 1180px; margin: 0 auto; padding: 48px 32px 80px; }
 }
 .phone-convo::-webkit-scrollbar { width: 4px; }
 .phone-convo::-webkit-scrollbar-thumb { background: #2A2A2A; border-radius: 999px; }
+.phone-convo[hidden] { display: none; }
 
 .bubble {
-  max-width: 86%;
+  max-width: 88%;
   padding: 7px 11px; border-radius: 14px;
   font-size: 11.5px; line-height: 1.45;
   word-wrap: break-word;
+  position: relative;
   animation: bubbleIn 280ms cubic-bezier(.2,.8,.2,1);
 }
 @keyframes bubbleIn {
@@ -189,6 +275,13 @@ main { max-width: 1180px; margin: 0 auto; padding: 48px 32px 80px; }
   background: #2a2a2a; color: #F5F5F5;
   border: 1px solid #1E1E1E;
   border-bottom-left-radius: 4px;
+  cursor: pointer;
+  transition: background 200ms ease, border-color 200ms ease;
+}
+.bubble-kwame:hover { background: #313131; border-color: #2A2A2A; }
+.bubble-kwame.speaking {
+  border-color: rgba(0,212,255,0.35);
+  background: linear-gradient(180deg, #2A2A2A, rgba(0,212,255,0.04));
 }
 .bubble-caller {
   align-self: flex-end;
@@ -196,28 +289,65 @@ main { max-width: 1180px; margin: 0 auto; padding: 48px 32px 80px; }
   border-bottom-right-radius: 4px;
   font-weight: 500;
 }
-.typing-bubble {
-  align-self: flex-start;
-  display: inline-flex; gap: 4px;
-  padding: 9px 12px;
-  background: #2a2a2a; border: 1px solid #1E1E1E;
-  border-radius: 14px;
-}
-.typing-bubble span {
-  width: 5px; height: 5px; border-radius: 50%;
-  background: #8A8A8A;
-  animation: typeBubble 1.2s infinite;
-}
-.typing-bubble span:nth-child(2) { animation-delay: 0.18s; }
-.typing-bubble span:nth-child(3) { animation-delay: 0.36s; }
-@keyframes typeBubble {
-  0%, 60%, 100% { opacity: 0.3; transform: translateY(0); }
-  30%           { opacity: 1;   transform: translateY(-3px); }
-}
-.caret { color: #00D4FF; animation: caretBlink 1s steps(2) infinite; }
-@keyframes caretBlink { 0%,50% { opacity: 1; } 50.01%,100% { opacity: 0; } }
+.bubble-text { display: inline; }
 
-/* phone controls below the phone */
+/* tiny waveform inside Kwame bubble — animates only while .speaking */
+.wave {
+  display: inline-flex; gap: 2px; align-items: flex-end;
+  margin-left: 6px; vertical-align: middle;
+  height: 10px;
+  opacity: 0; transition: opacity 200ms ease;
+}
+.bubble-kwame.speaking .wave { opacity: 1; }
+.wave .bar {
+  width: 2px; background: #00D4FF; border-radius: 1px;
+  animation: waveBar 0.9s ease-in-out infinite;
+}
+.wave .bar:nth-child(1) { height: 4px;  animation-delay: 0.00s; }
+.wave .bar:nth-child(2) { height: 7px;  animation-delay: 0.10s; }
+.wave .bar:nth-child(3) { height: 9px;  animation-delay: 0.20s; }
+.wave .bar:nth-child(4) { height: 6px;  animation-delay: 0.30s; }
+.wave .bar:nth-child(5) { height: 4px;  animation-delay: 0.40s; }
+@keyframes waveBar {
+  0%, 100% { transform: scaleY(0.5); }
+  50%      { transform: scaleY(1.3); }
+}
+
+/* "Kwame is speaking…" indicator */
+.speaking-indicator {
+  align-self: flex-start;
+  display: inline-flex; gap: 6px; align-items: center;
+  padding: 7px 12px;
+  background: #2a2a2a; border: 1px solid rgba(0,212,255,0.25);
+  border-radius: 14px;
+  color: #00D4FF; font-size: 11px;
+}
+.speaking-indicator .wave {
+  opacity: 1; height: 9px;
+}
+
+/* phone hardware row */
+.phone-hardware {
+  display: flex; gap: 14px; align-items: center; justify-content: center;
+  margin-top: 14px;
+}
+.hw-btn {
+  width: 44px; height: 44px; border-radius: 50%;
+  background: #111; border: 1px solid #1E1E1E;
+  color: #F5F5F5; cursor: pointer; font-size: 16px;
+  display: inline-flex; align-items: center; justify-content: center;
+  transition: background 150ms ease, border-color 150ms ease, transform 120ms ease;
+}
+.hw-btn:hover { background: #181818; border-color: rgba(0,212,255,0.4); }
+.hw-btn:active { transform: scale(0.96); }
+.hw-btn.muted { color: #EF4444; border-color: rgba(239,68,68,0.45); }
+.hw-btn.endcall {
+  background: #EF4444; color: white; border-color: #EF4444;
+  font-size: 18px;
+}
+.hw-btn.endcall:hover { background: #DC2626; box-shadow: 0 0 0 1px #EF4444, 0 0 18px rgba(239,68,68,0.4); }
+
+/* ── playback controls below phone ───────────────────────────── */
 .phone-controls {
   display: flex; align-items: center; gap: 10px;
   margin-top: 14px; flex-wrap: wrap; justify-content: center;
@@ -250,12 +380,11 @@ main { max-width: 1180px; margin: 0 auto; padding: 48px 32px 80px; }
   transition: border-color 120ms ease, color 120ms ease;
 }
 .speed-pill:hover { border-color: rgba(0,212,255,0.5); color: #00D4FF; }
-.restart-btn {
-  font-size: 11px; color: #8A8A8A; background: transparent;
-  border: none; cursor: pointer; padding: 6px 10px;
-  text-decoration: underline; transition: color 120ms ease;
+.audio-status {
+  font-family: 'JetBrains Mono', monospace; font-size: 10px;
+  color: #5F5F5F;
+  margin-top: 8px; text-align: center;
 }
-.restart-btn:hover { color: #00D4FF; }
 
 /* ── live metrics panel ──────────────────────────────────────── */
 .metrics-panel {
@@ -356,9 +485,7 @@ main { max-width: 1180px; margin: 0 auto; padding: 48px 32px 80px; }
 .compare-head .compare-cell { color: #F5F5F5; }
 .compare-head .compare-cell.cynea { color: #00D4FF; }
 
-.cta-row {
-  text-align: center; margin: 36px 0 0;
-}
+.cta-row { text-align: center; margin: 36px 0 0; }
 .cta-row .btn-primary { padding: 14px 28px; font-size: 14px; }
 
 /* ── footer ───────────────────────────────────────────────────── */
@@ -394,7 +521,7 @@ main { max-width: 1180px; margin: 0 auto; padding: 48px 32px 80px; }
   <header class="demo-hero">
     <span class="demo-eyebrow">Live demo</span>
     <h1>Hear a real Cynea call</h1>
-    <p>An anniversary booking, end to end. Watch the conversation unfold while live metrics track the call's health.</p>
+    <p>An anniversary booking, end to end. Click the phone to take the call — Kwame speaks every reply.</p>
   </header>
 
   <!-- ── stage ─────────────────────────────────────────────────── -->
@@ -402,11 +529,22 @@ main { max-width: 1180px; margin: 0 auto; padding: 48px 32px 80px; }
 
     <!-- Phone mockup (left) -->
     <div class="phone-wrap">
-      <div class="phone">
+      <div class="phone ringing" id="phoneEl">
         <div class="phone-notch" aria-hidden="true"></div>
         <div class="phone-screen">
-          <div class="phone-status mono">CYNEA · LIVE · ENCRYPTED</div>
-          <div class="phone-callee">
+          <div class="phone-status mono" id="phoneStatus">CYNEA · INCOMING CALL</div>
+
+          <!-- Ringing splash, replaced by the conversation when accepted -->
+          <div class="phone-ringing-splash" id="ringingSplash">
+            <div class="big-avatar"><span>K</span></div>
+            <h3>Kwame</h3>
+            <div class="subline">Adinkra Hotel · Accra</div>
+            <div class="ringing-state">RINGING<span class="dots"></span></div>
+            <button class="tap-to-begin" id="tapToBegin" type="button">Tap to take the call</button>
+          </div>
+
+          <!-- Ongoing conversation, hidden until call accepted -->
+          <div class="phone-callee" id="phoneCallee" hidden>
             <div class="phone-avatar"><span>K</span></div>
             <div class="phone-callee-id">
               <div class="phone-name">Kwame</div>
@@ -414,17 +552,25 @@ main { max-width: 1180px; margin: 0 auto; padding: 48px 32px 80px; }
             </div>
             <span class="pulse-dot"></span>
           </div>
-          <div class="phone-convo" id="phoneConvo" role="log" aria-live="polite"></div>
+          <div class="phone-convo" id="phoneConvo" role="log" aria-live="polite" hidden></div>
         </div>
       </div>
-      <div class="phone-controls">
+      <div class="phone-rings" aria-hidden="true"></div>
+
+      <!-- Phone hardware: speaker / keypad / end call -->
+      <div class="phone-hardware" id="phoneHardware" hidden>
+        <button class="hw-btn" id="muteBtn" type="button" aria-label="Mute / unmute" title="Mute / unmute">🔊</button>
+        <button class="hw-btn" id="keypadBtn" type="button" aria-label="Keypad" title="Keypad">⌨</button>
+        <button class="hw-btn endcall" id="endCallBtn" type="button" aria-label="End call" title="End call">✕</button>
+      </div>
+
+      <!-- Playback controls -->
+      <div class="phone-controls" id="phoneControls" hidden>
         <button class="icon-btn" id="playBtn" type="button" aria-label="Play / pause">⏸</button>
         <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
         <button class="speed-pill" id="speedBtn" type="button">1×</button>
       </div>
-      <div style="text-align:center; margin-top:10px;">
-        <button class="restart-btn" id="restartBtn" type="button">↻ Restart demo</button>
-      </div>
+      <div class="audio-status" id="audioStatus"></div>
     </div>
 
     <!-- Live metrics (right) -->
@@ -502,131 +648,352 @@ main { max-width: 1180px; margin: 0 auto; padding: 48px 32px 80px; }
 
   <footer class="demo-footer">
     <div><strong>Cynea AI</strong><span class="dim"> — Made in Kenya</span></div>
-    <div class="dim">Audio: kwame_test_*.mp3 (approximate sample voice)</div>
+    <div class="dim">Audio: kwame_test_1.mp3 (greeting) + Web Speech API (rest)</div>
   </footer>
 </main>
 
-<audio id="audioPlayer" preload="none" aria-label="Demo audio"></audio>
+<audio id="audioPlayer" preload="auto" aria-label="Demo audio"></audio>
 
 <script>
 'use strict';
 
 // ─────────────────────────────────────────────────────────────────
-// Demo conversation — 17 turns, anniversary booking flow.
-// Each turn is {speaker, text, audio?}. Kwame's first turn plays a
-// real ElevenLabs MP3 (close match to the greeting); subsequent
-// audio is approximate, so we omit it to avoid mismatch with the
-// typewritten text. The phone speaker icon in real production
-// would play the matching synthesized audio for each line.
+// Demo conversation — 17 turns. Audio map:
+//   - Turn 1 (greeting) plays kwame_test_1.mp3 (real ElevenLabs sample)
+//   - Every other Kwame turn uses the Web Speech API at 0.95× rate.
+//     Pre-recorded test_2 / test_3 are about cedi prices / Friday
+//     bookings — they don't match this anniversary script, so playing
+//     them would jar the demo. TTS gets the right words; ElevenLabs
+//     polish loses to literal correctness here.
 // ─────────────────────────────────────────────────────────────────
 const TURNS = [
   { speaker: 'kwame',  text: "Hello? Adinkra Hotel, Accra. Kwame speaking. How can I help?", audio: 'kwame_test_1.mp3' },
   { speaker: 'caller', text: "Hi Kwame! I'm planning a trip to Accra next month with my wife for our anniversary. We're looking for something special." },
   { speaker: 'kwame',  text: "Ah, anniversary! Congratulations! You've come to the right place. We have some lovely rooms. Are you thinking ocean view or city view? And what dates are you looking at?" },
   { speaker: 'caller', text: "Ocean view for sure. We're thinking March 15th to 18th. Three nights. What do you have available?" },
-  { speaker: 'kwame',  text: "Let me check for you... Yes, we have availability. For a special anniversary, I'd recommend our Executive Suite — king bed, panoramic ocean view, private balcony, and we can arrange champagne and flowers for your arrival. That's $200 per night." },
+  { speaker: 'kwame',  text: "Let me check for you. Yes, we have availability. For a special anniversary, I'd recommend our Executive Suite — king bed, panoramic ocean view, private balcony, and we can arrange champagne and flowers for your arrival. That's two hundred dollars per night." },
   { speaker: 'caller', text: "That sounds perfect! What about dining? Is there a restaurant?" },
   { speaker: 'kwame',  text: "Yes! Our restaurant serves Ghanaian and continental cuisine. We can also arrange a private candlelit dinner on your balcony. Breakfast is complimentary — fresh fruit, eggs, our famous hausa koko porridge. Would you like me to book the dinner as well?" },
   { speaker: 'caller', text: "Yes, book the dinner too. And is there airport pickup?" },
-  { speaker: 'kwame',  text: "We have airport shuttle service — $25 each way, about 30 minutes from Kotoka International. I can arrange pickup for your flight. What time do you arrive on the 15th?" },
+  { speaker: 'kwame',  text: "We have airport shuttle service, twenty-five dollars each way, about thirty minutes from Kotoka International. I can arrange pickup for your flight. What time do you arrive on the fifteenth?" },
   { speaker: 'caller', text: "We land at 2pm. Flight BA2079 from London." },
-  { speaker: 'kwame',  text: "Perfect. Let me summarize: Executive Suite, March 15-18, three nights at $200 = $600. Private dinner on the 15th, airport pickup at 2pm, champagne and flowers on arrival. Total including shuttle and dinner is approximately $720. Shall I go ahead and secure this?" },
+  { speaker: 'kwame',  text: "Perfect. Let me summarize: Executive Suite, March fifteenth to eighteenth, three nights at two hundred dollars equals six hundred dollars. Private dinner on the fifteenth, airport pickup at two pm, champagne and flowers on arrival. Total including shuttle and dinner is approximately seven hundred and twenty dollars. Shall I go ahead and secure this?" },
   { speaker: 'caller', text: "Yes, please! Book it all." },
-  { speaker: 'kwame',  text: "Lovely! I'll need your full name, a phone number, an email for the confirmation, and a deposit equal to the first night — $200. We accept Visa, Mastercard, or Mobile Money." },
+  { speaker: 'kwame',  text: "Lovely! I'll need your full name, a phone number, an email for the confirmation, and a deposit equal to the first night, two hundred dollars. We accept Visa, Mastercard, or Mobile Money." },
   { speaker: 'caller', text: "Name is David Osei. Phone +44 7700 900 123. Email david.osei@email.com. I'll pay by card." },
-  { speaker: 'kwame',  text: "Thank you, David. So to confirm: David Osei, Executive Suite, March 15-18, airport pickup at 2pm, anniversary dinner, champagne and flowers. Total $720. Deposit $200 charged to your card. You'll receive a confirmation email shortly. Is everything correct?" },
+  { speaker: 'kwame',  text: "Thank you, David. So to confirm: David Osei, Executive Suite, March fifteenth to eighteenth, airport pickup at two pm, anniversary dinner, champagne and flowers. Total seven hundred and twenty dollars. Deposit two hundred dollars charged to your card. You'll receive a confirmation email shortly. Is everything correct?" },
   { speaker: 'caller', text: "Perfect. Thank you Kwame!" },
-  { speaker: 'kwame',  text: "You're most welcome, David. We look forward to making your anniversary special. Safe flight, and we'll see you on the 15th. Akwaaba!" },
+  { speaker: 'kwame',  text: "You're most welcome, David. We look forward to making your anniversary special. Safe flight, and we'll see you on the fifteenth. Akwaaba!" },
 ];
 
 // ─────────────────────────────────────────────────────────────────
 // State
 // ─────────────────────────────────────────────────────────────────
 const state = {
-  turnIndex: -1,         // last turn that started rendering
+  turnIndex: -1,
   isPaused: false,
-  speed: 1,              // 1 | 1.5 | 2
-  callStartMs: null,     // wall-clock start of the demo call
-  callElapsedSec: 0,     // simulated call seconds (used for metrics)
+  isMuted: false,
+  speed: 1,
+  callStartMs: null,
+  callElapsedSec: 0,
   finished: false,
   pendingTimeout: null,
   typewriterTimer: null,
+  currentBubble: null,
+  currentAudio: null,        // active HTMLAudioElement playing
+  currentUtterance: null,    // active SpeechSynthesisUtterance
+  hasStarted: false,
 };
 
-const convoEl = document.getElementById('phoneConvo');
-const playBtn = document.getElementById('playBtn');
-const speedBtn = document.getElementById('speedBtn');
-const restartBtn = document.getElementById('restartBtn');
-const progressFill = document.getElementById('progressFill');
-const audioPlayer = document.getElementById('audioPlayer');
+// ─────────────────────────────────────────────────────────────────
+// DOM refs
+// ─────────────────────────────────────────────────────────────────
+const phoneEl       = document.getElementById('phoneEl');
+const phoneStatus   = document.getElementById('phoneStatus');
+const ringingSplash = document.getElementById('ringingSplash');
+const phoneCallee   = document.getElementById('phoneCallee');
+const convoEl       = document.getElementById('phoneConvo');
+const phoneHardware = document.getElementById('phoneHardware');
+const phoneControls = document.getElementById('phoneControls');
+const audioStatusEl = document.getElementById('audioStatus');
+
+const tapToBeginBtn = document.getElementById('tapToBegin');
+const playBtn       = document.getElementById('playBtn');
+const speedBtn      = document.getElementById('speedBtn');
+const muteBtn       = document.getElementById('muteBtn');
+const keypadBtn     = document.getElementById('keypadBtn');
+const endCallBtn    = document.getElementById('endCallBtn');
+const progressFill  = document.getElementById('progressFill');
+const audioPlayer   = document.getElementById('audioPlayer');
 const compareSection = document.getElementById('compareSection');
 
-const metricDuration = document.getElementById('metricDuration');
+const metricDuration   = document.getElementById('metricDuration');
 const metricDurationMini = document.getElementById('callDurationMini');
-const metricSentiment = document.getElementById('metricSentiment');
+const metricSentiment    = document.getElementById('metricSentiment');
 const metricSentimentSub = document.getElementById('metricSentimentSub');
-const metricCost = document.getElementById('metricCost');
-const metricStars = document.getElementById('metricStars');
-const metricStarsSub = document.getElementById('metricStarsSub');
+const metricCost         = document.getElementById('metricCost');
+const metricStars        = document.getElementById('metricStars');
+const metricStarsSub     = document.getElementById('metricStarsSub');
 
 // ─────────────────────────────────────────────────────────────────
-// Helpers
+// MP3 pre-load. Only kwame_test_1.mp3 is mapped; the rest of the
+// turns use Web Speech.
 // ─────────────────────────────────────────────────────────────────
-function fmtClock(secs) {
-  const m = Math.floor(secs / 60);
-  const s = Math.floor(secs % 60);
-  return String(m).padStart(2, '0') + ':' + String(s).padStart(2, '0');
+const AUDIO_CACHE = new Map();
+const PRELOAD_FILES = ['kwame_test_1.mp3'];
+PRELOAD_FILES.forEach((name) => {
+  const a = new Audio(name);
+  a.preload = 'auto';
+  AUDIO_CACHE.set(name, a);
+});
+
+// ─────────────────────────────────────────────────────────────────
+// Web Speech API setup
+// ─────────────────────────────────────────────────────────────────
+const tts = {
+  available: ('speechSynthesis' in window && 'SpeechSynthesisUtterance' in window),
+  voices: [],
+  voice: null,
+};
+
+function pickVoice(voices) {
+  if (!voices || !voices.length) return null;
+  // 1. Specific known good male English voices.
+  const preferred = [
+    'Google UK English Male',
+    'Microsoft Ryan Online (Natural) - English (United Kingdom)',
+    'Microsoft Ryan - English (United States)',
+    'Microsoft George - English (United Kingdom)',
+    'Microsoft Mark - English (United States)',
+    'Daniel',           // macOS UK male
+    'Daniel (Enhanced)',
+    'Alex',             // macOS US male
+    'Fred',             // macOS classic
+  ];
+  for (const name of preferred) {
+    const v = voices.find((x) => x.name === name);
+    if (v) return v;
+  }
+  // 2. Heuristic: en-GB or en-* whose name suggests male.
+  const malePatterns = /\b(male|man|guy|alex|daniel|fred|james|mark|ryan|george|david|tom|john|paul|brian|matthew|nathan)\b/i;
+  const enGbMale = voices.find((x) => x.lang && x.lang.startsWith('en-GB') && malePatterns.test(x.name));
+  if (enGbMale) return enGbMale;
+  const enMale = voices.find((x) => x.lang && x.lang.startsWith('en') && malePatterns.test(x.name));
+  if (enMale) return enMale;
+  // 3. Any en-GB → any en-* → first available.
+  return voices.find((x) => x.lang && x.lang.startsWith('en-GB')) ||
+         voices.find((x) => x.lang && x.lang.startsWith('en')) ||
+         voices[0];
 }
 
-function delayFor(turn) {
-  // Per-turn pacing:
-  //   - Caller messages take 3-4 s "reading time"
-  //   - Kwame messages are preceded by a 1.4 s typing indicator,
-  //     then the typewriter renders, then a 1.5-2 s settle pause.
-  // All scaled by speed.
-  const base = turn.speaker === 'kwame' ? 5 : 3.5;
-  return (base * 1000) / state.speed;
+function loadVoices() {
+  if (!tts.available) return;
+  tts.voices = window.speechSynthesis.getVoices() || [];
+  tts.voice = pickVoice(tts.voices);
+  if (tts.voice && audioStatusEl && !state.hasStarted) {
+    audioStatusEl.textContent = 'Voice ready: ' + tts.voice.name + ' · ' + (tts.voice.lang || 'en');
+  }
+}
+if (tts.available) {
+  loadVoices();
+  // Some browsers load voices async.
+  window.speechSynthesis.addEventListener('voiceschanged', loadVoices);
+}
+if (!tts.available && audioStatusEl) {
+  audioStatusEl.textContent = 'Web Speech API not supported — Kwame will type only.';
 }
 
+// ─────────────────────────────────────────────────────────────────
+// Audio helpers
+// ─────────────────────────────────────────────────────────────────
+function audioReady(audio) {
+  // readyState 1 = HAVE_METADATA, enough to know duration
+  return new Promise((resolve) => {
+    if (audio.readyState >= 1 && !isNaN(audio.duration) && audio.duration > 0) {
+      return resolve(true);
+    }
+    const onMeta = () => {
+      audio.removeEventListener('loadedmetadata', onMeta);
+      audio.removeEventListener('error', onErr);
+      resolve(true);
+    };
+    const onErr = () => {
+      audio.removeEventListener('loadedmetadata', onMeta);
+      audio.removeEventListener('error', onErr);
+      resolve(false);
+    };
+    audio.addEventListener('loadedmetadata', onMeta);
+    audio.addEventListener('error', onErr);
+    setTimeout(() => resolve(false), 1500);  // safety
+  });
+}
+
+// Estimate TTS duration. ~13 chars/sec at rate 0.95 is a reasonable
+// average for natural English with punctuation pauses. Over-estimate
+// slightly so the typewriter never finishes far ahead of the voice.
+function estimateTTSDurationMs(text) {
+  const charsPerSec = 13 * state.speed;  // higher speed = faster
+  return Math.max(1500, (text.length / charsPerSec) * 1000);
+}
+
+// ─────────────────────────────────────────────────────────────────
+// playback orchestration: returns { kind, durationMs, stop, ended }
+// kind = 'mp3' | 'tts' | 'silent'
+// `ended` is a Promise resolved when audio actually finishes (or
+// estimated duration elapses for `silent`).
+// ─────────────────────────────────────────────────────────────────
+async function playKwameAudio(turn) {
+  // Preferred: matched MP3.
+  if (turn.audio && AUDIO_CACHE.has(turn.audio)) {
+    const a = AUDIO_CACHE.get(turn.audio);
+    const ok = await audioReady(a);
+    if (ok && !state.isMuted) {
+      a.currentTime = 0;
+      a.playbackRate = state.speed;
+      a.muted = state.isMuted;
+      const playPromise = a.play();
+      let played = true;
+      if (playPromise && typeof playPromise.catch === 'function') {
+        try { await playPromise; } catch (_) { played = false; }
+      }
+      if (played) {
+        state.currentAudio = a;
+        const durationMs = (a.duration || 5) * 1000 / state.speed;
+        const ended = new Promise((res) => {
+          const onEnd = () => { a.removeEventListener('ended', onEnd); a.removeEventListener('pause', onEnd); res(); };
+          a.addEventListener('ended', onEnd, { once: true });
+          a.addEventListener('pause', onEnd, { once: true });
+        });
+        return { kind: 'mp3', durationMs, ended, stop() { try { a.pause(); } catch (_) {} } };
+      }
+    }
+  }
+  // Fallback: Web Speech API.
+  if (tts.available && !state.isMuted) {
+    return await speakViaTTS(turn.text);
+  }
+  // Silent fallback: estimate duration from text length.
+  const durationMs = estimateTTSDurationMs(turn.text);
+  return {
+    kind: 'silent',
+    durationMs,
+    ended: new Promise((res) => setTimeout(res, durationMs)),
+    stop() {},
+  };
+}
+
+function speakViaTTS(text) {
+  return new Promise((resolve) => {
+    try {
+      window.speechSynthesis.cancel();
+      const u = new SpeechSynthesisUtterance(text);
+      u.rate = 0.95 * state.speed;
+      u.pitch = 0.95;
+      u.volume = state.isMuted ? 0 : 1;
+      if (tts.voice) u.voice = tts.voice;
+      const durationMs = estimateTTSDurationMs(text);
+      let endResolve = null;
+      const ended = new Promise((res) => { endResolve = res; });
+      u.onend = () => endResolve && endResolve();
+      u.onerror = () => endResolve && endResolve();
+      state.currentUtterance = u;
+      window.speechSynthesis.speak(u);
+      resolve({
+        kind: 'tts', durationMs, ended,
+        stop() {
+          try { window.speechSynthesis.cancel(); } catch (_) {}
+          endResolve && endResolve();
+        },
+      });
+    } catch (_) {
+      const durationMs = estimateTTSDurationMs(text);
+      resolve({
+        kind: 'silent',
+        durationMs,
+        ended: new Promise((r) => setTimeout(r, durationMs)),
+        stop() {},
+      });
+    }
+  });
+}
+
+// ─────────────────────────────────────────────────────────────────
+// Bubble + typewriter
+// ─────────────────────────────────────────────────────────────────
 function appendBubble(turn) {
   const div = document.createElement('div');
   div.className = 'bubble bubble-' + turn.speaker;
+  if (turn.speaker === 'kwame') {
+    const txt = document.createElement('span');
+    txt.className = 'bubble-text';
+    div.appendChild(txt);
+    const wave = document.createElement('span');
+    wave.className = 'wave';
+    wave.innerHTML = '<span class="bar"></span><span class="bar"></span><span class="bar"></span><span class="bar"></span><span class="bar"></span>';
+    div.appendChild(wave);
+    // Click-to-replay on Kwame bubbles
+    div.dataset.fullText = turn.text;
+    div.dataset.audio = turn.audio || '';
+    div.title = 'Click to replay';
+    div.addEventListener('click', () => replayBubble(div));
+  } else {
+    div.textContent = turn.text;
+  }
   convoEl.appendChild(div);
   convoEl.scrollTop = convoEl.scrollHeight;
   return div;
 }
 
-function showTypingIndicator() {
+function showSpeakingIndicator() {
   const tip = document.createElement('div');
-  tip.className = 'typing-bubble';
-  tip.id = 'typingBubble';
-  tip.innerHTML = '<span></span><span></span><span></span>';
+  tip.className = 'speaking-indicator';
+  tip.id = 'speakingIndicator';
+  tip.innerHTML = '<span class="wave"><span class="bar"></span><span class="bar"></span><span class="bar"></span><span class="bar"></span><span class="bar"></span></span> Kwame is speaking…';
   convoEl.appendChild(tip);
   convoEl.scrollTop = convoEl.scrollHeight;
 }
-function hideTypingIndicator() {
-  const tip = document.getElementById('typingBubble');
+function hideSpeakingIndicator() {
+  const tip = document.getElementById('speakingIndicator');
   if (tip) tip.remove();
 }
 
-function typewriterInto(el, text, doneCb) {
+function typewriterInto(textHost, fullText, totalMs) {
+  const charDelay = Math.max(8, totalMs / Math.max(fullText.length, 1));
   let i = 0;
-  el.textContent = '';
+  textHost.textContent = '';
   const tick = () => {
     if (state.isPaused) {
       state.typewriterTimer = setTimeout(tick, 200);
       return;
     }
-    if (i >= text.length) {
-      if (doneCb) doneCb();
-      return;
-    }
-    el.textContent += text.charAt(i++);
+    if (i >= fullText.length) return;
+    textHost.textContent += fullText.charAt(i++);
     convoEl.scrollTop = convoEl.scrollHeight;
-    const charDelay = 24 / state.speed;
-    state.typewriterTimer = setTimeout(tick, charDelay);
+    if (i < fullText.length) state.typewriterTimer = setTimeout(tick, charDelay);
   };
   tick();
+  // Returned function force-completes the typewriter when the audio ends.
+  return function complete() {
+    if (state.typewriterTimer) clearTimeout(state.typewriterTimer);
+    textHost.textContent = fullText;
+  };
+}
+
+// Click-to-replay
+async function replayBubble(bubble) {
+  if (!bubble || !bubble.dataset) return;
+  const text = bubble.dataset.fullText;
+  const audio = bubble.dataset.audio;
+  if (!text) return;
+  // stop any currently playing audio
+  if (state.currentAudio) try { state.currentAudio.pause(); } catch (_) {}
+  if (state.currentUtterance && tts.available) try { window.speechSynthesis.cancel(); } catch (_) {}
+  // Clear other bubbles' speaking state
+  document.querySelectorAll('.bubble-kwame.speaking').forEach((b) => b.classList.remove('speaking'));
+  bubble.classList.add('speaking');
+  await playKwameAudio({ text, audio });
+  // Wait for audio to end before clearing the speaking class
+  setTimeout(() => bubble.classList.remove('speaking'), estimateTTSDurationMs(text));
 }
 
 // ─────────────────────────────────────────────────────────────────
@@ -641,13 +1008,10 @@ function updateMetrics() {
   if (metricDuration) metricDuration.textContent = fmtClock(state.callElapsedSec);
   if (metricDurationMini) metricDurationMini.textContent = fmtClock(state.callElapsedSec);
 
-  // Progress: based on turn index, not wall clock — feels more honest
-  // than a strict timer when speed changes mid-demo.
   const turnsDone = Math.max(0, state.turnIndex + 1);
   const progress = Math.min(1, turnsDone / TURNS.length);
   progressFill.style.width = (progress * 100).toFixed(1) + '%';
 
-  // Sentiment + cost interpolated from progress.
   const sentiment = +(0.45 * progress).toFixed(2);
   metricSentiment.textContent = (sentiment >= 0 ? '+' : '') + sentiment.toFixed(2);
   if (sentiment >= 0.30) metricSentimentSub.textContent = 'Positive · happy customer';
@@ -657,7 +1021,6 @@ function updateMetrics() {
   const cost = (0.17 * progress).toFixed(2);
   metricCost.textContent = '$' + cost;
 
-  // Stars only fill at the end.
   if (state.finished) {
     metricStars.classList.add('full');
     metricStars.textContent = '★★★★★';
@@ -670,71 +1033,115 @@ function updateMetrics() {
 }
 setInterval(updateMetrics, 250);
 
-// ─────────────────────────────────────────────────────────────────
-// Auto-advance loop
-// ─────────────────────────────────────────────────────────────────
-function startCallClock() {
-  if (state.callStartMs == null) state.callStartMs = Date.now();
+function fmtClock(secs) {
+  const m = Math.floor(secs / 60);
+  const s = Math.floor(secs % 60);
+  return String(m).padStart(2, '0') + ':' + String(s).padStart(2, '0');
 }
 
-function advanceTurn() {
-  if (state.finished || state.isPaused) return;
+// ─────────────────────────────────────────────────────────────────
+// Turn loop
+// ─────────────────────────────────────────────────────────────────
+async function runTurns() {
+  if (state.finished) return;
   state.turnIndex += 1;
-  if (state.turnIndex >= TURNS.length) {
-    finishCall();
-    return;
-  }
-  startCallClock();
+  if (state.turnIndex >= TURNS.length) { finishCall(); return; }
+
   const turn = TURNS[state.turnIndex];
+  if (state.callStartMs == null) state.callStartMs = Date.now();
 
   if (turn.speaker === 'kwame') {
-    showTypingIndicator();
-    state.pendingTimeout = setTimeout(() => {
-      hideTypingIndicator();
-      const bubble = appendBubble(turn);
-      typewriterInto(bubble, turn.text, () => {
-        // Try to play audio (only Kwame has audio files mapped).
-        if (turn.audio) playSafe(turn.audio);
-        state.pendingTimeout = setTimeout(advanceTurn, delayFor(turn));
-      });
-    }, 1400 / state.speed);
-  } else {
-    // Caller — instant render, no typing indicator (simulating a phone
-    // call where you "hear" them all at once). Could also typewrite
-    // for visual symmetry.
+    showSpeakingIndicator();
+    // Brief pre-speak pause so the call has rhythm (1-1.4s scaled).
+    await wait(1100 / state.speed);
+    hideSpeakingIndicator();
+
     const bubble = appendBubble(turn);
-    typewriterInto(bubble, turn.text, () => {
-      state.pendingTimeout = setTimeout(advanceTurn, delayFor(turn));
-    });
+    bubble.classList.add('speaking');
+    state.currentBubble = bubble;
+    const textHost = bubble.querySelector('.bubble-text');
+
+    // Start audio and capture its actual duration.
+    const playback = await playKwameAudio(turn);
+    if (audioStatusEl) {
+      audioStatusEl.textContent = (
+        playback.kind === 'mp3' ? '🔊 ElevenLabs · ' + (turn.audio || '') :
+        playback.kind === 'tts' ? '🔊 Web Speech · ' + (tts.voice ? tts.voice.name : '') :
+        '🔇 Audio unavailable — text only'
+      );
+    }
+    // Sync typewriter pace to actual duration.
+    const completeText = typewriterInto(textHost, turn.text, playback.durationMs);
+
+    // Wait until audio is done (or the user paused).
+    await playback.ended;
+    completeText();
+    bubble.classList.remove('speaking');
+    state.currentAudio = null;
+    state.currentUtterance = null;
+
+    // Brief settle pause so the caller has space to breathe.
+    await wait(700 / state.speed);
+  } else {
+    // Caller — typewrite at a quick pace, no audio. Estimated 60ms/char.
+    const bubble = appendBubble(turn);
+    state.currentBubble = bubble;
+    const totalMs = Math.max(1200, turn.text.length * 32);
+    const completeText = typewriterInto(bubble, turn.text, totalMs);
+    await wait(totalMs);
+    completeText();
+    // 1-2s pause before Kwame's reply (per spec).
+    await wait((1100 + Math.random() * 800) / state.speed);
   }
+
+  if (!state.finished && !state.isPaused) runTurns();
+}
+
+function wait(ms) {
+  return new Promise((resolve) => {
+    state.pendingTimeout = setTimeout(() => {
+      state.pendingTimeout = null;
+      resolve();
+    }, ms);
+  });
 }
 
 function finishCall() {
   state.finished = true;
   playBtn.disabled = true;
   playBtn.textContent = '✓';
+  if (audioStatusEl) audioStatusEl.textContent = 'Call ended · ' + fmtClock(state.callElapsedSec);
   updateMetrics();
   if (compareSection) {
     compareSection.hidden = false;
-    setTimeout(() => {
-      compareSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }, 600);
+    setTimeout(() => compareSection.scrollIntoView({ behavior: 'smooth', block: 'start' }), 600);
   }
 }
 
-function playSafe(src) {
-  if (!audioPlayer || !src) return;
-  try { audioPlayer.pause(); audioPlayer.currentTime = 0; } catch (_) {}
-  audioPlayer.src = src;
-  audioPlayer.playbackRate = state.speed;
-  const p = audioPlayer.play();
-  if (p && typeof p.catch === 'function') {
-    // First-load autoplay may be blocked. We don't surface a UI
-    // because the typewriter is the primary medium — audio is a nice
-    // extra. Failure is silent.
-    p.catch(() => {});
-  }
+// ─────────────────────────────────────────────────────────────────
+// Tap-to-begin (satisfies autoplay policy)
+// ─────────────────────────────────────────────────────────────────
+function startCall() {
+  if (state.hasStarted) return;
+  state.hasStarted = true;
+  // Hide ringing splash, reveal conversation UI.
+  ringingSplash.hidden = true;
+  phoneEl.classList.remove('ringing');
+  phoneStatus.textContent = 'CYNEA · LIVE · ENCRYPTED';
+  phoneCallee.hidden = false;
+  convoEl.hidden = false;
+  phoneHardware.hidden = false;
+  phoneControls.hidden = false;
+  if (audioStatusEl) audioStatusEl.textContent = '🔊 Connecting…';
+  // Kick off the turn loop.
+  runTurns();
 }
+tapToBeginBtn.addEventListener('click', startCall);
+// Also allow tapping anywhere on the ringing splash.
+ringingSplash.addEventListener('click', (e) => {
+  if (e.target === tapToBeginBtn) return;  // already handled
+  startCall();
+});
 
 // ─────────────────────────────────────────────────────────────────
 // Controls
@@ -743,53 +1150,82 @@ function setPaused(p) {
   state.isPaused = p;
   playBtn.textContent = p ? '▶' : '⏸';
   if (p) {
-    if (audioPlayer) try { audioPlayer.pause(); } catch (_) {}
+    if (state.currentAudio) try { state.currentAudio.pause(); } catch (_) {}
+    if (tts.available) try { window.speechSynthesis.pause(); } catch (_) {}
   } else {
-    if (audioPlayer && audioPlayer.src && !audioPlayer.ended) {
-      audioPlayer.play().catch(() => {});
+    if (state.currentAudio && state.currentAudio.src && !state.currentAudio.ended) {
+      state.currentAudio.play().catch(() => {});
     }
+    if (tts.available) try { window.speechSynthesis.resume(); } catch (_) {}
+    if (!state.pendingTimeout && !state.finished) runTurns();
   }
 }
-
 function cycleSpeed() {
   const order = [1, 1.5, 2];
   const i = order.indexOf(state.speed);
   state.speed = order[(i + 1) % order.length];
   speedBtn.textContent = state.speed + '×';
-  if (audioPlayer) audioPlayer.playbackRate = state.speed;
+  if (state.currentAudio) state.currentAudio.playbackRate = state.speed;
 }
-
-function restartDemo() {
-  // Cancel anything in flight.
+function toggleMute() {
+  state.isMuted = !state.isMuted;
+  muteBtn.classList.toggle('muted', state.isMuted);
+  muteBtn.textContent = state.isMuted ? '🔇' : '🔊';
+  if (state.currentAudio) state.currentAudio.muted = state.isMuted;
+  if (tts.available && state.isMuted) try { window.speechSynthesis.cancel(); } catch (_) {}
+}
+function endCall() {
+  // Reset everything and return to the ringing splash.
   if (state.pendingTimeout) clearTimeout(state.pendingTimeout);
   if (state.typewriterTimer) clearTimeout(state.typewriterTimer);
-  if (audioPlayer) try { audioPlayer.pause(); audioPlayer.currentTime = 0; } catch (_) {}
+  if (state.currentAudio) try { state.currentAudio.pause(); state.currentAudio.currentTime = 0; } catch (_) {}
+  if (tts.available) try { window.speechSynthesis.cancel(); } catch (_) {}
   convoEl.innerHTML = '';
   state.turnIndex = -1;
   state.isPaused = false;
   state.callStartMs = null;
   state.callElapsedSec = 0;
   state.finished = false;
+  state.hasStarted = false;
+  state.currentAudio = null;
+  state.currentUtterance = null;
   playBtn.disabled = false;
   playBtn.textContent = '⏸';
   if (compareSection) compareSection.hidden = true;
+  // Restore ringing splash
+  ringingSplash.hidden = false;
+  phoneEl.classList.add('ringing');
+  phoneStatus.textContent = 'CYNEA · INCOMING CALL';
+  phoneCallee.hidden = true;
+  convoEl.hidden = true;
+  phoneHardware.hidden = true;
+  phoneControls.hidden = true;
+  if (audioStatusEl) audioStatusEl.textContent = '';
   updateMetrics();
-  setTimeout(advanceTurn, 600);
 }
 
 playBtn.addEventListener('click', () => {
-  if (state.finished) { restartDemo(); return; }
+  if (state.finished) { endCall(); return; }
   setPaused(!state.isPaused);
-  if (!state.isPaused && state.turnIndex >= 0) {
-    // Resume — no new advance scheduled? Wake the loop.
-    if (!state.pendingTimeout) advanceTurn();
-  }
 });
 speedBtn.addEventListener('click', cycleSpeed);
-restartBtn.addEventListener('click', restartDemo);
+muteBtn.addEventListener('click', toggleMute);
+endCallBtn.addEventListener('click', endCall);
+keypadBtn.addEventListener('click', () => {
+  // Keypad is visual-only for the demo. Show a small toast-y note.
+  if (audioStatusEl) {
+    audioStatusEl.textContent = 'DTMF keypad — visual only in this demo.';
+    setTimeout(() => {
+      if (audioStatusEl && state.hasStarted) audioStatusEl.textContent = '';
+    }, 2400);
+  }
+});
 
-// Kick off the demo with a small initial delay so the page settles.
-setTimeout(advanceTurn, 1200);
+// Stop any in-flight TTS when the user navigates away. (Some browsers
+// keep speechSynthesis alive across page transitions.)
+window.addEventListener('beforeunload', () => {
+  if (tts.available) try { window.speechSynthesis.cancel(); } catch (_) {}
+});
 </script>
 </body>
 </html>

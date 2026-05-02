@@ -1,4 +1,4 @@
-# Cynea Voice Engine — Dependencies
+# Cynea Voice Engine ï¿½ Dependencies
 # Core
 fastapi>=0.108
 uvicorn>=0.22
@@ -12,6 +12,8 @@ openai-whisper>=20231117
 
 # TTS (choose one or more)
 edge-tts>=6.1
+elevenlabs>=2.0
+python-dotenv>=1.0
 
 # LLM (choose one or more)
 anthropic>=0.30

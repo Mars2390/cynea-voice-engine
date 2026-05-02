@@ -1,12 +1,11 @@
-"""Cynea Voice Engine — hear Amina.
+"""Cynea Voice Engine — hear Amina (ElevenLabs edition).
 
 Generates real MP3 audio of Amina (the Kenyan customer-service agent)
-speaking three natural phrases, so you can preview the voice before
-wiring it into a live call.
+speaking three natural phrases via ElevenLabs.
 
 The MP3 files are written to examples/_out/ so the marketing landing
-page (examples/_out/cynea_landing.html) can play them directly via its
-"Hear demo" button — relative paths resolve from the HTML's directory.
+page (examples/_out/cynea_landing.html) can play them directly via
+its "Hear demo" button.
 
 Output:
     examples/_out/amina_test_1.mp3
@@ -17,10 +16,11 @@ Run:
     python examples/hear_amina.py
 
 Requires:
-    pip install edge-tts
+    pip install elevenlabs python-dotenv
 
-Edge TTS uses Microsoft's free Azure Cognitive Services voice endpoint
-over HTTPS. No API key needed, but it does require internet access.
+Configuration:
+    Add the following to your .env file at the repo root:
+        ELEVENLABS_API_KEY=sk_...
 """
 
 from __future__ import annotations
@@ -30,15 +30,17 @@ import os
 import sys
 
 # Windows consoles default to cp1252 and choke on em-dashes / non-ASCII.
-# Reconfigure stdout so the script never crashes on print().
 try:
     sys.stdout.reconfigure(encoding="utf-8", errors="replace")  # type: ignore[attr-defined]
 except (AttributeError, OSError):
     pass
 
 
-VOICE = "en-GB-SoniaNeural"   # British female; closest warm female voice to Kenyan on Edge
-SPEED = 1.0                   # Kenyans on the phone speak at normal pace, not slowed down
+# Cynea-shipped Amina voice. Bella — American female, warm. Premium tier.
+VOICE_ID = "EXAVITQu4vr4xnSDxMaL"
+SPEED = 1.0   # Kenyan call-centre English is faster than Ghanaian; keep
+              # baseline at 1.0. ElevenLabs' turbo model handles its own
+              # pacing internally; we pass speed for interface parity.
 
 PHRASES = [
     "Hello, this is Amina. How can I help you today?",
@@ -46,53 +48,56 @@ PHRASES = [
     "I understand your frustration. Let me connect you with my manager right away.",
 ]
 
-# Output directory — examples/_out/ so the landing page's relative
-# audio paths resolve correctly.
+# Output dir — examples/_out/ so the landing page's relative audio
+# paths resolve correctly.
 OUT_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "_out")
 
 
-def _check_edge_tts_installed() -> bool:
-    """Return True if the edge-tts package can be imported."""
+def _check_deps_installed() -> tuple:
+    missing = []
     try:
-        import edge_tts  # noqa: F401
-        return True
+        import elevenlabs  # noqa: F401
     except ImportError:
-        return False
+        missing.append("elevenlabs")
+    try:
+        import dotenv  # noqa: F401
+    except ImportError:
+        missing.append("python-dotenv")
+    return (not missing, missing)
 
 
 async def main() -> int:
-    if not _check_edge_tts_installed():
-        print("edge-tts is not installed.")
-        print("Install it and re-run:")
-        print("    pip install edge-tts")
+    ok, missing = _check_deps_installed()
+    if not ok:
+        print("Required packages not installed:")
+        print(f"    pip install {' '.join(missing)}")
         return 1
 
-    # Imported here so the friendlier message above runs first if edge-tts is missing.
     from cynea.models import SynthesisRequest
-    from cynea_africa.synthesizer.edge_tts import EdgeTTSSynthesizer
+    from cynea_africa.synthesizer.elevenlabs_synthesizer import ElevenLabsSynthesizer
 
     os.makedirs(OUT_DIR, exist_ok=True)
-    synthesizer = EdgeTTSSynthesizer(voice=VOICE)
+    synthesizer = ElevenLabsSynthesizer(voice=VOICE_ID)
 
-    print("=" * 60)
-    print("  CYNEA VOICE ENGINE — HEAR AMINA")
-    print(f"  Voice: {VOICE} @ speed {SPEED}")
+    print("=" * 64)
+    print("  CYNEA VOICE ENGINE — HEAR AMINA (ElevenLabs)")
+    print(f"  Voice: {VOICE_ID}  ({synthesizer.VOICES.get(VOICE_ID, 'custom')})")
+    print(f"  Model: {synthesizer.model}")
     print(f"  Out:   {OUT_DIR}")
-    print("=" * 60)
+    print("=" * 64)
 
-    # One health check up front saves three round-trips of useless 401/timeout work.
     health = await synthesizer.health_check(timeout=2.0)
     if not health.get("ready"):
-        print(f"\nEdge TTS is not ready: {health.get('reason') or 'unknown reason'}")
+        print(f"\nElevenLabs is not ready: {health.get('reason') or 'unknown reason'}")
         print("Common fixes:")
-        print("  - Check your internet connection.")
-        print("  - Confirm your firewall allows speech.platform.bing.com:443.")
+        print("  - Add ELEVENLABS_API_KEY=sk_... to your .env file.")
+        print("  - Confirm your network can reach api.elevenlabs.io:443.")
         return 1
 
     failures = 0
     for index, phrase in enumerate(PHRASES, start=1):
         out_path = os.path.join(OUT_DIR, f"amina_test_{index}.mp3")
-        request = SynthesisRequest(text=phrase, voice=VOICE, speed=SPEED)
+        request = SynthesisRequest(text=phrase, voice=VOICE_ID, speed=SPEED)
 
         print(f"\n[{index}/{len(PHRASES)}] Synthesizing: {phrase}")
 
@@ -126,7 +131,7 @@ async def main() -> int:
         size_kb = len(audio) / 1024.0
         print(f"  -> wrote {out_path} ({size_kb:,.1f} KB)")
 
-    print("\n" + "=" * 60)
+    print("\n" + "=" * 64)
     if failures == 0:
         print(f"  Done. Open the .mp3 files in {OUT_DIR} to hear Amina.")
         print("  The landing page's 'Hear demo' button will now play them.")

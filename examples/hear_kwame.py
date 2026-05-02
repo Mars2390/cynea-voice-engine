@@ -1,22 +1,26 @@
-"""Cynea Voice Engine — hear Kwame.
+"""Cynea Voice Engine — hear Kwame (ElevenLabs edition).
 
-Generates real MP3 audio of Kwame (the Adinkra Hotel agent) speaking three
-natural phrases, so you can hear what the voice actually sounds like
-before wiring it into a phone call.
+Generates real MP3 audio of Kwame (the Adinkra Hotel agent) speaking
+three natural phrases via ElevenLabs, so you can preview the premium
+voice quality before wiring it into a live call.
 
 Output:
-    examples/kwame_test_1.mp3
-    examples/kwame_test_2.mp3
-    examples/kwame_test_3.mp3
+    examples/_out/kwame_test_1.mp3
+    examples/_out/kwame_test_2.mp3
+    examples/_out/kwame_test_3.mp3
+
+(The MP3s land in `_out/` so the marketing landing page can play them
+inline via its "Hear demo" button.)
 
 Run:
     python examples/hear_kwame.py
 
 Requires:
-    pip install edge-tts
+    pip install elevenlabs python-dotenv
 
-Edge TTS uses Microsoft's free Azure Cognitive Services voice endpoint
-over HTTPS. No API key needed, but it does require an internet connection.
+Configuration:
+    Add the following to your .env file at the repo root:
+        ELEVENLABS_API_KEY=sk_...
 """
 
 from __future__ import annotations
@@ -26,15 +30,17 @@ import os
 import sys
 
 # Windows consoles default to cp1252 and choke on em-dashes / non-ASCII.
-# Reconfigure stdout so the script never crashes on print().
 try:
     sys.stdout.reconfigure(encoding="utf-8", errors="replace")  # type: ignore[attr-defined]
 except (AttributeError, OSError):
     pass
 
 
-VOICE = "en-GB-RyanNeural"   # British male; closest neural voice to Ghanaian on Edge
-SPEED = 0.95                 # Slightly slower — sounds more natural on the phone
+# Cynea-shipped Kwame voice. George — British male, warm. Premium tier.
+VOICE_ID = "JBFqnCBsd6RMkjVDRZzb"
+SPEED = 0.95   # Carried through the SynthesisRequest; ElevenLabs' turbo
+               # model handles its own pacing internally, but we pass
+               # the value through for parity with the Edge path.
 
 PHRASES = [
     "Hello? Yes, Adinkra Hotel. Kwame speaking. How can I help?",
@@ -42,51 +48,78 @@ PHRASES = [
     "It's four hundred and eighty cedis per night, breakfast included. Want me to hold it?",
 ]
 
+# Output dir — examples/_out/ so the landing page's relative audio
+# paths resolve correctly.
+OUT_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "_out")
 
-def _check_edge_tts_installed() -> bool:
-    """Return True if the edge-tts package can be imported."""
+
+def _check_deps_installed() -> tuple:
+    """Return (ok, missing_list)."""
+    missing = []
     try:
-        import edge_tts  # noqa: F401
-        return True
+        import elevenlabs  # noqa: F401
     except ImportError:
-        return False
+        missing.append("elevenlabs")
+    try:
+        import dotenv  # noqa: F401
+    except ImportError:
+        missing.append("python-dotenv")
+    return (not missing, missing)
 
 
 async def main() -> int:
-    if not _check_edge_tts_installed():
-        print("edge-tts is not installed.")
-        print("Install it and re-run:")
-        print("    pip install edge-tts")
+    ok, missing = _check_deps_installed()
+    if not ok:
+        print("Required packages not installed:")
+        print(f"    pip install {' '.join(missing)}")
         return 1
 
-    # Imported here so the friendlier error above runs first if edge-tts is missing.
+    # Lazy imports so the friendlier message above fires first.
     from cynea.models import SynthesisRequest
-    from cynea_africa.synthesizer.edge_tts import EdgeTTSSynthesizer
+    from cynea_africa.synthesizer.elevenlabs_synthesizer import ElevenLabsSynthesizer
 
-    out_dir = os.path.dirname(os.path.abspath(__file__))
-    synthesizer = EdgeTTSSynthesizer(voice=VOICE)
+    os.makedirs(OUT_DIR, exist_ok=True)
+    synthesizer = ElevenLabsSynthesizer(voice=VOICE_ID)
 
-    print("=" * 60)
-    print("  CYNEA VOICE ENGINE — HEAR KWAME")
-    print(f"  Voice: {VOICE} @ speed {SPEED}")
-    print("=" * 60)
+    print("=" * 64)
+    print("  CYNEA VOICE ENGINE — HEAR KWAME (ElevenLabs)")
+    print(f"  Voice: {VOICE_ID}  ({synthesizer.VOICES.get(VOICE_ID, 'custom')})")
+    print(f"  Model: {synthesizer.model}")
+    print(f"  Out:   {OUT_DIR}")
+    print("=" * 64)
+
+    health = await synthesizer.health_check(timeout=2.0)
+    if not health.get("ready"):
+        print(f"\nElevenLabs is not ready: {health.get('reason') or 'unknown reason'}")
+        print("Common fixes:")
+        print("  - Add ELEVENLABS_API_KEY=sk_... to your .env file.")
+        print("  - Confirm your network can reach api.elevenlabs.io:443.")
+        return 1
 
     failures = 0
     for index, phrase in enumerate(PHRASES, start=1):
-        out_path = os.path.join(out_dir, f"kwame_test_{index}.mp3")
-        request = SynthesisRequest(text=phrase, voice=VOICE, speed=SPEED)
+        out_path = os.path.join(OUT_DIR, f"kwame_test_{index}.mp3")
+        request = SynthesisRequest(text=phrase, voice=VOICE_ID, speed=SPEED)
 
         print(f"\n[{index}/{len(PHRASES)}] Synthesizing: {phrase}")
 
         try:
             audio = await synthesizer.synthesize(request)
+        except ImportError as exc:
+            audio = b""
+            print(f"  -> package missing: {exc}")
+        except ConnectionError as exc:
+            audio = b""
+            print(f"  -> no network: {exc}")
+        except RuntimeError as exc:
+            audio = b""
+            print(f"  -> synthesis failed: {exc}")
         except Exception as exc:
             audio = b""
-            print(f"  -> synthesis raised: {exc}")
+            print(f"  -> unexpected error: {exc!r}")
 
         if not audio:
             failures += 1
-            print(f"  -> FAILED (no audio returned). Check your internet connection.")
             continue
 
         try:
@@ -100,9 +133,10 @@ async def main() -> int:
         size_kb = len(audio) / 1024.0
         print(f"  -> wrote {out_path} ({size_kb:,.1f} KB)")
 
-    print("\n" + "=" * 60)
+    print("\n" + "=" * 64)
     if failures == 0:
-        print(f"  Done. Open the .mp3 files in {out_dir} to hear Kwame.")
+        print(f"  Done. Open the .mp3 files in {OUT_DIR} to hear Kwame.")
+        print("  The landing page's 'Hear demo' button will now play them.")
         return 0
     print(f"  Done with {failures} failure(s) of {len(PHRASES)}.")
     return 2

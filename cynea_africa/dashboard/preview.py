@@ -2921,7 +2921,8 @@ def _landing_render_nav() -> str:
     <li><a href="https://github.com/Mars2390/cynea-voice-engine" target="_blank" rel="noopener">GitHub</a></li>
   </ul>
   <a class="nav-signin" href="signin.html">Sign in</a>
-  <a class="btn btn-outline" id="bookDemo" href="agent_manager.html">Get started</a>
+  <a class="btn btn-outline" id="bookDemo" href="https://calendly.com/cynea-ai/demo"
+     target="_blank" rel="noopener">📅 Book a Demo</a>
 </nav>
 """
 
@@ -2948,8 +2949,9 @@ def _landing_render_hero() -> str:
       </h1>
       <p class="hero-sub">{html.escape(LANDING_SUBTITLE)}</p>
       <div class="hero-ctas">
-        <a class="btn btn-primary btn-glow" href="agent_manager.html">
-          See dashboard <span aria-hidden="true">→</span>
+        <a class="btn btn-primary btn-glow" href="https://calendly.com/cynea-ai/demo"
+           target="_blank" rel="noopener">
+          📅 Book a Demo <span aria-hidden="true">→</span>
         </a>
         <button class="btn btn-outline btn-glow play-btn" type="button"
                 data-audio="kwame_test_1.mp3"
@@ -3259,7 +3261,8 @@ def _landing_render_phone_demo() -> str:
       <h3>Engineered for African telephony</h3>
       <p class="muted">Production-ready integrations with Africa's Talking, Twilio, Plivo and SIP. Route inbound calls to your agents in minutes, not weeks.</p>
       <div class="phone-cta-row">
-        <a class="btn btn-primary btn-glow" href="#agents">Book a demo</a>
+        <a class="btn btn-primary btn-glow" href="https://calendly.com/cynea-ai/demo"
+           target="_blank" rel="noopener">📅 Book a Demo</a>
         <a class="btn btn-ghost" href="https://github.com/Mars2390/cynea-voice-engine" target="_blank" rel="noopener">View on GitHub</a>
       </div>
       <div class="phone-feature-row">

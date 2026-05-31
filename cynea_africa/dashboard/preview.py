@@ -2964,10 +2964,7 @@ def _landing_render_hero() -> str:
     )
     return f"""
 <section class="hero-cinematic" id="top">
-  <video class="hero-video" autoplay loop muted playsinline preload="metadata"
-         aria-hidden="true" poster="">
-    <source src="assets/hero-bg.mp4" type="video/mp4">
-  </video>
+  <div class="hero-gradient" aria-hidden="true"></div>
   <div class="hero-video-overlay" aria-hidden="true"></div>
   <div class="hero-bg" aria-hidden="true">
     <div class="hero-grid-bg"></div>
@@ -3152,7 +3149,7 @@ def _landing_render_agent_showcase() -> str:
 <section class="agents-section" id="agents">
   <div class="section-head">
     <span class="section-eyebrow">Agents</span>
-    <h2>Two agents shipping today</h2>
+    <h2>Three agents shipping today</h2>
     <p class="muted">Both run on the same engine. Add a third by writing one Python file plus a JSON config.</p>
   </div>
   <div class="agent-showcase-grid">{"".join(cards)}</div>
@@ -4464,31 +4461,36 @@ body.landing > footer.landing-footer {
 }
 
 /* ── visual assets layer ───────────────────────────────────────── */
-/* Hero video — full-cover behind everything, dark overlay on top so
-   the headline keeps its contrast. The .hero-bg grid + orbs render
-   ON TOP of the overlay so the cyan glow still reads. */
+/* Hero backdrop — pure CSS animated gradient (no video, no SVG). The
+   gradient is full-cover behind everything; the dark overlay sits on
+   top so the headline keeps its contrast. The .hero-bg grid + orbs
+   render ON TOP of the overlay so the cyan glow still reads.
+   Lightweight: zero bytes downloaded, zero decode cost. */
 .hero-cinematic { isolation: isolate; }
-.hero-video {
+.hero-gradient {
   position: absolute; inset: 0;
-  width: 100%; height: 100%;
-  object-fit: cover;
   z-index: -3;
-  /* Prevent the video from causing a horizontal scrollbar on Safari. */
-  min-width: 100%; min-height: 100%;
+  background:
+    linear-gradient(135deg, #050505 0%, #0A1A2A 25%, #001020 55%, #050505 100%);
+  background-size: 220% 220%;
+  background-position: 0% 0%;
+  animation: gradientShift 8s ease-in-out infinite;
+  pointer-events: none;
+}
+@keyframes gradientShift {
+  0%   { background-position:   0%   0%; }
+  50%  { background-position: 100% 100%; }
+  100% { background-position:   0%   0%; }
 }
 .hero-video-overlay {
   position: absolute; inset: 0; z-index: -2;
-  background: rgba(5,5,5,0.6);
+  background: rgba(5,5,5,0.55);
   pointer-events: none;
 }
-.hero-bg { z-index: -1; }  /* lifts the existing grid/orbs above the video */
+.hero-bg { z-index: -1; }  /* lifts the existing grid/orbs above the overlay */
 @media (prefers-reduced-motion: reduce) {
-  /* Pause auto-playing video for users who asked to reduce motion. */
-  .hero-video { display: none; }
-}
-@media (max-width: 720px) {
-  /* Skip the video on mobile — saves ~2 MB of mobile data per visit. */
-  .hero-video { display: none; }
+  /* Hold the gradient still for users who asked to reduce motion. */
+  .hero-gradient { animation: none; background-position: 50% 50%; }
 }
 
 /* Agent showcase — 3-up grid + photo avatars */
@@ -4531,12 +4533,34 @@ body.landing > footer.landing-footer {
   border-radius: 50%;
 }
 
-/* Features section — subtle African-pattern overlay */
+/* CSS-generated initial avatar (no photo) — Kofi etc. Gets a slightly
+   richer ring than the photo variant so it reads as deliberately
+   designed rather than "broken image fell back". The --accent comes
+   from the agent definition (Kofi = #10B981 green), so this rule
+   automatically tints to whichever colour the agent uses. */
+.agent-card-cinematic .agent-avatar:not(.agent-avatar-photo) {
+  box-shadow:
+    0 0 0 3px var(--accent, #00D4FF),
+    0 0 0 5px rgba(255,255,255,0.04),
+    0 0 28px var(--accent-soft, rgba(0,212,255,0.40));
+  background:
+    radial-gradient(circle at 30% 30%, rgba(255,255,255,0.18), transparent 45%),
+    linear-gradient(135deg, var(--accent), rgba(0,0,0,0.55));
+}
+.agent-card-cinematic .agent-avatar:not(.agent-avatar-photo) > span {
+  color: #ffffff;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.35);
+}
+
+/* Features section — pure CSS geometric pattern (no SVG download).
+   Two crossed sets of cyan diagonal lines at 5% opacity form a subtle
+   diamond grid behind the feature cards. Zero bytes, no flicker. */
 .features-section { position: relative; isolation: isolate; }
 .features-section::before {
   content: ""; position: absolute; inset: 0;
-  background: url("assets/african-pattern.svg") center/600px repeat;
-  opacity: 0.07;
+  background:
+    repeating-linear-gradient( 45deg, rgba(0,212,255,0.05) 0 1px, transparent 1px 28px),
+    repeating-linear-gradient(-45deg, rgba(0,212,255,0.05) 0 1px, transparent 1px 28px);
   pointer-events: none;
   z-index: -1;
 }

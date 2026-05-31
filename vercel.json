@@ -1,16 +1,4 @@
 {
-  "version": 2,
-  "framework": null,
-  "builds": [
-    {
-      "src": "**",
-      "use": "@vercel/static"
-    }
-  ],
-  "routes": [
-    {
-      "src": "/(.*)",
-      "dest": "/"
-    }
-  ]
+  "cleanUrls": true,
+  "trailingSlash": false
 }

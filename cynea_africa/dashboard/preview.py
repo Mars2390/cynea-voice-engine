@@ -3268,72 +3268,51 @@ def _landing_render_features() -> str:
 """
 
 
-# 14 African countries Cynea targets, with approximate viewport
-# coordinates as percentages of the SVG viewBox (300×340). Tuned by
-# eye against the outline below; close enough for a marketing
-# illustration, not for any geographic claim.
+# 14 African countries Cynea targets. Each entry is
+# (country_name, ISO-3166 country code, flag emoji, status).
+# Flag emojis are Unicode regional-indicator pairs — render natively
+# on every modern OS, no asset files needed.
 LANDING_AFRICA_COVERAGE = [
-    ("Morocco",        "37%", "10%"),
-    ("Egypt",          "65%", "16%"),
-    ("Senegal",        "16%", "33%"),
-    ("Côte d'Ivoire",  "26%", "43%"),
-    ("Ghana",          "32%", "44%"),
-    ("Nigeria",        "42%", "44%"),
-    ("Cameroon",       "48%", "50%"),
-    ("Ethiopia",       "70%", "44%"),
-    ("Uganda",         "62%", "55%"),
-    ("Kenya",          "70%", "58%"),
-    ("Rwanda",         "59%", "60%"),
-    ("Tanzania",       "66%", "63%"),
-    ("Zambia",         "57%", "73%"),
-    ("South Africa",   "55%", "90%"),
+    ("Ghana",          "GH", "🇬🇭", "Active"),
+    ("Kenya",          "KE", "🇰🇪", "Active"),
+    ("Nigeria",        "NG", "🇳🇬", "Active"),
+    ("South Africa",   "ZA", "🇿🇦", "Active"),
+    ("Tanzania",       "TZ", "🇹🇿", "Active"),
+    ("Uganda",         "UG", "🇺🇬", "Active"),
+    ("Rwanda",         "RW", "🇷🇼", "Active"),
+    ("Ethiopia",       "ET", "🇪🇹", "Active"),
+    ("Egypt",          "EG", "🇪🇬", "Coming soon"),
+    ("Morocco",        "MA", "🇲🇦", "Coming soon"),
+    ("Senegal",        "SN", "🇸🇳", "Coming soon"),
+    ("Côte d'Ivoire",  "CI", "🇨🇮", "Coming soon"),
+    ("Cameroon",       "CM", "🇨🇲", "Coming soon"),
+    ("Zambia",         "ZM", "🇿🇲", "Coming soon"),
 ]
 
 
-# Simplified Africa outline — a single SVG <path> tuned to fit a
-# 300×340 viewBox. Not geographically precise; this is an illustration,
-# not a cartographic claim. The path coordinates are eyeballed from a
-# public-domain continent silhouette and trace the major landmass
-# (excluding Madagascar; the small island sits to the east).
-_AFRICA_OUTLINE_PATH = (
-    "M 138 18 L 162 14 L 188 18 L 210 26 L 226 38 L 236 50 L 230 64 "
-    "L 232 80 L 222 96 L 218 110 L 208 120 L 200 130 L 196 144 "
-    "L 198 160 L 204 172 L 208 188 L 210 204 L 212 220 L 206 232 "
-    "L 196 244 L 184 256 L 170 268 L 158 282 L 148 296 L 138 308 "
-    "L 130 318 L 122 322 L 116 320 L 112 312 L 108 298 L 104 282 "
-    "L 96 266 L 88 250 L 82 234 L 78 218 L 74 202 L 70 186 L 66 168 "
-    "L 64 150 L 66 132 L 70 116 L 76 102 L 84 90 L 92 80 L 100 70 "
-    "L 108 58 L 116 46 L 122 36 L 130 26 Z"
-)
-
-
 def _landing_render_africa_map() -> str:
-    dots_html = "\n".join(
-        f'<div class="africa-dot" data-name="{html.escape(name)}"'
-        f' style="left:{x};top:{y}" title="{html.escape(name)}"></div>'
-        for name, x, y in LANDING_AFRICA_COVERAGE
-    )
-    pills_html = "\n".join(
-        f'<span class="africa-country-pill">{html.escape(name)}</span>'
-        for name, _, _ in LANDING_AFRICA_COVERAGE
-    )
+    cards = []
+    for name, code, flag, status in LANDING_AFRICA_COVERAGE:
+        status_class = "is-active" if status == "Active" else "is-soon"
+        cards.append(f"""
+<article class="coverage-card {status_class}">
+  <span class="coverage-flag" aria-hidden="true">{flag}</span>
+  <div class="coverage-id">
+    <span class="coverage-name">{html.escape(name)}</span>
+    <span class="coverage-code mono">{code}</span>
+  </div>
+  <span class="coverage-status">{html.escape(status)}</span>
+</article>
+""")
+    active_count = sum(1 for *_, s in LANDING_AFRICA_COVERAGE if s == "Active")
     return f"""
 <section class="africa-map-section" id="coverage">
   <div class="section-head">
     <span class="section-eyebrow">Coverage</span>
     <h2>Serving 14 African countries</h2>
-    <p class="muted">Africa's Talking and Twilio integrations, ready to deploy across the continent.</p>
+    <p class="muted">{active_count} active markets via Africa's Talking and Twilio · {len(LANDING_AFRICA_COVERAGE) - active_count} expanding next.</p>
   </div>
-  <div class="africa-map-wrap" aria-label="Map of Africa with 14 coverage points">
-    <svg class="africa-svg" viewBox="0 0 300 340" preserveAspectRatio="xMidYMid meet"
-         aria-hidden="true" role="img">
-      <path d="{_AFRICA_OUTLINE_PATH}"/>
-    </svg>
-    {dots_html}
-  </div>
-  <div class="africa-countries-list">
-    {pills_html}
-  </div>
+  <div class="coverage-grid">{"".join(cards)}</div>
 </section>
 """
 
@@ -4562,65 +4541,71 @@ body.landing > footer.landing-footer {
   z-index: -1;
 }
 
-/* ── Africa coverage map ────────────────────────────────────────── */
-.africa-map-section {
-  padding: 88px 0;
-  text-align: center;
-}
-.africa-map-wrap {
-  position: relative;
-  max-width: 520px;
+/* ── Africa coverage grid ──────────────────────────────────────── */
+/* Country-card grid replaces the earlier CSS-dots map. Flag emojis
+   are Unicode (no asset files), so this section renders identically
+   on Vercel, on localhost, and offline. */
+.africa-map-section { padding: 88px 0; }
+.coverage-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+  max-width: 880px;
   margin: 32px auto 0;
-  aspect-ratio: 1 / 1.1;
 }
-.africa-svg {
-  width: 100%; height: auto;
-  filter: drop-shadow(0 0 20px rgba(0,212,255,0.25));
+@media (max-width: 900px) { .coverage-grid { grid-template-columns: repeat(3, 1fr); } }
+@media (max-width: 640px) { .coverage-grid { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 420px) { .coverage-grid { grid-template-columns: 1fr; } }
+.coverage-card {
+  display: flex; align-items: center; gap: 12px;
+  padding: 14px 16px;
+  background: linear-gradient(160deg, #111 0%, #0E0E0E 100%);
+  border: 1px solid #1E1E1E;
+  border-radius: 12px;
+  position: relative; overflow: hidden;
+  min-height: 60px;
+  transition: border-color 200ms ease, transform 200ms ease, box-shadow 200ms ease;
 }
-.africa-svg path {
-  fill: #0E0E0E;
-  stroke: rgba(0,212,255,0.45);
-  stroke-width: 1.2;
-  vector-effect: non-scaling-stroke;
+.coverage-card:hover {
+  border-color: rgba(0,212,255,0.4);
+  transform: translateY(-2px);
+  box-shadow: 0 16px 32px rgba(0,212,255,0.10);
 }
-.africa-dot {
-  position: absolute;
-  width: 12px; height: 12px;
-  border-radius: 50%;
-  background: #00D4FF;
-  transform: translate(-50%, -50%);
-  box-shadow: 0 0 0 2px rgba(0,212,255,0.25),
-              0 0 14px rgba(0,212,255,0.9);
-  animation: africaDotPulse 2.4s cubic-bezier(.4,0,.6,1) infinite;
+.coverage-flag {
+  font-size: 28px; line-height: 1;
+  flex-shrink: 0;
+  filter: drop-shadow(0 0 8px rgba(0,0,0,0.6));
 }
-.africa-dot::after {
-  content: attr(data-name);
-  position: absolute; left: 50%; bottom: calc(100% + 6px);
-  transform: translateX(-50%);
-  background: rgba(5,5,5,0.92);
-  border: 1px solid rgba(0,212,255,0.4);
-  color: #F5F5F5;
+.coverage-id {
+  flex: 1; min-width: 0;
+  display: flex; flex-direction: column; gap: 2px;
+}
+.coverage-name {
+  font-family: 'Syne', sans-serif; font-weight: 600;
+  font-size: 13px; color: #F5F5F5;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.coverage-code {
+  font-size: 10px; color: #5F5F5F; letter-spacing: 0.08em;
+}
+.coverage-status {
   font-size: 10px; font-weight: 600; letter-spacing: 0.04em;
-  padding: 3px 8px; border-radius: 6px;
-  white-space: nowrap;
-  opacity: 0; pointer-events: none;
-  transition: opacity 180ms ease;
+  padding: 3px 8px; border-radius: 999px;
+  flex-shrink: 0;
 }
-.africa-dot:hover::after { opacity: 1; }
-@keyframes africaDotPulse {
-  0%, 100% { box-shadow: 0 0 0 2px rgba(0,212,255,0.25), 0 0 14px rgba(0,212,255,0.9); }
-  50%      { box-shadow: 0 0 0 4px rgba(0,212,255,0.15), 0 0 26px rgba(0,212,255,1); }
+.coverage-card.is-active .coverage-status {
+  color: #10B981;
+  background: rgba(16,185,129,0.12);
+  border: 1px solid rgba(16,185,129,0.30);
 }
-.africa-countries-list {
-  display: flex; flex-wrap: wrap; justify-content: center;
-  gap: 6px 10px; margin: 32px auto 0;
-  max-width: 700px;
+.coverage-card.is-soon .coverage-status {
+  color: #8A8A8A;
+  background: #161616;
+  border: 1px solid #1E1E1E;
 }
-.africa-country-pill {
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 11px; color: #8A8A8A;
-  padding: 4px 10px; border-radius: 999px;
-  border: 1px solid #1E1E1E; background: #0E0E0E;
+.coverage-card.is-active::before {
+  content: ""; position: absolute; left: 0; top: 0; bottom: 0;
+  width: 2px; background: #10B981;
 }
 """
 
@@ -4645,20 +4630,33 @@ def _landing_render_js(calls: list) -> str:
 // ====================================================================
 
 // -- loader cleanup ---------------------------------------------------
+// Three independent paths remove the loader, so it can NEVER stay on
+// screen indefinitely:
+//   1. CSS @keyframes loaderFade naturally hides it at ~2.4s via the
+//      `forwards` fill-mode (opacity:0, visibility:hidden).
+//   2. JS animationend listener adds `.done` (display:none) when the
+//      keyframe finishes — handles the case where another script
+//      mutates the loader element.
+//   3. Hard timeout at 2.5s removes the loader from the DOM entirely.
+//      This is the failsafe — even if CSS animations are blocked, the
+//      keyframe name changes, or `prefers-reduced-motion` skips the
+//      animation, the loader is gone in 2.5s flat.
 (function() {
   const loader = document.getElementById('cyneaLoader');
   if (!loader) return;
   let removed = false;
-  const remove = () => {
+  const hide = () => {
     if (removed) return;
     removed = true;
     loader.classList.add('done');
+    // Belt and braces: remove from DOM after the .done transition.
+    setTimeout(() => { try { loader.remove(); } catch (_) {} }, 120);
   };
   loader.addEventListener('animationend', (e) => {
-    if (e.animationName === 'loaderFade') remove();
+    if (e.animationName === 'loaderFade') hide();
   });
-  // Safety net: never let the loader stick around after 3 s.
-  setTimeout(remove, 3000);
+  // Hard timeout: 2.5s — covers all failure modes.
+  setTimeout(hide, 2500);
 })();
 
 // -- shared playDemo ------------------------------------------------

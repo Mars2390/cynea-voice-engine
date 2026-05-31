@@ -2698,6 +2698,10 @@ LANDING_AGENTS = [
         "role": "Hotel Receptionist",
         "country": "Ghana",
         "voice_label": "British male · en-GB-RyanNeural",
+        # Real photo from assets/. If the file is missing the
+        # _landing_render_agent_showcase() renderer falls back to a
+        # CSS-generated initial avatar matching the same style.
+        "photo": "assets/avatar-kwame.jpg",
         # ElevenLabs-synthesized greeting from examples/hear_kwame.py.
         # Fallback to test_2 (the "let me check" line) when the greeting
         # file is missing.
@@ -2717,12 +2721,35 @@ LANDING_AGENTS = [
         "role": "Customer Service Agent",
         "country": "Kenya",
         "voice_label": "British female · en-GB-SoniaNeural",
+        # NOTE: file is literally "amina .jpg" (space before the
+        # extension). URL-encode the space to %20 so the browser
+        # resolves it.
+        "photo": "assets/amina%20.jpg",
         "audio_file": "assets/amina_test_1.mp3",
         "audio_fallback": "",
         "audio_error": "Amina audio not generated yet — run hear_amina.py",
         "summary": (
             "Banking, telco, and e-commerce inquiries with M-Pesa, "
             "airtime, and bundle support. Escalates complaints fast."
+        ),
+    },
+    {
+        "key": "kofi",
+        "name": "Kofi",
+        "initials": "K",
+        "accent": "#10B981",
+        "role": "Restaurant Order Agent",
+        "country": "Ghana",
+        "voice_label": "British male · en-GB-RyanNeural",
+        # CSS-generated avatar — no photo asset; renderer paints the
+        # initial in the same circular gradient style.
+        "photo": None,
+        "audio_file": "assets/kofi_test_1.mp3",
+        "audio_fallback": "",
+        "audio_error": "Kofi audio not generated yet — run hear_kofi.py",
+        "summary": (
+            "Takes food orders for dine-in, takeaway, and delivery — "
+            "with allergy checks, spice levels, and M-Pesa payment."
         ),
     },
 ]
@@ -2827,6 +2854,7 @@ def _render_landing_html(*, calls: list, showcase: dict, is_empty_state: bool) -
     chat_widget = _landing_render_chat_widget()
     timeline    = _landing_render_timeline()
     feats       = _landing_render_features()
+    africa_map  = _landing_render_africa_map()
     phone       = _landing_render_phone_demo()
     table       = _render_call_history_table(calls, is_empty_state)
     footer      = _landing_render_footer()
@@ -2859,6 +2887,7 @@ def _render_landing_html(*, calls: list, showcase: dict, is_empty_state: bool) -
   {chat_widget}
   {timeline}
   {feats}
+  {africa_map}
   {phone}
   <section id="dashboard" class="dashboard-anchor">
     <div class="section-head">
@@ -2935,6 +2964,11 @@ def _landing_render_hero() -> str:
     )
     return f"""
 <section class="hero-cinematic" id="top">
+  <video class="hero-video" autoplay loop muted playsinline preload="metadata"
+         aria-hidden="true" poster="">
+    <source src="assets/hero-bg.mp4" type="video/mp4">
+  </video>
+  <div class="hero-video-overlay" aria-hidden="true"></div>
   <div class="hero-bg" aria-hidden="true">
     <div class="hero-grid-bg"></div>
     <div class="hero-orb hero-orb-1"></div>
@@ -3054,16 +3088,38 @@ def _landing_render_agent_showcase() -> str:
     cards = []
     for agent in LANDING_AGENTS:
         accent = agent["accent"]
+        # Avatar — real photo if the agent has one, else CSS-generated
+        # initial in the same circular gradient style. The fallback
+        # `<span>` always renders the initial; the `<img>` overlays it
+        # via CSS (object-fit cover). If the image fails to load, the
+        # browser hides the broken-image icon via `onerror` and the
+        # initial remains visible.
+        photo = agent.get('photo')
+        initial = html.escape(agent['initials'])
+        if photo:
+            avatar_html = (
+                f'<div class="agent-avatar agent-avatar-photo" aria-hidden="true"'
+                f' style="--accent:{accent}">'
+                f'<span class="agent-avatar-initial">{initial}</span>'
+                f'<img src="{html.escape(photo)}" alt=""'
+                f' loading="lazy" decoding="async"'
+                f' onerror="this.style.display=\'none\'">'
+                f'</div>'
+            )
+        else:
+            avatar_html = (
+                f'<div class="agent-avatar" aria-hidden="true"'
+                f' style="--accent:{accent}">'
+                f'<span>{initial}</span>'
+                f'</div>'
+            )
         cards.append(f"""
 <article class="agent-card-cinematic reveal" data-tilt
          style="--accent:{accent};--accent-soft:{accent}33;--accent-glow:{accent}55">
   <div class="agent-card-glare" aria-hidden="true"></div>
   <div class="agent-card-inner">
     <header class="agent-card-head">
-      <div class="agent-avatar" aria-hidden="true"
-           style="--accent:{accent}">
-        <span>{html.escape(agent['initials'])}</span>
-      </div>
+      {avatar_html}
       <div class="agent-id">
         <h3>{html.escape(agent['name'])}</h3>
         <p class="muted">{html.escape(agent['role'])} · {html.escape(agent['country'])}</p>
@@ -3208,6 +3264,76 @@ def _landing_render_features() -> str:
     <p class="muted">Where US-first voice AI platforms get Africa wrong, and where we get it right.</p>
   </div>
   <div class="features-grid">{"".join(cards)}</div>
+</section>
+"""
+
+
+# 14 African countries Cynea targets, with approximate viewport
+# coordinates as percentages of the SVG viewBox (300×340). Tuned by
+# eye against the outline below; close enough for a marketing
+# illustration, not for any geographic claim.
+LANDING_AFRICA_COVERAGE = [
+    ("Morocco",        "37%", "10%"),
+    ("Egypt",          "65%", "16%"),
+    ("Senegal",        "16%", "33%"),
+    ("Côte d'Ivoire",  "26%", "43%"),
+    ("Ghana",          "32%", "44%"),
+    ("Nigeria",        "42%", "44%"),
+    ("Cameroon",       "48%", "50%"),
+    ("Ethiopia",       "70%", "44%"),
+    ("Uganda",         "62%", "55%"),
+    ("Kenya",          "70%", "58%"),
+    ("Rwanda",         "59%", "60%"),
+    ("Tanzania",       "66%", "63%"),
+    ("Zambia",         "57%", "73%"),
+    ("South Africa",   "55%", "90%"),
+]
+
+
+# Simplified Africa outline — a single SVG <path> tuned to fit a
+# 300×340 viewBox. Not geographically precise; this is an illustration,
+# not a cartographic claim. The path coordinates are eyeballed from a
+# public-domain continent silhouette and trace the major landmass
+# (excluding Madagascar; the small island sits to the east).
+_AFRICA_OUTLINE_PATH = (
+    "M 138 18 L 162 14 L 188 18 L 210 26 L 226 38 L 236 50 L 230 64 "
+    "L 232 80 L 222 96 L 218 110 L 208 120 L 200 130 L 196 144 "
+    "L 198 160 L 204 172 L 208 188 L 210 204 L 212 220 L 206 232 "
+    "L 196 244 L 184 256 L 170 268 L 158 282 L 148 296 L 138 308 "
+    "L 130 318 L 122 322 L 116 320 L 112 312 L 108 298 L 104 282 "
+    "L 96 266 L 88 250 L 82 234 L 78 218 L 74 202 L 70 186 L 66 168 "
+    "L 64 150 L 66 132 L 70 116 L 76 102 L 84 90 L 92 80 L 100 70 "
+    "L 108 58 L 116 46 L 122 36 L 130 26 Z"
+)
+
+
+def _landing_render_africa_map() -> str:
+    dots_html = "\n".join(
+        f'<div class="africa-dot" data-name="{html.escape(name)}"'
+        f' style="left:{x};top:{y}" title="{html.escape(name)}"></div>'
+        for name, x, y in LANDING_AFRICA_COVERAGE
+    )
+    pills_html = "\n".join(
+        f'<span class="africa-country-pill">{html.escape(name)}</span>'
+        for name, _, _ in LANDING_AFRICA_COVERAGE
+    )
+    return f"""
+<section class="africa-map-section" id="coverage">
+  <div class="section-head">
+    <span class="section-eyebrow">Coverage</span>
+    <h2>Serving 14 African countries</h2>
+    <p class="muted">Africa's Talking and Twilio integrations, ready to deploy across the continent.</p>
+  </div>
+  <div class="africa-map-wrap" aria-label="Map of Africa with 14 coverage points">
+    <svg class="africa-svg" viewBox="0 0 300 340" preserveAspectRatio="xMidYMid meet"
+         aria-hidden="true" role="img">
+      <path d="{_AFRICA_OUTLINE_PATH}"/>
+    </svg>
+    {dots_html}
+  </div>
+  <div class="africa-countries-list">
+    {pills_html}
+  </div>
 </section>
 """
 
@@ -4356,6 +4482,145 @@ body.landing > footer.landing-footer {
   #cynea-scroll-progress, #cynea-cursor-glow, #cynea-back-to-top { display: none !important; }
   .agent-card-cinematic::before, .phone-frame::before, .metric-strip-inner::before { display: none !important; }
   .feature-card-cinematic { backdrop-filter: none !important; }
+}
+
+/* ── visual assets layer ───────────────────────────────────────── */
+/* Hero video — full-cover behind everything, dark overlay on top so
+   the headline keeps its contrast. The .hero-bg grid + orbs render
+   ON TOP of the overlay so the cyan glow still reads. */
+.hero-cinematic { isolation: isolate; }
+.hero-video {
+  position: absolute; inset: 0;
+  width: 100%; height: 100%;
+  object-fit: cover;
+  z-index: -3;
+  /* Prevent the video from causing a horizontal scrollbar on Safari. */
+  min-width: 100%; min-height: 100%;
+}
+.hero-video-overlay {
+  position: absolute; inset: 0; z-index: -2;
+  background: rgba(5,5,5,0.6);
+  pointer-events: none;
+}
+.hero-bg { z-index: -1; }  /* lifts the existing grid/orbs above the video */
+@media (prefers-reduced-motion: reduce) {
+  /* Pause auto-playing video for users who asked to reduce motion. */
+  .hero-video { display: none; }
+}
+@media (max-width: 720px) {
+  /* Skip the video on mobile — saves ~2 MB of mobile data per visit. */
+  .hero-video { display: none; }
+}
+
+/* Agent showcase — 3-up grid + photo avatars */
+.agent-showcase-grid {
+  grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+}
+@media (max-width: 1100px) {
+  .agent-showcase-grid { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; }
+}
+@media (max-width: 720px) {
+  .agent-showcase-grid { grid-template-columns: 1fr !important; }
+}
+
+.agent-card-cinematic .agent-avatar {
+  width: 80px; height: 80px; flex-shrink: 0;
+  font-size: 32px;
+  box-shadow: 0 0 0 2px rgba(255,255,255,0.08),
+              0 0 20px var(--accent-soft, rgba(0,212,255,0.30));
+  transition: box-shadow 240ms ease, transform 240ms ease;
+}
+.agent-card-cinematic:hover .agent-avatar {
+  box-shadow: 0 0 0 2px var(--accent, #00D4FF),
+              0 0 32px var(--accent, rgba(0,212,255,0.55));
+  transform: translateY(-1px);
+}
+.agent-avatar-photo {
+  position: relative;
+  overflow: hidden;
+}
+.agent-avatar-photo .agent-avatar-initial {
+  position: absolute; inset: 0;
+  display: flex; align-items: center; justify-content: center;
+  z-index: 0;  /* sits behind the img; visible only if the img fails */
+}
+.agent-avatar-photo img {
+  position: relative; z-index: 1;
+  width: 100%; height: 100%;
+  object-fit: cover;
+  display: block;
+  border-radius: 50%;
+}
+
+/* Features section — subtle African-pattern overlay */
+.features-section { position: relative; isolation: isolate; }
+.features-section::before {
+  content: ""; position: absolute; inset: 0;
+  background: url("assets/african-pattern.svg") center/600px repeat;
+  opacity: 0.07;
+  pointer-events: none;
+  z-index: -1;
+}
+
+/* ── Africa coverage map ────────────────────────────────────────── */
+.africa-map-section {
+  padding: 88px 0;
+  text-align: center;
+}
+.africa-map-wrap {
+  position: relative;
+  max-width: 520px;
+  margin: 32px auto 0;
+  aspect-ratio: 1 / 1.1;
+}
+.africa-svg {
+  width: 100%; height: auto;
+  filter: drop-shadow(0 0 20px rgba(0,212,255,0.25));
+}
+.africa-svg path {
+  fill: #0E0E0E;
+  stroke: rgba(0,212,255,0.45);
+  stroke-width: 1.2;
+  vector-effect: non-scaling-stroke;
+}
+.africa-dot {
+  position: absolute;
+  width: 12px; height: 12px;
+  border-radius: 50%;
+  background: #00D4FF;
+  transform: translate(-50%, -50%);
+  box-shadow: 0 0 0 2px rgba(0,212,255,0.25),
+              0 0 14px rgba(0,212,255,0.9);
+  animation: africaDotPulse 2.4s cubic-bezier(.4,0,.6,1) infinite;
+}
+.africa-dot::after {
+  content: attr(data-name);
+  position: absolute; left: 50%; bottom: calc(100% + 6px);
+  transform: translateX(-50%);
+  background: rgba(5,5,5,0.92);
+  border: 1px solid rgba(0,212,255,0.4);
+  color: #F5F5F5;
+  font-size: 10px; font-weight: 600; letter-spacing: 0.04em;
+  padding: 3px 8px; border-radius: 6px;
+  white-space: nowrap;
+  opacity: 0; pointer-events: none;
+  transition: opacity 180ms ease;
+}
+.africa-dot:hover::after { opacity: 1; }
+@keyframes africaDotPulse {
+  0%, 100% { box-shadow: 0 0 0 2px rgba(0,212,255,0.25), 0 0 14px rgba(0,212,255,0.9); }
+  50%      { box-shadow: 0 0 0 4px rgba(0,212,255,0.15), 0 0 26px rgba(0,212,255,1); }
+}
+.africa-countries-list {
+  display: flex; flex-wrap: wrap; justify-content: center;
+  gap: 6px 10px; margin: 32px auto 0;
+  max-width: 700px;
+}
+.africa-country-pill {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px; color: #8A8A8A;
+  padding: 4px 10px; border-radius: 999px;
+  border: 1px solid #1E1E1E; background: #0E0E0E;
 }
 """
 

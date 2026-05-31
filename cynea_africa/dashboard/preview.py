@@ -2701,8 +2701,8 @@ LANDING_AGENTS = [
         # ElevenLabs-synthesized greeting from examples/hear_kwame.py.
         # Fallback to test_2 (the "let me check" line) when the greeting
         # file is missing.
-        "audio_file": "kwame_test_1.mp3",
-        "audio_fallback": "kwame_test_2.mp3",
+        "audio_file": "assets/kwame_test_1.mp3",
+        "audio_fallback": "assets/kwame_test_2.mp3",
         "audio_error": "Kwame demo audio not available — run examples/hear_kwame.py",
         "summary": (
             "Handles bookings, room availability, restaurant hours, and "
@@ -2717,7 +2717,7 @@ LANDING_AGENTS = [
         "role": "Customer Service Agent",
         "country": "Kenya",
         "voice_label": "British female · en-GB-SoniaNeural",
-        "audio_file": "amina_test_1.mp3",
+        "audio_file": "assets/amina_test_1.mp3",
         "audio_fallback": "",
         "audio_error": "Amina audio not generated yet — run hear_amina.py",
         "summary": (
@@ -2954,8 +2954,8 @@ def _landing_render_hero() -> str:
           📅 Book a Demo <span aria-hidden="true">→</span>
         </a>
         <button class="btn btn-outline btn-glow play-btn" type="button"
-                data-audio="kwame_test_1.mp3"
-                data-audio-fallback="kwame_test_2.mp3"
+                data-audio="assets/kwame_test_1.mp3"
+                data-audio-fallback="assets/kwame_test_2.mp3"
                 data-error="Kwame demo audio not available — run examples/hear_kwame.py"
                 data-label="Kwame demo">
           <span class="play-icon" aria-hidden="true">▶</span>
@@ -3245,8 +3245,8 @@ def _landing_render_phone_demo() -> str:
           <div class="phone-convo" data-typewriter>{convo_lines}</div>
           <div class="phone-controls">
             <button class="phone-play play-btn" type="button"
-                    data-audio="kwame_test_1.mp3"
-                    data-audio-fallback="kwame_test_2.mp3"
+                    data-audio="assets/kwame_test_1.mp3"
+                    data-audio-fallback="assets/kwame_test_2.mp3"
                     data-error="Audio not available offline — run examples/hear_kwame.py"
                     data-label="Kwame call audio"
                     aria-label="Play call audio">
@@ -4642,7 +4642,7 @@ function startTypewriter(container, opts) {
           keywords: ['book', 'booking', 'reserve', 'reservation', 'room', 'rooms',
                      'check in', 'check-in', 'stay', 'night', 'nights'],
           text: "Ah, lovely! When would you like to check in? We have standard at $80, deluxe at $120, and executive suites at $200 per night.",
-          audio: "kwame_test_2.mp3",
+          audio: "assets/kwame_test_2.mp3",
         },
         {
           keywords: ['friday','saturday','sunday','monday','tuesday','wednesday','thursday',
@@ -4650,7 +4650,7 @@ function startTypewriter(container, opts) {
                      'standard','deluxe','executive','suite','single','double',
                      'this week'],
           text: "Let me check... yes, we have a deluxe room available this Friday. That's $120 per night, breakfast included. Shall I hold the booking for you?",
-          audio: "kwame_test_3.mp3",
+          audio: "assets/kwame_test_3.mp3",
         },
         {
           keywords: ['yes','please','confirm','go ahead','sure','ok','okay','yep',
@@ -4705,7 +4705,7 @@ function startTypewriter(container, opts) {
 
   const GREETING = {
     text: "Hello? Yes, Adinkra Hotel. Kwame speaking. How can I help you today?",
-    audio: "kwame_test_1.mp3",
+    audio: "assets/kwame_test_1.mp3",
     chips: null,  // we use INITIAL_CHIPS for the opener
   };
 

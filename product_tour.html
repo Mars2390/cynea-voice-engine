@@ -1,0 +1,568 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Product tour — Cynea Voice Engine</title>
+<meta name="description" content="A 60-second guided walkthrough of the Cynea agent manager." />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=DM+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
+body {
+  font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  font-size: 14px; line-height: 1.55;
+  -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale;
+  color: #F5F5F5;
+  background:
+    radial-gradient(900px 500px at 0% -10%, rgba(0,212,255,0.08), transparent 60%),
+    radial-gradient(800px 460px at 100% -10%, rgba(167,139,250,0.05), transparent 65%),
+    #050505;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* ── nav ──────────────────────────────────────────────────────── */
+.cynea-nav {
+  position: sticky; top: 0; z-index: 30;
+  display: flex; align-items: center; gap: 16px;
+  padding: 14px 32px;
+  background: rgba(5,5,5,0.85);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border-bottom: 1px solid #1E1E1E;
+}
+.nav-brand { display: inline-flex; align-items: baseline; gap: 10px; text-decoration: none; }
+.brand-mark {
+  font-family: 'Syne', sans-serif; font-weight: 800;
+  font-size: 18px; letter-spacing: 0.18em;
+  color: #00D4FF;
+  text-shadow: 0 0 14px rgba(0,212,255,0.45);
+}
+.brand-tag {
+  font-family: 'Syne', sans-serif; font-weight: 600;
+  font-size: 9px; letter-spacing: 0.32em; color: #8A8A8A;
+}
+.nav-links { list-style: none; padding: 0; margin: 0 auto; display: flex; gap: 26px; }
+.nav-links a {
+  color: #8A8A8A; text-decoration: none; font-size: 13px; font-weight: 500;
+  position: relative; padding-bottom: 2px; transition: color 120ms ease;
+}
+.nav-links a:hover { color: #F5F5F5; }
+.nav-links a.active { color: #F5F5F5; }
+.nav-links a.active::after {
+  content: ""; position: absolute; left: 0; right: 0; bottom: -2px;
+  height: 1px; background: #00D4FF;
+}
+.btn {
+  font-family: inherit; font-weight: 600; font-size: 13px;
+  padding: 9px 18px; border-radius: 999px; cursor: pointer;
+  border: 1px solid #1E1E1E; background: #0E0E0E; color: #F5F5F5;
+  text-decoration: none;
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  transition: transform 180ms cubic-bezier(.2,.8,.2,1), box-shadow 220ms ease, filter 120ms ease, background 200ms ease;
+}
+.btn:hover { transform: translateY(-1px) scale(1.02); }
+.btn-outline { background: transparent; color: #00D4FF; border-color: #00D4FF; }
+.btn-outline:hover { background: rgba(0,212,255,0.08); }
+.btn-primary { background: #00D4FF; color: #001218; border-color: #00D4FF; }
+.btn-primary:hover { box-shadow: 0 0 0 1px #00D4FF, 0 0 24px rgba(0,212,255,0.45); }
+.btn-ghost { background: transparent; color: #8A8A8A; border-color: transparent; }
+.btn-ghost:hover { color: #F5F5F5; }
+@media (max-width: 720px) { .nav-links { display: none; } }
+
+/* ── page hero ────────────────────────────────────────────────── */
+main { max-width: 980px; margin: 0 auto; padding: 56px 32px 80px; }
+@media (max-width: 720px) { main { padding: 40px 16px 48px; } }
+
+.tour-hero { text-align: center; margin-bottom: 48px; }
+.tour-eyebrow {
+  display: inline-block; font-family: 'JetBrains Mono', monospace;
+  font-weight: 600; font-size: 11px; letter-spacing: 0.18em;
+  color: #00D4FF; text-transform: uppercase; margin-bottom: 14px;
+}
+.tour-hero h1 {
+  font-family: 'Syne', sans-serif; font-weight: 800;
+  font-size: clamp(32px, 4.5vw, 48px); margin: 0 0 12px;
+  letter-spacing: -0.01em;
+}
+.tour-hero p { color: #8A8A8A; margin: 0 auto; max-width: 580px; font-size: 16px; }
+
+/* ── tour stage (where the highlighted mock + step content live) ── */
+.tour-stage {
+  background: #050505;
+  border: 1px solid #1E1E1E; border-radius: 18px;
+  padding: 36px 32px;
+  position: relative; overflow: hidden;
+}
+.tour-stage::before {
+  content: ""; position: absolute; inset: 0; pointer-events: none;
+  background-image:
+    linear-gradient(rgba(0,212,255,0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0,212,255,0.04) 1px, transparent 1px);
+  background-size: 28px 28px;
+  mask-image: radial-gradient(ellipse 600px 400px at 50% 30%, black 30%, transparent 80%);
+  -webkit-mask-image: radial-gradient(ellipse 600px 400px at 50% 30%, black 30%, transparent 80%);
+  opacity: 0.5;
+}
+.tour-stage-inner { position: relative; z-index: 1; min-height: 420px; }
+
+.tour-step { display: none; animation: tourStepIn 360ms cubic-bezier(.2,.8,.2,1); }
+.tour-step.active { display: block; }
+@keyframes tourStepIn {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.tour-step-num {
+  display: inline-block;
+  font-family: 'JetBrains Mono', monospace; font-size: 11px;
+  letter-spacing: 0.16em; color: #00D4FF; font-weight: 600;
+  text-transform: uppercase;
+  padding: 4px 10px;
+  border: 1px solid rgba(0,212,255,0.28);
+  background: rgba(0,212,255,0.08);
+  border-radius: 999px;
+  margin-bottom: 14px;
+}
+.tour-step h2 {
+  font-family: 'Syne', sans-serif; font-weight: 700;
+  font-size: clamp(22px, 3vw, 32px); margin: 0 0 14px;
+  letter-spacing: -0.01em;
+}
+.tour-step p {
+  color: #C7C7C7; font-size: 15px; line-height: 1.65;
+  max-width: 680px; margin: 0 0 24px;
+}
+
+/* ── mock UI snippets used as illustrations per step ─────────── */
+.mock {
+  background: linear-gradient(160deg, #111111 0%, #0E0E0E 100%);
+  border: 1px solid #1E1E1E; border-radius: 12px;
+  padding: 20px;
+  position: relative; overflow: hidden;
+}
+.mock-glow {
+  position: relative;
+  box-shadow: 0 0 0 2px #00D4FF, 0 0 36px rgba(0,212,255,0.4),
+              0 18px 48px rgba(0,212,255,0.12);
+  animation: mockPulse 2.4s ease-in-out infinite;
+}
+@keyframes mockPulse {
+  0%, 100% { box-shadow: 0 0 0 2px #00D4FF, 0 0 36px rgba(0,212,255,0.4); }
+  50%      { box-shadow: 0 0 0 2px #00D4FF, 0 0 56px rgba(0,212,255,0.7); }
+}
+.mock-label {
+  position: absolute; top: -10px; left: 16px;
+  background: #00D4FF; color: #001218;
+  padding: 3px 8px; border-radius: 999px;
+  font-size: 10px; font-weight: 700; letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+/* mock: agent grid (step 2) */
+.mock-agent-grid {
+  display: grid; gap: 12px;
+  grid-template-columns: repeat(2, 1fr);
+}
+@media (max-width: 540px) { .mock-agent-grid { grid-template-columns: 1fr; } }
+.mock-agent {
+  background: #0E0E0E; border: 1px solid #1E1E1E;
+  border-radius: 10px; padding: 14px;
+  display: flex; align-items: center; gap: 10px;
+}
+.mock-avatar {
+  width: 32px; height: 32px; border-radius: 50%;
+  background: linear-gradient(135deg, var(--accent), rgba(255,255,255,0.05));
+  display: inline-flex; align-items: center; justify-content: center;
+  font-family: 'Syne', sans-serif; font-weight: 800; font-size: 13px;
+  color: #001218;
+  flex-shrink: 0;
+  box-shadow: 0 0 0 2px rgba(255,255,255,0.05), 0 0 12px var(--accent);
+}
+.mock-agent-id { flex: 1; min-width: 0; }
+.mock-agent-id strong { font-size: 13px; display: block; }
+.mock-agent-id span { font-size: 11px; color: #8A8A8A; }
+.mock-status-dot {
+  width: 6px; height: 6px; border-radius: 50%;
+  background: #10B981;
+  box-shadow: 0 0 0 0 rgba(16,185,129,0.7);
+  animation: mockDotPulse 1.8s cubic-bezier(.4,0,.6,1) infinite;
+}
+@keyframes mockDotPulse {
+  0%   { box-shadow: 0 0 0 0 rgba(16,185,129,0.7); }
+  60%  { box-shadow: 0 0 0 8px rgba(16,185,129,0); }
+  100% { box-shadow: 0 0 0 0 rgba(16,185,129,0); }
+}
+
+/* mock: create button (step 3) */
+.mock-create {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: #00D4FF; color: #001218;
+  padding: 14px 24px; border-radius: 10px;
+  font-weight: 700; font-size: 16px;
+  border: 1px solid #00D4FF;
+}
+
+/* mock: dropzone (step 4) */
+.mock-dropzone {
+  padding: 36px 22px;
+  border: 1.5px dashed rgba(0,212,255,0.6); border-radius: 12px;
+  text-align: center;
+  background: rgba(0,212,255,0.04);
+}
+.mock-dropzone p { margin: 0 0 8px; color: #C7C7C7; font-size: 13px; }
+.mock-dropzone .files {
+  display: inline-flex; gap: 6px; flex-wrap: wrap; justify-content: center;
+  margin-top: 10px;
+}
+.mock-file-pill {
+  font-family: 'JetBrains Mono', monospace; font-size: 11px;
+  background: #0E0E0E; border: 1px solid #1E1E1E; border-radius: 999px;
+  padding: 4px 10px; color: #F5F5F5;
+}
+
+/* mock: ops link (step 5) */
+.mock-ops {
+  display: inline-flex; align-items: center; gap: 10px;
+  padding: 12px 18px; border-radius: 10px;
+  background: rgba(0,212,255,0.10); color: #00D4FF;
+  font-weight: 600; font-size: 14px;
+  border: 1px solid rgba(0,212,255,0.4);
+}
+
+/* mock: chat bubble (step 6) */
+.mock-chat { display: flex; flex-direction: column; gap: 8px; }
+.mock-chat .bubble {
+  max-width: 80%; padding: 10px 14px; border-radius: 14px;
+  font-size: 13px; line-height: 1.5;
+}
+.mock-chat .from-user {
+  background: #00D4FF; color: #001218;
+  align-self: flex-end; border-bottom-right-radius: 4px; font-weight: 500;
+}
+.mock-chat .from-kwame {
+  background: #2a2a2a; color: #F5F5F5;
+  align-self: flex-start; border-bottom-left-radius: 4px;
+  border: 1px solid #1E1E1E;
+}
+
+/* mock: phone (step 7) */
+.mock-phone-row {
+  display: flex; gap: 22px; align-items: center; flex-wrap: wrap;
+}
+.mock-phone-row .stats {
+  font-family: 'JetBrains Mono', monospace;
+  display: grid; grid-template-columns: auto auto; gap: 6px 16px;
+  font-size: 13px;
+}
+.mock-phone-row .stats dt { color: #8A8A8A; }
+.mock-phone-row .stats dd { margin: 0; color: #F5F5F5; }
+
+/* ── progress dots ────────────────────────────────────────────── */
+.tour-progress {
+  display: flex; align-items: center; gap: 8px;
+  margin: 28px 0 20px;
+  justify-content: center;
+}
+.tour-dot {
+  width: 8px; height: 8px; border-radius: 50%;
+  background: #1E1E1E;
+  cursor: pointer;
+  transition: background 200ms ease, transform 200ms ease, box-shadow 200ms ease;
+}
+.tour-dot:hover { background: #2A2A2A; }
+.tour-dot.done { background: rgba(0,212,255,0.5); }
+.tour-dot.active {
+  background: #00D4FF;
+  transform: scale(1.4);
+  box-shadow: 0 0 12px rgba(0,212,255,0.6);
+}
+
+/* ── nav buttons ─────────────────────────────────────────────── */
+.tour-controls {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 14px; flex-wrap: wrap;
+  margin-top: 12px;
+}
+.tour-controls .left, .tour-controls .right {
+  display: inline-flex; align-items: center; gap: 10px;
+}
+
+.tour-skip { color: #8A8A8A; font-size: 12px; text-decoration: none; }
+.tour-skip:hover { color: #F5F5F5; text-decoration: underline; }
+
+/* ── footer ───────────────────────────────────────────────────── */
+.tour-footer {
+  border-top: 1px solid #1E1E1E;
+  margin-top: 56px; padding-top: 22px;
+  display: flex; justify-content: space-between; align-items: center;
+  font-size: 12px; color: #8A8A8A;
+}
+.tour-footer .dim { color: #5F5F5F; }
+@media (max-width: 540px) {
+  .tour-footer { flex-direction: column; gap: 8px; text-align: center; }
+}
+</style>
+</head>
+<body>
+
+<nav class="cynea-nav" id="topnav">
+  <a class="nav-brand" href="cynea_landing.html">
+    <span class="brand-mark">CYNEA</span>
+    <span class="brand-tag">VOICE ENGINE</span>
+  </a>
+  <ul class="nav-links">
+    <li><a href="product_tour.html" class="active">Product Tour</a></li>
+    <li><a href="demo_call_flow.html">Demo</a></li>
+    <li><a href="help_center.html">Help</a></li>
+    <li><a href="agent_manager.html">Dashboard</a></li>
+  </ul>
+  <a class="btn btn-outline" href="signin.html">Sign in</a>
+</nav>
+
+<main>
+  <header class="tour-hero">
+    <span class="tour-eyebrow">60-second tour</span>
+    <h1>See Cynea in action</h1>
+    <p>A guided walkthrough of the agent manager. Skip ahead, jump to any step, or explore on your own.</p>
+  </header>
+
+  <section class="tour-stage" aria-live="polite">
+    <div class="tour-stage-inner">
+
+      <!-- Step 1: Welcome -->
+      <article class="tour-step active" data-step="1">
+        <span class="tour-step-num">Step 1 of 7 · Welcome</span>
+        <h2>This is your Cynea Agent Manager</h2>
+        <p>Let us show you around in 60 seconds — what each section does, where to start, and how to deploy your first voice agent.</p>
+        <div style="display:flex; gap:10px; flex-wrap:wrap; align-items:center;">
+          <button class="btn btn-primary" id="startTourBtn" type="button">Start tour →</button>
+          <a class="tour-skip" href="agent_manager.html" id="skipLink">Skip tour</a>
+        </div>
+      </article>
+
+      <!-- Step 2: Agent Overview -->
+      <article class="tour-step" data-step="2">
+        <span class="tour-step-num">Step 2 of 7 · Agents</span>
+        <h2>These are your voice agents</h2>
+        <p>Each one handles calls for a different purpose — hotels, banking, restaurants, support. Click any agent to see their details, conversation history, and live metrics.</p>
+        <div class="mock mock-glow">
+          <span class="mock-label">Agent overview</span>
+          <div class="mock-agent-grid">
+            <div class="mock-agent">
+              <div class="mock-avatar" style="--accent:#00D4FF"><span>K</span></div>
+              <div class="mock-agent-id"><strong>Kwame</strong><span>Hotel Receptionist · Ghana</span></div>
+              <span class="mock-status-dot"></span>
+            </div>
+            <div class="mock-agent">
+              <div class="mock-avatar" style="--accent:#A78BFA"><span>A</span></div>
+              <div class="mock-agent-id"><strong>Amina</strong><span>Customer Service · Kenya</span></div>
+              <span class="mock-status-dot"></span>
+            </div>
+            <div class="mock-agent">
+              <div class="mock-avatar" style="--accent:#10B981"><span>K</span></div>
+              <div class="mock-agent-id"><strong>Kofi</strong><span>Restaurant · Ghana</span></div>
+              <span class="mock-status-dot"></span>
+            </div>
+            <div class="mock-agent">
+              <div class="mock-avatar" style="--accent:#F59E0B"><span>A</span></div>
+              <div class="mock-agent-id"><strong>Adwoa</strong><span>Complaints · Ghana</span></div>
+              <span class="mock-status-dot" style="background:#F59E0B"></span>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <!-- Step 3: Create New Agent -->
+      <article class="tour-step" data-step="3">
+        <span class="tour-step-num">Step 3 of 7 · Create</span>
+        <h2>This is where the magic happens</h2>
+        <p>Click <em>Create New Agent</em> to launch the wizard. You'll pick a persona, upload your scripts, choose a voice, and deploy to a phone number — all in about five minutes.</p>
+        <div class="mock mock-glow" style="text-align:center; padding:28px 22px;">
+          <span class="mock-label">Create button</span>
+          <div class="mock-create"><span style="font-size:18px;line-height:1;">+</span> Create New Agent</div>
+          <p style="margin:14px 0 0; color:#8A8A8A; font-size:12px;">Six steps · five minutes · zero code</p>
+        </div>
+      </article>
+
+      <!-- Step 4: Upload Content -->
+      <article class="tour-step" data-step="4">
+        <span class="tour-step-num">Step 4 of 7 · Content</span>
+        <h2>Upload your scripts, PDFs, or paste a URL</h2>
+        <p>Our AI reads your content and trains your agent to handle real customer conversations. No coding, no prompt engineering — just drop in what your team already uses.</p>
+        <div class="mock mock-glow">
+          <span class="mock-label">Upload content</span>
+          <div class="mock-dropzone">
+            <p>Drag &amp; drop scripts, PDFs, or paste a URL</p>
+            <div class="files">
+              <span class="mock-file-pill">📄 hotel_scripts.pdf · 18.2 KB</span>
+              <span class="mock-file-pill">📄 menu_2026.pdf · 4.1 KB</span>
+              <span class="mock-file-pill">🌐 adinkrahotel.com</span>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <!-- Step 5: Operations Center -->
+      <article class="tour-step" data-step="5">
+        <span class="tour-step-num">Step 5 of 7 · Operations</span>
+        <h2>Your entire call center in one screen</h2>
+        <p>Once your agents are live, the Operations Center shows you everything: active calls, wait times, agent status, cost savings, and full call transcripts. Designed for ops teams to run a fleet of voice agents without leaving the dashboard.</p>
+        <div class="mock mock-glow" style="text-align:center;">
+          <span class="mock-label">Operations link</span>
+          <div class="mock-ops">📊 Operations Center</div>
+          <p style="margin:14px 0 0; color:#8A8A8A; font-size:12px;">Live calls · sentiment · cost-per-call · exports</p>
+        </div>
+      </article>
+
+      <!-- Step 6: Test Before Launch -->
+      <article class="tour-step" data-step="6">
+        <span class="tour-step-num">Step 6 of 7 · Test</span>
+        <h2>Talk to your agent before the first customer does</h2>
+        <p>Every agent comes with a test chat. Try every persona, fine-tune the tone, sanity-check the escalation rules — all before going live.</p>
+        <div class="mock mock-glow">
+          <span class="mock-label">Test chat</span>
+          <div class="mock-chat">
+            <div class="bubble from-kwame">Hello? Adinkra Hotel, Kwame speaking. How can I help?</div>
+            <div class="bubble from-user">Hi, do you have rooms for Friday?</div>
+            <div class="bubble from-kwame">Mm, let me check… yes, we have a deluxe room available. Friday to Sunday, two adults?</div>
+          </div>
+        </div>
+      </article>
+
+      <!-- Step 7: Ready -->
+      <article class="tour-step" data-step="7">
+        <span class="tour-step-num">Step 7 of 7 · Ready</span>
+        <h2>You're all set</h2>
+        <p>Create your first agent and watch it go live. Need a hand? The Help center has guides, FAQs, and a direct line to our team.</p>
+        <div class="mock" style="text-align:center; padding:28px 22px;">
+          <div class="mock-phone-row" style="justify-content:center;">
+            <div style="font-size:48px;">🎉</div>
+            <dl class="stats">
+              <dt>Setup time</dt><dd>~5 min</dd>
+              <dt>Free trial</dt><dd>500 minutes</dd>
+              <dt>Phone</dt><dd>Africa's Talking · Twilio</dd>
+            </dl>
+          </div>
+        </div>
+        <div style="display:flex; gap:10px; flex-wrap:wrap; margin-top:24px; align-items:center;">
+          <a class="btn btn-primary" id="createFirstBtn" href="agent_manager.html?createAgent=1">Create my first agent</a>
+          <a class="tour-skip" href="agent_manager.html">Explore on my own</a>
+        </div>
+      </article>
+
+    </div>
+
+    <!-- progress dots -->
+    <div class="tour-progress" role="tablist" aria-label="Tour progress">
+      <button class="tour-dot active" data-go="1" aria-label="Step 1" type="button"></button>
+      <button class="tour-dot" data-go="2" aria-label="Step 2" type="button"></button>
+      <button class="tour-dot" data-go="3" aria-label="Step 3" type="button"></button>
+      <button class="tour-dot" data-go="4" aria-label="Step 4" type="button"></button>
+      <button class="tour-dot" data-go="5" aria-label="Step 5" type="button"></button>
+      <button class="tour-dot" data-go="6" aria-label="Step 6" type="button"></button>
+      <button class="tour-dot" data-go="7" aria-label="Step 7" type="button"></button>
+    </div>
+
+    <!-- prev / next controls -->
+    <div class="tour-controls">
+      <div class="left">
+        <button class="btn btn-ghost" id="prevBtn" type="button" disabled>← Back</button>
+      </div>
+      <div class="right">
+        <a class="tour-skip" href="agent_manager.html" id="skipLink2">Skip tour</a>
+        <button class="btn btn-primary" id="nextBtn" type="button">Next →</button>
+      </div>
+    </div>
+  </section>
+
+  <footer class="tour-footer">
+    <div><strong>Cynea AI</strong><span class="dim"> — Made in Kenya</span></div>
+    <div class="dim">Reset tour: localStorage.removeItem('cynea_tour_seen')</div>
+  </footer>
+</main>
+
+<script>
+'use strict';
+(function() {
+  const STEP_COUNT = 7;
+  let current = 1;
+
+  const params = new URLSearchParams(location.search);
+  const forceTour = params.get('tour') === '1';
+
+  const stepEls = Array.from(document.querySelectorAll('.tour-step'));
+  const dotEls = Array.from(document.querySelectorAll('.tour-dot'));
+  const prevBtn = document.getElementById('prevBtn');
+  const nextBtn = document.getElementById('nextBtn');
+  const startBtn = document.getElementById('startTourBtn');
+
+  function setStep(n) {
+    n = Math.max(1, Math.min(STEP_COUNT, n));
+    current = n;
+    stepEls.forEach((el) => el.classList.toggle('active', el.dataset.step === String(n)));
+    dotEls.forEach((d, i) => {
+      const idx = i + 1;
+      d.classList.toggle('active', idx === n);
+      d.classList.toggle('done', idx < n);
+    });
+    prevBtn.disabled = (n === 1);
+    if (n === STEP_COUNT) {
+      nextBtn.textContent = 'Open dashboard ↗';
+    } else if (n === 1) {
+      nextBtn.textContent = 'Begin tour →';
+    } else {
+      nextBtn.textContent = 'Next →';
+    }
+  }
+
+  prevBtn.addEventListener('click', () => setStep(current - 1));
+  nextBtn.addEventListener('click', () => {
+    if (current === STEP_COUNT) {
+      try { localStorage.setItem('cynea_tour_seen', '1'); } catch (_) {}
+      location.href = 'agent_manager.html';
+      return;
+    }
+    setStep(current + 1);
+  });
+  startBtn.addEventListener('click', () => setStep(2));
+  dotEls.forEach((d) => {
+    d.addEventListener('click', () => {
+      const idx = parseInt(d.dataset.go, 10);
+      if (idx <= current + 1) setStep(idx);  // can't skip ahead more than one
+    });
+  });
+
+  // Keyboard navigation
+  document.addEventListener('keydown', (e) => {
+    if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+    if (e.key === 'ArrowRight') { e.preventDefault(); if (current < STEP_COUNT) setStep(current + 1); }
+    else if (e.key === 'ArrowLeft') { e.preventDefault(); if (current > 1) setStep(current - 1); }
+    else if (e.key === 'Escape') { location.href = 'agent_manager.html'; }
+  });
+
+  // Mark tour as seen when the user finishes any meaningful step.
+  // ?tour=1 forces the tour to display fresh.
+  const seen = (() => { try { return localStorage.getItem('cynea_tour_seen') === '1'; } catch (_) { return false; } })();
+  if (forceTour) {
+    try { localStorage.removeItem('cynea_tour_seen'); } catch (_) {}
+  }
+  // (We don't auto-redirect logged-in users away — this page exists for both
+  // first-timers and people deep-linking. localStorage is just informational
+  // for any future agent_manager.html integration that wants to gate the
+  // overlay-tour behaviour.)
+
+  setStep(1);
+})();
+</script>
+</body>
+</html>

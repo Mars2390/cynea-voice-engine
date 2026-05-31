@@ -1,0 +1,9 @@
+.git
+.env
+*.py
+cynea/
+cynea_africa/
+local_setup/
+tests/
+examples/
+node_modules/

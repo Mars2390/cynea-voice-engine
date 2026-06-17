@@ -439,6 +439,82 @@ h1,h2,h3{letter-spacing:-.02em;font-weight:600;margin:0}
 .bg-dots{position:absolute;inset:-64px;background-image:radial-gradient(rgba(20,22,26,.06) 1px,transparent 1.7px);background-size:32px 32px;opacity:.6;animation:bgDots 7s linear infinite;will-change:transform}
 @keyframes bgDots{from{transform:translate3d(0,0,0)}to{transform:translate3d(0,-32px,0)}}
 
+/* ════════════════════ MAGIC LAYER (GPU-only, reduced-motion safe) ════════════════════ */
+/* hero floating particles */
+.hero-particles{position:absolute;inset:0;z-index:0;overflow:hidden;pointer-events:none}
+.hero-particles span{position:absolute;bottom:-12px;border-radius:50%;opacity:0;filter:blur(.4px);animation:floatUp var(--dur,14s) linear var(--dly,0s) infinite}
+@keyframes floatUp{0%{transform:translate3d(0,0,0);opacity:0}10%{opacity:var(--o,.5)}88%{opacity:var(--o,.5)}100%{transform:translate3d(var(--dx,0),-94vh,0);opacity:0}}
+
+/* cursor glow + click sparks (desktop, injected by JS) */
+.cursor-glow{position:fixed;left:0;top:0;width:320px;height:320px;border-radius:50%;pointer-events:none;z-index:70;opacity:0;transition:opacity .4s ease;will-change:transform;background:radial-gradient(circle,rgba(0,212,255,.16),transparent 60%);mix-blend-mode:multiply}
+.spark{position:fixed;width:7px;height:7px;margin:-3px 0 0 -3px;border-radius:50%;pointer-events:none;z-index:71;animation:spark .8s cubic-bezier(.2,.7,.3,1) forwards}
+@keyframes spark{0%{transform:translate3d(0,0,0) scale(1);opacity:1}100%{transform:translate3d(var(--tx),var(--ty),0) scale(.2);opacity:0}}
+
+/* parallax of the living background */
+.bg{transform:translate3d(0,calc(var(--sy,0px) * -0.03),0)}
+
+/* headline shimmer sweep */
+#heroTitle{position:relative;overflow:hidden}
+#heroTitle::after{content:"";position:absolute;top:0;left:-60%;width:45%;height:100%;pointer-events:none;background:linear-gradient(100deg,transparent,rgba(255,255,255,.5),transparent);transform:skewX(-12deg);animation:sweep 5.5s ease-in-out 2s infinite}
+@keyframes sweep{0%{left:-60%}16%{left:130%}100%{left:130%}}
+
+/* first-visit word reveal */
+.word-in .ww{display:inline-block;opacity:0;transform:translateY(14px);animation:wordIn .55s cubic-bezier(.2,.8,.2,1) forwards}
+@keyframes wordIn{to{opacity:1;transform:none}}
+
+/* orb: Saturn ring + prismatic edge + one-time load wave */
+.orb-ring{position:absolute;left:50%;top:50%;width:300px;height:300px;margin:-150px 0 0 -150px;border-radius:50%;pointer-events:none;
+  background:conic-gradient(from 0deg,transparent 0deg,rgba(0,212,255,.7) 60deg,rgba(167,139,250,.6) 120deg,transparent 200deg,transparent 360deg);
+  -webkit-mask:radial-gradient(closest-side,transparent 76%,#000 79%,#000 84%,transparent 86%);mask:radial-gradient(closest-side,transparent 76%,#000 79%,#000 84%,transparent 86%);
+  transform:rotateX(70deg) rotate(0);animation:ringSpin 12s linear infinite;opacity:.85}
+@keyframes ringSpin{to{transform:rotateX(70deg) rotate(360deg)}}
+.callprev[data-state="ringing"] .orb-ring{animation-duration:6s}
+.callprev[data-state="live"] .orb-ring{animation-duration:22s;opacity:.4}
+.orb::after{content:"";position:absolute;inset:0;border-radius:50%;padding:2px;pointer-events:none;z-index:2;
+  background:conic-gradient(from 0deg,#ff5e8a,#ffd36e,#5effa0,#5ec8ff,#a78bfa,#ff5e8a);
+  -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);mask-composite:exclude;
+  opacity:.4;mix-blend-mode:screen;animation:orbSpin 8s linear infinite}
+.cp-stage::before{content:"";position:absolute;left:50%;top:50%;width:210px;height:210px;margin:-105px 0 0 -105px;border-radius:50%;border:2px solid rgba(0,212,255,.5);opacity:0;pointer-events:none;animation:orbLoad 1.8s ease-out .4s 1}
+@keyframes orbLoad{0%{transform:scale(.55);opacity:.7}100%{transform:scale(3.4);opacity:0}}
+
+/* product switcher: cursor spotlight + traveling border glow + media zoom */
+.tile{--mx:50%;--my:50%}
+.tile-media{transition:transform .55s cubic-bezier(.2,.8,.2,1)}
+.tile:hover .tile-media{transform:scale(1.07)}
+.tile::after{content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;z-index:2;opacity:0;transition:opacity .3s;background:radial-gradient(240px circle at var(--mx) var(--my),rgba(255,255,255,.4),transparent 60%);mix-blend-mode:overlay}
+.tile:hover::after{opacity:1}
+.tile::before{content:"";position:absolute;inset:-1px;border-radius:inherit;padding:2px;pointer-events:none;z-index:3;opacity:0;transition:opacity .3s;
+  background:conic-gradient(from 0deg,transparent 0deg,#00D4FF 45deg,#A78BFA 90deg,transparent 150deg,transparent 360deg);
+  -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);mask-composite:exclude;
+  animation:tileSpin 3s linear infinite}
+.tile:hover::before{opacity:1}
+@keyframes tileSpin{to{transform:rotate(360deg)}}
+
+/* section heading underline draws on reveal */
+.sec-head h2{position:relative;display:inline-block}
+.sec-head h2::after{content:"";position:absolute;left:0;bottom:-10px;height:2px;width:100%;border-radius:2px;background:linear-gradient(90deg,#00D4FF,#A78BFA);transform:scaleX(0);transform-origin:left;transition:transform .8s cubic-bezier(.2,.8,.2,1) .2s}
+.sec-head.in h2::after{transform:scaleX(1)}
+
+/* staggered card reveals */
+.feat-grid .rv:nth-child(2),.uc-grid .rv:nth-child(2),.agents .rv:nth-child(2),.news .rv:nth-child(2),.shots .rv:nth-child(2){transition-delay:.09s}
+.feat-grid .rv:nth-child(3),.uc-grid .rv:nth-child(3),.agents .rv:nth-child(3),.news .rv:nth-child(3){transition-delay:.18s}
+.feat-grid .rv:nth-child(4),.uc-grid .rv:nth-child(4),.agents .rv:nth-child(4){transition-delay:.27s}
+.uc-grid .rv:nth-child(5),.feat-grid .rv:nth-child(5){transition-delay:.36s}
+.feat-grid .rv:nth-child(6){transition-delay:.45s}
+
+/* industry photo shimmer on hover */
+.uc::after{content:"";position:absolute;inset:0;z-index:2;pointer-events:none;opacity:0;background:linear-gradient(105deg,transparent 35%,rgba(255,255,255,.45) 50%,transparent 65%);transform:translateX(-100%)}
+.uc:hover::after{opacity:1;animation:ucShimmer 1s ease}
+@keyframes ucShimmer{from{transform:translateX(-100%)}to{transform:translateX(100%)}}
+
+/* globe pulsing edge glow */
+.worldmap::after{content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;z-index:4;animation:globeGlow 3.6s ease-in-out infinite}
+@keyframes globeGlow{0%,100%{box-shadow:inset 0 0 50px rgba(0,212,255,.14)}50%{box-shadow:inset 0 0 95px rgba(0,212,255,.4)}}
+
+/* hero copy load fade */
+.hero-copy{animation:fadeUp .8s ease both}
+@keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
+
 /* product switcher media */
 .tile-media{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0}
 .tile-play{position:relative;z-index:1}
@@ -502,10 +578,11 @@ h1,h2,h3{letter-spacing:-.02em;font-weight:600;margin:0}
   <div class="hero-orb orb-a"></div>
   <div class="hero-orb orb-b"></div>
   <div class="hero-orb orb-c"></div>
+  <div class="hero-particles" id="heroParticles" aria-hidden="true"></div>
   <div class="wrap hero-grid">
-    <div>
+    <div class="hero-copy">
       <span class="eyebrow">Voice AI · For every market</span>
-      <h1>Voice agents that<br>sound <span class="grad">human</span>, everywhere</h1>
+      <h1 id="heroTitle">Voice agents that<br>sound <span class="grad">human</span>, everywhere</h1>
       <p class="hero-sub">Deploy agents that answer calls, handle interruptions, and speak with genuine warmth — live on your phone line in days, not months.</p>
       <div class="hero-cta">
         <a class="btn btn-dark" href="https://calendly.com/albertmomanyi07/30min" target="_blank" rel="noopener">Get started →</a>
@@ -522,6 +599,7 @@ h1,h2,h3{letter-spacing:-.02em;font-weight:600;margin:0}
       <div class="cp-stage">
         <div class="cp-rings" aria-hidden="true"><span></span><span></span><span></span></div>
         <div class="orb-aura" aria-hidden="true"></div>
+        <div class="orb-ring" aria-hidden="true"></div>
         <div class="orb-bars" aria-hidden="true"><i style="--a:0deg;--d:0s"></i><i style="--a:15deg;--d:.05s"></i><i style="--a:30deg;--d:.1s"></i><i style="--a:45deg;--d:.15s"></i><i style="--a:60deg;--d:.2s"></i><i style="--a:75deg;--d:.25s"></i><i style="--a:90deg;--d:.3s"></i><i style="--a:105deg;--d:.35s"></i><i style="--a:120deg;--d:.4s"></i><i style="--a:135deg;--d:.45s"></i><i style="--a:150deg;--d:.5s"></i><i style="--a:165deg;--d:.55s"></i><i style="--a:180deg;--d:.6s"></i><i style="--a:195deg;--d:.65s"></i><i style="--a:210deg;--d:.7s"></i><i style="--a:225deg;--d:.75s"></i><i style="--a:240deg;--d:.8s"></i><i style="--a:255deg;--d:.85s"></i><i style="--a:270deg;--d:.9s"></i><i style="--a:285deg;--d:.95s"></i><i style="--a:300deg;--d:1s"></i><i style="--a:315deg;--d:1.05s"></i><i style="--a:330deg;--d:1.1s"></i><i style="--a:345deg;--d:1.15s"></i></div>
         <div class="orb" id="orb">
           <div class="orb-grad"></div>
@@ -952,6 +1030,94 @@ var mband=document.querySelector('.metrics'); if(mband) mio.observe(mband);
 document.querySelectorAll('video').forEach(function(v){
   v.muted=true; var p=v.play&&v.play(); if(p&&p.catch)p.catch(function(){});
 });
+
+/* ════ magic layer — particles, cursor glow, sparks, parallax (GPU-only) ════ */
+(function(){
+  var reduce=matchMedia('(prefers-reduced-motion:reduce)').matches;
+  var fine=matchMedia('(hover:hover) and (pointer:fine)').matches;
+  var C=['#00D4FF','#A78BFA','#FFB5A7'];
+
+  // hero floating particles
+  var hp=document.getElementById('heroParticles');
+  if(hp&&!reduce){
+    var n=innerWidth<700?42:84, fr=document.createDocumentFragment();
+    for(var i=0;i<n;i++){
+      var s=document.createElement('span'), z=(Math.random()*2.5+1.5).toFixed(1);
+      s.style.cssText='left:'+(Math.random()*100).toFixed(2)+'%;width:'+z+'px;height:'+z+'px;background:'+C[i%3]+
+        ';--dx:'+((Math.random()*60-30)|0)+'px;--dur:'+(Math.random()*12+11).toFixed(1)+'s;--dly:'+(-Math.random()*22).toFixed(1)+'s;--o:'+(Math.random()*.45+.3).toFixed(2);
+      fr.appendChild(s);
+    }
+    hp.appendChild(fr);
+  }
+
+  // cursor glow (desktop)
+  if(fine&&!reduce){
+    var g=document.createElement('div'); g.className='cursor-glow'; document.body.appendChild(g); var idle;
+    addEventListener('pointermove',function(e){
+      g.style.transform='translate3d('+(e.clientX-160)+'px,'+(e.clientY-160)+'px,0)';
+      g.style.opacity='1'; clearTimeout(idle); idle=setTimeout(function(){g.style.opacity='0';},800);
+    },{passive:true});
+  }
+
+  // click spark burst on hero (desktop)
+  var hero=document.getElementById('top');
+  if(hero&&fine&&!reduce){
+    hero.addEventListener('pointerdown',function(e){
+      if(e.target.closest('a,button,input')) return;
+      for(var i=0;i<13;i++){
+        var p=document.createElement('span'); p.className='spark';
+        var a=Math.random()*6.283, d=Math.random()*70+34;
+        p.style.cssText='left:'+e.clientX+'px;top:'+e.clientY+'px;background:'+C[i%3]+
+          ';--tx:'+(Math.cos(a)*d|0)+'px;--ty:'+(Math.sin(a)*d|0)+'px';
+        document.body.appendChild(p); setTimeout(p.remove.bind(p),820);
+      }
+    });
+  }
+
+  // parallax of living background on scroll
+  if(!reduce){
+    var t=false;
+    addEventListener('scroll',function(){
+      if(t)return; t=true;
+      requestAnimationFrame(function(){document.documentElement.style.setProperty('--sy',scrollY+'px'); t=false;});
+    },{passive:true});
+  }
+
+  // switcher cursor spotlight
+  if(fine){
+    document.querySelectorAll('.tile').forEach(function(c){
+      c.addEventListener('pointermove',function(e){
+        var r=c.getBoundingClientRect();
+        c.style.setProperty('--mx',(e.clientX-r.left)+'px');
+        c.style.setProperty('--my',(e.clientY-r.top)+'px');
+      },{passive:true});
+    });
+  }
+
+  // first-visit word-by-word headline
+  try{
+    var h=document.getElementById('heroTitle');
+    if(h&&!reduce&&!localStorage.getItem('cynea_seen')){
+      h.classList.add('word-in'); var k=0;
+      (function w(node){
+        [].slice.call(node.childNodes).forEach(function(c){
+          if(c.nodeType===3){
+            var f=document.createDocumentFragment();
+            c.textContent.split(/(\s+)/).forEach(function(tx){
+              if(tx.trim()===''){f.appendChild(document.createTextNode(tx));return;}
+              var sp=document.createElement('span'); sp.className='ww'; sp.textContent=tx; sp.style.animationDelay=(k++*0.07)+'s'; f.appendChild(sp);
+            });
+            node.replaceChild(f,c);
+          }else if(c.nodeType===1){
+            if(c.classList&&c.classList.contains('grad')){c.classList.add('ww'); c.style.animationDelay=(k++*0.07)+'s';}
+            else w(c);
+          }
+        });
+      })(h);
+      localStorage.setItem('cynea_seen','1');
+    }
+  }catch(e){}
+})();
 </script>
 </body>
 </html>

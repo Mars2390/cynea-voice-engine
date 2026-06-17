@@ -316,6 +316,27 @@ h1,h2,h3{letter-spacing:-.02em;font-weight:600;margin:0}
 @keyframes ringPulse{0%{box-shadow:0 0 0 0 rgba(16,185,129,.5)}70%{box-shadow:0 0 0 15px rgba(16,185,129,0)}100%{box-shadow:0 0 0 0 rgba(16,185,129,0)}}
 .callprev [hidden]{display:none!important}
 
+/* ── built for every industry (photo cards) ──────────────────────── */
+.uc-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:14px}
+@media(max-width:1000px){.uc-grid{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:620px){.uc-grid{grid-template-columns:repeat(2,1fr)}}
+.uc{position:relative;overflow:hidden;border-radius:var(--r);aspect-ratio:3/4;border:1px solid var(--line);
+  background:linear-gradient(160deg,#cfe9f5,#e8dcff);box-shadow:0 12px 30px rgba(22,22,22,.08);
+  transition:transform .3s cubic-bezier(.2,.8,.2,1),box-shadow .3s}
+.uc:hover{transform:translateY(-5px);box-shadow:0 26px 54px rgba(22,22,22,.18)}
+.uc img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:transform .55s cubic-bezier(.2,.8,.2,1)}
+.uc:hover img{transform:scale(1.08)}
+.uc-scrim{position:absolute;inset:0;background:linear-gradient(180deg,transparent 42%,rgba(10,12,16,.74) 100%)}
+.uc-label{position:absolute;left:0;right:0;bottom:0;z-index:1;padding:16px 18px;color:#fff;font-size:17px;font-weight:600;letter-spacing:-.01em}
+.uc-fallback img{display:none}
+.uc-fallback .uc-scrim{background:linear-gradient(160deg,rgba(0,137,168,.55),rgba(124,92,252,.45))}
+
+/* agents grid → four-up */
+.agents{grid-template-columns:repeat(4,1fr)}
+@media(max-width:1040px){.agents{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:560px){.agents{grid-template-columns:1fr}}
+.agent-orb.m{background:radial-gradient(120% 130% at 70% 70%,#FFD7A6,#E0902F 72%)}
+
 /* ── what's new gradient cards ────────────────────────────────────── */
 .news{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
 @media(max-width:820px){.news{grid-template-columns:1fr}}
@@ -550,6 +571,22 @@ h1,h2,h3{letter-spacing:-.02em;font-weight:600;margin:0}
   </div>
 </section>
 
+<!-- ─── BUILT FOR EVERY INDUSTRY ────────────────────────────────── -->
+<section class="sec wrap" id="industries">
+  <div class="sec-head center rv">
+    <span class="eyebrow">Industries</span>
+    <h2>Built for every industry</h2>
+    <p>One engine, tuned to how each business talks to its customers.</p>
+  </div>
+  <div class="uc-grid">
+    <article class="uc rv"><img src="assets/usecase-hotel.jpg" alt="Hotels" loading="lazy" onerror="this.closest('.uc').classList.add('uc-fallback')"><div class="uc-scrim" aria-hidden="true"></div><div class="uc-label">Hotels</div></article>
+    <article class="uc rv"><img src="assets/usecase-banking.jpg" alt="Banking" loading="lazy" onerror="this.closest('.uc').classList.add('uc-fallback')"><div class="uc-scrim" aria-hidden="true"></div><div class="uc-label">Banking</div></article>
+    <article class="uc rv"><img src="assets/usecase-restaurant.jpg" alt="Restaurants" loading="lazy" onerror="this.closest('.uc').classList.add('uc-fallback')"><div class="uc-scrim" aria-hidden="true"></div><div class="uc-label">Restaurants</div></article>
+    <article class="uc rv"><img src="assets/usecase-callcenter.jpg" alt="Call Centers" loading="lazy" onerror="this.closest('.uc').classList.add('uc-fallback')"><div class="uc-scrim" aria-hidden="true"></div><div class="uc-label">Call Centers</div></article>
+    <article class="uc rv"><img src="assets/usecase-clinic.jpg" alt="Clinics" loading="lazy" onerror="this.closest('.uc').classList.add('uc-fallback')"><div class="uc-scrim" aria-hidden="true"></div><div class="uc-label">Clinics</div></article>
+  </div>
+</section>
+
 <!-- ─── WHAT'S NEW ──────────────────────────────────────────────── -->
 <section class="sec wrap">
   <div class="sec-head center rv">
@@ -627,7 +664,7 @@ h1,h2,h3{letter-spacing:-.02em;font-weight:600;margin:0}
 <section class="sec wrap" id="agents">
   <div class="sec-head rv">
     <span class="eyebrow">Agents</span>
-    <h2>Three agents shipping today</h2>
+    <h2>Four agents shipping today</h2>
     <p>All run on the same engine. Add another by writing one Python file and a JSON config.</p>
   </div>
   <div class="agents">
@@ -652,13 +689,23 @@ h1,h2,h3{letter-spacing:-.02em;font-weight:600;margin:0}
       </div>
     </article>
     <article class="agent rv">
-      <div class="agent-orb f"><b>● Ready for calls</b></div>
+      <div class="agent-orb f"><img src="assets/avatar-kofi.jpg" alt="" loading="lazy" onerror="this.remove()"><b>● Ready for calls</b></div>
       <div class="agent-body">
         <h3>Kofi</h3>
         <div class="agent-role">Restaurant Orders</div>
         <p>Takes dine-in, takeaway and delivery orders with allergy checks and card payment.</p>
         <div class="agent-meta">en-GB-RyanNeural</div>
         <button class="btn btn-sm" data-audio="assets/kofi_test_1.mp3">▶ Hear demo</button>
+      </div>
+    </article>
+    <article class="agent rv">
+      <div class="agent-orb m"><img src="assets/avatar-maya.jpg" alt="" loading="lazy" onerror="this.remove()"><b>● Ready for calls</b></div>
+      <div class="agent-body">
+        <h3>Maya</h3>
+        <div class="agent-role">Bookings &amp; Scheduling</div>
+        <p>Books appointments, reschedules and sends reminders — across time zones, around the clock.</p>
+        <div class="agent-meta">en-US-AriaNeural</div>
+        <button class="btn btn-sm" data-audio="assets/amina_test_1.mp3">▶ Hear demo</button>
       </div>
     </article>
   </div>

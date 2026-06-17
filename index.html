@@ -7,7 +7,7 @@
 <meta name="description" content="Deploy human-like voice agents that answer calls, handle interruptions, and speak with African warmth — in hours, not months." />
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=DM+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Syne:wght@600;700;800&family=DM+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
 *, *::before, *::after { box-sizing: border-box; }
 html, body { margin: 0; padding: 0; background: #050505; color: #F5F5F5; }
@@ -1873,6 +1873,414 @@ body.landing > footer.landing-footer {
   content: ""; position: absolute; left: 0; top: 0; bottom: 0;
   width: 2px; background: #10B981;
 }
+
+/* ════════════════════════════════════════════════════════════════════
+   ELEVENLABS LIGHT SKIN — appended override layer
+   Later cascade + higher specificity (body.landing …) win over every
+   dark rule above, so the original dark page is fully reskinned to a
+   warm, editorial, ElevenLabs-style LIGHT theme without rewriting the
+   3,800 lines above. All JS class toggles keep working untouched.
+   Accent = Cynea cyan #00D4FF, kept small. Primary action = solid black.
+   ════════════════════════════════════════════════════════════════════ */
+
+body.landing {
+  --cream:    #F5F1EA;   /* page background            */
+  --cream-2:  #EFEAE0;   /* deeper cream for washes     */
+  --surface:  #FFFFFF;   /* cards / panels              */
+  --surface-2:#FBF8F2;   /* subtle raised surface       */
+  --ink:      #1A1A1A;   /* primary text                */
+  --muted:    #6B6B6B;   /* secondary text              */
+  --faint:    #9A938A;   /* tertiary / captions         */
+  --line:     #E4DED2;   /* hairline borders            */
+  --line-2:   #EDE8DE;   /* softer dividers             */
+  --black:    #0A0A0A;   /* primary button              */
+  --accent:   #00D4FF;   /* Cynea cyan — small accent   */
+  --accent-ink:#0089A8;  /* readable cyan on cream      */
+  --radius:   18px;
+}
+
+/* ── PHASE 1 · FOUNDATION ─────────────────────────────────────────── */
+
+/* page surface + base type */
+body.landing {
+  background:
+    radial-gradient(900px 520px at 12% -8%, rgba(0,212,255,0.06), transparent 60%),
+    radial-gradient(820px 480px at 92% 0%, rgba(167,139,250,0.07), transparent 60%),
+    var(--cream);
+  color: var(--ink);
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+body.landing .muted { color: var(--muted); }
+body.landing .dim   { color: var(--faint); }
+
+/* headings → medium-weight neo-grotesque (ElevenLabs feel), dark ink */
+body.landing h1, body.landing h2, body.landing h3,
+body.landing .section-head h2 {
+  font-family: 'Inter', sans-serif;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  color: var(--ink);
+}
+body.landing .section-eyebrow {
+  color: var(--accent-ink);
+  font-family: 'Inter', sans-serif; font-weight: 600;
+}
+
+/* wordmark — black, calm, no glow */
+body.landing .brand-mark {
+  font-family: 'Inter', sans-serif; font-weight: 700;
+  letter-spacing: 0.04em;
+  color: var(--ink);
+  text-shadow: none;
+}
+body.landing .brand-tag { color: var(--faint); }
+body.landing .landing-nav .brand-mark,
+body.landing .landing-footer .brand-mark.large { animation: none; }
+
+/* ── nav ──────────────────────────────────────────────────────────── */
+body.landing .landing-nav {
+  background: rgba(245,241,234,0.82);
+  backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
+  border-bottom: 1px solid var(--line);
+}
+body.landing .nav-links a { color: var(--muted); }
+body.landing .nav-links a:hover { color: var(--ink); }
+body.landing .nav-links a::after { background: var(--accent); }
+body.landing .nav-signin { color: var(--ink); }
+body.landing .nav-signin::after { background: var(--accent); }
+
+/* ── buttons ──────────────────────────────────────────────────────── */
+body.landing .btn {
+  background: var(--surface);
+  color: var(--ink);
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  font-family: 'Inter', sans-serif; font-weight: 500;
+}
+body.landing .btn:hover { border-color: #cfc6b6; }
+body.landing .btn-primary {
+  background: var(--black); color: #FFFFFF; border-color: var(--black);
+  font-weight: 600;
+}
+body.landing .btn-primary:hover { filter: none; background: #222; border-color: #222; }
+body.landing .btn-outline {
+  background: transparent; color: var(--ink); border: 1px solid var(--ink);
+}
+body.landing .btn-outline:hover { background: rgba(0,0,0,0.04); }
+body.landing .btn-ghost { background: transparent; border-color: transparent; color: var(--muted); }
+body.landing .btn-ghost:hover { color: var(--ink); border-color: var(--line); }
+/* neutralise dark-theme glow shadows on cream */
+body.landing .btn-primary.btn-glow:hover { box-shadow: 0 8px 24px rgba(0,0,0,0.16); }
+body.landing .btn-outline.btn-glow:hover { box-shadow: 0 8px 20px rgba(0,0,0,0.08); }
+
+/* ── generic surfaces (cards / panels) ────────────────────────────── */
+body.landing .card,
+body.landing .panel {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  box-shadow: 0 1px 2px rgba(26,26,26,0.03);
+}
+body.landing .panel-head { border-bottom: 1px solid var(--line); }
+body.landing .panel-head h2 { color: var(--ink); font-family: 'Inter', sans-serif; }
+
+/* ── loader (cream, calm brand moment) ────────────────────────────── */
+body.landing .cynea-loader { background: var(--cream); }
+body.landing .cynea-loader-text {
+  color: var(--ink);
+  filter: drop-shadow(0 0 18px rgba(0,212,255,0.25));
+}
+body.landing .cynea-loader-tag { color: var(--faint); }
+
+/* ── toast ────────────────────────────────────────────────────────── */
+body.landing #toast { background: var(--black); color: #fff; }
+
+/* mono helper stays legible on light */
+body.landing .mono, body.landing .num { color: var(--ink); }
+
+/* ── PHASE 2 · HERO ───────────────────────────────────────────────── */
+
+/* swap the dark animated backdrop for a soft cream + pastel mesh */
+body.landing .hero-gradient {
+  background:
+    radial-gradient(720px 480px at 18% 12%, rgba(0,212,255,0.16), transparent 62%),
+    radial-gradient(680px 460px at 82% 8%,  rgba(167,139,250,0.18), transparent 62%),
+    radial-gradient(620px 520px at 60% 90%, rgba(255,179,128,0.14), transparent 62%),
+    linear-gradient(180deg, var(--cream) 0%, var(--cream-2) 100%);
+  background-size: 160% 160%;
+}
+/* drop the dark scrim entirely on light */
+body.landing .hero-video-overlay { background: transparent; }
+/* faint ink grid instead of cyan-on-black */
+body.landing .hero-grid-bg {
+  background-image:
+    linear-gradient(rgba(26,26,26,0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(26,26,26,0.05) 1px, transparent 1px);
+  opacity: 0.5;
+}
+/* pastel orbs */
+body.landing .hero-orb-1 {
+  background: radial-gradient(circle, rgba(0,212,255,0.30), transparent 62%);
+}
+body.landing .hero-orb-2 {
+  background: radial-gradient(circle, rgba(167,139,250,0.28), transparent 62%);
+}
+body.landing .hero-scanline {
+  background: linear-gradient(90deg, transparent, rgba(0,212,255,0.35), transparent);
+}
+
+/* headline */
+body.landing .hero-line-1 { color: var(--ink); -webkit-text-fill-color: var(--ink); }
+body.landing .hero-line-2 {
+  background: linear-gradient(110deg, #00B4D8 0%, #7C5CFC 55%, #00B4D8 110%);
+  -webkit-background-clip: text; background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+body.landing .hero-sub   { color: var(--muted); }
+body.landing .hero-trust { color: var(--muted); }
+body.landing .hero-trust .dim { color: var(--faint); }
+
+/* floating conversation card → clean white panel */
+body.landing .hero-card {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  box-shadow: 0 24px 60px rgba(26,26,26,0.10), 0 2px 6px rgba(26,26,26,0.04);
+}
+body.landing .hero-card-glare {
+  background: linear-gradient(180deg, rgba(0,212,255,0.06), transparent 42%);
+}
+body.landing .hero-card-head { border-bottom: 1px solid var(--line); }
+body.landing .hero-card-foot { border-top: 1px solid var(--line); }
+body.landing .hero-card-title { color: var(--muted); }
+body.landing .convo-speaker { color: var(--accent-ink); }
+body.landing .convo-line[data-speaker="Caller"] .convo-speaker { color: #7C5CFC; }
+body.landing .convo-text { color: var(--ink); text-shadow: none; }
+body.landing .hero-card .convo-text { text-shadow: none; }
+body.landing .convo-text::after { color: var(--accent); }
+
+/* pills on cream */
+body.landing .pill-green {
+  color: #0F9D6E; border-color: rgba(16,185,129,0.30); background: rgba(16,185,129,0.10);
+}
+body.landing .pill-amber {
+  color: #B45309; border-color: rgba(245,158,11,0.30); background: rgba(245,158,11,0.10);
+}
+body.landing .pill-muted {
+  color: var(--muted); border-color: var(--line); background: var(--surface-2);
+}
+
+/* ── PHASE 3 · SECTIONS ───────────────────────────────────────────── */
+
+body.landing .section-head p { color: var(--muted); }
+
+/* metric strip */
+body.landing .metric-strip {
+  background: rgba(245,241,234,0.88);
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+}
+body.landing .metric-cell { border-right: 1px solid var(--line); }
+body.landing .metric-cell:last-child { border-right: none; }
+body.landing .metric-num { color: var(--accent-ink); }
+body.landing .metric-label { color: var(--muted); }
+body.landing .metric-strip-inner::before {
+  background-image:
+    linear-gradient(rgba(26,26,26,0.025) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(26,26,26,0.025) 1px, transparent 1px);
+}
+body.landing .metric-circle svg circle:first-child { stroke: var(--line); }
+body.landing .metric-circle-text { color: var(--ink); }
+
+/* agent showcase cards */
+body.landing .agent-card-cinematic {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  box-shadow: 0 1px 0 rgba(255,255,255,0.6) inset, 0 18px 40px rgba(26,26,26,0.06);
+}
+body.landing .agent-card-cinematic:hover {
+  border-color: var(--accent-soft, rgba(0,212,255,0.45));
+  box-shadow: 0 0 0 1px rgba(0,212,255,0.25), 0 26px 60px rgba(26,26,26,0.10);
+}
+body.landing .agent-card-glare {
+  background: linear-gradient(160deg, var(--accent-soft, rgba(0,212,255,0.10)), transparent 38%);
+  opacity: 0.5;
+}
+body.landing .agent-card-cinematic::before { opacity: 0; }
+body.landing .agent-card-cinematic:hover::before { opacity: 0.18; }
+body.landing .agent-id h3 { color: var(--ink); }
+body.landing .agent-summary { color: var(--ink); }
+body.landing .agent-meta dt { color: var(--muted); }
+body.landing .agent-meta dd { color: var(--ink); }
+
+/* timeline */
+body.landing .timeline-step {
+  background: var(--surface); border: 1px solid var(--line);
+  box-shadow: 0 1px 2px rgba(26,26,26,0.03);
+}
+body.landing .timeline-dot {
+  background: var(--accent);
+  box-shadow: 0 0 0 4px var(--cream), 0 0 16px rgba(0,212,255,0.35);
+}
+body.landing .timeline-rail {
+  background: linear-gradient(90deg, transparent, rgba(0,212,255,0.35), rgba(0,212,255,0.35), transparent);
+}
+body.landing .timeline-num { color: var(--accent-ink); }
+body.landing .timeline-icon {
+  background: var(--surface-2); border: 1px solid var(--line); color: var(--accent-ink);
+}
+body.landing .timeline-step h3 { color: var(--ink); }
+
+/* features */
+body.landing .features-section::before {
+  background:
+    repeating-linear-gradient( 45deg, rgba(26,26,26,0.035) 0 1px, transparent 1px 28px),
+    repeating-linear-gradient(-45deg, rgba(26,26,26,0.035) 0 1px, transparent 1px 28px);
+}
+body.landing .feature-card-cinematic {
+  background: var(--surface);
+  backdrop-filter: none; -webkit-backdrop-filter: none;
+  border: 1px solid var(--line);
+  box-shadow: 0 1px 2px rgba(26,26,26,0.03);
+}
+body.landing .feature-card-cinematic:hover {
+  border-color: rgba(0,212,255,0.45);
+  box-shadow: 0 0 0 1px rgba(0,212,255,0.20), 0 16px 40px rgba(26,26,26,0.08);
+}
+body.landing .feature-icon {
+  background: var(--surface-2); border: 1px solid var(--line); color: var(--accent-ink);
+}
+body.landing .feature-card-cinematic h3 { color: var(--ink); }
+body.landing .feature-card-cinematic p { color: var(--muted); }
+body.landing .feature-card-glow {
+  background: radial-gradient(280px 180px at 50% 0%, rgba(0,212,255,0.12), transparent 70%);
+}
+
+/* ── PHASE 4 · INTERACTIVE ────────────────────────────────────────── */
+
+/* chat widget → light "device" */
+body.landing .chat-demo {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  box-shadow: 0 1px 0 rgba(255,255,255,0.6) inset, 0 26px 60px rgba(26,26,26,0.10);
+}
+body.landing .chat-header {
+  background: var(--surface-2); border-bottom: 1px solid var(--line);
+}
+body.landing .chat-header-title { color: var(--ink); }
+body.landing .chat-header-status { color: var(--muted); }
+body.landing .chat-messages::-webkit-scrollbar-thumb { background: #DAD3C6; }
+body.landing .chat-msg-kwame {
+  background: #F0ECE3; color: var(--ink); border: 1px solid var(--line);
+}
+body.landing .chat-typing { background: #F0ECE3; border: 1px solid var(--line); }
+body.landing .chat-typing span { background: var(--faint); }
+body.landing .chat-chip {
+  color: var(--accent-ink); border: 1px solid rgba(0,212,255,0.45); background: transparent;
+}
+body.landing .chat-chip:hover { background: rgba(0,212,255,0.10); border-color: var(--accent); }
+body.landing .chat-input-row { border-top: 1px solid var(--line); }
+body.landing .chat-input {
+  background: var(--surface-2); color: var(--ink); border: 1px solid var(--line);
+}
+body.landing .chat-input::placeholder { color: var(--faint); }
+body.landing .chat-input:focus {
+  border-color: var(--accent); box-shadow: 0 0 0 3px rgba(0,212,255,0.15);
+}
+body.landing .chat-autoplay-hint {
+  background: rgba(0,212,255,0.08); border: 1px dashed rgba(0,212,255,0.35); color: var(--accent-ink);
+}
+body.landing .chat-mode-cog:hover {
+  color: var(--accent-ink); border-color: rgba(0,212,255,0.35); background: rgba(0,212,255,0.08);
+}
+
+/* phone demo — keep the device dark (realistic), light the surroundings */
+body.landing .phone-frame {
+  box-shadow: 0 0 0 4px #E4DED2, 0 24px 60px rgba(26,26,26,0.18), 0 50px 100px rgba(26,26,26,0.10);
+}
+body.landing .phone-sidecar h3 { color: var(--ink); }
+body.landing .phone-sidecar p  { color: var(--muted); }
+body.landing .phone-cta-row {
+  background: var(--surface); border: 1px solid var(--line);
+}
+body.landing .phone-number { color: var(--accent-ink); }
+body.landing .phone-feature {
+  background: var(--surface); border: 1px solid var(--line);
+}
+body.landing .phone-feature strong { color: var(--accent-ink); }
+body.landing .phone-feature .muted { color: var(--muted); }
+
+/* coverage grid */
+body.landing .coverage-card {
+  background: var(--surface); border: 1px solid var(--line);
+}
+body.landing .coverage-card:hover {
+  border-color: rgba(0,212,255,0.45);
+  box-shadow: 0 12px 28px rgba(26,26,26,0.08);
+}
+body.landing .coverage-flag { filter: none; }
+body.landing .coverage-name { color: var(--ink); }
+body.landing .coverage-code { color: var(--faint); }
+body.landing .coverage-card.is-active .coverage-status {
+  color: #0F9D6E; background: rgba(16,185,129,0.12); border: 1px solid rgba(16,185,129,0.30);
+}
+body.landing .coverage-card.is-soon .coverage-status {
+  color: var(--muted); background: var(--surface-2); border: 1px solid var(--line);
+}
+
+/* dashboard (collapsible) */
+body.landing .data-collapse {
+  background: var(--surface); border: 1px solid var(--line);
+}
+body.landing .data-collapse summary { color: var(--ink); }
+body.landing .data-collapse[open] summary { border-bottom-color: var(--line); }
+body.landing .data-collapse-icon { color: var(--accent-ink); }
+body.landing .data-collapse-body .panel { background: var(--surface); }
+body.landing thead th {
+  background: var(--surface-2); color: var(--muted); border-bottom: 1px solid var(--line);
+}
+body.landing thead th[aria-sort="ascending"],
+body.landing thead th[aria-sort="descending"] { color: var(--accent-ink); }
+body.landing tbody td { border-bottom: 1px solid var(--line); color: var(--ink); }
+body.landing .call-row:hover td { background: rgba(0,212,255,0.05); }
+body.landing .call-row.expanded td { background: rgba(0,212,255,0.07); }
+body.landing .call-detail td { background: var(--surface-2); border-bottom: 1px solid var(--line); }
+body.landing .detail-section-label { color: var(--muted); }
+body.landing .kv { border-bottom: 1px dashed var(--line); }
+body.landing .sbar { background: #E4DED2; }
+body.landing .sbar-axis { background: #D6CEBF; }
+body.landing .cost-bar { background: #E4DED2; }
+body.landing .empty { color: var(--muted); }
+
+/* ── PHASE 5 · FOOTER + POLISH ────────────────────────────────────── */
+
+/* footer */
+body.landing .landing-footer {
+  background: var(--surface-2); border-top: 1px solid var(--line);
+}
+body.landing .footer-brand .brand-mark.large { color: var(--ink); }
+body.landing .footer-col h4 { color: var(--muted); }
+body.landing .footer-col a, body.landing .footer-col span { color: var(--ink); }
+body.landing .footer-col a:hover { color: var(--accent-ink); }
+body.landing .footer-col span.dim { color: var(--faint); }
+body.landing .footer-col .muted { color: var(--muted); }
+
+/* scroll-progress bar — keep the gradient, it reads on cream */
+body.landing #cynea-scroll-progress {
+  box-shadow: 0 0 6px rgba(0,212,255,0.4);
+}
+
+/* cursor glow — "screen" blend vanishes on light; switch to a soft tint */
+body.landing #cynea-cursor-glow {
+  mix-blend-mode: normal;
+  background: radial-gradient(circle, rgba(0,212,255,0.07) 0%, rgba(0,212,255,0) 60%);
+}
+
+/* back-to-top — keep cyan accent, neutralise the dark glow */
+body.landing #cynea-back-to-top {
+  box-shadow: 0 8px 24px rgba(0,212,255,0.25);
+}
+
+/* === LIGHT SKIN END === */
 </style>
 </head>
 <body class="landing">

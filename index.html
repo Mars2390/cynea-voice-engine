@@ -242,6 +242,48 @@ h1,h2,h3{letter-spacing:-.02em;font-weight:600;margin:0}
 
 /* ── scroll progress ──────────────────────────────────────────────── */
 #prog{position:fixed;top:0;left:0;height:2px;width:0;background:linear-gradient(90deg,#00D4FF,#7C5CFC);z-index:80;box-shadow:0 0 8px rgba(0,212,255,.5)}
+
+/* ── cinematic stats band ─────────────────────────────────────────── */
+.metrics{position:relative;overflow:hidden;background:linear-gradient(135deg,#0B0B0C,#15171C);color:#fff;padding:56px 0}
+.metrics-orb{position:absolute;border-radius:50%;filter:blur(60px);opacity:.55;pointer-events:none}
+.metrics-orb.a{width:440px;height:440px;left:-6%;top:-70%;background:radial-gradient(circle,rgba(0,212,255,.5),transparent 60%)}
+.metrics-orb.b{width:440px;height:440px;right:-6%;bottom:-70%;background:radial-gradient(circle,rgba(124,92,252,.5),transparent 60%)}
+.metrics-in{position:relative;z-index:1;display:grid;grid-template-columns:repeat(4,1fr);gap:24px;text-align:center}
+@media(max-width:640px){.metrics-in{grid-template-columns:repeat(2,1fr);gap:34px 24px}}
+.metric b{display:block;font-size:clamp(34px,5vw,54px);font-weight:600;letter-spacing:-.02em;line-height:1;
+  background:linear-gradient(180deg,#fff,#9FE9FF);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.metric span{display:block;margin-top:9px;font-size:13px;color:#B8BCC4}
+
+/* ── how-it-works steps ───────────────────────────────────────────── */
+.steps{position:relative;display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
+@media(max-width:780px){.steps{grid-template-columns:1fr}}
+.steps-rail{position:absolute;top:56px;left:16%;right:16%;height:2px;background:linear-gradient(90deg,transparent,rgba(0,212,255,.45),rgba(124,92,252,.45),transparent)}
+@media(max-width:780px){.steps-rail{display:none}}
+.step{position:relative;background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:28px;transition:transform .25s,box-shadow .25s}
+.step:hover{transform:translateY(-3px);box-shadow:0 20px 44px rgba(22,22,22,.08)}
+.step-no{font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--accent-ink);font-weight:600}
+.step-ic{width:46px;height:46px;border-radius:12px;display:grid;place-items:center;margin:14px 0 16px;color:#fff;background:linear-gradient(135deg,#00D4FF,#7C5CFC)}
+.step-ic svg{width:22px;height:22px}
+.step h3{font-size:19px;margin-bottom:8px}
+.step p{font-size:14.5px;color:var(--muted);margin:0}
+
+/* ── audio showcase player ────────────────────────────────────────── */
+.player{position:relative;overflow:hidden;display:flex;align-items:center;gap:22px;flex-wrap:wrap;
+  background:linear-gradient(135deg,#0E1014,#1A1D24);border-radius:var(--r-lg);padding:28px 30px;color:#fff;box-shadow:0 30px 70px rgba(22,22,22,.16)}
+.player-orb{position:absolute;width:380px;height:380px;border-radius:50%;right:-8%;top:-120%;filter:blur(50px);background:radial-gradient(circle,rgba(0,212,255,.5),transparent 60%);pointer-events:none}
+.player-play{position:relative;z-index:1;width:64px;height:64px;border-radius:50%;flex-shrink:0;border:none;cursor:pointer;background:#00D4FF;color:#04323d;font-size:19px;display:grid;place-items:center;transition:transform .15s,box-shadow .2s;box-shadow:0 0 0 6px rgba(0,212,255,.15)}
+.player-play:hover{transform:scale(1.05);box-shadow:0 0 0 10px rgba(0,212,255,.18)}
+.player-main{position:relative;z-index:1;flex:1;min-width:240px}
+.player-meta b{display:block;font-size:16px}
+.player-meta span{font-size:13px;color:#B8BCC4}
+.player-wave{display:flex;align-items:center;gap:3px;height:40px;margin-top:12px}
+.player-wave i{flex:1;background:linear-gradient(180deg,#00D4FF,#7C5CFC);border-radius:2px;height:30%;opacity:.5}
+.player.on .player-wave i{animation:wave 1s ease-in-out infinite;opacity:.95}
+.player-wave i:nth-child(odd){animation-delay:.2s}.player-wave i:nth-child(3n){animation-delay:.4s}
+.player-clips{position:relative;z-index:1;display:flex;gap:8px;flex-wrap:wrap}
+.clip{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.16);color:#fff;border-radius:999px;padding:7px 14px;font-family:inherit;font-size:13px;cursor:pointer;transition:.15s}
+.clip:hover{background:rgba(255,255,255,.16)}
+.clip.is-on{background:#00D4FF;color:#04323d;border-color:#00D4FF;font-weight:600}
 </style>
 </head>
 <body>
@@ -254,7 +296,7 @@ h1,h2,h3{letter-spacing:-.02em;font-weight:600;margin:0}
     <div class="nav-links">
       <a href="#agents">Agents</a>
       <a href="#platform">Platform</a>
-      <a href="#api">Developers</a>
+      <a href="#how">How it works</a>
       <a href="#coverage">Coverage</a>
       <a href="help_center.html">Docs</a>
     </div>
@@ -346,39 +388,45 @@ h1,h2,h3{letter-spacing:-.02em;font-weight:600;margin:0}
   </div>
 </section>
 
-<!-- ─── DEPLOY SPLIT ────────────────────────────────────────────── -->
-<section class="sec wrap">
-  <div class="sec-head center rv">
-    <span class="eyebrow">One engine</span>
-    <h2>Two ways to put a voice agent on your line</h2>
-    <p>The same engine powers a point-and-deploy console and a developer API. Start where you are.</p>
+<!-- ─── CINEMATIC STATS BAND ────────────────────────────────────── -->
+<section class="metrics">
+  <div class="metrics-orb a"></div>
+  <div class="metrics-orb b"></div>
+  <div class="wrap metrics-in">
+    <div class="metric"><b data-to="87" data-suffix="%">0</b><span>Avg containment</span></div>
+    <div class="metric"><b data-to="800" data-suffix="ms" data-prefix="&lt;">0</b><span>P95 response</span></div>
+    <div class="metric"><b data-to="14">0</b><span>Countries live</span></div>
+    <div class="metric"><b data-to="24" data-suffix="/7">0</b><span>Always on</span></div>
   </div>
-  <div class="split">
-    <div class="split-card rv">
-      <h3>Voice Agents console</h3>
-      <p>Pick a persona, voice and language, attach a number, and go live — no code.</p>
-      <div class="mock">
-        <div class="mock-head"><span class="dot" style="background:#FF6058"></span><span class="dot" style="background:#FFBD2E"></span><span class="dot" style="background:#28C840"></span></div>
-        <div class="mock-body">
-          <div class="bar accent" style="width:62%"></div>
-          <div class="bar" style="width:90%"></div>
-          <div class="bar" style="width:74%"></div>
-          <div class="bar" style="width:48%"></div>
-        </div>
-      </div>
-    </div>
-    <div class="split-card rv">
-      <h3>Developer API</h3>
-      <p>Spin up an agent, place a call, and stream the live transcript from your own backend.</p>
-      <div class="codeblock">
-<pre><span class="tok-c"># place an outbound call with an agent</span>
-<span class="tok-k">from</span> cynea <span class="tok-k">import</span> Engine
-agent = Engine.<span class="tok-f">load</span>(<span class="tok-s">"kwame"</span>)
-call  = agent.<span class="tok-f">call</span>(<span class="tok-s">"+233..."</span>)
-<span class="tok-k">for</span> turn <span class="tok-k">in</span> call.<span class="tok-f">stream</span>():
-    <span class="tok-f">print</span>(turn.speaker, turn.text)</pre>
-      </div>
-    </div>
+</section>
+
+<!-- ─── HOW IT WORKS (no-code, 3 steps) ─────────────────────────── -->
+<section class="sec wrap" id="how">
+  <div class="sec-head center rv">
+    <span class="eyebrow">How it works</span>
+    <h2>From your script to a live line in 3 steps</h2>
+    <p>No code. Pick a voice, point it at a number, and your agent starts taking calls.</p>
+  </div>
+  <div class="steps">
+    <div class="steps-rail" aria-hidden="true"></div>
+    <article class="step rv">
+      <div class="step-no">01</div>
+      <div class="step-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg></div>
+      <h3>Upload</h3>
+      <p>Point Cynea at your scripts, FAQs or website. The agent learns your business.</p>
+    </article>
+    <article class="step rv">
+      <div class="step-no">02</div>
+      <div class="step-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><line x1="4" y1="21" x2="4" y2="14"/><line x1="4" y1="10" x2="4" y2="3"/><line x1="12" y1="21" x2="12" y2="12"/><line x1="12" y1="8" x2="12" y2="3"/><line x1="20" y1="21" x2="20" y2="16"/><line x1="20" y1="12" x2="20" y2="3"/><line x1="1" y1="14" x2="7" y2="14"/><line x1="9" y1="8" x2="15" y2="8"/><line x1="17" y1="16" x2="23" y2="16"/></svg></div>
+      <h3>Configure</h3>
+      <p>Choose a persona, voice, language and escalation rules. Preview before going live.</p>
+    </article>
+    <article class="step rv">
+      <div class="step-no">03</div>
+      <div class="step-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M22 16.9V21a1 1 0 0 1-1.1 1A19.9 19.9 0 0 1 3 4.1 1 1 0 0 1 4 3h4a1 1 0 0 1 1 .8c.1 1 .4 1.8.6 2.6a1 1 0 0 1-.2 1L8 8.9a16 16 0 0 0 6 6l1.5-1.5a1 1 0 0 1 1-.2c.8.3 1.7.5 2.6.6a1 1 0 0 1 .9 1z"/></svg></div>
+      <h3>Deploy</h3>
+      <p>Attach an Africa's Talking or Twilio number. Your agent answers in minutes.</p>
+    </article>
   </div>
 </section>
 
@@ -440,39 +488,24 @@ call  = agent.<span class="tok-f">call</span>(<span class="tok-s">"+233..."</spa
   </div>
 </section>
 
-<!-- ─── API CODE SECTION ────────────────────────────────────────── -->
-<section class="sec wrap" id="api">
-  <div class="sec-head rv">
-    <span class="eyebrow">Developers</span>
-    <h2>Or build anything with the engine directly</h2>
-    <p>A small, readable Python core. These snippets are illustrative of the engine's shape.</p>
+<!-- ─── WHAT YOUR CUSTOMER HEARS (audio showcase) ───────────────── -->
+<section class="sec wrap" id="listen">
+  <div class="sec-head center rv">
+    <span class="eyebrow">Listen</span>
+    <h2>This is what your customer hears</h2>
+    <p>Real audio from the same engine that powers production. Press play.</p>
   </div>
-  <div class="split">
-    <div class="split-card rv">
-      <h3>Configure an agent</h3>
-      <p>Persona, voice, language and escalation rules in one config.</p>
-      <div class="codeblock">
-<pre>{
-  <span class="tok-k">"name"</span>: <span class="tok-s">"kwame"</span>,
-  <span class="tok-k">"voice"</span>: <span class="tok-s">"en-GB-RyanNeural"</span>,
-  <span class="tok-k">"country"</span>: <span class="tok-s">"GH"</span>,
-  <span class="tok-k">"persona"</span>: <span class="tok-s">"hotel receptionist"</span>,
-  <span class="tok-k">"escalate_on"</span>: [<span class="tok-s">"complaint"</span>, <span class="tok-s">"refund"</span>]
-}</pre>
-      </div>
+  <div class="player rv" id="showcase">
+    <div class="player-orb" aria-hidden="true"></div>
+    <button class="player-play" id="scPlay" type="button" aria-label="Play clip">▶</button>
+    <div class="player-main">
+      <div class="player-meta"><b id="scTitle">Kwame · Hotel booking</b><span id="scSub">Adinkra Hotel, Accra</span></div>
+      <div class="player-wave" id="scWave"></div>
     </div>
-    <div class="split-card rv">
-      <h3>Handle an inbound call</h3>
-      <p>Route a number to an agent and let the engine run the conversation.</p>
-      <div class="codeblock">
-<pre><span class="tok-k">from</span> cynea <span class="tok-k">import</span> Engine
-<span class="tok-k">from</span> cynea_africa <span class="tok-k">import</span> AfricasTalking
-
-engine = Engine.<span class="tok-f">load</span>(<span class="tok-s">"kwame"</span>)
-line   = AfricasTalking(number=<span class="tok-s">"+233..."</span>)
-line.<span class="tok-f">on_call</span>(engine.<span class="tok-f">handle</span>)
-line.<span class="tok-f">serve</span>()</pre>
-      </div>
+    <div class="player-clips">
+      <button class="clip is-on" data-audio="assets/kwame_test_1.mp3" data-title="Kwame · Hotel booking" data-sub="Adinkra Hotel, Accra">Kwame</button>
+      <button class="clip" data-audio="assets/amina_test_1.mp3" data-title="Amina · Customer service" data-sub="Telco support, Nairobi">Amina</button>
+      <button class="clip" data-audio="assets/kofi_test_1.mp3" data-title="Kofi · Restaurant order" data-sub="Takeaway, Accra">Kofi</button>
     </div>
   </div>
 </section>
@@ -521,7 +554,7 @@ line.<span class="tok-f">serve</span>()</pre>
       <p>Human-like voice agents, built from the ground up for African markets. Made in Kenya.</p>
     </div>
     <div class="foot-col"><h4>Product</h4><a href="#agents">Agents</a><a href="#platform">Platform</a><a href="#coverage">Coverage</a><a href="agent_manager.html">Dashboard</a></div>
-    <div class="foot-col"><h4>Developers</h4><a href="#api">Engine</a><a href="https://github.com/Mars2390/cynea-voice-engine" target="_blank" rel="noopener">GitHub</a><a href="help_center.html">Docs</a><a href="product_tour.html">Product tour</a></div>
+    <div class="foot-col"><h4>Resources</h4><a href="#how">How it works</a><a href="#listen">Listen to a call</a><a href="help_center.html">Docs</a><a href="product_tour.html">Product tour</a></div>
     <div class="foot-col"><h4>Company</h4><a href="signin.html">Sign in</a><a href="https://calendly.com/albertmomanyi07/30min" target="_blank" rel="noopener">Contact sales</a><span>Made in Kenya 🇰🇪</span></div>
   </div>
   <div class="foot-base"><span>© 2026 Cynea AI · Voice Platform for Africa</span><span>Built for African business</span></div>
@@ -554,7 +587,7 @@ function play(src,fallback){
     player.play().catch(function(){ if(fallback){player.src=fallback;player.play().catch(function(){});} });
   }catch(e){}
 }
-document.querySelectorAll('[data-audio]').forEach(function(el){
+document.querySelectorAll('[data-audio]:not(.clip)').forEach(function(el){
   el.addEventListener('click',function(){ play(el.getAttribute('data-audio'),el.getAttribute('data-audio2')); });
 });
 
@@ -627,6 +660,33 @@ document.getElementById('hearBtn').addEventListener('click',function(){
   document.getElementById('top').scrollIntoView({behavior:'smooth'});
   accept();
 });
+
+/* ── count-up stats band ───────────────────────────────────────── */
+function countUp(el){
+  var to=+el.getAttribute('data-to'),suf=el.getAttribute('data-suffix')||'',pre=el.getAttribute('data-prefix')||'';
+  var start=null,dur=1300;
+  function step(ts){ if(!start)start=ts; var p=Math.min((ts-start)/dur,1); var e=1-Math.pow(1-p,3);
+    el.textContent=pre+Math.round(to*e)+suf; if(p<1)requestAnimationFrame(step); else el.textContent=pre+to+suf; }
+  requestAnimationFrame(step);
+}
+var mio=new IntersectionObserver(function(es){es.forEach(function(e){ if(e.isIntersecting){ e.target.querySelectorAll('[data-to]').forEach(countUp); mio.unobserve(e.target); } });},{threshold:.3});
+var mband=document.querySelector('.metrics'); if(mband) mio.observe(mband);
+
+/* ── audio showcase player ─────────────────────────────────────── */
+(function(){
+  var sc=document.getElementById('showcase'); if(!sc) return;
+  var wave=document.getElementById('scWave'); for(var i=0;i<48;i++) wave.appendChild(document.createElement('i'));
+  var playBtn=document.getElementById('scPlay'),title=document.getElementById('scTitle'),sub=document.getElementById('scSub');
+  var cur='assets/kwame_test_1.mp3';
+  function go(){ play(cur); sc.classList.add('on'); playBtn.textContent='❚❚'; }
+  function stop(){ try{player.pause();}catch(e){} sc.classList.remove('on'); playBtn.textContent='▶'; }
+  sc.querySelectorAll('.clip').forEach(function(c){ c.addEventListener('click',function(){
+    sc.querySelectorAll('.clip').forEach(function(x){x.classList.remove('is-on');}); c.classList.add('is-on');
+    cur=c.getAttribute('data-audio'); title.textContent=c.getAttribute('data-title'); sub.textContent=c.getAttribute('data-sub'); go();
+  });});
+  playBtn.addEventListener('click',function(){ if(sc.classList.contains('on')&&!player.paused) stop(); else go(); });
+  player.addEventListener('ended',function(){ sc.classList.remove('on'); playBtn.textContent='▶'; });
+})();
 
 /* ── coverage grid ─────────────────────────────────────────────── */
 var countries=[

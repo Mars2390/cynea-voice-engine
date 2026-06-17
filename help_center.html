@@ -4,471 +4,283 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Help center — Cynea Voice Engine</title>
-<meta name="description" content="Guides and answers for the Cynea voice agent platform." />
+<meta name="description" content="Guides, FAQs, and support for building and deploying human-like AI voice agents with Cynea." />
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Syne:wght@600;700;800&family=DM+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
-*, *::before, *::after { box-sizing: border-box; }
-html, body { margin: 0; padding: 0; }
-html { scroll-behavior: smooth; }
-body {
-  font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  font-size: 14px; line-height: 1.55;
-  -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale;
-  color: #1A1A1A;
-  background:
-    radial-gradient(900px 500px at 0% -10%, rgba(0,212,255,0.08), transparent 60%),
-    radial-gradient(800px 460px at 100% -10%, rgba(167,139,250,0.05), transparent 65%),
-    #F5F1EA;
-  min-height: 100vh;
-}
-@media (prefers-reduced-motion: reduce) {
-  *, *::before, *::after {
-    animation-duration: 0.01ms !important;
-    transition-duration: 0.01ms !important;
-  }
-}
+:root{--cream:#F5F1EA;--cream-2:#EFEAE0;--surface:#FFFFFF;--surface-2:#FBF8F2;--ink:#161616;--muted:#6B6660;--faint:#9A938A;--line:#E6E0D5;--black:#0A0A0A;--accent:#00D4FF;--accent-ink:#0089A8;--r:18px;--r-lg:28px;--maxw:1200px}
+*,*::before,*::after{box-sizing:border-box}html{scroll-behavior:smooth}
+body{margin:0;background:var(--cream);color:var(--ink);font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;font-size:16px;line-height:1.55;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important;scroll-behavior:auto!important}}
+a{color:inherit;text-decoration:none}img{max-width:100%;display:block}
+.wrap{max-width:var(--maxw);margin:0 auto;padding:0 24px}.mono{font-family:'JetBrains Mono',monospace}
+.eyebrow{font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--accent-ink);font-weight:500}
+h1,h2,h3{letter-spacing:-.02em;font-weight:600;margin:0}.muted{color:var(--muted)}
+.btn{display:inline-flex;align-items:center;gap:8px;font-family:inherit;font-size:15px;font-weight:500;padding:11px 20px;border-radius:999px;border:1px solid var(--line);background:var(--surface);color:var(--ink);cursor:pointer;transition:transform .18s,box-shadow .2s,background .2s,border-color .2s}
+.btn:hover{transform:translateY(-1px)}.btn-dark{background:var(--black);color:#fff;border-color:var(--black)}.btn-dark:hover{background:#262626;box-shadow:0 10px 28px rgba(0,0,0,.18)}.btn-sm{padding:8px 14px;font-size:13px}
+.nav{position:sticky;top:0;z-index:60;background:rgba(245,241,234,.8);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border-bottom:1px solid var(--line)}
+.nav-in{display:flex;align-items:center;gap:24px;height:64px;max-width:var(--maxw);margin:0 auto;padding:0 24px}
+.brand{display:inline-flex;align-items:baseline;gap:9px}.brand b{font-weight:700;font-size:20px;letter-spacing:.02em}.brand span{font-size:10px;letter-spacing:.28em;color:var(--faint);font-weight:600}
+.nav-links{display:flex;gap:26px;margin:0 auto}.nav-links a{font-size:14.5px;color:var(--muted);font-weight:500;transition:color .15s}.nav-links a:hover,.nav-links a.active{color:var(--ink)}
+.nav-right{display:flex;align-items:center;gap:14px}.nav-signin{font-size:14.5px;color:var(--ink);font-weight:500}
+@media(max-width:920px){.nav-links{display:none}.nav-signin{display:none}}
+.sec{padding:72px 0}.sec-head{max-width:680px;margin:0 0 36px}.sec-head.center{margin-left:auto;margin-right:auto;text-align:center}.sec-head h2{font-size:clamp(26px,3vw,36px);line-height:1.1;margin:12px 0 12px}.sec-head p{font-size:16px;color:var(--muted);margin:0}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);box-shadow:0 1px 2px rgba(22,22,22,.03)}
+.foot{padding:56px 0 36px;border-top:1px solid var(--line);margin-top:24px}.foot-in{max-width:var(--maxw);margin:0 auto;padding:0 24px;display:grid;grid-template-columns:1.6fr repeat(3,1fr);gap:32px}@media(max-width:760px){.foot-in{grid-template-columns:1fr 1fr}}
+.foot-brand p{font-size:13.5px;color:var(--muted);max-width:280px;margin:14px 0 0}.foot-col h4{font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--faint);margin:0 0 14px}.foot-col a,.foot-col span{display:block;font-size:14px;color:var(--muted);margin-bottom:10px}.foot-col a:hover{color:var(--ink)}
+.rv{opacity:0;transform:translateY(22px);transition:opacity .7s cubic-bezier(.2,.8,.2,1),transform .7s cubic-bezier(.2,.8,.2,1)}.rv.in{opacity:1;transform:none}
+#prog{position:fixed;top:0;left:0;height:2px;width:0;background:linear-gradient(90deg,#00D4FF,#7C5CFC);z-index:80;box-shadow:0 0 8px rgba(0,212,255,.5)}
 
-/* ── nav ──────────────────────────────────────────────────────── */
-.cynea-nav {
-  position: sticky; top: 0; z-index: 30;
-  display: flex; align-items: center; gap: 16px;
-  padding: 14px 32px;
-  background: rgba(245,241,234,0.85);
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
-  border-bottom: 1px solid #E4DED2;
-}
-.nav-brand { display: inline-flex; align-items: baseline; gap: 10px; text-decoration: none; }
-.brand-mark {
-  font-family: 'Syne', sans-serif; font-weight: 800;
-  font-size: 18px; letter-spacing: 0.18em;
-  color: #00D4FF;
-  text-shadow: 0 0 14px rgba(0,212,255,0.45);
-}
-.brand-tag {
-  font-family: 'Syne', sans-serif; font-weight: 600;
-  font-size: 9px; letter-spacing: 0.32em; color: #6B6B6B;
-}
-.nav-links {
-  list-style: none; padding: 0; margin: 0 auto;
-  display: flex; gap: 26px;
-}
-.nav-links a {
-  color: #6B6B6B; text-decoration: none;
-  font-size: 13px; font-weight: 500;
-  position: relative; padding-bottom: 2px;
-  transition: color 120ms ease;
-}
-.nav-links a:hover { color: #1A1A1A; }
-.nav-links a.active { color: #1A1A1A; }
-.nav-links a.active::after {
-  content: ""; position: absolute; left: 0; right: 0; bottom: -2px;
-  height: 1px; background: #00D4FF;
-}
-.btn {
-  font-family: inherit; font-weight: 600; font-size: 13px;
-  padding: 8px 16px; border-radius: 999px; cursor: pointer;
-  border: 1px solid #E4DED2; background: #FBF8F2; color: #1A1A1A;
-  text-decoration: none;
-  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
-  transition: transform 180ms cubic-bezier(.2,.8,.2,1), box-shadow 220ms ease, filter 120ms ease, background 200ms ease;
-}
-.btn:hover { transform: translateY(-1px) scale(1.02); }
-.btn-outline { background: transparent; color: #00D4FF; border-color: #00D4FF; }
-.btn-outline:hover { background: rgba(0,212,255,0.08); }
-.btn-primary { background: #00D4FF; color: #001218; border-color: #00D4FF; }
-.btn-primary:hover { box-shadow: 0 0 0 1px #00D4FF, 0 0 24px rgba(0,212,255,0.45); }
+/* ── hero ─────────────────────────────────────────────────────── */
+.hero{position:relative;text-align:center;padding:84px 0 56px;overflow:hidden}
+.hero::before{content:"";position:absolute;inset:0;pointer-events:none;background:radial-gradient(620px 420px at 50% -8%,rgba(0,212,255,.16),transparent 64%),radial-gradient(520px 360px at 80% 0%,rgba(124,92,252,.07),transparent 70%)}
+.hero-in{position:relative;z-index:1}
+.hero h1{font-size:clamp(34px,5vw,56px);line-height:1.04;margin:14px 0 14px}
+.hero .lead{font-size:17px;color:var(--muted);max-width:560px;margin:0 auto 30px}
+.search{position:relative;max-width:560px;margin:0 auto}
+.search svg{position:absolute;left:20px;top:50%;transform:translateY(-50%);color:var(--faint);pointer-events:none}
+.search input{width:100%;background:var(--surface);color:var(--ink);border:1px solid var(--line);border-radius:999px;padding:16px 22px 16px 52px;font-family:inherit;font-size:16px;outline:none;box-shadow:0 6px 24px rgba(22,22,22,.05);transition:border-color .15s,box-shadow .15s}
+.search input:focus{border-color:var(--accent);box-shadow:0 0 0 4px rgba(0,212,255,.14)}
+.search input::placeholder{color:var(--faint)}
 
-@media (max-width: 720px) { .nav-links { display: none; } }
+/* ── quick-start ──────────────────────────────────────────────── */
+.qs-grid{display:grid;gap:18px;grid-template-columns:repeat(4,1fr)}
+@media(max-width:920px){.qs-grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:560px){.qs-grid{grid-template-columns:1fr}}
+.qs{display:flex;flex-direction:column;padding:24px;border-radius:var(--r);background:var(--surface);border:1px solid var(--line);box-shadow:0 1px 2px rgba(22,22,22,.03);transition:transform .2s,box-shadow .22s,border-color .22s}
+.qs:hover{transform:translateY(-4px);border-color:rgba(0,212,255,.4);box-shadow:0 18px 44px rgba(0,212,255,.12)}
+.qs-icon{width:44px;height:44px;display:inline-flex;align-items:center;justify-content:center;border-radius:13px;background:linear-gradient(150deg,#00D4FF,#0089A8);color:#fff;margin-bottom:16px;box-shadow:0 8px 20px rgba(0,212,255,.28)}
+.qs-icon svg{width:22px;height:22px}
+.qs h3{font-size:16.5px;margin:0 0 8px}
+.qs p{font-size:14px;color:var(--muted);margin:0 0 16px;flex:1}
+.qs-link{font-size:14px;font-weight:600;color:var(--accent-ink)}
 
-/* ── layout ───────────────────────────────────────────────────── */
-main { max-width: 980px; margin: 0 auto; padding: 56px 32px 80px; }
-@media (max-width: 720px) { main { padding: 40px 16px 48px; } }
+/* ── faq ──────────────────────────────────────────────────────── */
+.faq-cat{margin:34px 0 14px}
+.faq-cat:first-of-type{margin-top:8px}
+.faq{background:var(--surface);border:1px solid var(--line);border-radius:14px;margin-bottom:10px;overflow:hidden;transition:border-color .2s,box-shadow .2s}
+.faq.open{border-color:rgba(0,212,255,.4);box-shadow:0 10px 30px rgba(0,212,255,.08)}
+.faq-q{display:flex;align-items:center;justify-content:space-between;gap:16px;width:100%;background:none;border:0;text-align:left;font-family:inherit;font-size:15.5px;font-weight:600;color:var(--ink);padding:18px 20px;cursor:pointer}
+.faq-plus{flex-shrink:0;width:24px;height:24px;position:relative;color:var(--accent-ink);transition:transform .25s cubic-bezier(.2,.8,.2,1)}
+.faq-plus::before,.faq-plus::after{content:"";position:absolute;background:currentColor;border-radius:2px}
+.faq-plus::before{left:50%;top:5px;width:2px;height:14px;transform:translateX(-50%)}
+.faq-plus::after{top:50%;left:5px;height:2px;width:14px;transform:translateY(-50%)}
+.faq.open .faq-plus{transform:rotate(135deg)}
+.faq-a{max-height:0;overflow:hidden;transition:max-height .3s cubic-bezier(.2,.8,.2,1)}
+.faq-a p{margin:0;padding:0 20px 20px;font-size:14.5px;color:var(--muted);line-height:1.65}
+.faq-empty{display:none;padding:28px;text-align:center;color:var(--muted);font-size:14.5px}
+.faq-empty.show{display:block}
 
-.help-hero { text-align: center; margin-bottom: 48px; }
-.help-eyebrow {
-  display: inline-block; font-family: 'JetBrains Mono', monospace;
-  font-weight: 600; font-size: 11px; letter-spacing: 0.18em;
-  color: #00D4FF; text-transform: uppercase; margin-bottom: 14px;
-}
-.help-hero h1 {
-  font-family: 'Syne', sans-serif; font-weight: 800;
-  font-size: clamp(32px, 4.5vw, 48px); margin: 0 0 12px;
-  letter-spacing: -0.01em;
-}
-.help-hero p { color: #6B6B6B; margin: 0 auto; max-width: 580px; font-size: 16px; }
-
-/* ── search ───────────────────────────────────────────────────── */
-.search-row {
-  margin: 28px auto 0; max-width: 580px;
-  position: relative;
-}
-.search-input {
-  width: 100%;
-  background: #FFFFFF; color: #1A1A1A;
-  border: 1px solid #E4DED2; border-radius: 12px;
-  padding: 14px 18px 14px 44px;
-  font-family: inherit; font-size: 15px;
-  outline: none;
-  transition: border-color 150ms ease, box-shadow 150ms ease;
-}
-.search-input:focus {
-  border-color: #00D4FF;
-  box-shadow: 0 0 0 3px rgba(0,212,255,0.15);
-}
-.search-input::placeholder { color: #9A938A; }
-.search-icon {
-  position: absolute; left: 16px; top: 50%; transform: translateY(-50%);
-  color: #6B6B6B; pointer-events: none;
-}
-
-/* ── section heads ────────────────────────────────────────────── */
-.section-head {
-  margin: 64px 0 20px;
-  display: flex; align-items: baseline; justify-content: space-between;
-}
-.section-head h2 {
-  font-family: 'Syne', sans-serif; font-weight: 700;
-  font-size: 13px; letter-spacing: 0.08em; text-transform: uppercase;
-  margin: 0;
-}
-.section-head .muted { color: #6B6B6B; font-size: 12px; }
-
-/* ── quick-start cards ────────────────────────────────────────── */
-.qs-grid {
-  display: grid; gap: 16px;
-  grid-template-columns: repeat(2, 1fr);
-}
-@media (max-width: 720px) { .qs-grid { grid-template-columns: 1fr; } }
-.qs-card {
-  display: block;
-  background: linear-gradient(160deg, #FFFFFF 0%, #FBF8F2 100%);
-  border: 1px solid #E4DED2; border-radius: 14px;
-  padding: 22px;
-  text-decoration: none; color: #1A1A1A;
-  transition: border-color 220ms ease, transform 200ms ease, box-shadow 220ms ease;
-  position: relative; overflow: hidden;
-}
-.qs-card:hover {
-  border-color: rgba(0,212,255,0.45);
-  transform: translateY(-3px);
-  box-shadow: 0 18px 44px rgba(0,212,255,0.10);
-}
-.qs-card::before {
-  content: ""; position: absolute; inset: 0; pointer-events: none; opacity: 0;
-  background: radial-gradient(280px 180px at 30% 0%, rgba(0,212,255,0.18), transparent 70%);
-  transition: opacity 220ms ease;
-}
-.qs-card:hover::before { opacity: 1; }
-.qs-icon {
-  width: 36px; height: 36px;
-  display: inline-flex; align-items: center; justify-content: center;
-  border: 1px solid #DED7C9; border-radius: 10px;
-  color: #00D4FF; background: #FBF8F2;
-  margin-bottom: 12px; position: relative; z-index: 1;
-}
-.qs-icon svg { width: 18px; height: 18px; }
-.qs-card h3 {
-  font-family: 'Syne', sans-serif; font-weight: 700;
-  font-size: 16px; margin: 0 0 8px; position: relative; z-index: 1;
-}
-.qs-card p { color: #6B6B6B; font-size: 13px; margin: 0; position: relative; z-index: 1; }
-.qs-card-cta {
-  margin-top: 14px; font-size: 12px; color: #00D4FF; font-weight: 600;
-  position: relative; z-index: 1;
-}
-
-/* ── FAQ accordion ────────────────────────────────────────────── */
-.faq-cat { margin-bottom: 28px; }
-.faq-cat-title {
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase;
-  color: #00D4FF; font-weight: 600; margin: 0 0 12px;
-}
-.faq-item {
-  background: #FFFFFF; border: 1px solid #E4DED2;
-  border-radius: 10px; padding: 0;
-  margin-bottom: 8px;
-  overflow: hidden;
-}
-.faq-item summary {
-  cursor: pointer;
-  padding: 16px 18px;
-  font-weight: 600; font-size: 14px;
-  list-style: none;
-  display: flex; align-items: center; justify-content: space-between; gap: 16px;
-  transition: color 150ms ease;
-}
-.faq-item summary::-webkit-details-marker { display: none; }
-.faq-item summary:hover { color: #00D4FF; }
-.faq-toggle {
-  flex-shrink: 0; color: #00D4FF; font-size: 16px;
-  transition: transform 200ms ease;
-}
-.faq-item[open] .faq-toggle { transform: rotate(45deg); }
-.faq-item[open] summary { color: #00D4FF; border-bottom: 1px solid #E4DED2; }
-.faq-body {
-  padding: 14px 18px 18px;
-  color: #C7C7C7; font-size: 14px; line-height: 1.65;
-}
-
-/* ── contact panel ────────────────────────────────────────────── */
-.contact {
-  margin-top: 64px;
-  padding: 36px 28px;
-  background: linear-gradient(160deg, #FFFFFF 0%, #FBF8F2 100%);
-  border: 1px solid #E4DED2; border-radius: 16px;
-  text-align: center;
-  position: relative; overflow: hidden;
-}
-.contact::before {
-  content: ""; position: absolute; inset: 0; pointer-events: none;
-  background: radial-gradient(420px 280px at 50% 0%, rgba(0,212,255,0.10), transparent 70%);
-}
-.contact h2 {
-  font-family: 'Syne', sans-serif; font-weight: 700;
-  font-size: 22px; margin: 0 0 8px; position: relative; z-index: 1;
-}
-.contact p { color: #6B6B6B; margin: 0 0 22px; position: relative; z-index: 1; }
-.contact-row {
-  display: inline-flex; gap: 10px; flex-wrap: wrap; justify-content: center;
-  position: relative; z-index: 1;
-}
-.contact-email {
-  font-family: 'JetBrains Mono', monospace; font-size: 13px;
-  color: #00D4FF; margin-top: 18px; display: block;
-  position: relative; z-index: 1;
-}
-
-/* ── footer ───────────────────────────────────────────────────── */
-.help-footer {
-  border-top: 1px solid #E4DED2;
-  margin-top: 56px; padding-top: 22px;
-  display: flex; justify-content: space-between; align-items: center;
-  font-size: 12px; color: #6B6B6B;
-}
-.help-footer .dim { color: #9A938A; }
-@media (max-width: 540px) {
-  .help-footer { flex-direction: column; gap: 8px; text-align: center; }
-}
-
-/* ════ CY-LIGHT — ElevenLabs-style light skin (Cynea) ════ */
-body{font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;}
-h1,h2,h3,h4{font-family:'Inter',sans-serif;letter-spacing:-0.02em;}
-.brand-mark{font-family:'Inter',sans-serif;font-weight:700;letter-spacing:0.04em;color:#1A1A1A;text-shadow:none;}
-.brand-tag{color:#9A938A;}
-.btn-primary{background:#0A0A0A;color:#FFFFFF;border-color:#0A0A0A;}
-.btn-primary:hover{background:#222;border-color:#222;filter:none;box-shadow:0 8px 24px rgba(0,0,0,0.16);}
-
-/* ════ CY-LIGHT · wow polish ════ */
-html{scroll-behavior:smooth;}
-@media (prefers-reduced-motion:no-preference){
-  body{animation:cyPageIn 0.55s cubic-bezier(.2,.8,.2,1) both;}
-  @keyframes cyPageIn{from{opacity:0;}to{opacity:1;}}
-}
+/* ── contact cta ──────────────────────────────────────────────── */
+.cta{position:relative;text-align:center;padding:44px 32px;border-radius:var(--r-lg);overflow:hidden}
+.cta::before{content:"";position:absolute;inset:0;pointer-events:none;background:radial-gradient(460px 300px at 50% 0%,rgba(0,212,255,.12),transparent 70%)}
+.cta-in{position:relative;z-index:1}
+.cta h2{font-size:clamp(22px,3vw,30px);margin:0 0 10px}
+.cta p{color:var(--muted);margin:0 auto 24px;max-width:460px}
+.cta-row{display:inline-flex;gap:12px;flex-wrap:wrap;justify-content:center}
 </style>
 </head>
 <body>
 
-<nav class="cynea-nav" id="topnav">
-  <a class="nav-brand" href="cynea_landing.html">
-    <span class="brand-mark">CYNEA</span>
-    <span class="brand-tag">VOICE ENGINE</span>
-  </a>
-  <ul class="nav-links">
-    <li><a href="product_tour.html">Product Tour</a></li>
-    <li><a href="demo_call_flow.html">Demo</a></li>
-    <li><a href="help_center.html" class="active">Help</a></li>
-    <li><a href="agent_manager.html">Dashboard</a></li>
-  </ul>
-  <a class="btn btn-outline" href="signin.html">Sign in</a>
-</nav>
+<div id="prog"></div>
+<nav class="nav"><div class="nav-in"><a class="brand" href="index.html"><b>CYNEA</b><span>VOICE ENGINE</span></a><div class="nav-links"><a href="index.html#agents">Agents</a><a href="index.html#platform">Platform</a><a href="product_tour.html">Product tour</a><a href="agent_manager.html">Dashboard</a><a class="active" href="help_center.html">Docs</a></div><div class="nav-right"><a class="nav-signin" href="signin.html">Sign in</a><a class="btn btn-dark btn-sm" href="https://calendly.com/albertmomanyi07/30min" target="_blank" rel="noopener">Get started</a></div></div></nav>
 
 <main>
-  <header class="help-hero">
-    <span class="help-eyebrow">Help center</span>
-    <h1>How can we help?</h1>
-    <p>Guides, FAQs, and direct support for getting the most out of your Cynea voice agents.</p>
-    <div class="search-row">
-      <span class="search-icon" aria-hidden="true">
-        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-          <circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/>
-        </svg>
-      </span>
-      <input class="search-input" id="searchInput" type="search"
-             placeholder="Search for answers…"
-             aria-label="Search the help center">
-    </div>
-  </header>
 
-  <!-- ── Quick start cards ─────────────────────────────────────── -->
-  <section>
-    <header class="section-head">
-      <h2>Quick start</h2>
-      <span class="muted">Get up and running in minutes</span>
-    </header>
-    <div class="qs-grid">
-      <a class="qs-card" href="product_tour.html">
-        <div class="qs-icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-        </div>
-        <h3>Creating your first agent</h3>
-        <p>Step-by-step walkthrough: name, persona, content, voice, phone number, deploy. Five minutes from zero to live.</p>
-        <div class="qs-card-cta">Start the tour →</div>
-      </a>
-      <a class="qs-card" href="demo_call_flow.html">
-        <div class="qs-icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
-        </div>
-        <h3>Choosing the right voice</h3>
-        <p>Side-by-side voice comparison: George, Bella, Eric, Aria. Hear each one before deploying. Match voice to industry.</p>
-        <div class="qs-card-cta">Compare voices →</div>
-      </a>
-      <a class="qs-card" href="#faq-getting-started">
-        <div class="qs-icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
-        </div>
-        <h3>Uploading scripts &amp; content</h3>
-        <p>Supported formats: PDF, plain text, HTML, website URLs. Best practices for scripts, FAQs, and product catalogs.</p>
-        <div class="qs-card-cta">Read the guide →</div>
-      </a>
-      <a class="qs-card" href="#faq-technical">
-        <div class="qs-icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92V21a1 1 0 0 1-1.09 1 19.91 19.91 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6A19.91 19.91 0 0 1 3.21 4.09 1 1 0 0 1 4.2 3h4.09a1 1 0 0 1 1 .76 12.4 12.4 0 0 0 .65 2.62 1 1 0 0 1-.23 1L8 8.91a16 16 0 0 0 6 6l1.51-1.69a1 1 0 0 1 1-.23 12.4 12.4 0 0 0 2.62.65 1 1 0 0 1 .87 1.28z"/></svg>
-        </div>
-        <h3>Deploying to a phone number</h3>
-        <p>Africa's Talking, Twilio, and major African carriers. Full setup in under 30 minutes with our team.</p>
-        <div class="qs-card-cta">View setup →</div>
-      </a>
+  <!-- ── hero ──────────────────────────────────────────────────── -->
+  <section class="hero">
+    <div class="wrap hero-in">
+      <span class="eyebrow">Help center</span>
+      <h1>How can we help?</h1>
+      <p class="lead">Guides, answers, and setup walkthroughs for building and deploying human-like AI voice agents with Cynea.</p>
+      <div class="search">
+        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
+        <input id="search" type="search" placeholder="Search for answers…" aria-label="Search the help center" autocomplete="off">
+      </div>
     </div>
   </section>
 
-  <!-- ── FAQ ──────────────────────────────────────────────────── -->
-  <section>
-    <header class="section-head">
-      <h2>Frequently asked</h2>
-      <span class="muted" id="faqCount">13 answers</span>
-    </header>
+  <!-- ── quick start ───────────────────────────────────────────── -->
+  <section class="sec" style="padding-top:24px">
+    <div class="wrap">
+      <div class="sec-head">
+        <span class="eyebrow">Quick start</span>
+        <h2>Up and running in minutes</h2>
+        <p>Four short guides that take you from an empty workspace to a live agent answering calls.</p>
+      </div>
+      <div class="qs-grid">
 
-    <div class="faq-cat" id="faq-getting-started">
-      <h3 class="faq-cat-title">Getting started</h3>
-      <details class="faq-item" data-faq>
-        <summary>How do I create a voice agent?<span class="faq-toggle">+</span></summary>
-        <div class="faq-body">Click "Create New Agent" from your dashboard. Follow the 6-step wizard: name your agent, pick a persona, upload your content, choose a voice, select a phone number, and deploy. It takes about five minutes.</div>
-      </details>
-      <details class="faq-item" data-faq>
-        <summary>What can my agent handle?<span class="faq-toggle">+</span></summary>
-        <div class="faq-body">Agents can book appointments, answer FAQs, take orders, handle complaints, check account balances, and more. Upload your scripts and the AI learns your business processes.</div>
-      </details>
-      <details class="faq-item" data-faq>
-        <summary>Do I need technical skills?<span class="faq-toggle">+</span></summary>
-        <div class="faq-body">No. The agent manager is designed for operations teams. Upload your existing scripts and documents — our AI does the rest. No coding, no DevOps.</div>
-      </details>
-    </div>
+        <a class="qs rv" href="product_tour.html">
+          <span class="qs-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></span>
+          <h3>Create your first agent</h3>
+          <p>Name it, give it a persona, and walk through the guided setup to a working agent.</p>
+          <span class="qs-link">Start &rarr;</span>
+        </a>
 
-    <div class="faq-cat">
-      <h3 class="faq-cat-title">Voice &amp; language</h3>
-      <details class="faq-item" data-faq>
-        <summary>What voices are available?<span class="faq-toggle">+</span></summary>
-        <div class="faq-body">We offer 30+ natural voices across English (British, American, African-accented), French, and Swahili. You can preview any voice before deploying.</div>
-      </details>
-      <details class="faq-item" data-faq>
-        <summary>Can the agent handle accents?<span class="faq-toggle">+</span></summary>
-        <div class="faq-body">Yes. Our speech recognition is trained on diverse African accents including Ghanaian, Kenyan, Nigerian, and South African English.</div>
-      </details>
-      <details class="faq-item" data-faq>
-        <summary>What languages do you support?<span class="faq-toggle">+</span></summary>
-        <div class="faq-body">Currently English with African accents. Swahili and French coming Q4 2026. Code-switching (mixing languages mid-sentence) works for common English-Swahili patterns.</div>
-      </details>
-    </div>
+        <a class="qs rv" href="product_tour.html">
+          <span class="qs-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/></svg></span>
+          <h3>Choose the right voice</h3>
+          <p>Preview natural voices and match tone, pace, and accent to your brand.</p>
+          <span class="qs-link">Compare &rarr;</span>
+        </a>
 
-    <div class="faq-cat">
-      <h3 class="faq-cat-title">Pricing &amp; billing</h3>
-      <details class="faq-item" data-faq>
-        <summary>How much does it cost?<span class="faq-toggle">+</span></summary>
-        <div class="faq-body">You pay per minute of call time. Starter plan: $0.04/min. Business: $0.03/min. Enterprise: custom pricing. No setup fees, no monthly minimum.</div>
-      </details>
-      <details class="faq-item" data-faq>
-        <summary>Is there a free trial?<span class="faq-toggle">+</span></summary>
-        <div class="faq-body">Yes. First 500 minutes are free. No credit card required.</div>
-      </details>
-      <details class="faq-item" data-faq>
-        <summary>How does billing work?<span class="faq-toggle">+</span></summary>
-        <div class="faq-body">Monthly invoice based on usage. You can set spending limits and get alerts when you approach them.</div>
-      </details>
-    </div>
+        <a class="qs rv" href="product_tour.html">
+          <span class="qs-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg></span>
+          <h3>Upload scripts &amp; content</h3>
+          <p>Add scripts, FAQs, and documents so your agent answers in your own words.</p>
+          <span class="qs-link">Guide &rarr;</span>
+        </a>
 
-    <div class="faq-cat" id="faq-technical">
-      <h3 class="faq-cat-title">Technical</h3>
-      <details class="faq-item" data-faq>
-        <summary>How do I connect my phone number?<span class="faq-toggle">+</span></summary>
-        <div class="faq-body">We integrate with Africa's Talking, Twilio, and major African carriers. Our team helps you set up in under 30 minutes.</div>
-      </details>
-      <details class="faq-item" data-faq>
-        <summary>Can the agent transfer to a human?<span class="faq-toggle">+</span></summary>
-        <div class="faq-body">Yes. Warm transfers with full conversation summary. You define escalation triggers — angry customer, complex issue, VIP caller.</div>
-      </details>
-      <details class="faq-item" data-faq>
-        <summary>Is my data secure?<span class="faq-toggle">+</span></summary>
-        <div class="faq-body">All call data is encrypted in transit and at rest. We comply with African data protection regulations. Call recordings can be stored on your own infrastructure.</div>
-      </details>
-      <details class="faq-item" data-faq>
-        <summary>What happens if the internet goes down?<span class="faq-toggle">+</span></summary>
-        <div class="faq-body">Agents can fall back to a basic IVR mode — critical for areas with intermittent connectivity. Full offline mode coming Q1 2027.</div>
-      </details>
+        <a class="qs rv" href="product_tour.html">
+          <span class="qs-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92V21a1 1 0 0 1-1.09 1 19.91 19.91 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6A19.91 19.91 0 0 1 3.21 4.09 1 1 0 0 1 4.2 3h4.09a1 1 0 0 1 1 .76 12.4 12.4 0 0 0 .65 2.62 1 1 0 0 1-.23 1L8 8.91a16 16 0 0 0 6 6l1.51-1.69a1 1 0 0 1 1-.23 12.4 12.4 0 0 0 2.62.65 1 1 0 0 1 .87 1.28z"/></svg></span>
+          <h3>Deploy to a phone number</h3>
+          <p>Connect a number and take your agent live for inbound and outbound calls.</p>
+          <span class="qs-link">Set up &rarr;</span>
+        </a>
+
+      </div>
     </div>
   </section>
 
-  <!-- ── contact ──────────────────────────────────────────────── -->
-  <section class="contact">
-    <h2>Still need help?</h2>
-    <p>Our team responds within four business hours, Africa-wide.</p>
-    <div class="contact-row">
-      <a class="btn btn-primary" href="mailto:hello@cynea.ai?subject=Cynea%20support%20request">Contact our team</a>
-      <a class="btn" href="https://calendly.com/albertmomanyi07/30min"
-         target="_blank" rel="noopener">📅 Book a Demo</a>
+  <!-- ── faq ───────────────────────────────────────────────────── -->
+  <section class="sec" style="padding-top:24px">
+    <div class="wrap">
+      <div class="sec-head">
+        <span class="eyebrow">FAQ</span>
+        <h2>Frequently asked</h2>
+        <p>Honest answers to the questions teams ask most. Use the search above to filter.</p>
+      </div>
+
+      <div id="faqList">
+
+        <div class="faq-cat"><span class="eyebrow">Getting started</span></div>
+        <div class="faq" data-faq>
+          <button class="faq-q" type="button">How do I create a voice agent?<span class="faq-plus" aria-hidden="true"></span></button>
+          <div class="faq-a"><p>From your dashboard, start a new agent and follow the guided setup: give it a name and persona, add your content, pick a voice, then connect a phone number. Most teams have a working agent in a few minutes.</p></div>
+        </div>
+        <div class="faq" data-faq>
+          <button class="faq-q" type="button">What can my agent handle?<span class="faq-plus" aria-hidden="true"></span></button>
+          <div class="faq-a"><p>Agents handle conversational tasks such as answering common questions, booking appointments, qualifying leads, taking simple requests, and routing callers. The more relevant content you upload, the better it represents your business.</p></div>
+        </div>
+        <div class="faq" data-faq>
+          <button class="faq-q" type="button">Do I need technical skills to get started?<span class="faq-plus" aria-hidden="true"></span></button>
+          <div class="faq-a"><p>No. The dashboard is built for operations and support teams. You upload your existing scripts and documents and configure the agent through the interface — no coding required.</p></div>
+        </div>
+
+        <div class="faq-cat"><span class="eyebrow">Voice &amp; language</span></div>
+        <div class="faq" data-faq>
+          <button class="faq-q" type="button">What voices are available?<span class="faq-plus" aria-hidden="true"></span></button>
+          <div class="faq-a"><p>A range of natural, human-like voices with different tones and styles. You can preview each voice in the dashboard and switch at any time before or after deploying.</p></div>
+        </div>
+        <div class="faq" data-faq>
+          <button class="faq-q" type="button">Can the agent handle different accents?<span class="faq-plus" aria-hidden="true"></span></button>
+          <div class="faq-a"><p>Yes. Speech recognition is designed to understand a wide variety of speakers and accents. Adding example phrases and domain terms from your business helps accuracy in your specific use case.</p></div>
+        </div>
+        <div class="faq" data-faq>
+          <button class="faq-q" type="button">What languages do you support?<span class="faq-plus" aria-hidden="true"></span></button>
+          <div class="faq-a"><p>Cynea supports human-like conversation in multiple languages, with more added over time. Check the dashboard for the current list, and reach out if you need a specific language for your market.</p></div>
+        </div>
+
+        <div class="faq-cat"><span class="eyebrow">Pricing &amp; billing</span></div>
+        <div class="faq" data-faq>
+          <button class="faq-q" type="button">How much does it cost?<span class="faq-plus" aria-hidden="true"></span></button>
+          <div class="faq-a"><p>Pricing is usage-based, so you pay for what you use. For current rates and plan options that fit your call volume, talk to our team and we will put together pricing for your needs.</p></div>
+        </div>
+        <div class="faq" data-faq>
+          <button class="faq-q" type="button">Is there a free trial?<span class="faq-plus" aria-hidden="true"></span></button>
+          <div class="faq-a"><p>You can try Cynea before committing. Book a session with our team and we will set you up so you can build an agent and hear it in action.</p></div>
+        </div>
+        <div class="faq" data-faq>
+          <button class="faq-q" type="button">How does billing work?<span class="faq-plus" aria-hidden="true"></span></button>
+          <div class="faq-a"><p>Billing is based on your usage over each period. You can review activity in the dashboard, and our team can help you set up the plan and limits that work for your account.</p></div>
+        </div>
+
+        <div class="faq-cat"><span class="eyebrow">Telephony</span></div>
+        <div class="faq" data-faq>
+          <button class="faq-q" type="button">Which telephony providers are supported?<span class="faq-plus" aria-hidden="true"></span></button>
+          <div class="faq-a"><p>Cynea connects to phone numbers through Twilio and major carriers worldwide. Our team helps you link a number and get your agent live for inbound and outbound calls.</p></div>
+        </div>
+        <div class="faq" data-faq>
+          <button class="faq-q" type="button">Can the agent transfer a call to a human?<span class="faq-plus" aria-hidden="true"></span></button>
+          <div class="faq-a"><p>Yes. You can define when a call should escalate, and the agent will hand off to a team member so the caller reaches the right person when needed.</p></div>
+        </div>
+        <div class="faq" data-faq>
+          <button class="faq-q" type="button">How do I deploy my agent to a phone number?<span class="faq-plus" aria-hidden="true"></span></button>
+          <div class="faq-a"><p>Once your agent is configured, connect it to a phone number through a supported provider and publish it. After that, calls to that number are answered by your agent.</p></div>
+        </div>
+
+        <div class="faq-empty" id="faqEmpty">No answers match your search. Try a different term, or contact our team below.</div>
+      </div>
     </div>
-    <span class="contact-email">hello@cynea.ai</span>
   </section>
 
-  <footer class="help-footer">
-    <div><strong>Cynea AI</strong><span class="dim"> — Made in Kenya</span></div>
-    <div class="dim">Voice Engine · Help center</div>
-  </footer>
+  <!-- ── contact cta ───────────────────────────────────────────── -->
+  <section class="sec" style="padding-top:0">
+    <div class="wrap">
+      <div class="card cta rv">
+        <div class="cta-in">
+          <h2>Still need help?</h2>
+          <p>Talk to our team about your use case, or browse the source and examples on GitHub.</p>
+          <div class="cta-row">
+            <a class="btn btn-dark" href="https://calendly.com/albertmomanyi07/30min" target="_blank" rel="noopener">Contact sales</a>
+            <a class="btn" href="https://github.com/Mars2390/cynea-voice-engine" target="_blank" rel="noopener">View on GitHub</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
 </main>
 
-<script>
-'use strict';
-// Search filter — pure client-side, simple includes() match against
-// each FAQ summary + body. Empty query shows all.
-(function() {
-  const input = document.getElementById('searchInput');
-  if (!input) return;
-  const items = Array.from(document.querySelectorAll('[data-faq]'));
-  const counter = document.getElementById('faqCount');
+<footer class="foot"><div class="foot-in"><div class="foot-brand"><a class="brand" href="index.html"><b>CYNEA</b><span>VOICE ENGINE</span></a><p>Human-like AI voice agents for businesses worldwide.</p></div><div class="foot-col"><h4>Product</h4><a href="index.html#agents">Agents</a><a href="index.html#platform">Platform</a><a href="agent_manager.html">Dashboard</a><a href="demo_call_flow.html">Live demo</a></div><div class="foot-col"><h4>Resources</h4><a href="product_tour.html">Product tour</a><a href="help_center.html">Docs</a><a href="https://github.com/Mars2390/cynea-voice-engine" target="_blank" rel="noopener">GitHub</a></div><div class="foot-col"><h4>Company</h4><a href="signin.html">Sign in</a><a href="https://calendly.com/albertmomanyi07/30min" target="_blank" rel="noopener">Contact sales</a><span>Voice AI for every market</span></div></div></footer>
 
-  function applyFilter() {
-    const q = input.value.trim().toLowerCase();
-    let visible = 0;
-    items.forEach((it) => {
-      const text = it.textContent.toLowerCase();
-      const match = !q || text.includes(q);
-      it.style.display = match ? '' : 'none';
-      if (match) visible++;
-      // Auto-expand the matching items so the answer is visible.
-      if (q && match) it.setAttribute('open', '');
-      if (!q) it.removeAttribute('open');
+<script>'use strict';var prog=document.getElementById('prog');if(prog)addEventListener('scroll',function(){var h=document.documentElement;prog.style.width=(h.scrollTop/(h.scrollHeight-h.clientHeight||1)*100)+'%';},{passive:true});var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target);}});},{threshold:.12});document.querySelectorAll('.rv').forEach(function(el){io.observe(el);});</script>
+
+<script>'use strict';
+// ── Accordion ──────────────────────────────────────────────────
+(function(){
+  var faqs=document.querySelectorAll('[data-faq]');
+  faqs.forEach(function(faq){
+    var q=faq.querySelector('.faq-q');
+    var a=faq.querySelector('.faq-a');
+    q.addEventListener('click',function(){
+      var open=faq.classList.contains('open');
+      if(open){faq.classList.remove('open');a.style.maxHeight=null;}
+      else{faq.classList.add('open');a.style.maxHeight=a.scrollHeight+'px';}
     });
-    if (counter) counter.textContent = visible + (visible === 1 ? ' answer' : ' answers');
+  });
+})();
+// ── Search filter ──────────────────────────────────────────────
+(function(){
+  var input=document.getElementById('search');
+  if(!input)return;
+  var faqs=Array.prototype.slice.call(document.querySelectorAll('[data-faq]'));
+  var cats=Array.prototype.slice.call(document.querySelectorAll('.faq-cat'));
+  var empty=document.getElementById('faqEmpty');
+  function apply(){
+    var q=input.value.trim().toLowerCase();
+    var visible=0;
+    faqs.forEach(function(faq){
+      var text=faq.textContent.toLowerCase();
+      var match=!q||text.indexOf(q)!==-1;
+      faq.style.display=match?'':'none';
+      if(match)visible++;
+    });
+    // Hide a category label when none of its questions are visible.
+    cats.forEach(function(cat){
+      var shown=false,node=cat.nextElementSibling;
+      while(node&&node.hasAttribute('data-faq')){
+        if(node.style.display!=='none'){shown=true;break;}
+        node=node.nextElementSibling;
+      }
+      cat.style.display=shown?'':'none';
+    });
+    if(empty)empty.classList.toggle('show',visible===0);
   }
-
-  input.addEventListener('input', applyFilter);
-
-  // ESC clears the search
-  input.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape') { input.value = ''; applyFilter(); input.blur(); }
+  input.addEventListener('input',apply);
+  input.addEventListener('keydown',function(e){
+    if(e.key==='Escape'){input.value='';apply();input.blur();}
   });
 })();
 </script>

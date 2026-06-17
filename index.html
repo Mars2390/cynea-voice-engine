@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Cynea — Voice agents that sound human, built for Africa</title>
-<meta name="description" content="Cynea deploys human-like voice agents that answer calls, handle interruptions, and speak with African warmth — live on your phone line in days, not months." />
+<title>Cynea — Voice agents that sound human, for every market</title>
+<meta name="description" content="Cynea deploys human-like voice agents that answer calls, handle interruptions, and speak with genuine warmth — live on your phone line in days, not months. Anywhere in the world." />
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -284,6 +284,16 @@ h1,h2,h3{letter-spacing:-.02em;font-weight:600;margin:0}
 .clip{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.16);color:#fff;border-radius:999px;padding:7px 14px;font-family:inherit;font-size:13px;cursor:pointer;transition:.15s}
 .clip:hover{background:rgba(255,255,255,.16)}
 .clip.is-on{background:#00D4FF;color:#04323d;border-color:#00D4FF;font-weight:600}
+
+/* ── world map (global coverage) ──────────────────────────────────── */
+.worldmap{position:relative;overflow:hidden;border-radius:var(--r-lg);min-height:400px;border:1px solid var(--line);
+  background:linear-gradient(135deg,#0E1014,#1A1D24);display:flex;align-items:flex-end;justify-content:center;padding:26px}
+.worldmap>img,.wm-video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:.75}
+.wm-grid{position:absolute;inset:0;background-image:radial-gradient(rgba(159,233,255,.16) 1px,transparent 1.6px);background-size:26px 26px;
+  -webkit-mask-image:radial-gradient(ellipse 72% 70% at 50% 46%,#000 38%,transparent 80%);mask-image:radial-gradient(ellipse 72% 70% at 50% 46%,#000 38%,transparent 80%)}
+.wm-node{position:absolute;width:11px;height:11px;border-radius:50%;background:#00D4FF;box-shadow:0 0 12px rgba(0,212,255,.8);animation:wmPulse 2.4s ease-out infinite}
+@keyframes wmPulse{0%{box-shadow:0 0 0 0 rgba(0,212,255,.5),0 0 12px rgba(0,212,255,.8)}70%{box-shadow:0 0 0 16px rgba(0,212,255,0),0 0 12px rgba(0,212,255,.8)}100%{box-shadow:0 0 0 0 rgba(0,212,255,0),0 0 12px rgba(0,212,255,.8)}}
+.wm-cap{position:relative;z-index:1;font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:#9FE9FF;background:rgba(0,0,0,.35);padding:8px 16px;border-radius:999px;border:1px solid rgba(159,233,255,.2)}
 </style>
 </head>
 <body>
@@ -314,9 +324,9 @@ h1,h2,h3{letter-spacing:-.02em;font-weight:600;margin:0}
   <div class="hero-orb orb-c"></div>
   <div class="wrap hero-grid">
     <div>
-      <span class="eyebrow">Voice AI · Built for Africa</span>
-      <h1>Voice agents that<br>sound <span class="grad">human</span>, built for Africa</h1>
-      <p class="hero-sub">Deploy agents that answer calls, handle interruptions, and speak with African warmth — live on your phone line in days, not months.</p>
+      <span class="eyebrow">Voice AI · For every market</span>
+      <h1>Voice agents that<br>sound <span class="grad">human</span>, everywhere</h1>
+      <p class="hero-sub">Deploy agents that answer calls, handle interruptions, and speak with genuine warmth — live on your phone line in days, not months.</p>
       <div class="hero-cta">
         <a class="btn btn-dark" href="https://calendly.com/albertmomanyi07/30min" target="_blank" rel="noopener">Get started →</a>
         <button class="btn btn-ghost" id="hearBtn" type="button">▶ Hear a live call</button>
@@ -332,7 +342,7 @@ h1,h2,h3{letter-spacing:-.02em;font-weight:600;margin:0}
         <div class="call-av ringing" id="callav">K</div>
         <div class="call-id">
           <b>Adinkra Hotel</b>
-          <span id="callsub">Incoming call · Accra</span>
+          <span id="callsub">Incoming call</span>
         </div>
         <div class="call-state" id="callstate">Ringing…</div>
       </div>
@@ -357,7 +367,7 @@ h1,h2,h3{letter-spacing:-.02em;font-weight:600;margin:0}
         </div>
         <div class="tile" data-audio="assets/amina_test_1.mp3">
           <div class="tile-orb b"><div class="tile-play">▶</div></div>
-          <div class="tile-cap"><b>Telephony</b><span>Africa's Talking · Twilio</span></div>
+          <div class="tile-cap"><b>Telephony</b><span>Twilio · SIP · worldwide</span></div>
         </div>
         <div class="tile" data-audio="assets/kofi_test_1.mp3">
           <div class="tile-orb c"><div class="tile-play">▶</div></div>
@@ -365,7 +375,7 @@ h1,h2,h3{letter-spacing:-.02em;font-weight:600;margin:0}
         </div>
       </div>
       <div class="pills">
-        <span class="pill">African Voices</span>
+        <span class="pill">Natural Voices</span>
         <span class="pill">Text to Speech</span>
         <span class="pill">Speech to Text</span>
         <span class="pill">Interruptions</span>
@@ -383,7 +393,7 @@ h1,h2,h3{letter-spacing:-.02em;font-weight:600;margin:0}
     <p>Built on production-grade, open infrastructure</p>
     <div class="strip-logos">
       <span>Whisper</span><span>Edge TTS</span><span>ElevenLabs</span>
-      <span>Africa's Talking</span><span>Twilio</span><span>Groq</span>
+      <span>Twilio</span><span>Plivo</span><span>Groq</span>
     </div>
   </div>
 </section>
@@ -425,7 +435,7 @@ h1,h2,h3{letter-spacing:-.02em;font-weight:600;margin:0}
       <div class="step-no">03</div>
       <div class="step-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M22 16.9V21a1 1 0 0 1-1.1 1A19.9 19.9 0 0 1 3 4.1 1 1 0 0 1 4 3h4a1 1 0 0 1 1 .8c.1 1 .4 1.8.6 2.6a1 1 0 0 1-.2 1L8 8.9a16 16 0 0 0 6 6l1.5-1.5a1 1 0 0 1 1-.2c.8.3 1.7.5 2.6.6a1 1 0 0 1 .9 1z"/></svg></div>
       <h3>Deploy</h3>
-      <p>Attach an Africa's Talking or Twilio number. Your agent answers in minutes.</p>
+      <p>Attach a Twilio or SIP number in any country. Your agent answers in minutes.</p>
     </article>
   </div>
 </section>
@@ -434,15 +444,15 @@ h1,h2,h3{letter-spacing:-.02em;font-weight:600;margin:0}
 <section class="sec wrap">
   <div class="sec-head rv">
     <span class="eyebrow">Why Cynea</span>
-    <h2>Built differently, for how Africa actually calls</h2>
-    <p>Where US-first voice AI gets the continent wrong, we got it right.</p>
+    <h2>Built for how the world actually calls</h2>
+    <p>Real conversations, low latency and natural turn-taking — in every market.</p>
   </div>
   <div class="feat-grid">
-    <div class="feat rv"><div class="feat-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15 15 0 0 1 0 20M12 2a15 15 0 0 0 0 20"/></svg></div><h3>African voices</h3><p>Accents and warmth for Ghana, Kenya, Nigeria, South Africa — plus mixed Swahili.</p></div>
+    <div class="feat rv"><div class="feat-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15 15 0 0 1 0 20M12 2a15 15 0 0 0 0 20"/></svg></div><h3>Natural voices</h3><p>Warm, native-sounding accents across 30+ languages and dialects worldwide.</p></div>
     <div class="feat rv"><div class="feat-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M21 11.5a8.5 8.5 0 0 1-8.5 8.5 8.4 8.4 0 0 1-3.8-.9L3 21l1.9-5.7A8.5 8.5 0 1 1 21 11.5z"/></svg></div><h3>Human-like turns</h3><p>Sequence-id barge-in, grace periods and backchannels. No robotic IVR feel.</p></div>
     <div class="feat rv"><div class="feat-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg></div><h3>Free STT / TTS</h3><p>Local Whisper and free Edge TTS by default. You pay only LLM tokens and telephony.</p></div>
     <div class="feat rv"><div class="feat-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><line x1="3" y1="20" x2="21" y2="20"/><rect x="6" y="10" width="3" height="10"/><rect x="11" y="6" width="3" height="14"/><rect x="16" y="13" width="3" height="7"/></svg></div><h3>Analytics included</h3><p>Per-call sentiment, containment and cost. Export PDF and CSV in a click.</p></div>
-    <div class="feat rv"><div class="feat-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M22 16.9V21a1 1 0 0 1-1.1 1A19.9 19.9 0 0 1 3 4.1 1 1 0 0 1 4 3h4a1 1 0 0 1 1 .8c.1 1 .4 1.8.6 2.6a1 1 0 0 1-.2 1L8 8.9a16 16 0 0 0 6 6l1.5-1.5a1 1 0 0 1 1-.2c.8.3 1.7.5 2.6.6a1 1 0 0 1 .9 1z"/></svg></div><h3>African telephony</h3><p>Production integrations with Africa's Talking, Twilio, Plivo and SIP.</p></div>
+    <div class="feat rv"><div class="feat-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M22 16.9V21a1 1 0 0 1-1.1 1A19.9 19.9 0 0 1 3 4.1 1 1 0 0 1 4 3h4a1 1 0 0 1 1 .8c.1 1 .4 1.8.6 2.6a1 1 0 0 1-.2 1L8 8.9a16 16 0 0 0 6 6l1.5-1.5a1 1 0 0 1 1-.2c.8.3 1.7.5 2.6.6a1 1 0 0 1 .9 1z"/></svg></div><h3>Any telephony</h3><p>Production integrations with Twilio, Plivo, SIP and major carriers worldwide.</p></div>
     <div class="feat rv"><div class="feat-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div><h3>24/7 operation</h3><p>Handles concurrent calls with a full audit trail, day and night.</p></div>
   </div>
 </section>
@@ -459,7 +469,7 @@ h1,h2,h3{letter-spacing:-.02em;font-weight:600;margin:0}
       <div class="agent-orb k"><img src="assets/avatar-kwame.jpg" alt="" loading="lazy" onerror="this.remove()"><b>● Ready for calls</b></div>
       <div class="agent-body">
         <h3>Kwame</h3>
-        <div class="agent-role">Hotel Receptionist · Ghana</div>
+        <div class="agent-role">Hotel Receptionist</div>
         <p>Handles bookings, availability, restaurant hours and small talk for hospitality.</p>
         <div class="agent-meta">en-GB-RyanNeural</div>
         <button class="btn btn-sm" data-audio="assets/kwame_test_1.mp3" data-audio2="assets/kwame_test_2.mp3">▶ Hear demo</button>
@@ -469,8 +479,8 @@ h1,h2,h3{letter-spacing:-.02em;font-weight:600;margin:0}
       <div class="agent-orb a"><img src="assets/amina%20.jpg" alt="" loading="lazy" onerror="this.remove()"><b>● Ready for calls</b></div>
       <div class="agent-body">
         <h3>Amina</h3>
-        <div class="agent-role">Customer Service · Kenya</div>
-        <p>Banking, telco and e-commerce with M-Pesa, airtime and bundles. Escalates fast.</p>
+        <div class="agent-role">Customer Service</div>
+        <p>Banking, telco and e-commerce — payments, billing and plans. Escalates complaints fast.</p>
         <div class="agent-meta">en-GB-SoniaNeural</div>
         <button class="btn btn-sm" data-audio="assets/amina_test_1.mp3">▶ Hear demo</button>
       </div>
@@ -479,8 +489,8 @@ h1,h2,h3{letter-spacing:-.02em;font-weight:600;margin:0}
       <div class="agent-orb f"><b>● Ready for calls</b></div>
       <div class="agent-body">
         <h3>Kofi</h3>
-        <div class="agent-role">Restaurant Orders · Ghana</div>
-        <p>Takes dine-in, takeaway and delivery orders with allergy checks and M-Pesa pay.</p>
+        <div class="agent-role">Restaurant Orders</div>
+        <p>Takes dine-in, takeaway and delivery orders with allergy checks and card payment.</p>
         <div class="agent-meta">en-GB-RyanNeural</div>
         <button class="btn btn-sm" data-audio="assets/kofi_test_1.mp3">▶ Hear demo</button>
       </div>
@@ -499,13 +509,13 @@ h1,h2,h3{letter-spacing:-.02em;font-weight:600;margin:0}
     <div class="player-orb" aria-hidden="true"></div>
     <button class="player-play" id="scPlay" type="button" aria-label="Play clip">▶</button>
     <div class="player-main">
-      <div class="player-meta"><b id="scTitle">Kwame · Hotel booking</b><span id="scSub">Adinkra Hotel, Accra</span></div>
+      <div class="player-meta"><b id="scTitle">Kwame · Hotel booking</b><span id="scSub">Hotel reception demo</span></div>
       <div class="player-wave" id="scWave"></div>
     </div>
     <div class="player-clips">
-      <button class="clip is-on" data-audio="assets/kwame_test_1.mp3" data-title="Kwame · Hotel booking" data-sub="Adinkra Hotel, Accra">Kwame</button>
-      <button class="clip" data-audio="assets/amina_test_1.mp3" data-title="Amina · Customer service" data-sub="Telco support, Nairobi">Amina</button>
-      <button class="clip" data-audio="assets/kofi_test_1.mp3" data-title="Kofi · Restaurant order" data-sub="Takeaway, Accra">Kofi</button>
+      <button class="clip is-on" data-audio="assets/kwame_test_1.mp3" data-title="Kwame · Hotel booking" data-sub="Hotel reception demo">Kwame</button>
+      <button class="clip" data-audio="assets/amina_test_1.mp3" data-title="Amina · Customer service" data-sub="Telco support demo">Amina</button>
+      <button class="clip" data-audio="assets/kofi_test_1.mp3" data-title="Kofi · Restaurant order" data-sub="Restaurant order demo">Kofi</button>
     </div>
   </div>
 </section>
@@ -514,10 +524,22 @@ h1,h2,h3{letter-spacing:-.02em;font-weight:600;margin:0}
 <section class="sec wrap" id="coverage">
   <div class="sec-head center rv">
     <span class="eyebrow">Coverage</span>
-    <h2>Serving 14 African countries</h2>
-    <p>8 active markets via Africa's Talking and Twilio · 6 expanding next.</p>
+    <h2>Live in every market</h2>
+    <p>Deploy voice agents anywhere — any language, any carrier, any time zone.</p>
   </div>
-  <div class="cov-grid" id="covgrid"></div>
+  <div class="worldmap rv">
+    <!-- DROP YOUR WORLD MAP HERE → assets/world-map.svg (or .png / .mp4). It auto-shows when present. -->
+    <img src="assets/world-map.svg" alt="Global coverage" onerror="this.style.display='none'">
+    <video class="wm-video" autoplay muted loop playsinline onerror="this.style.display='none'" style="display:none"></video>
+    <div class="wm-grid" aria-hidden="true"></div>
+    <span class="wm-node" style="left:21%;top:40%"></span>
+    <span class="wm-node" style="left:33%;top:60%;animation-delay:.4s"></span>
+    <span class="wm-node" style="left:47%;top:31%;animation-delay:.8s"></span>
+    <span class="wm-node" style="left:55%;top:55%;animation-delay:1.2s"></span>
+    <span class="wm-node" style="left:72%;top:43%;animation-delay:.6s"></span>
+    <span class="wm-node" style="left:83%;top:64%;animation-delay:1.6s"></span>
+    <div class="wm-cap">Available worldwide · 40+ markets</div>
+  </div>
 </section>
 
 <!-- ─── SAFETY ──────────────────────────────────────────────────── -->
@@ -538,7 +560,7 @@ h1,h2,h3{letter-spacing:-.02em;font-weight:600;margin:0}
 <section class="sec">
   <div class="cta rv">
     <h2>Put a voice agent on your line this week</h2>
-    <p>Book a 30-minute demo and hear your own script in an African voice.</p>
+    <p>Book a 30-minute demo and hear your own script in a natural, human-like voice.</p>
     <div class="cta-row">
       <a class="btn btn-light" href="https://calendly.com/albertmomanyi07/30min" target="_blank" rel="noopener">Book a demo</a>
       <a class="btn btn-ghost" href="https://github.com/Mars2390/cynea-voice-engine" target="_blank" rel="noopener">View on GitHub</a>
@@ -551,13 +573,13 @@ h1,h2,h3{letter-spacing:-.02em;font-weight:600;margin:0}
   <div class="wrap foot-in">
     <div class="foot-brand">
       <a class="brand" href="#top"><b>CYNEA</b><span>VOICE ENGINE</span></a>
-      <p>Human-like voice agents, built from the ground up for African markets. Made in Kenya.</p>
+      <p>Human-like AI voice agents for businesses worldwide. Built to answer, resolve, and sound human.</p>
     </div>
     <div class="foot-col"><h4>Product</h4><a href="#agents">Agents</a><a href="#platform">Platform</a><a href="#coverage">Coverage</a><a href="agent_manager.html">Dashboard</a></div>
     <div class="foot-col"><h4>Resources</h4><a href="#how">How it works</a><a href="#listen">Listen to a call</a><a href="help_center.html">Docs</a><a href="product_tour.html">Product tour</a></div>
-    <div class="foot-col"><h4>Company</h4><a href="signin.html">Sign in</a><a href="https://calendly.com/albertmomanyi07/30min" target="_blank" rel="noopener">Contact sales</a><span>Made in Kenya 🇰🇪</span></div>
+    <div class="foot-col"><h4>Company</h4><a href="signin.html">Sign in</a><a href="https://calendly.com/albertmomanyi07/30min" target="_blank" rel="noopener">Contact sales</a><span>Voice AI for every market</span></div>
   </div>
-  <div class="foot-base"><span>© 2026 Cynea AI · Voice Platform for Africa</span><span>Built for African business</span></div>
+  <div class="foot-base"><span>© 2026 Cynea AI · Voice agents, worldwide</span><span>Built for every business</span></div>
 </footer>
 
 <audio id="player" preload="none"></audio>
@@ -607,7 +629,7 @@ var script=[
   {s:'Caller',c:'caller',t:"Hi, I'd like to book a room for Friday."},
   {s:'Kwame',c:'agent',t:"Of course — for how many nights, and how many guests?"},
   {s:'Caller',c:'caller',t:"Two nights, two adults."},
-  {s:'Kwame',c:'agent',t:"We have a double at GH₵420 a night. Shall I confirm it?"},
+  {s:'Kwame',c:'agent',t:"We have a double at $120 a night. Shall I confirm it?"},
   {s:'Caller',c:'caller',t:"Yes please."},
   {s:'Kwame',c:'agent',t:"Done — I've sent a confirmation by SMS. Anything else?"}
 ];
@@ -631,7 +653,7 @@ function accept(){
   if(card.classList.contains('live')) return;
   av.classList.remove('ringing');
   card.classList.add('live');
-  subEl.textContent='Connected · Accra';
+  subEl.textContent='Connected';
   actions.innerHTML='<button class="btn call-replay" id="replayBtn" type="button">↻ Replay call</button>';
   document.getElementById('replayBtn').addEventListener('click',reset);
   stateEl.textContent='00:00'; secs=0;
@@ -647,7 +669,7 @@ function reset(){
   try{player.pause();}catch(e){}
   card.classList.remove('live');
   av.classList.add('ringing');
-  subEl.textContent='Incoming call · Accra';
+  subEl.textContent='Incoming call';
   stateEl.textContent='Ringing…';
   logEl.innerHTML='';
   actions.innerHTML='<button class="btn call-accept" id="acceptBtn" type="button">Accept call</button><button class="btn call-decline" id="declineBtn" type="button" aria-label="Decline">✕</button>';
@@ -688,21 +710,12 @@ var mband=document.querySelector('.metrics'); if(mband) mio.observe(mband);
   player.addEventListener('ended',function(){ sc.classList.remove('on'); playBtn.textContent='▶'; });
 })();
 
-/* ── coverage grid ─────────────────────────────────────────────── */
-var countries=[
-  ['🇬🇭','Ghana',1],['🇰🇪','Kenya',1],['🇳🇬','Nigeria',1],['🇿🇦','South Africa',1],
-  ['🇹🇿','Tanzania',1],['🇺🇬','Uganda',1],['🇷🇼','Rwanda',1],['🇪🇹','Ethiopia',1],
-  ['🇪🇬','Egypt',0],['🇲🇦','Morocco',0],['🇸🇳','Senegal',0],['🇨🇮',"Côte d'Ivoire",0],
-  ['🇨🇲','Cameroon',0],['🇿🇲','Zambia',0]
-];
-var cg=document.getElementById('covgrid');
-countries.forEach(function(c){
-  var d=document.createElement('div');
-  d.className='cov '+(c[2]?'on':'soon');
-  d.innerHTML='<span class="fl">'+c[0]+'</span><span class="nm"></span><span class="st">'+(c[2]?'Active':'Soon')+'</span>';
-  d.querySelector('.nm').textContent=c[1];
-  cg.appendChild(d);
-});
+/* ── world map: auto-use a dropped video if present ────────────── */
+(function(){
+  var v=document.querySelector('.wm-video'); if(!v) return;
+  var src='assets/world-map.mp4';
+  fetch(src,{method:'HEAD'}).then(function(r){ if(r.ok){ v.src=src; v.style.display='block'; } }).catch(function(){});
+})();
 </script>
 </body>
 </html>

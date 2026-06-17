@@ -3,234 +3,101 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Sign in — Cynea Voice Engine</title>
-<meta name="description" content="Sign in to your Cynea voice agent dashboard." />
+<title>Sign in — Cynea</title>
+<meta name="description" content="Sign in to Cynea — human-like AI voice agents for businesses worldwide." />
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Syne:wght@600;700;800&family=DM+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
-*, *::before, *::after { box-sizing: border-box; }
-html, body { margin: 0; padding: 0; }
-body {
-  font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  font-size: 14px; line-height: 1.5;
-  -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale;
-  color: #1A1A1A;
-  background: #F5F1EA;
-  min-height: 100vh;
-  position: relative;
-  overflow-x: hidden;
-}
-@media (prefers-reduced-motion: reduce) {
-  *, *::before, *::after {
-    animation-duration: 0.01ms !important;
-    transition-duration: 0.01ms !important;
-  }
-}
+:root{--cream:#F5F1EA;--cream-2:#EFEAE0;--surface:#FFFFFF;--surface-2:#FBF8F2;--ink:#161616;--muted:#6B6660;--faint:#9A938A;--line:#E6E0D5;--black:#0A0A0A;--accent:#00D4FF;--accent-ink:#0089A8;--r:18px;--r-lg:28px;--maxw:1200px}
+*,*::before,*::after{box-sizing:border-box}html{scroll-behavior:smooth}
+body{margin:0;background:var(--cream);color:var(--ink);font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;font-size:16px;line-height:1.55;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important}}
+a{color:inherit;text-decoration:none}img{max-width:100%;display:block}
+.eyebrow{font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--accent-ink);font-weight:500}
+h1,h2,h3{letter-spacing:-.02em;font-weight:600;margin:0}.muted{color:var(--muted)}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;font-family:inherit;font-size:15px;font-weight:500;padding:12px 20px;border-radius:999px;border:1px solid var(--line);background:var(--surface);color:var(--ink);cursor:pointer;transition:transform .18s,box-shadow .2s,background .2s,border-color .2s}
+.btn:hover{transform:translateY(-1px)}.btn-dark{background:var(--black);color:#fff;border-color:var(--black)}.btn-dark:hover{background:#262626;box-shadow:0 10px 28px rgba(0,0,0,.18)}
 
-/* ── full-page subtle ambient gradient ─────────────────────────── */
-.signin-bg {
-  position: fixed; inset: 0; z-index: -1;
-  background:
-    radial-gradient(900px 500px at 30% 30%, rgba(0,212,255,0.18), transparent 60%),
-    radial-gradient(800px 460px at 70% 70%, rgba(167,139,250,0.10), transparent 65%),
-    #F5F1EA;
-}
-.signin-bg::after {
-  content: ""; position: absolute; inset: 0;
-  background-image:
-    linear-gradient(rgba(0,212,255,0.04) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(0,212,255,0.04) 1px, transparent 1px);
-  background-size: 44px 44px;
-  mask-image: radial-gradient(ellipse 700px 500px at 50% 40%, black 30%, transparent 80%);
-  -webkit-mask-image: radial-gradient(ellipse 700px 500px at 50% 40%, black 30%, transparent 80%);
-  opacity: 0.6;
-}
+/* ── ambient drifting orbs ───────────────────────────────────── */
+.orbs{position:fixed;inset:0;z-index:0;overflow:hidden;pointer-events:none}
+.orb{position:absolute;border-radius:50%;filter:blur(80px);will-change:transform;opacity:.9}
+.orb-cyan{width:560px;height:560px;top:-160px;left:-120px;background:radial-gradient(circle at 50% 50%,rgba(0,212,255,.22),transparent 70%);animation:drift1 26s ease-in-out infinite}
+.orb-lav{width:620px;height:620px;bottom:-200px;right:-160px;background:radial-gradient(circle at 50% 50%,rgba(124,92,252,.20),transparent 70%);animation:drift2 32s ease-in-out infinite}
+@keyframes drift1{0%,100%{transform:translate3d(0,0,0)}50%{transform:translate3d(80px,60px,0)}}
+@keyframes drift2{0%,100%{transform:translate3d(0,0,0)}50%{transform:translate3d(-70px,-50px,0)}}
 
 /* ── page layout ─────────────────────────────────────────────── */
-.signin-page {
-  min-height: 100vh;
-  display: flex; flex-direction: column;
-  align-items: center; justify-content: center;
-  padding: 32px 20px;
-  gap: 32px;
-}
+.page{position:relative;z-index:1;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:40px 20px;gap:30px}
 
-.signin-logo {
-  display: inline-flex; align-items: baseline; gap: 12px;
-  text-decoration: none;
-  animation: brandGlowPulse 4.5s ease-in-out infinite;
-}
-.brand-mark {
-  font-family: 'Syne', sans-serif; font-weight: 800;
-  font-size: 22px; letter-spacing: 0.18em;
-  color: #00D4FF;
-  text-shadow: 0 0 20px rgba(0,212,255,0.5);
-}
-.brand-tag {
-  font-family: 'Syne', sans-serif; font-weight: 600;
-  font-size: 11px; letter-spacing: 0.32em; color: #6B6B6B;
-}
-@keyframes brandGlowPulse {
-  0%, 100% { filter: drop-shadow(0 0 12px rgba(0,212,255,0.35)); }
-  50%      { filter: drop-shadow(0 0 28px rgba(0,212,255,0.7)); }
-}
+/* ── wordmark ────────────────────────────────────────────────── */
+.logo{display:inline-flex;align-items:baseline;gap:11px}
+.logo b{font-weight:700;font-size:24px;letter-spacing:.02em;color:var(--ink)}
+.logo span{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.32em;color:var(--faint);font-weight:500}
 
-/* ── card ─────────────────────────────────────────────────────── */
-.signin-card {
-  width: 100%; max-width: 420px;
-  background: linear-gradient(160deg, #FFFFFF 0%, #FBF8F2 100%);
-  border: 1px solid #E4DED2; border-radius: 16px;
-  padding: 32px;
-  box-shadow:
-    0 0 0 1px rgba(255,255,255,0.03) inset,
-    0 30px 80px rgba(0,212,255,0.10),
-    0 60px 120px rgba(0,0,0,0.6);
-  position: relative; overflow: hidden;
-}
-.signin-card::before {
-  content: ""; position: absolute; inset: 0; pointer-events: none;
-  background: linear-gradient(180deg, rgba(0,212,255,0.06), transparent 30%);
-}
-.signin-card h1 {
-  font-family: 'Syne', sans-serif; font-weight: 700;
-  font-size: 22px; margin: 0 0 6px;
-  position: relative; z-index: 1;
-}
-.signin-card .lead {
-  font-size: 13px; color: #6B6B6B; margin: 0 0 22px;
-  position: relative; z-index: 1;
-}
+/* ── card ────────────────────────────────────────────────────── */
+.card{position:relative;width:100%;max-width:430px;background:var(--surface);border:1px solid var(--line);border-radius:20px;padding:34px;box-shadow:0 1px 0 rgba(255,255,255,.6) inset,0 20px 50px rgba(0,0,0,.07),0 40px 90px rgba(0,212,255,.06);overflow:hidden;animation:cardIn .6s cubic-bezier(.2,.8,.2,1) both}
+.card::before{content:"";position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(0,212,255,.55),transparent);pointer-events:none}
+@keyframes cardIn{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+.card h1{font-size:23px;margin:0 0 7px}
+.card .lead{font-size:14px;color:var(--muted);margin:0 0 24px}
 
-/* ── form ─────────────────────────────────────────────────────── */
-.signin-form {
-  display: flex; flex-direction: column; gap: 14px;
-  position: relative; z-index: 1;
-}
-.signin-field { display: flex; flex-direction: column; gap: 6px; }
-.signin-label {
-  font-size: 11px; text-transform: uppercase; letter-spacing: 0.08em;
-  color: #6B6B6B; font-weight: 600;
-}
-.signin-input {
-  width: 100%;
-  background: #FBF8F2; color: #1A1A1A;
-  border: 1px solid #E4DED2; border-radius: 10px;
-  padding: 11px 14px;
-  font-family: inherit; font-size: 14px;
-  outline: none;
-  transition: border-color 150ms ease, box-shadow 150ms ease;
-}
-.signin-input:focus {
-  border-color: #00D4FF;
-  box-shadow: 0 0 0 3px rgba(0,212,255,0.18);
-}
-.signin-input::placeholder { color: #9A938A; }
+/* ── form ────────────────────────────────────────────────────── */
+.form{display:flex;flex-direction:column;gap:16px}
+.field{display:flex;flex-direction:column;gap:7px}
+.label{font-family:'JetBrains Mono',monospace;font-size:11px;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);font-weight:500}
+.input{width:100%;background:var(--surface-2);color:var(--ink);border:1px solid var(--line);border-radius:10px;padding:12px 14px;font-family:inherit;font-size:15px;outline:none;transition:border-color .15s,box-shadow .15s,background .15s}
+.input:focus{border-color:var(--accent);background:var(--surface);box-shadow:0 0 0 3px rgba(0,212,255,.22)}
+.input::placeholder{color:var(--faint)}
+.btn-submit{width:100%;margin-top:4px;font-size:15px;font-weight:600;padding:13px 20px;border-radius:999px}
 
-/* ── buttons ──────────────────────────────────────────────────── */
-.btn {
-  font-family: inherit; font-weight: 600; font-size: 14px;
-  padding: 11px 18px; border-radius: 10px; cursor: pointer;
-  border: 1px solid #E4DED2; background: #FBF8F2; color: #1A1A1A;
-  transition: transform 180ms cubic-bezier(.2,.8,.2,1), box-shadow 220ms ease, filter 120ms ease, background 200ms ease;
-}
-.btn:hover { transform: translateY(-1px) scale(1.02); }
-.btn:active { transform: translateY(0) scale(1); }
-.btn-primary {
-  background: #00D4FF; color: #001218; border-color: #00D4FF;
-  width: 100%;
-}
-.btn-primary:hover { box-shadow: 0 0 0 1px #00D4FF, 0 0 28px rgba(0,212,255,0.45); }
+/* ── divider ─────────────────────────────────────────────────── */
+.divider{display:flex;align-items:center;gap:12px;margin:24px 0}
+.divider::before,.divider::after{content:"";flex:1;height:1px;background:var(--line)}
+.divider span{font-family:'JetBrains Mono',monospace;font-size:11px;text-transform:uppercase;letter-spacing:.12em;color:var(--faint)}
 
-.btn-google {
-  width: 100%;
-  background: #FFFFFF; color: #1F1F1F;
-  border: 1px solid #FFFFFF;
-  display: inline-flex; align-items: center; justify-content: center; gap: 10px;
-  padding: 11px 16px;
-}
-.btn-google:hover { background: #1A1A1A; }
-.btn-google svg { width: 18px; height: 18px; flex-shrink: 0; }
+/* ── google btn ──────────────────────────────────────────────── */
+.btn-google{width:100%;gap:10px;font-weight:500;padding:12px 18px}
+.btn-google svg{width:18px;height:18px;flex-shrink:0}
 
-/* ── divider ──────────────────────────────────────────────────── */
-.signin-divider {
-  display: flex; align-items: center; gap: 12px;
-  margin: 22px 0;
-  position: relative; z-index: 1;
-}
-.signin-divider::before,
-.signin-divider::after {
-  content: ""; flex: 1; height: 1px; background: #E4DED2;
-}
-.signin-divider span {
-  font-size: 11px; text-transform: uppercase; letter-spacing: 0.12em;
-  color: #9A938A; font-weight: 600;
-}
+/* ── aside / footer ──────────────────────────────────────────── */
+.aside{text-align:center;margin:24px 0 0;font-size:14px;color:var(--muted)}
+.aside a{color:var(--accent-ink);font-weight:500}
+.aside a:hover{text-decoration:underline}
+.page-footer{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.08em;color:var(--faint)}
 
-/* ── footer link ──────────────────────────────────────────────── */
-.signin-aside {
-  text-align: center; margin: 22px 0 0;
-  font-size: 13px; color: #6B6B6B;
-  position: relative; z-index: 1;
-}
-.signin-aside a { color: #00D4FF; text-decoration: none; font-weight: 500; }
-.signin-aside a:hover { text-decoration: underline; }
-
-.signin-page-footer {
-  font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase;
-  color: #9A938A; font-weight: 600;
-}
-
-/* mobile */
-@media (max-width: 480px) {
-  .signin-card { padding: 24px; border-radius: 14px; }
-  .signin-card h1 { font-size: 19px; }
-}
-
-/* ════ CY-LIGHT — ElevenLabs-style light skin (Cynea) ════ */
-body{font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;}
-h1,h2,h3,h4{font-family:'Inter',sans-serif;letter-spacing:-0.02em;}
-.brand-mark{font-family:'Inter',sans-serif;font-weight:700;letter-spacing:0.04em;color:#1A1A1A;text-shadow:none;}
-.brand-tag{color:#9A938A;}
-.btn-primary{background:#0A0A0A;color:#FFFFFF;border-color:#0A0A0A;}
-.btn-primary:hover{background:#222;border-color:#222;filter:none;box-shadow:0 8px 24px rgba(0,0,0,0.16);}
-
-/* ════ CY-LIGHT · wow polish ════ */
-html{scroll-behavior:smooth;}
-@media (prefers-reduced-motion:no-preference){
-  body{animation:cyPageIn 0.55s cubic-bezier(.2,.8,.2,1) both;}
-  @keyframes cyPageIn{from{opacity:0;}to{opacity:1;}}
-}
+@media(max-width:480px){.card{padding:26px;border-radius:16px}.card h1{font-size:20px}}
 </style>
 </head>
 <body>
-<div class="signin-bg" aria-hidden="true"></div>
+<div class="orbs" aria-hidden="true">
+  <div class="orb orb-cyan"></div>
+  <div class="orb orb-lav"></div>
+</div>
 
-<main class="signin-page">
-  <a class="signin-logo" href="cynea_landing.html">
-    <span class="brand-mark">CYNEA</span>
-    <span class="brand-tag">VOICE ENGINE</span>
+<main class="page">
+  <a class="logo" href="index.html" aria-label="Cynea home">
+    <b>CYNEA</b>
+    <span>VOICE ENGINE</span>
   </a>
 
-  <article class="signin-card">
-    <h1>Sign in to your account</h1>
-    <p class="lead">Continue managing your voice agents and call operations.</p>
+  <article class="card">
+    <h1>Sign in to Cynea</h1>
+    <p class="lead">Welcome back. Access your dashboard and manage your AI voice agents.</p>
 
-    <form id="signin-form" class="signin-form" autocomplete="off" novalidate>
-      <label class="signin-field">
-        <span class="signin-label">Email</span>
-        <input class="signin-input" type="email" name="email"
-               placeholder="you@company.com" autocomplete="email">
-      </label>
-      <label class="signin-field">
-        <span class="signin-label">Password</span>
-        <input class="signin-input" type="password" name="password"
-               placeholder="••••••••" autocomplete="current-password">
-      </label>
-      <button class="btn btn-primary" type="submit">Sign in</button>
+    <form id="signin-form" class="form" autocomplete="off" novalidate>
+      <div class="field">
+        <label class="label" for="email">Email</label>
+        <input class="input" id="email" type="email" name="email" placeholder="you@company.com" autocomplete="email" required>
+      </div>
+      <div class="field">
+        <label class="label" for="password">Password</label>
+        <input class="input" id="password" type="password" name="password" placeholder="••••••••" autocomplete="current-password" required>
+      </div>
+      <button class="btn btn-dark btn-submit" type="submit">Sign in</button>
     </form>
 
-    <div class="signin-divider"><span>or continue with</span></div>
+    <div class="divider"><span>or continue with</span></div>
 
     <button id="googleBtn" class="btn btn-google" type="button">
       <svg viewBox="0 0 18 18" aria-hidden="true">
@@ -242,31 +109,30 @@ html{scroll-behavior:smooth;}
       Sign in with Google
     </button>
 
-    <p class="signin-aside">
+    <p class="aside">
       Don't have an account?
-      <a href="cynea_landing.html#agents">Request access</a>
+      <a href="index.html#agents">Request access</a>
     </p>
   </article>
 
-  <footer class="signin-page-footer">Cynea AI · Voice Platform for Africa</footer>
+  <footer class="page-footer">Cynea AI · Voice agents for every market</footer>
 </main>
 
 <script>
 'use strict';
-// Demo wiring — both the form submit and the Google button take the
-// user straight to the agent manager. There is no real authentication
-// happening here. A production deployment would replace these handlers
-// with a real OAuth flow + session-cookie issuance.
-function go() { window.location.href = 'agent_manager.html'; }
+// Demo wiring — both the form submit and the Google button take the user
+// straight to the agent manager. No real authentication happens here; a
+// production deployment would replace these with a real OAuth + session flow.
+function go(){ window.location.href = 'agent_manager.html'; }
 
-const form = document.getElementById('signin-form');
+var form = document.getElementById('signin-form');
 if (form) {
-  form.addEventListener('submit', (e) => {
+  form.addEventListener('submit', function(e){
     e.preventDefault();
     go();
   });
 }
-const googleBtn = document.getElementById('googleBtn');
+var googleBtn = document.getElementById('googleBtn');
 if (googleBtn) googleBtn.addEventListener('click', go);
 </script>
 </body>

@@ -4,1373 +4,475 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Agent Manager — Cynea Voice Engine</title>
-<meta name="description" content="Manage your Cynea voice agents — create, configure, and monitor calls across Africa." />
+<meta name="description" content="Manage your Cynea AI voice agents — create, configure, and monitor calls across every market worldwide." />
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Syne:wght@600;700;800&family=DM+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
-*, *::before, *::after { box-sizing: border-box; }
-html, body { margin: 0; padding: 0; }
-body {
-  font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  font-size: 14px; line-height: 1.5;
-  -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale;
-  color: #1A1A1A;
-  background: #F5F1EA;
-  min-height: 100vh;
-}
-@media (prefers-reduced-motion: reduce) {
-  *, *::before, *::after {
-    animation-duration: 0.01ms !important;
-    transition-duration: 0.01ms !important;
-  }
-}
+:root{--cream:#F5F1EA;--cream-2:#EFEAE0;--surface:#FFFFFF;--surface-2:#FBF8F2;--ink:#161616;--muted:#6B6660;--faint:#9A938A;--line:#E6E0D5;--black:#0A0A0A;--accent:#00D4FF;--accent-ink:#0089A8;--ok:#10B981;--r:18px;--r-lg:28px;--maxw:1240px}
+*,*::before,*::after{box-sizing:border-box}html{scroll-behavior:smooth}
+body{margin:0;background:var(--cream);color:var(--ink);font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;font-size:15px;line-height:1.5;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important}}
+a{color:inherit;text-decoration:none}.wrap{max-width:var(--maxw);margin:0 auto;padding:0 24px}.mono{font-family:'JetBrains Mono',monospace;font-feature-settings:"tnum" 1}
+.eyebrow{font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--accent-ink);font-weight:500}
+h1,h2,h3{letter-spacing:-.02em;font-weight:600;margin:0}.muted{color:var(--muted)}
+.btn{display:inline-flex;align-items:center;gap:8px;font-family:inherit;font-size:14px;font-weight:500;padding:9px 16px;border-radius:999px;border:1px solid var(--line);background:var(--surface);color:var(--ink);cursor:pointer;transition:transform .18s,box-shadow .2s,background .2s,border-color .2s}
+.btn:hover{transform:translateY(-1px)}.btn-dark{background:var(--black);color:#fff;border-color:var(--black)}.btn-dark:hover{background:#262626;box-shadow:0 10px 28px rgba(0,0,0,.18)}.btn-sm{padding:7px 13px;font-size:13px}.btn-ghost{background:transparent}.btn-ghost:hover{background:rgba(0,0,0,.04)}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);box-shadow:0 1px 2px rgba(22,22,22,.03)}
+.nav{position:sticky;top:0;z-index:60;background:rgba(245,241,234,.82);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border-bottom:1px solid var(--line)}
+.nav-in{display:flex;align-items:center;gap:24px;height:60px;max-width:var(--maxw);margin:0 auto;padding:0 24px}
+.brand{display:inline-flex;align-items:baseline;gap:9px}.brand b{font-weight:700;font-size:19px;letter-spacing:.02em}.brand span{font-size:10px;letter-spacing:.28em;color:var(--faint);font-weight:600}
+.nav-links{display:flex;gap:24px;margin:0 auto}.nav-links a{font-size:14px;color:var(--muted);font-weight:500}.nav-links a:hover,.nav-links a.active{color:var(--ink)}
+.nav-right{display:flex;align-items:center;gap:12px}.nav-signin{font-size:14px;color:var(--ink);font-weight:500}
+@media(max-width:920px){.nav-links{display:none}.nav-signin{display:none}}
+.pill{display:inline-flex;align-items:center;gap:6px;padding:3px 10px;border-radius:999px;font-size:11px;font-weight:600;border:1px solid}
+.pill-ok{color:#0F9D6E;border-color:rgba(16,185,129,.3);background:rgba(16,185,129,.1)}
+.dot{width:8px;height:8px;border-radius:50%;background:var(--ok);box-shadow:0 0 0 0 rgba(16,185,129,.6);animation:pulse 1.8s infinite}
+@keyframes pulse{0%{box-shadow:0 0 0 0 rgba(16,185,129,.5)}70%{box-shadow:0 0 0 9px rgba(16,185,129,0)}100%{box-shadow:0 0 0 0 rgba(16,185,129,0)}}
+.foot{padding:48px 0 32px;border-top:1px solid var(--line);margin-top:32px}.foot-in{max-width:var(--maxw);margin:0 auto;padding:0 24px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:16px;font-size:13px;color:var(--faint)}
+.rv{opacity:0;transform:translateY(18px);transition:opacity .6s cubic-bezier(.2,.8,.2,1),transform .6s cubic-bezier(.2,.8,.2,1)}.rv.in{opacity:1;transform:none}
+#prog{position:fixed;top:0;left:0;height:2px;width:0;background:linear-gradient(90deg,#00D4FF,#7C5CFC);z-index:80}
 
-/* ── layout ───────────────────────────────────────────────────── */
-.am-layout {
-  display: grid;
-  grid-template-columns: 232px 1fr;
-  min-height: 100vh;
-  transition: grid-template-columns 200ms ease;
-}
-.am-layout.sidebar-collapsed { grid-template-columns: 64px 1fr; }
-@media (max-width: 900px) {
-  .am-layout { grid-template-columns: 64px 1fr; }
-}
+/* ════════ PAGE — Agent Manager console ════════ */
+main{padding:32px 0 16px}
+.section{display:flex;flex-direction:column;gap:20px}
+.section + .section{margin-top:20px}
 
-/* ── sidebar ──────────────────────────────────────────────────── */
-.am-sidebar {
-  position: sticky; top: 0; height: 100vh;
-  background: #F5F1EA;
-  border-right: 1px solid #E4DED2;
-  display: flex; flex-direction: column;
-  padding: 20px 0;
-  overflow: hidden;
-}
-.am-sidebar-brand {
-  display: flex; align-items: center; gap: 10px;
-  padding: 0 20px 20px;
-  border-bottom: 1px solid #E4DED2;
-  margin-bottom: 12px;
-  text-decoration: none;
-}
-.am-sidebar-brand .brand-mark {
-  font-family: 'Syne', sans-serif; font-weight: 800;
-  font-size: 18px; letter-spacing: 0.18em;
-  color: #00D4FF;
-  text-shadow: 0 0 14px rgba(0,212,255,0.5);
-}
-.am-sidebar-brand .brand-tag {
-  font-family: 'Syne', sans-serif; font-weight: 600;
-  font-size: 9px; letter-spacing: 0.32em; color: #6B6B6B;
-  white-space: nowrap;
-}
-.am-layout.sidebar-collapsed .brand-tag,
-.am-layout.sidebar-collapsed .am-sidebar-link span:not(.icon) {
-  display: none;
-}
+/* header */
+.am-head{display:flex;align-items:flex-end;justify-content:space-between;gap:20px;flex-wrap:wrap}
+.am-head h1{font-size:34px;line-height:1.1}
+.am-head .sub{margin-top:8px;color:var(--muted);font-size:15px}
+@media(max-width:560px){.am-head h1{font-size:27px}}
 
-.am-sidebar-toggle {
-  position: absolute; top: 24px; right: 12px;
-  width: 24px; height: 24px;
-  background: transparent; color: #6B6B6B;
-  border: none; cursor: pointer;
-  font-size: 14px;
-  display: inline-flex; align-items: center; justify-content: center;
-  transition: color 120ms ease;
-}
-.am-sidebar-toggle:hover { color: #1A1A1A; }
+/* KPI strip */
+.kpi{display:flex;flex-wrap:wrap;padding:6px 0}
+.kpi .item{flex:1 1 0;min-width:120px;padding:14px 22px;border-right:1px solid var(--line);display:flex;flex-direction:column;gap:5px}
+.kpi .item:last-child{border-right:none}
+.kpi .lbl{font-size:11px;letter-spacing:.10em;text-transform:uppercase;color:var(--faint);font-weight:600}
+.kpi .val{font-family:'JetBrains Mono',monospace;font-feature-settings:"tnum" 1;font-size:25px;font-weight:600;letter-spacing:-.02em;color:var(--ink)}
+.kpi .val.accent{color:var(--accent-ink)}
+@media(max-width:760px){.kpi .item{flex:1 1 44%;border-right:none;border-bottom:1px solid var(--line)}.kpi .item:nth-last-child(-n+1){border-bottom:none}}
 
-.am-sidebar-nav { display: flex; flex-direction: column; padding: 0 12px; gap: 2px; }
-.am-sidebar-link {
-  display: flex; align-items: center; gap: 12px;
-  padding: 10px 12px;
-  border-radius: 8px;
-  color: #6B6B6B; text-decoration: none;
-  font-size: 13px; font-weight: 500;
-  transition: background 150ms ease, color 150ms ease;
-  white-space: nowrap;
-}
-.am-sidebar-link:hover { background: #FFFFFF; color: #1A1A1A; }
-.am-sidebar-link.active {
-  background: rgba(0,212,255,0.10);
-  color: #00D4FF;
-  box-shadow: inset 2px 0 0 #00D4FF;
-}
-.am-sidebar-link .icon {
-  font-size: 16px; flex-shrink: 0;
-  width: 22px; text-align: center;
-}
+/* section header */
+.sec-head{display:flex;align-items:baseline;justify-content:space-between;gap:14px}
+.sec-head h2{font-size:13px;letter-spacing:.10em;text-transform:uppercase;color:var(--ink);font-family:'JetBrains Mono',monospace;font-weight:600}
+.sec-head .note{font-size:12px;color:var(--faint)}
 
-/* ── main column ──────────────────────────────────────────────── */
-.am-main {
-  display: flex; flex-direction: column;
-  min-width: 0;
-  background:
-    radial-gradient(900px 500px at 100% 0%, rgba(0,212,255,0.06), transparent 60%),
-    #F5F1EA;
-}
+/* agent grid */
+.agrid{display:grid;gap:18px;grid-template-columns:repeat(4,1fr)}
+@media(max-width:1080px){.agrid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:560px){.agrid{grid-template-columns:1fr}}
 
-/* ── top nav ──────────────────────────────────────────────────── */
-.am-topnav {
-  display: flex; align-items: center; gap: 24px;
-  padding: 16px 32px;
-  border-bottom: 1px solid #E4DED2;
-  background: rgba(245,241,234,0.85);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  position: sticky; top: 0; z-index: 30;
-}
-.am-topnav-title {
-  font-family: 'Syne', sans-serif; font-weight: 700;
-  font-size: 16px; letter-spacing: 0.02em;
-  margin: 0;
-}
-.pill {
-  display: inline-flex; align-items: center; gap: 6px;
-  padding: 4px 10px; border-radius: 999px;
-  font-size: 11px; font-weight: 600; letter-spacing: 0.05em;
-  text-transform: uppercase; border: 1px solid; line-height: 1;
-}
-.pill-green {
-  color: #10B981; border-color: rgba(16,185,129,0.25); background: rgba(16,185,129,0.10);
-}
-.pulse-dot {
-  width: 7px; height: 7px; border-radius: 50%;
-  background: #10B981; display: inline-block;
-  animation: pulseDot 1.8s cubic-bezier(.4,0,.6,1) infinite;
-}
-@keyframes pulseDot {
-  0%   { box-shadow: 0 0 0 0 rgba(16,185,129,0.7); }
-  60%  { box-shadow: 0 0 0 9px rgba(16,185,129,0); }
-  100% { box-shadow: 0 0 0 0 rgba(16,185,129,0); }
-}
+.acard{padding:20px;display:flex;flex-direction:column;gap:16px;position:relative;overflow:hidden;transition:transform .22s cubic-bezier(.2,.8,.2,1),box-shadow .25s,border-color .25s}
+.acard:hover{transform:translateY(-3px);box-shadow:0 18px 40px rgba(22,22,22,.10);border-color:#D8D0C2}
+.acard::before{content:"";position:absolute;left:0;right:0;top:0;height:3px;background:linear-gradient(90deg,var(--c1,#00D4FF),var(--c2,#7C5CFC));opacity:.9}
+.acard-head{display:flex;align-items:center;gap:13px}
+.avatar{width:52px;height:52px;border-radius:50%;flex-shrink:0;overflow:hidden;display:inline-flex;align-items:center;justify-content:center;font-weight:700;font-size:20px;color:#fff;background:linear-gradient(135deg,var(--c1,#00D4FF),var(--c2,#7C5CFC));box-shadow:0 4px 14px rgba(0,0,0,.10)}
+.avatar img{width:100%;height:100%;object-fit:cover;display:block}
+.acard-id{flex:1;min-width:0}
+.acard-id h3{font-size:17px;font-weight:600}
+.acard-id p{margin:2px 0 0;font-size:12.5px;color:var(--muted)}
+.status{display:inline-flex;align-items:center;gap:6px;padding:3px 10px;border-radius:999px;font-size:11px;font-weight:600;border:1px solid;line-height:1.4;white-space:nowrap}
+.status .sdot{width:7px;height:7px;border-radius:50%;display:inline-block}
+.status.ready{color:#0F9D6E;border-color:rgba(16,185,129,.3);background:rgba(16,185,129,.1)}
+.status.ready .sdot{background:var(--ok)}
+.status.oncall{color:#0089A8;border-color:rgba(0,212,255,.4);background:rgba(0,212,255,.10)}
+.status.oncall .sdot{background:var(--accent);animation:pulse 1.8s infinite}
+.status.paused{color:#B7791F;border-color:rgba(245,158,11,.35);background:rgba(245,158,11,.12)}
+.status.paused .sdot{background:#F59E0B}
 
-.am-topnav-links {
-  margin-left: auto;
-  display: flex; gap: 22px;
-}
-.am-topnav-links a {
-  color: #6B6B6B; text-decoration: none;
-  font-size: 13px; font-weight: 500;
-  position: relative; padding-bottom: 2px;
-  transition: color 120ms ease;
-}
-.am-topnav-links a:hover { color: #1A1A1A; }
-.am-topnav-links a.active { color: #1A1A1A; }
-.am-topnav-links a.active::after {
-  content: ""; position: absolute; left: 0; right: 0; bottom: -2px;
-  height: 1px; background: #00D4FF;
-}
-@media (max-width: 720px) { .am-topnav-links { display: none; } }
+.acard-stats{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:14px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.acard-stats .s .l{font-size:11px;color:var(--faint);letter-spacing:.04em}
+.acard-stats .s .v{font-family:'JetBrains Mono',monospace;font-weight:600;font-size:16px;margin-top:2px;color:var(--ink);font-feature-settings:"tnum" 1}
+.acard-foot{display:flex;gap:8px;flex-wrap:wrap}
+.acard-foot .btn{flex:1 1 auto;justify-content:center;padding:7px 12px;font-size:12.5px}
+.acard-foot .btn.full{flex-basis:100%}
 
-.am-user { position: relative; }
-.am-user-trigger {
-  background: transparent; border: none; cursor: pointer;
-  padding: 0;
-}
-.am-user-avatar {
-  width: 36px; height: 36px; border-radius: 50%;
-  background: linear-gradient(135deg, #00D4FF, rgba(255,255,255,0.05));
-  display: inline-flex; align-items: center; justify-content: center;
-  font-family: 'Syne', sans-serif; font-weight: 700; font-size: 14px;
-  color: #001218;
-  box-shadow: 0 0 0 2px rgba(255,255,255,0.06), 0 0 18px rgba(0,212,255,0.3);
-  transition: filter 150ms ease;
-}
-.am-user-avatar:hover { filter: brightness(1.05); }
-.am-user-menu {
-  position: absolute; right: 0; top: calc(100% + 10px);
-  background: #FFFFFF; border: 1px solid #E4DED2; border-radius: 10px;
-  min-width: 180px;
-  padding: 6px;
-  box-shadow: 0 18px 50px rgba(0,0,0,0.6);
-  z-index: 40;
-}
-.am-user-menu[hidden] { display: none; }
-.am-user-menu a {
-  display: block;
-  padding: 9px 12px; border-radius: 6px;
-  color: #1A1A1A; text-decoration: none;
-  font-size: 13px;
-  transition: background 120ms ease, color 120ms ease;
-}
-.am-user-menu a:hover { background: #FFFFFF; color: #00D4FF; }
-.am-user-menu hr { border: none; border-top: 1px solid #E4DED2; margin: 6px 4px; }
-.am-user-menu .danger:hover { color: #EF4444; }
+/* create tile */
+.acard-create{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;border:1.5px dashed #D6CEBF;background:var(--surface-2);min-height:240px;cursor:pointer;color:var(--muted);transition:border-color .2s,color .2s,background .2s,transform .2s}
+.acard-create:hover{border-color:var(--accent);color:var(--accent-ink);background:rgba(0,212,255,.04);transform:translateY(-3px)}
+.acard-create .plus{width:44px;height:44px;border-radius:50%;border:1.5px solid currentColor;display:inline-flex;align-items:center;justify-content:center;font-size:24px;font-weight:300}
+.acard-create span{font-size:13px;font-weight:500}
 
-/* ── content padding ──────────────────────────────────────────── */
-.am-content {
-  flex: 1; min-width: 0;
-  padding: 28px 32px 64px;
-  max-width: 1280px; margin: 0 auto; width: 100%;
-}
-@media (max-width: 720px) { .am-content { padding: 20px 16px 48px; } }
+/* table */
+.table-wrap{overflow:hidden}
+.tbl-scroll{overflow-x:auto}
+table.tbl{width:100%;border-collapse:collapse}
+table.tbl thead th{text-align:left;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--faint);font-weight:600;padding:14px 18px;border-bottom:1px solid var(--line);background:var(--surface-2);white-space:nowrap}
+table.tbl thead th.num{text-align:right}
+table.tbl thead th.act{text-align:right}
+table.tbl tbody td{padding:13px 18px;font-size:13.5px;border-bottom:1px solid var(--line);vertical-align:middle;white-space:nowrap}
+table.tbl tbody tr:last-child td{border-bottom:none}
+table.tbl tbody tr:hover td{background:rgba(0,212,255,.05)}
+table.tbl .num{text-align:right;font-family:'JetBrains Mono',monospace;font-feature-settings:"tnum" 1}
+table.tbl .rowname{display:inline-flex;align-items:center;gap:10px;font-weight:600}
+table.tbl .rowname .avatar{width:30px;height:30px;font-size:13px}
+table.tbl .act{text-align:right}
+table.tbl .act .btn{padding:6px 11px;font-size:12px;margin-left:6px}
+@media(max-width:760px){table.tbl{min-width:760px}}
 
-/* ── welcome ──────────────────────────────────────────────────── */
-.am-welcome { margin-bottom: 24px; }
-.am-welcome h2 {
-  font-family: 'Syne', sans-serif; font-weight: 700;
-  font-size: 28px; letter-spacing: -0.01em;
-  margin: 0 0 6px;
-}
-.am-welcome p { margin: 0; color: #6B6B6B; font-size: 14px; }
-.am-welcome p span.dot { color: #9A938A; margin: 0 8px; }
+/* modal */
+.overlay{position:fixed;inset:0;z-index:90;background:rgba(20,18,14,.42);backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);display:flex;align-items:center;justify-content:center;padding:20px;opacity:0;pointer-events:none;transition:opacity .22s}
+.overlay.open{opacity:1;pointer-events:auto}
+.modal{width:100%;max-width:480px;background:var(--surface);border:1px solid var(--line);border-radius:var(--r-lg);box-shadow:0 30px 80px rgba(0,0,0,.28);padding:28px;transform:translateY(14px) scale(.98);transition:transform .26s cubic-bezier(.2,.8,.2,1)}
+.overlay.open .modal{transform:none}
+.modal h3{font-size:20px;font-weight:600}
+.modal .mtag{font-size:12.5px;color:var(--muted);margin-top:6px}
+.modal .field{margin-top:18px}
+.modal label{display:block;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:600;margin-bottom:7px}
+.modal input,.modal select{width:100%;background:var(--surface-2);color:var(--ink);border:1px solid var(--line);border-radius:12px;padding:11px 14px;font-family:inherit;font-size:14px;outline:none;transition:border-color .15s,box-shadow .15s}
+.modal input:focus,.modal select:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(0,212,255,.16)}
+.modal .mfoot{display:flex;justify-content:flex-end;gap:10px;margin-top:26px}
+.modal-close{position:absolute;top:18px;right:20px;background:transparent;border:none;font-size:24px;line-height:1;color:var(--faint);cursor:pointer}
+.modal-close:hover{color:var(--ink)}
+.modal-inner{position:relative}
 
-/* ── stats bar ────────────────────────────────────────────────── */
-.am-stats {
-  display: grid; gap: 12px;
-  grid-template-columns: repeat(5, 1fr);
-  margin-bottom: 28px;
-  padding: 18px;
-  background: linear-gradient(160deg, #FFFFFF 0%, #FBF8F2 100%);
-  border: 1px solid #E4DED2; border-radius: 14px;
-  position: relative; overflow: hidden;
-}
-.am-stats::before {
-  content: ""; position: absolute; inset: 0; pointer-events: none;
-  background-image:
-    linear-gradient(rgba(0,212,255,0.04) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(0,212,255,0.04) 1px, transparent 1px);
-  background-size: 22px 22px; opacity: 0.5;
-}
-.am-stat {
-  display: flex; flex-direction: column; gap: 2px;
-  padding: 0 14px;
-  border-right: 1px solid #E4DED2;
-  position: relative; z-index: 1;
-}
-.am-stat:last-child { border-right: none; }
-.am-stat-label {
-  font-size: 10px; text-transform: uppercase; letter-spacing: 0.10em;
-  color: #6B6B6B; font-weight: 600;
-}
-.am-stat-value {
-  font-family: 'JetBrains Mono', monospace; font-weight: 600;
-  font-size: 22px; color: #00D4FF;
-  letter-spacing: -0.02em;
-  font-feature-settings: "tnum" 1;
-}
-@media (max-width: 1000px) {
-  .am-stats { grid-template-columns: repeat(3, 1fr); }
-  .am-stat:nth-child(3) { border-right: none; }
-}
-@media (max-width: 540px) {
-  .am-stats { grid-template-columns: repeat(2, 1fr); padding: 14px; }
-  .am-stat { padding: 0 10px; border-right: none; }
-}
-
-/* ── create button + wizard ───────────────────────────────────── */
-.am-create-row {
-  display: flex; align-items: center; justify-content: space-between;
-  gap: 12px; margin-bottom: 24px;
-}
-.btn {
-  font-family: inherit; font-weight: 600; font-size: 13px;
-  padding: 9px 16px; border-radius: 10px; cursor: pointer;
-  border: 1px solid #E4DED2; background: #FBF8F2; color: #1A1A1A;
-  transition: transform 180ms cubic-bezier(.2,.8,.2,1), box-shadow 220ms ease, filter 120ms ease, background 200ms ease, border-color 150ms ease;
-  text-decoration: none;
-  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
-}
-.btn:hover { transform: translateY(-1px) scale(1.02); }
-.btn:active { transform: translateY(0) scale(1); }
-.btn:disabled { opacity: 0.4; cursor: not-allowed; transform: none; }
-.btn-primary {
-  background: #00D4FF; color: #001218; border-color: #00D4FF;
-}
-.btn-primary:hover { box-shadow: 0 0 0 1px #00D4FF, 0 0 24px rgba(0,212,255,0.45); }
-.btn-ghost { background: transparent; }
-.btn-ghost:hover { border-color: rgba(0,212,255,0.4); }
-.btn-large { padding: 12px 20px; font-size: 14px; }
-.btn-icon-only { width: 32px; height: 32px; padding: 0; }
-.btn-danger { color: #EF4444; }
-.btn-danger:hover { border-color: rgba(239,68,68,0.5); background: rgba(239,68,68,0.08); }
-
-.am-wizard {
-  margin-bottom: 28px;
-  background: linear-gradient(160deg, #FFFFFF 0%, #FBF8F2 100%);
-  border: 1px solid #E4DED2; border-radius: 14px;
-  overflow: hidden;
-  animation: wizardIn 320ms cubic-bezier(.2,.8,.2,1);
-}
-.am-wizard[hidden] { display: none; }
-@keyframes wizardIn {
-  from { opacity: 0; transform: translateY(-8px) scale(0.99); }
-  to   { opacity: 1; transform: translateY(0) scale(1); }
-}
-.am-wizard-head {
-  display: flex; align-items: center; justify-content: space-between;
-  padding: 16px 22px; border-bottom: 1px solid #E4DED2;
-}
-.am-wizard-head h3 {
-  font-family: 'Syne', sans-serif; font-weight: 700;
-  font-size: 14px; letter-spacing: 0.06em; text-transform: uppercase;
-  margin: 0;
-}
-.am-wizard-close {
-  background: transparent; border: none; color: #6B6B6B;
-  font-size: 22px; cursor: pointer; padding: 0; line-height: 1;
-}
-.am-wizard-close:hover { color: #1A1A1A; }
-
-.am-wizard-progress {
-  display: flex; gap: 4px;
-  padding: 14px 22px; border-bottom: 1px solid #E4DED2;
-  overflow-x: auto;
-  scrollbar-width: none;
-}
-.am-wizard-progress::-webkit-scrollbar { display: none; }
-.am-wizard-step {
-  font-size: 11px; font-weight: 600;
-  padding: 6px 12px; border-radius: 999px;
-  color: #9A938A; background: transparent; border: 1px solid #E4DED2;
-  white-space: nowrap;
-  transition: all 200ms ease;
-}
-.am-wizard-step.active {
-  color: #00D4FF; border-color: rgba(0,212,255,0.4); background: rgba(0,212,255,0.08);
-}
-.am-wizard-step.done { color: #10B981; border-color: rgba(16,185,129,0.3); }
-
-.am-wizard-body { padding: 24px 22px; min-height: 220px; }
-.am-wizard-pane[hidden] { display: none; }
-.am-wizard-pane label.field-label {
-  display: block;
-  font-size: 11px; text-transform: uppercase; letter-spacing: 0.08em;
-  color: #6B6B6B; font-weight: 600; margin-bottom: 8px;
-}
-.am-input, .am-select {
-  width: 100%; max-width: 480px;
-  background: #FBF8F2; color: #1A1A1A;
-  border: 1px solid #E4DED2; border-radius: 10px;
-  padding: 10px 14px;
-  font-family: inherit; font-size: 14px;
-  outline: none;
-  transition: border-color 150ms ease, box-shadow 150ms ease;
-}
-.am-input:focus, .am-select:focus {
-  border-color: #00D4FF;
-  box-shadow: 0 0 0 3px rgba(0,212,255,0.15);
-}
-.am-help-text {
-  font-size: 12px; color: #6B6B6B; margin-top: 8px;
-}
-
-.am-dropzone {
-  margin-top: 6px;
-  padding: 32px 18px;
-  border: 1.5px dashed #DED7C9; border-radius: 12px;
-  text-align: center;
-  background: rgba(0,212,255,0.02);
-  transition: border-color 200ms ease, background 200ms ease;
-  cursor: pointer;
-}
-.am-dropzone:hover, .am-dropzone.drag-over {
-  border-color: #00D4FF; background: rgba(0,212,255,0.06);
-}
-.am-dropzone p { margin: 0 0 10px; color: #6B6B6B; font-size: 13px; }
-.am-file-list { list-style: none; margin: 12px 0 0; padding: 0; }
-.am-file-list li {
-  display: flex; align-items: center; gap: 10px;
-  padding: 8px 12px; border: 1px solid #E4DED2; border-radius: 8px;
-  background: #FBF8F2;
-  font-size: 12px; color: #1A1A1A; margin-top: 6px;
-}
-.am-file-list li::before {
-  content: "📄"; flex-shrink: 0;
-}
-
-.am-voice-list { display: flex; flex-direction: column; gap: 8px; max-width: 480px; }
-.am-voice-row {
-  display: grid; grid-template-columns: 36px 1fr; gap: 12px;
-  align-items: center;
-  padding: 10px 14px;
-  border: 1px solid #E4DED2; border-radius: 10px;
-  background: #FBF8F2;
-  cursor: pointer;
-  transition: border-color 150ms ease, background 150ms ease;
-}
-.am-voice-row:hover { border-color: rgba(0,212,255,0.4); }
-.am-voice-row.selected { border-color: #00D4FF; background: rgba(0,212,255,0.06); }
-.am-voice-play {
-  width: 32px; height: 32px; border-radius: 50%;
-  background: rgba(0,212,255,0.12); color: #00D4FF;
-  border: 1px solid rgba(0,212,255,0.4);
-  cursor: pointer; font-size: 11px;
-  display: inline-flex; align-items: center; justify-content: center;
-  transition: background 150ms ease;
-}
-.am-voice-play:hover { background: rgba(0,212,255,0.24); }
-.am-voice-play[data-playing="true"] { background: #00D4FF; color: #001218; }
-.am-voice-info { display: flex; flex-direction: column; gap: 2px; }
-.am-voice-name { font-weight: 600; font-size: 13px; }
-.am-voice-desc { font-size: 11px; color: #6B6B6B; }
-
-.am-deploy-summary {
-  background: #FBF8F2; border: 1px solid #E4DED2;
-  border-radius: 12px; padding: 18px; margin-bottom: 18px;
-  font-size: 13px;
-}
-.am-deploy-summary dl {
-  display: grid; grid-template-columns: 130px 1fr; gap: 8px 16px;
-  margin: 0;
-}
-.am-deploy-summary dt { color: #6B6B6B; font-size: 12px; }
-.am-deploy-summary dd {
-  margin: 0; color: #1A1A1A;
-  font-family: 'JetBrains Mono', monospace; font-size: 12px;
-}
-
-.am-spinner {
-  width: 28px; height: 28px;
-  border-radius: 50%;
-  border: 2px solid rgba(0,212,255,0.18);
-  border-top-color: #00D4FF;
-  animation: spin 0.8s linear infinite;
-  margin-bottom: 12px;
-}
-@keyframes spin { to { transform: rotate(360deg); } }
-.am-deploy-loading {
-  display: flex; flex-direction: column; align-items: center;
-  padding: 24px; color: #6B6B6B; font-size: 13px;
-}
-.am-deploy-success {
-  padding: 24px;
-  background: rgba(16,185,129,0.08);
-  border: 1px solid rgba(16,185,129,0.3); border-radius: 12px;
-  text-align: center;
-  animation: successIn 320ms cubic-bezier(.2,.8,.2,1);
-}
-@keyframes successIn {
-  from { opacity: 0; transform: scale(0.96); }
-  to   { opacity: 1; transform: scale(1); }
-}
-.am-success-icon {
-  width: 48px; height: 48px; border-radius: 50%;
-  background: #10B981; color: #042A1B;
-  font-size: 24px; font-weight: 700;
-  display: inline-flex; align-items: center; justify-content: center;
-  margin: 0 auto 12px;
-}
-.am-deploy-success h4 {
-  font-family: 'Syne', sans-serif; font-weight: 700;
-  font-size: 16px; margin: 0 0 6px;
-}
-.am-deploy-success p { font-size: 13px; color: #1A1A1A; margin: 0; }
-.am-deploy-success code {
-  font-family: 'JetBrains Mono', monospace;
-  background: rgba(255,255,255,0.04);
-  padding: 3px 8px; border-radius: 6px;
-  color: #00D4FF;
-}
-
-.am-wizard-foot {
-  display: flex; justify-content: space-between; align-items: center;
-  padding: 14px 22px; border-top: 1px solid #E4DED2;
-}
-
-/* ── section heads ───────────────────────────────────────────── */
-.am-section-head {
-  display: flex; align-items: baseline; justify-content: space-between;
-  margin: 0 4px 16px;
-}
-.am-section-head h3 {
-  font-family: 'Syne', sans-serif; font-weight: 700;
-  font-size: 13px; letter-spacing: 0.08em; text-transform: uppercase;
-  margin: 0;
-}
-.am-section-head .muted { color: #6B6B6B; font-size: 12px; }
-
-/* ── agent overview cards ─────────────────────────────────────── */
-.am-agent-grid {
-  display: grid; gap: 16px;
-  grid-template-columns: repeat(4, 1fr);
-  margin-bottom: 32px;
-}
-@media (max-width: 1100px) { .am-agent-grid { grid-template-columns: repeat(2, 1fr); } }
-@media (max-width: 540px)  { .am-agent-grid { grid-template-columns: 1fr; } }
-
-.am-agent-card {
-  background: linear-gradient(160deg, #FFFFFF 0%, #FBF8F2 100%);
-  border: 1px solid #E4DED2; border-radius: 14px;
-  padding: 20px;
-  display: flex; flex-direction: column; gap: 14px;
-  position: relative; overflow: hidden;
-  transition: border-color 220ms ease, transform 200ms ease, box-shadow 220ms ease;
-}
-.am-agent-card:hover {
-  border-color: var(--accent-soft, rgba(0,212,255,0.4));
-  transform: translateY(-2px);
-  box-shadow: 0 16px 36px rgba(0,212,255,0.12);
-}
-.am-agent-card::before {
-  content: ""; position: absolute; inset: 0; pointer-events: none;
-  background: linear-gradient(180deg, var(--accent-soft, rgba(0,212,255,0.08)), transparent 35%);
-}
-.am-agent-card-head { display: flex; gap: 12px; position: relative; z-index: 1; }
-.agent-avatar {
-  width: 38px; height: 38px; border-radius: 50%;
-  background: linear-gradient(135deg, var(--accent, #00D4FF), rgba(255,255,255,0.05));
-  display: inline-flex; align-items: center; justify-content: center;
-  font-family: 'Syne', sans-serif; font-weight: 800; font-size: 16px;
-  color: #001218;
-  flex-shrink: 0;
-  box-shadow: 0 0 0 2px rgba(255,255,255,0.06), 0 0 16px var(--accent-soft, rgba(0,212,255,0.3));
-}
-.am-agent-id { flex: 1; min-width: 0; }
-.am-agent-id h4 {
-  font-family: 'Syne', sans-serif; font-weight: 700; font-size: 15px;
-  margin: 0;
-}
-.am-agent-id p { margin: 2px 0 0; font-size: 11px; color: #6B6B6B; }
-.am-agent-card .pill {
-  align-self: center;
-  flex-shrink: 0;
-}
-
-.am-agent-card-stats {
-  display: grid; grid-template-columns: 1fr 1fr;
-  gap: 8px 12px;
-  font-size: 12px;
-  position: relative; z-index: 1;
-}
-.am-agent-stat-label { color: #6B6B6B; font-size: 11px; }
-.am-agent-stat-value {
-  font-family: 'JetBrains Mono', monospace; font-weight: 600;
-  font-size: 14px; color: #1A1A1A;
-}
-
-.am-agent-card-foot {
-  display: flex; gap: 8px;
-  border-top: 1px solid #E4DED2;
-  padding-top: 12px;
-  position: relative; z-index: 1;
-}
-.am-agent-card-foot .btn { flex: 1; padding: 7px 12px; font-size: 12px; }
-
-/* status pills inside cards */
-.am-agent-status {
-  display: inline-flex; align-items: center; gap: 6px;
-  padding: 3px 8px; border-radius: 999px;
-  font-size: 10px; font-weight: 600; letter-spacing: 0.06em;
-  text-transform: uppercase; border: 1px solid; line-height: 1;
-}
-.am-agent-status-dot { width: 6px; height: 6px; border-radius: 50%; display: inline-block; }
-.am-agent-status.active {
-  color: #10B981; border-color: rgba(16,185,129,0.25); background: rgba(16,185,129,0.10);
-}
-.am-agent-status.active .am-agent-status-dot {
-  background: #10B981;
-  animation: pulseDot 1.8s cubic-bezier(.4,0,.6,1) infinite;
-}
-.am-agent-status.paused {
-  color: #F59E0B; border-color: rgba(245,158,11,0.25); background: rgba(245,158,11,0.10);
-}
-.am-agent-status.paused .am-agent-status-dot { background: #F59E0B; }
-
-/* ── recent agents table ─────────────────────────────────────── */
-.am-table-wrap {
-  background: #FFFFFF; border: 1px solid #E4DED2; border-radius: 14px;
-  overflow: hidden;
-}
-.am-table { width: 100%; border-collapse: collapse; }
-.am-table thead th {
-  text-align: left; font-size: 11px; text-transform: uppercase;
-  letter-spacing: 0.08em; color: #6B6B6B; font-weight: 600;
-  padding: 14px 18px; border-bottom: 1px solid #E4DED2;
-  background: #FBF8F2;
-  cursor: pointer; user-select: none;
-  white-space: nowrap;
-}
-.am-table thead th[aria-sort="ascending"],
-.am-table thead th[aria-sort="descending"] { color: #00D4FF; }
-.am-table thead th.num { text-align: right; }
-.am-table thead th.actions { text-align: right; cursor: default; }
-.am-table tbody td {
-  padding: 12px 18px; font-size: 13px;
-  border-bottom: 1px solid #E4DED2;
-  vertical-align: middle;
-}
-.am-table tbody tr:last-child td { border-bottom: none; }
-.am-table tbody tr:nth-child(odd) td { background: rgba(255,255,255,0.012); }
-.am-table tbody tr:hover td { background: rgba(0,212,255,0.06); }
-.am-table .num { text-align: right; font-family: 'JetBrains Mono', monospace; }
-.am-table .mono { font-family: 'JetBrains Mono', monospace; font-size: 12px; }
-.am-table .actions { text-align: right; }
-.am-table .actions .btn { padding: 6px 10px; font-size: 11px; margin-left: 6px; }
-.am-table .row-name { display: inline-flex; align-items: center; gap: 10px; }
-.am-table .row-name .agent-avatar { width: 28px; height: 28px; font-size: 12px; }
-
-@media (max-width: 720px) {
-  .am-table thead th, .am-table tbody td { padding: 10px 12px; }
-  .am-table-wrap { overflow-x: auto; }
-  .am-table { min-width: 720px; }
-}
-
-/* ── footer ───────────────────────────────────────────────────── */
-.am-footer {
-  display: flex; justify-content: space-between; align-items: center;
-  padding: 24px 0 0;
-  margin-top: 32px;
-  border-top: 1px solid #E4DED2;
-  font-size: 12px; color: #6B6B6B;
-}
-.am-footer .dim { color: #9A938A; }
-
-/* ════ CY-LIGHT — ElevenLabs-style light skin (Cynea) ════ */
-body{font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;}
-h1,h2,h3,h4{font-family:'Inter',sans-serif;letter-spacing:-0.02em;}
-.brand-mark{font-family:'Inter',sans-serif;font-weight:700;letter-spacing:0.04em;color:#1A1A1A;text-shadow:none;}
-.brand-tag{color:#9A938A;}
-.btn-primary{background:#0A0A0A;color:#FFFFFF;border-color:#0A0A0A;}
-.btn-primary:hover{background:#222;border-color:#222;filter:none;box-shadow:0 8px 24px rgba(0,0,0,0.16);}
-
-/* ════ CY-LIGHT · wow polish ════ */
-html{scroll-behavior:smooth;}
-@media (prefers-reduced-motion:no-preference){
-  body{animation:cyPageIn 0.55s cubic-bezier(.2,.8,.2,1) both;}
-  @keyframes cyPageIn{from{opacity:0;}to{opacity:1;}}
-}
+/* toast */
+.toast{position:fixed;left:50%;bottom:28px;transform:translateX(-50%) translateY(20px);z-index:95;background:var(--black);color:#fff;padding:12px 20px;border-radius:999px;font-size:13.5px;font-weight:500;box-shadow:0 14px 36px rgba(0,0,0,.3);opacity:0;pointer-events:none;transition:opacity .25s,transform .25s;display:inline-flex;align-items:center;gap:9px}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+.toast .ok{width:18px;height:18px;border-radius:50%;background:var(--ok);color:#04321f;display:inline-flex;align-items:center;justify-content:center;font-size:11px;font-weight:700}
 </style>
 </head>
 <body>
 
-<div class="am-layout" id="amLayout">
-  <!-- ── SIDEBAR ─────────────────────────────────────────────── -->
-  <aside class="am-sidebar">
-    <button class="am-sidebar-toggle" id="sidebarToggle" type="button" aria-label="Toggle sidebar">≡</button>
-    <a class="am-sidebar-brand" href="cynea_landing.html">
-      <span class="brand-mark">CYNEA</span>
-      <span class="brand-tag">VOICE ENGINE</span>
-    </a>
-    <nav class="am-sidebar-nav">
-      <a class="am-sidebar-link active" href="agent_manager.html"><span class="icon">🏠</span><span>Dashboard</span></a>
-      <a class="am-sidebar-link" href="#agents"><span class="icon">🤖</span><span>My Agents</span></a>
-      <a class="am-sidebar-link" href="#history"><span class="icon">📞</span><span>Call History</span></a>
-      <a class="am-sidebar-link" href="dashboard.html"><span class="icon">📊</span><span>Operations Center</span></a>
-      <a class="am-sidebar-link" href="#settings"><span class="icon">⚙️</span><span>Settings</span></a>
-      <a class="am-sidebar-link" href="#export"><span class="icon">📤</span><span>Export Data</span></a>
-      <a class="am-sidebar-link" href="https://calendly.com/albertmomanyi07/30min"
-         target="_blank" rel="noopener" style="margin-top:auto"><span class="icon">📅</span><span>Book a Demo</span></a>
-    </nav>
-  </aside>
+<div id="prog"></div>
+<nav class="nav"><div class="nav-in"><a class="brand" href="index.html"><b>CYNEA</b><span>VOICE ENGINE</span></a><div class="nav-links"><a href="index.html#agents">Agents</a><a href="index.html#platform">Platform</a><a href="product_tour.html">Product tour</a><a class="active" href="agent_manager.html">Dashboard</a><a href="help_center.html">Docs</a></div><div class="nav-right"><a class="nav-signin" href="signin.html">Sign in</a><a class="btn btn-dark btn-sm" href="dashboard.html">Operations</a></div></div></nav>
 
-  <!-- ── MAIN ─────────────────────────────────────────────────── -->
-  <div class="am-main">
-    <!-- top nav -->
-    <header class="am-topnav">
-      <h1 class="am-topnav-title">Agent Manager</h1>
-      <span class="pill pill-green"><span class="pulse-dot"></span> 4 agents active</span>
-      <nav class="am-topnav-links">
-        <a href="#agents" class="active">Agents</a>
-        <a href="#history">Call History</a>
-        <a href="dashboard.html">Operations</a>
-        <a href="#settings">Settings</a>
-      </nav>
-      <div class="am-user">
-        <button class="am-user-trigger" id="userTrigger" type="button" aria-label="User menu" aria-haspopup="true">
-          <span class="am-user-avatar">DK</span>
-        </button>
-        <div class="am-user-menu" id="userMenu" hidden>
-          <a href="#profile">Profile</a>
-          <hr>
-          <a class="danger" href="cynea_landing.html">Sign out</a>
-        </div>
+<main class="wrap">
+
+  <!-- 1 · HEADER -->
+  <section class="section rv">
+    <div class="am-head">
+      <div>
+        <span class="eyebrow">Agent Manager</span>
+        <h1 id="greeting" style="margin-top:10px">Good morning</h1>
+        <p class="sub">You have <strong>3 active agents</strong> handling calls across every market.</p>
       </div>
-    </header>
+      <button class="btn btn-dark" id="createBtn" type="button">+ Create New Agent</button>
+    </div>
+  </section>
 
-    <!-- content -->
-    <div class="am-content">
+  <!-- 2 · KPI STRIP -->
+  <section class="section">
+    <div class="card kpi rv">
+      <div class="item"><span class="lbl">Total agents</span><span class="val">4</span></div>
+      <div class="item"><span class="lbl">Active now</span><span class="val accent">3</span></div>
+      <div class="item"><span class="lbl">Calls today</span><span class="val" id="callsKpi">247</span></div>
+      <div class="item"><span class="lbl">Avg containment</span><span class="val">89%</span></div>
+      <div class="item"><span class="lbl">Cost today</span><span class="val">$9.88</span></div>
+    </div>
+  </section>
 
-      <!-- welcome -->
-      <section class="am-welcome">
-        <h2 id="welcomeGreeting">Good morning, Daniel</h2>
-        <p>You have <strong>4 active agents</strong> handling calls across <strong>2 countries</strong><span class="dot">·</span><span id="welcomeDate"></span></p>
-      </section>
+  <!-- 3 · YOUR AGENTS -->
+  <section class="section" id="agents">
+    <div class="sec-head rv">
+      <h2>Your agents</h2>
+      <span class="note">4 agents · 3 live now</span>
+    </div>
+    <div class="agrid" id="agentGrid"></div>
+  </section>
 
-      <!-- quick stats -->
-      <section class="am-stats" aria-label="Quick stats">
-        <div class="am-stat">
-          <span class="am-stat-label">Total Agents</span>
-          <span class="am-stat-value">4</span>
-        </div>
-        <div class="am-stat">
-          <span class="am-stat-label">Active Now</span>
-          <span class="am-stat-value">3</span>
-        </div>
-        <div class="am-stat">
-          <span class="am-stat-label">Calls Today</span>
-          <span class="am-stat-value" id="callsTodayStat">247</span>
-        </div>
-        <div class="am-stat">
-          <span class="am-stat-label">Avg Containment</span>
-          <span class="am-stat-value">89%</span>
-        </div>
-        <div class="am-stat">
-          <span class="am-stat-label">Cost Today</span>
-          <span class="am-stat-value">$9.88</span>
-        </div>
-      </section>
-
-      <!-- create row -->
-      <div class="am-create-row">
-        <div>
-          <h3 style="font-family: 'Syne', sans-serif; font-weight:700; font-size:18px; margin:0;">Your agents</h3>
-          <p style="margin:4px 0 0; color:#6B6B6B; font-size:13px;">Create, configure, and monitor your voice agents.</p>
-        </div>
-        <button class="btn btn-primary btn-large" id="createAgentBtn" type="button">+ Create New Agent</button>
+  <!-- 4 · RECENT AGENTS TABLE -->
+  <section class="section" id="recent">
+    <div class="sec-head rv">
+      <h2>Recent agents</h2>
+      <span class="note">Last updated just now</span>
+    </div>
+    <div class="card table-wrap rv">
+      <div class="tbl-scroll">
+        <table class="tbl">
+          <thead>
+            <tr>
+              <th>Agent</th>
+              <th>Role</th>
+              <th>Voice</th>
+              <th class="num">Calls today</th>
+              <th>Status</th>
+              <th>Created</th>
+              <th class="act">Actions</th>
+            </tr>
+          </thead>
+          <tbody id="tableBody"></tbody>
+        </table>
       </div>
+    </div>
+  </section>
 
-      <!-- wizard -->
-      <section class="am-wizard" id="wizardPanel" hidden aria-labelledby="wizardTitle">
-        <header class="am-wizard-head">
-          <h3 id="wizardTitle">New agent</h3>
-          <button class="am-wizard-close" id="wizardClose" type="button" aria-label="Close wizard">×</button>
-        </header>
-        <div class="am-wizard-progress" id="wizardProgress">
-          <span class="am-wizard-step active" data-step="1">1 · Name</span>
-          <span class="am-wizard-step" data-step="2">2 · Persona</span>
-          <span class="am-wizard-step" data-step="3">3 · Content</span>
-          <span class="am-wizard-step" data-step="4">4 · Voice</span>
-          <span class="am-wizard-step" data-step="5">5 · Phone</span>
-          <span class="am-wizard-step" data-step="6">6 · Deploy</span>
-        </div>
-        <div class="am-wizard-body">
+</main>
 
-          <!-- Step 1: Name -->
-          <div class="am-wizard-pane" data-pane="1">
-            <label class="field-label" for="wName">Agent name</label>
-            <input class="am-input" type="text" id="wName" placeholder="e.g. Adinkra Hotel Front Desk">
-            <p class="am-help-text">Internal name. Callers don't see this.</p>
-          </div>
+<footer class="foot"><div class="foot-in"><span>© 2026 Cynea AI · Voice agents worldwide</span><span>Agent Manager</span></div></footer>
 
-          <!-- Step 2: Persona -->
-          <div class="am-wizard-pane" data-pane="2" hidden>
-            <label class="field-label" for="wPersona">Select persona</label>
-            <select class="am-select" id="wPersona">
-              <option value="kwame">Kwame — Hotel Receptionist (Ghana)</option>
-              <option value="amina">Amina — Customer Service (Kenya)</option>
-              <option value="custom">Custom — Define from scratch</option>
-            </select>
-            <p class="am-help-text">Personas come pre-loaded with system prompts, escalation rules, and industry playbooks.</p>
-          </div>
-
-          <!-- Step 3: Content -->
-          <div class="am-wizard-pane" data-pane="3" hidden>
-            <label class="field-label">Upload content</label>
-            <div class="am-dropzone" id="dropzone">
-              <p>Drag &amp; drop scripts, PDFs, or website URLs here</p>
-              <input type="file" id="fileInput" multiple hidden>
-              <button class="btn btn-ghost" id="browseBtn" type="button">Browse files</button>
-            </div>
-            <ul class="am-file-list" id="fileList"></ul>
-            <p class="am-help-text">Indexed for retrieval during calls. PDFs, plain text, and HTML supported.</p>
-          </div>
-
-          <!-- Step 4: Voice -->
-          <div class="am-wizard-pane" data-pane="4" hidden>
-            <label class="field-label">Choose voice</label>
-            <div class="am-voice-list" id="voiceList">
-              <div class="am-voice-row selected" data-voice="george">
-                <button class="am-voice-play" type="button" data-audio="assets/kwame_test_1.mp3" aria-label="Preview George">▶</button>
-                <div class="am-voice-info">
-                  <span class="am-voice-name">George</span>
-                  <span class="am-voice-desc">British male · warm · default for hospitality</span>
-                </div>
-              </div>
-              <div class="am-voice-row" data-voice="bella">
-                <button class="am-voice-play" type="button" data-audio="assets/amina_test_1.mp3" aria-label="Preview Bella">▶</button>
-                <div class="am-voice-info">
-                  <span class="am-voice-name">Bella</span>
-                  <span class="am-voice-desc">American female · warm · default for customer service</span>
-                </div>
-              </div>
-              <div class="am-voice-row" data-voice="eric">
-                <button class="am-voice-play" type="button" data-audio="" aria-label="Preview Eric">▶</button>
-                <div class="am-voice-info">
-                  <span class="am-voice-name">Eric</span>
-                  <span class="am-voice-desc">American male · professional</span>
-                </div>
-              </div>
-              <div class="am-voice-row" data-voice="aria">
-                <button class="am-voice-play" type="button" data-audio="" aria-label="Preview Aria">▶</button>
-                <div class="am-voice-info">
-                  <span class="am-voice-name">Aria</span>
-                  <span class="am-voice-desc">American female · natural</span>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- Step 5: Phone -->
-          <div class="am-wizard-pane" data-pane="5" hidden>
-            <label class="field-label" for="wCountry">Phone number</label>
-            <select class="am-select" id="wCountry">
-              <option value="+233">+233 — Ghana</option>
-              <option value="+254">+254 — Kenya</option>
-              <option value="+234">+234 — Nigeria</option>
-              <option value="+27">+27 — South Africa</option>
-              <option value="+256">+256 — Uganda</option>
-              <option value="+255">+255 — Tanzania</option>
-            </select>
-            <p class="am-help-text">Demo mode — your agent will be deployed to a test number you can call now. To go live, connect your Africa's Talking or Twilio account in Settings.</p>
-          </div>
-
-          <!-- Step 6: Deploy -->
-          <div class="am-wizard-pane" data-pane="6" hidden>
-            <div class="am-deploy-summary" id="deploySummary">
-              <dl>
-                <dt>Name</dt>            <dd id="sumName">—</dd>
-                <dt>Persona</dt>         <dd id="sumPersona">—</dd>
-                <dt>Content uploaded</dt><dd id="sumContent">none</dd>
-                <dt>Voice</dt>           <dd id="sumVoice">George</dd>
-                <dt>Country code</dt>    <dd id="sumCountry">+233</dd>
-              </dl>
-            </div>
-            <button class="btn btn-primary btn-large" id="deployBtn" type="button">Deploy agent</button>
-            <div class="am-deploy-loading" id="deployLoading" hidden>
-              <div class="am-spinner"></div>
-              <p>Deploying agent · provisioning test number · indexing content…</p>
-            </div>
-            <div class="am-deploy-success" id="deploySuccess" hidden>
-              <div class="am-success-icon">✓</div>
-              <h4>Agent deployed successfully!</h4>
-              <p>Test number: <code id="deployedNumber">+233 50 123 4567</code></p>
-            </div>
-          </div>
-
-        </div>
-        <footer class="am-wizard-foot">
-          <button class="btn btn-ghost" id="wPrev" type="button" disabled>Back</button>
-          <button class="btn btn-primary" id="wNext" type="button">Next</button>
-        </footer>
-      </section>
-
-      <!-- agent overview cards -->
-      <section id="agents">
-        <div class="am-agent-grid" id="agentGrid"></div>
-      </section>
-
-      <!-- recent agents table -->
-      <section id="history">
-        <header class="am-section-head">
-          <h3>Recent agents</h3>
-          <span class="muted">Sortable · 4 entries</span>
-        </header>
-        <div class="am-table-wrap">
-          <table class="am-table" id="agentTable">
-            <thead>
-              <tr>
-                <th data-sort="name">Agent name ⇅</th>
-                <th data-sort="persona">Persona ⇅</th>
-                <th data-sort="voice">Voice ⇅</th>
-                <th data-sort="calls" class="num">Calls today ⇅</th>
-                <th data-sort="status">Status ⇅</th>
-                <th data-sort="created">Created ⇅</th>
-                <th class="actions">Actions</th>
-              </tr>
-            </thead>
-            <tbody id="agentTableBody"></tbody>
-          </table>
-        </div>
-      </section>
-
-      <footer class="am-footer">
-        <div><strong>Cynea AI</strong><span class="dim"> · Made in Kenya</span></div>
-        <div class="dim">Voice Engine · Demo build</div>
-      </footer>
-
+<!-- MODAL -->
+<div class="overlay" id="overlay" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+  <div class="modal">
+    <div class="modal-inner">
+      <button class="modal-close" id="modalClose" type="button" aria-label="Close">×</button>
+      <h3 id="modalTitle">Create new agent</h3>
+      <p class="mtag">Spin up a human-like voice agent for any market. Demo mode — nothing is provisioned.</p>
+      <div class="field">
+        <label for="fName">Agent name</label>
+        <input type="text" id="fName" placeholder="e.g. Front Desk Concierge" autocomplete="off">
+      </div>
+      <div class="field">
+        <label for="fRole">Role</label>
+        <input type="text" id="fRole" placeholder="e.g. Hotel Receptionist" autocomplete="off">
+      </div>
+      <div class="field">
+        <label for="fVoice">Voice</label>
+        <select id="fVoice">
+          <option>George — warm, professional male</option>
+          <option>Bella — friendly female</option>
+          <option>Eric — calm, clear male</option>
+          <option>Aria — natural female</option>
+        </select>
+      </div>
+      <div class="field">
+        <label for="fLang">Language</label>
+        <select id="fLang">
+          <option>English (US)</option>
+          <option>English (UK)</option>
+          <option>Spanish</option>
+          <option>French</option>
+          <option>German</option>
+          <option>Portuguese</option>
+          <option>Arabic</option>
+          <option>Hindi</option>
+        </select>
+      </div>
+      <div class="mfoot">
+        <button class="btn btn-ghost" id="modalCancel" type="button">Cancel</button>
+        <button class="btn btn-dark" id="modalCreate" type="button">Create agent</button>
+      </div>
     </div>
   </div>
 </div>
 
-<audio id="audioPlayer" preload="none" aria-label="Voice preview"></audio>
+<!-- TOAST -->
+<div class="toast" id="toast"><span class="ok">✓</span><span id="toastMsg">Agent created (demo)</span></div>
+
+<!-- shared audio -->
+<audio id="player" preload="none" aria-label="Voice demo"></audio>
 
 <script>
 'use strict';
 
-// ─────────────────────────────────────────────────────────────────
-// Data — agents the user has already created. In production this
-// would be fetched from /api/v1/agents on page load.
-// ─────────────────────────────────────────────────────────────────
-const AGENTS = [
-  {
-    name: 'Kwame', persona: 'Hotel Receptionist', dept: 'Hotel Desk',
-    voice: 'George (British Male)', country: 'Ghana',
-    status: 'active', callsToday: 47, containment: 94, sentiment: 0.31,
-    created: '2026-04-12', accent: '#00D4FF', initials: 'K',
-    voicePreview: 'assets/kwame_test_1.mp3',
-  },
-  {
-    name: 'Amina', persona: 'Customer Service', dept: 'Banking',
-    voice: 'Bella (American Female)', country: 'Kenya',
-    status: 'active', callsToday: 38, containment: 88, sentiment: 0.24,
-    created: '2026-04-15', accent: '#A78BFA', initials: 'A',
-    voicePreview: 'assets/amina_test_1.mp3',
-  },
-  {
-    name: 'Kofi', persona: 'Support Agent', dept: 'Support',
-    voice: 'Eric (American Male)', country: 'Ghana',
-    status: 'active', callsToday: 12, containment: 76, sentiment: 0.12,
-    created: '2026-04-20', accent: '#10B981', initials: 'K',
-    voicePreview: '',
-  },
-  {
-    name: 'Adwoa', persona: 'Complaints Handler', dept: 'Complaints',
-    voice: 'Aria (American Female)', country: 'Ghana',
-    status: 'paused', callsToday: 0, containment: 45, sentiment: -0.08,
-    created: '2026-04-25', accent: '#F59E0B', initials: 'A',
-    voicePreview: '',
-  },
+/* ── data ── */
+var AGENTS = [
+  { name:'Kwame', role:'Hotel Receptionist', voice:'George', status:'oncall',
+    callsToday:47, containment:94, created:'Apr 12, 2026',
+    img:'assets/avatar-kwame.jpg', initial:'K', c1:'#00D4FF', c2:'#0089A8',
+    audio:'assets/kwame_test_1.mp3' },
+  { name:'Amina', role:'Customer Service', voice:'Bella', status:'oncall',
+    callsToday:38, containment:88, created:'Apr 15, 2026',
+    img:'assets/amina%20.jpg', initial:'A', c1:'#A78BFA', c2:'#7C5CFC',
+    audio:'assets/amina_test_1.mp3' },
+  { name:'Kofi', role:'Restaurant Orders', voice:'Eric', status:'oncall',
+    callsToday:33, containment:85, created:'Apr 20, 2026',
+    img:'', initial:'K', c1:'#34D399', c2:'#10B981',
+    audio:'assets/kofi_test_1.mp3' },
+  { name:'Maya', role:'Bookings', voice:'Aria', status:'ready',
+    callsToday:0, containment:0, created:'Apr 25, 2026',
+    img:'', initial:'M', c1:'#FBBF24', c2:'#F59E0B',
+    audio:'assets/kofi_test_1.mp3' }
 ];
 
-// ─────────────────────────────────────────────────────────────────
-// Welcome message — time-of-day aware greeting + today's date
-// ─────────────────────────────────────────────────────────────────
-(function() {
-  const greetingEl = document.getElementById('welcomeGreeting');
-  const dateEl = document.getElementById('welcomeDate');
-  if (greetingEl) {
-    const h = new Date().getHours();
-    const greet = h < 12 ? 'Good morning' : h < 18 ? 'Good afternoon' : 'Good evening';
-    greetingEl.textContent = greet + ', Daniel';
+function avatarHTML(a){
+  if(a.img){
+    return '<span class="avatar" style="--c1:'+a.c1+';--c2:'+a.c2+'">'
+      + '<img src="'+a.img+'" alt="'+a.name+'" onerror="this.remove()">'
+      + '<span style="position:absolute;display:none">'+a.initial+'</span></span>';
   }
-  if (dateEl) {
-    const opts = { weekday: 'long', month: 'short', day: 'numeric', year: 'numeric' };
-    dateEl.textContent = new Date().toLocaleDateString(undefined, opts);
-  }
-})();
-
-// ─────────────────────────────────────────────────────────────────
-// Render: agent overview cards
-// ─────────────────────────────────────────────────────────────────
-(function renderAgentCards() {
-  const grid = document.getElementById('agentGrid');
-  if (!grid) return;
-  grid.innerHTML = '';
-  AGENTS.forEach((a) => {
-    const card = document.createElement('article');
-    card.className = 'am-agent-card';
-    card.style.setProperty('--accent', a.accent);
-    card.style.setProperty('--accent-soft', a.accent + '40');
-    const sentimentColor = a.sentiment >= 0.2 ? '#10B981' : a.sentiment <= -0.2 ? '#EF4444' : '#6B6B6B';
-    const containmentColor = a.containment >= 80 ? '#10B981' : a.containment >= 60 ? '#F59E0B' : '#EF4444';
-    card.innerHTML = `
-      <div class="am-agent-card-head">
-        <div class="agent-avatar"><span>${a.initials}</span></div>
-        <div class="am-agent-id">
-          <h4>${a.name}</h4>
-          <p>${a.persona} · ${a.dept}</p>
-        </div>
-        <span class="am-agent-status ${a.status}">
-          <span class="am-agent-status-dot"></span>
-          ${a.status === 'active' ? 'Active' : 'Paused'}
-        </span>
-      </div>
-      <div class="am-agent-card-stats">
-        <div>
-          <div class="am-agent-stat-label">Calls today</div>
-          <div class="am-agent-stat-value">${a.callsToday}</div>
-        </div>
-        <div>
-          <div class="am-agent-stat-label">Containment</div>
-          <div class="am-agent-stat-value" style="color:${containmentColor}">${a.containment}%</div>
-        </div>
-        <div>
-          <div class="am-agent-stat-label">Avg sentiment</div>
-          <div class="am-agent-stat-value" style="color:${sentimentColor}">${a.sentiment >= 0 ? '+' : ''}${a.sentiment.toFixed(2)}</div>
-        </div>
-        <div>
-          <div class="am-agent-stat-label">Country</div>
-          <div class="am-agent-stat-value" style="font-size:12px">${a.country}</div>
-        </div>
-      </div>
-      <div class="am-agent-card-foot">
-        <button class="btn" type="button" data-action="view" data-agent="${a.name}">View details</button>
-        <button class="btn btn-ghost" type="button" data-action="toggle" data-agent="${a.name}">${a.status === 'active' ? 'Pause' : 'Resume'}</button>
-      </div>
-    `;
-    grid.appendChild(card);
-  });
-})();
-
-// ─────────────────────────────────────────────────────────────────
-// Render: recent agents table
-// ─────────────────────────────────────────────────────────────────
-function renderTable(rows) {
-  const tbody = document.getElementById('agentTableBody');
-  if (!tbody) return;
-  tbody.innerHTML = '';
-  rows.forEach((a) => {
-    const tr = document.createElement('tr');
-    tr.innerHTML = `
-      <td>
-        <span class="row-name">
-          <span class="agent-avatar" style="--accent:${a.accent}"><span>${a.initials}</span></span>
-          ${a.name}
-        </span>
-      </td>
-      <td>${a.persona}</td>
-      <td><span class="mono">${a.voice}</span></td>
-      <td class="num">${a.callsToday}</td>
-      <td>
-        <span class="am-agent-status ${a.status}">
-          <span class="am-agent-status-dot"></span>${a.status === 'active' ? 'Active' : 'Paused'}
-        </span>
-      </td>
-      <td><span class="mono">${a.created}</span></td>
-      <td class="actions">
-        <button class="btn" type="button" data-action="edit" data-agent="${a.name}">Edit</button>
-        <button class="btn btn-ghost" type="button" data-action="toggle" data-agent="${a.name}">${a.status === 'active' ? 'Pause' : 'Resume'}</button>
-        <button class="btn btn-danger" type="button" data-action="delete" data-agent="${a.name}">Delete</button>
-      </td>
-    `;
-    tbody.appendChild(tr);
-  });
+  return '<span class="avatar" style="--c1:'+a.c1+';--c2:'+a.c2+'">'+a.initial+'</span>';
 }
-renderTable(AGENTS);
-
-// ─────────────────────────────────────────────────────────────────
-// Sort: clicking a th cycles the column
-// ─────────────────────────────────────────────────────────────────
-(function setupSort() {
-  const headers = document.querySelectorAll('.am-table thead th[data-sort]');
-  headers.forEach((h) => h.addEventListener('click', () => {
-    const key = h.getAttribute('data-sort');
-    const cur = h.getAttribute('aria-sort');
-    const dir = cur === 'ascending' ? 'descending' : 'ascending';
-    headers.forEach((o) => o.setAttribute('aria-sort', 'none'));
-    h.setAttribute('aria-sort', dir);
-    const numeric = new Set(['calls']);
-    const sorted = [...AGENTS].sort((a, b) => {
-      const av = key === 'calls' ? a.callsToday :
-                 key === 'name' ? a.name :
-                 key === 'persona' ? a.persona :
-                 key === 'voice' ? a.voice :
-                 key === 'status' ? a.status :
-                 key === 'created' ? a.created : '';
-      const bv = key === 'calls' ? b.callsToday :
-                 key === 'name' ? b.name :
-                 key === 'persona' ? b.persona :
-                 key === 'voice' ? b.voice :
-                 key === 'status' ? b.status :
-                 key === 'created' ? b.created : '';
-      let cmp = numeric.has(key) ? (av - bv) : String(av).localeCompare(String(bv));
-      return dir === 'ascending' ? cmp : -cmp;
-    });
-    renderTable(sorted);
-  }));
-})();
-
-// ─────────────────────────────────────────────────────────────────
-// User menu dropdown
-// ─────────────────────────────────────────────────────────────────
-(function setupUserMenu() {
-  const trigger = document.getElementById('userTrigger');
-  const menu = document.getElementById('userMenu');
-  if (!trigger || !menu) return;
-  trigger.addEventListener('click', (e) => {
-    e.stopPropagation();
-    menu.hidden = !menu.hidden;
-  });
-  document.addEventListener('click', (e) => {
-    if (!menu.contains(e.target) && e.target !== trigger) menu.hidden = true;
-  });
-})();
-
-// ─────────────────────────────────────────────────────────────────
-// Sidebar collapse
-// ─────────────────────────────────────────────────────────────────
-(function setupSidebar() {
-  const layout = document.getElementById('amLayout');
-  const toggle = document.getElementById('sidebarToggle');
-  if (!layout || !toggle) return;
-  // Restore prior state
-  if (localStorage.getItem('cyneaSidebarCollapsed') === '1') {
-    layout.classList.add('sidebar-collapsed');
-  }
-  toggle.addEventListener('click', () => {
-    layout.classList.toggle('sidebar-collapsed');
-    localStorage.setItem(
-      'cyneaSidebarCollapsed',
-      layout.classList.contains('sidebar-collapsed') ? '1' : '0'
-    );
-  });
-})();
-
-// ─────────────────────────────────────────────────────────────────
-// Wizard
-// ─────────────────────────────────────────────────────────────────
-(function setupWizard() {
-  const STEP_COUNT = 6;
-  const panel = document.getElementById('wizardPanel');
-  const openBtn = document.getElementById('createAgentBtn');
-  const closeBtn = document.getElementById('wizardClose');
-  const prevBtn = document.getElementById('wPrev');
-  const nextBtn = document.getElementById('wNext');
-  const deployBtn = document.getElementById('deployBtn');
-  if (!panel || !openBtn) return;
-
-  let step = 1;
-
-  const sumName = document.getElementById('sumName');
-  const sumPersona = document.getElementById('sumPersona');
-  const sumContent = document.getElementById('sumContent');
-  const sumVoice = document.getElementById('sumVoice');
-  const sumCountry = document.getElementById('sumCountry');
-
-  function setStep(n) {
-    step = Math.min(STEP_COUNT, Math.max(1, n));
-    document.querySelectorAll('.am-wizard-pane').forEach((p) => {
-      p.hidden = p.getAttribute('data-pane') !== String(step);
-    });
-    document.querySelectorAll('.am-wizard-step').forEach((s) => {
-      const sn = parseInt(s.getAttribute('data-step'), 10);
-      s.classList.toggle('active', sn === step);
-      s.classList.toggle('done', sn < step);
-    });
-    prevBtn.disabled = step === 1;
-    nextBtn.textContent = step === STEP_COUNT ? 'Review' : 'Next';
-    nextBtn.disabled = step === STEP_COUNT;
-
-    if (step === STEP_COUNT) updateSummary();
-  }
-
-  function updateSummary() {
-    sumName.textContent = (document.getElementById('wName').value || '').trim() || 'Untitled agent';
-    const personaSel = document.getElementById('wPersona');
-    sumPersona.textContent = personaSel.options[personaSel.selectedIndex].text;
-    const fileCount = document.querySelectorAll('#fileList li').length;
-    sumContent.textContent = fileCount ? `${fileCount} file${fileCount === 1 ? '' : 's'}` : 'none';
-    const selectedVoice = document.querySelector('.am-voice-row.selected .am-voice-name');
-    sumVoice.textContent = selectedVoice ? selectedVoice.textContent : 'George';
-    sumCountry.textContent = document.getElementById('wCountry').value;
-  }
-
-  openBtn.addEventListener('click', () => {
-    panel.hidden = false;
-    setStep(1);
-    panel.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    setTimeout(() => document.getElementById('wName').focus(), 200);
-  });
-  closeBtn.addEventListener('click', () => { panel.hidden = true; });
-  prevBtn.addEventListener('click', () => setStep(step - 1));
-  nextBtn.addEventListener('click', () => setStep(step + 1));
-
-  // Step click — jump (only allowed for completed steps + current)
-  document.querySelectorAll('.am-wizard-step').forEach((s) => {
-    s.addEventListener('click', () => {
-      const sn = parseInt(s.getAttribute('data-step'), 10);
-      if (sn <= step) setStep(sn);
-    });
-  });
-
-  // ── Step 3: file dropzone
-  const dropzone = document.getElementById('dropzone');
-  const fileInput = document.getElementById('fileInput');
-  const browseBtn = document.getElementById('browseBtn');
-  const fileList = document.getElementById('fileList');
-  function addFiles(files) {
-    Array.from(files).forEach((f) => {
-      const li = document.createElement('li');
-      const sizeKb = (f.size / 1024).toFixed(1);
-      li.innerHTML = `<span>${f.name}</span><span style="margin-left:auto;color:#9A938A;font-size:11px;">${sizeKb} KB</span>`;
-      fileList.appendChild(li);
-    });
-  }
-  if (browseBtn) browseBtn.addEventListener('click', (e) => { e.stopPropagation(); fileInput.click(); });
-  if (dropzone) {
-    dropzone.addEventListener('click', () => fileInput.click());
-    dropzone.addEventListener('dragover', (e) => { e.preventDefault(); dropzone.classList.add('drag-over'); });
-    dropzone.addEventListener('dragleave', () => dropzone.classList.remove('drag-over'));
-    dropzone.addEventListener('drop', (e) => {
-      e.preventDefault(); dropzone.classList.remove('drag-over');
-      addFiles(e.dataTransfer.files);
-    });
-  }
-  if (fileInput) fileInput.addEventListener('change', (e) => addFiles(e.target.files));
-
-  // ── Step 4: voice select + preview
-  const voiceList = document.getElementById('voiceList');
-  if (voiceList) {
-    voiceList.addEventListener('click', (e) => {
-      const playBtn = e.target.closest('.am-voice-play');
-      const row = e.target.closest('.am-voice-row');
-      if (playBtn) {
-        e.stopPropagation();
-        playVoice(playBtn);
-        return;
-      }
-      if (row) {
-        document.querySelectorAll('.am-voice-row').forEach((r) => r.classList.remove('selected'));
-        row.classList.add('selected');
-      }
-    });
-  }
-
-  // ── Step 6: deploy
-  if (deployBtn) {
-    deployBtn.addEventListener('click', () => {
-      deployBtn.hidden = true;
-      document.getElementById('deployLoading').hidden = false;
-      // Simulated deployment delay — would be a real /api/v1/agents POST.
-      setTimeout(() => {
-        document.getElementById('deployLoading').hidden = true;
-        document.getElementById('deploySuccess').hidden = false;
-        // Generate a "test number" within the chosen country code.
-        const cc = document.getElementById('wCountry').value;
-        const middle = String(Math.floor(Math.random() * 90 + 10)); // 10-99
-        const tail = String(Math.floor(Math.random() * 9000000 + 1000000));
-        document.getElementById('deployedNumber').textContent =
-          `${cc} ${middle} ${tail.slice(0,3)} ${tail.slice(3)}`;
-      }, 1600);
-    });
-  }
-
-  setStep(1);
-})();
-
-// ─────────────────────────────────────────────────────────────────
-// Voice preview audio (shared <audio>)
-// ─────────────────────────────────────────────────────────────────
-function playVoice(btn) {
-  const player = document.getElementById('audioPlayer');
-  const src = btn.getAttribute('data-audio');
-  if (!player) return;
-  document.querySelectorAll('.am-voice-play[data-playing="true"]').forEach((b) => b.removeAttribute('data-playing'));
-  if (!src) {
-    btn.setAttribute('data-playing', 'true');
-    setTimeout(() => btn.removeAttribute('data-playing'), 600);
-    return;
-  }
-  try { player.pause(); player.currentTime = 0; } catch (_) {}
-  player.src = src;
-  btn.setAttribute('data-playing', 'true');
-  const reset = () => btn.removeAttribute('data-playing');
-  player.addEventListener('ended', reset, { once: true });
-  player.addEventListener('pause', reset, { once: true });
-  const promise = player.play();
-  if (promise && typeof promise.catch === 'function') {
-    promise.catch(() => reset());
-  }
+function statusPill(s){
+  var map={ ready:['ready','Ready'], oncall:['oncall','On call'], paused:['paused','Paused'] };
+  var m=map[s]||map.ready;
+  return '<span class="status '+m[0]+'"><span class="sdot"></span>'+m[1]+'</span>';
 }
 
-// ─────────────────────────────────────────────────────────────────
-// "Calls today" gentle live ticker (every 8 s, +1) — purely cosmetic.
-// ─────────────────────────────────────────────────────────────────
-// Live simulator — bumps the global "Calls Today" stat and each
-// agent's per-card calls counter at realistic intervals, plus a
-// brief "ringing" pulse on a random active agent every couple of
-// minutes. State sits at window.CALL_CENTER_STATE for inspection.
-// All numbers are sample data, no backend.
-// ─────────────────────────────────────────────────────────────────
-(function() {
-  const callsTodayEl = document.getElementById('callsTodayStat');
-  const STATE = window.CALL_CENTER_STATE = {
-    callsToday: callsTodayEl ? (parseInt((callsTodayEl.textContent || '247').replace(/[^0-9]/g, ''), 10) || 247) : 247,
-    callsHandled: AGENTS.reduce((m, a) => (m[a.name] = a.callsToday, m), {}),
-  };
+/* ── time-aware greeting ── */
+(function(){
+  var el=document.getElementById('greeting'); if(!el) return;
+  var h=new Date().getHours();
+  el.textContent = h<12 ? 'Good morning' : h<18 ? 'Good afternoon' : 'Good evening';
+})();
 
-  function bumpGlobalCallsToday() {
-    STATE.callsToday += 1;
-    if (callsTodayEl) {
-      callsTodayEl.textContent = STATE.callsToday.toLocaleString();
-      // Brief flash so it doesn't feel like a clock just incrementing.
-      callsTodayEl.style.transition = 'color 320ms ease';
-      callsTodayEl.style.color = '#10B981';
-      setTimeout(() => { callsTodayEl.style.color = ''; }, 600);
-    }
+/* ── render agent cards ── */
+(function renderCards(){
+  var grid=document.getElementById('agentGrid'); if(!grid) return;
+  var html='';
+  AGENTS.forEach(function(a,i){
+    var cont = a.containment ? a.containment+'%' : '—';
+    var toggleLabel = a.status==='paused' ? 'Resume' : 'Pause';
+    html +=
+      '<article class="card acard" data-i="'+i+'" style="--c1:'+a.c1+';--c2:'+a.c2+'">'
+      + '<div class="acard-head">'
+        + avatarHTML(a)
+        + '<div class="acard-id"><h3>'+a.name+'</h3><p>'+a.role+'</p></div>'
+      + '</div>'
+      + '<div class="acard-statpill">'+statusPill(a.status)+'</div>'
+      + '<div class="acard-stats">'
+        + '<div class="s"><div class="l">Calls today</div><div class="v cnum">'+a.callsToday+'</div></div>'
+        + '<div class="s"><div class="l">Containment</div><div class="v">'+cont+'</div></div>'
+      + '</div>'
+      + '<div class="acard-foot">'
+        + '<button class="btn btn-sm full" type="button" data-audio="'+a.audio+'">▶ Hear demo</button>'
+        + '<button class="btn btn-sm" type="button" data-view="'+a.name+'">View details</button>'
+        + '<button class="btn btn-sm btn-ghost" type="button" data-toggle="'+i+'">'+toggleLabel+'</button>'
+      + '</div>'
+      + '</article>';
+  });
+  // dashed create tile
+  html += '<article class="acard acard-create" id="createTile" tabindex="0" role="button" aria-label="Create new agent">'
+    + '<span class="plus">+</span><span>Create new agent</span></article>';
+  grid.innerHTML=html;
+})();
+
+/* ── render table ── */
+(function renderTable(){
+  var body=document.getElementById('tableBody'); if(!body) return;
+  var html='';
+  AGENTS.forEach(function(a,i){
+    var toggleLabel = a.status==='paused' ? 'Resume' : 'Pause';
+    html += '<tr data-row="'+i+'">'
+      + '<td><span class="rowname">'+avatarHTML(a)+a.name+'</span></td>'
+      + '<td>'+a.role+'</td>'
+      + '<td class="mono">'+a.voice+'</td>'
+      + '<td class="num">'+a.callsToday+'</td>'
+      + '<td>'+statusPill(a.status)+'</td>'
+      + '<td class="mono">'+a.created+'</td>'
+      + '<td class="act">'
+        + '<button class="btn btn-sm" type="button" data-view="'+a.name+'">Edit</button>'
+        + '<button class="btn btn-sm btn-ghost" type="button" data-toggle="'+i+'">'+toggleLabel+'</button>'
+      + '</td>'
+      + '</tr>';
+  });
+  body.innerHTML=html;
+})();
+
+/* ── audio playback (shared player) ── */
+(function(){
+  var player=document.getElementById('player'); if(!player) return;
+  document.addEventListener('click', function(e){
+    var btn=e.target.closest('[data-audio]'); if(!btn) return;
+    var src=btn.getAttribute('data-audio');
+    if(!src) return;
+    try{ player.pause(); player.currentTime=0; }catch(_){}
+    if(player.src.indexOf(src)===-1) player.src=src;
+    var p=player.play();
+    if(p&&p.catch) p.catch(function(){});
+  });
+})();
+
+/* ── pause / resume toggle ── */
+(function(){
+  function syncToggleButtons(i){
+    var a=AGENTS[i];
+    var lbl = a.status==='paused' ? 'Resume' : 'Pause';
+    document.querySelectorAll('[data-toggle="'+i+'"]').forEach(function(b){ b.textContent=lbl; });
+    // update card pill
+    var card=document.querySelector('.acard[data-i="'+i+'"]');
+    if(card){ var pp=card.querySelector('.acard-statpill'); if(pp) pp.innerHTML=statusPill(a.status); }
+    // update table pill
+    var row=document.querySelector('tr[data-row="'+i+'"]');
+    if(row){ var cells=row.querySelectorAll('td'); if(cells[4]) cells[4].innerHTML=statusPill(a.status); }
   }
+  document.addEventListener('click', function(e){
+    var btn=e.target.closest('[data-toggle]'); if(!btn) return;
+    var i=parseInt(btn.getAttribute('data-toggle'),10);
+    var a=AGENTS[i]; if(!a) return;
+    if(a.status==='paused'){ a.status='ready'; }
+    else { a.status='paused'; }
+    syncToggleButtons(i);
+  });
+})();
 
-  function jitter(minMs, maxMs) { return minMs + Math.random() * (maxMs - minMs); }
+/* ── modal ── */
+(function(){
+  var overlay=document.getElementById('overlay');
+  var createBtn=document.getElementById('createBtn');
+  var createTile=document.getElementById('createTile');
+  var closeBtn=document.getElementById('modalClose');
+  var cancelBtn=document.getElementById('modalCancel');
+  var createConfirm=document.getElementById('modalCreate');
+  var nameInput=document.getElementById('fName');
+  if(!overlay) return;
 
-  // Bump a random ACTIVE agent's per-card calls counter every 60-120 s.
-  // Also re-renders the table row so both views stay in sync.
-  function bumpRandomAgent() {
-    const activeAgents = AGENTS.filter((a) => a.status === 'active');
-    if (!activeAgents.length) return scheduleAgentBump();
-    const target = activeAgents[Math.floor(Math.random() * activeAgents.length)];
-    target.callsToday += 1;
-    STATE.callsHandled[target.name] = target.callsToday;
-
-    // Update the matching agent card.
-    document.querySelectorAll('.am-agent-card').forEach((card) => {
-      const nameEl = card.querySelector('.am-agent-id h4');
-      if (!nameEl || nameEl.textContent !== target.name) return;
-      const valEls = card.querySelectorAll('.am-agent-stat-value');
-      // First .am-agent-stat-value is "calls today" per renderAgentCards.
-      if (valEls.length) {
-        valEls[0].textContent = target.callsToday;
-        valEls[0].style.transition = 'color 400ms ease';
-        valEls[0].style.color = '#10B981';
-        setTimeout(() => { valEls[0].style.color = ''; }, 700);
-      }
-    });
-
-    // Re-render the table row for this agent (preserves sort).
-    const tbody = document.getElementById('agentTableBody');
-    if (tbody) {
-      Array.from(tbody.querySelectorAll('tr')).forEach((tr) => {
-        const nameCell = tr.querySelector('.row-name');
-        if (!nameCell || !nameCell.textContent.includes(target.name)) return;
-        const cells = tr.querySelectorAll('td');
-        // Column 4 is "Calls today" (zero-indexed cells[3]).
-        if (cells[3]) {
-          cells[3].textContent = target.callsToday;
-          cells[3].style.background = 'rgba(16,185,129,0.10)';
-          setTimeout(() => { cells[3].style.background = ''; }, 1200);
-        }
-      });
-    }
-
-    bumpGlobalCallsToday();
-    scheduleAgentBump();
+  function open(){
+    overlay.classList.add('open');
+    setTimeout(function(){ if(nameInput) nameInput.focus(); },80);
   }
-  function scheduleAgentBump() {
-    setTimeout(bumpRandomAgent, jitter(60000, 120000));
-  }
+  function close(){ overlay.classList.remove('open'); }
 
-  // Brief "ringing" pulse on a random active agent every 90-180 s. The
-  // active status pill flashes amber for ~3 s, then back to green.
-  function ringingPulse() {
-    const cards = Array.from(document.querySelectorAll('.am-agent-card'));
-    const activeCards = cards.filter((c) => {
-      const pill = c.querySelector('.am-agent-status');
-      return pill && pill.classList.contains('active');
-    });
-    if (!activeCards.length) return scheduleRinging();
-    const card = activeCards[Math.floor(Math.random() * activeCards.length)];
-    const pill = card.querySelector('.am-agent-status');
-    const dot = card.querySelector('.am-agent-status-dot');
-    const label = pill && pill.lastChild && pill.lastChild.nodeType === 3
-      ? pill.lastChild : null;
-    if (!pill || !label) return scheduleRinging();
-    const original = label.textContent;
-    pill.style.color = '#F59E0B';
-    pill.style.borderColor = 'rgba(245,158,11,0.30)';
-    pill.style.background = 'rgba(245,158,11,0.12)';
-    if (dot) dot.style.background = '#F59E0B';
-    label.textContent = ' Ringing';
-    setTimeout(() => {
-      pill.style.color = '';
-      pill.style.borderColor = '';
-      pill.style.background = '';
-      if (dot) dot.style.background = '';
-      label.textContent = original;
-    }, 3000);
-    scheduleRinging();
+  if(createBtn) createBtn.addEventListener('click', open);
+  if(createTile){
+    createTile.addEventListener('click', open);
+    createTile.addEventListener('keydown', function(e){ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); open(); }});
   }
-  function scheduleRinging() {
-    setTimeout(ringingPulse, jitter(90000, 180000));
-  }
+  if(closeBtn) closeBtn.addEventListener('click', close);
+  if(cancelBtn) cancelBtn.addEventListener('click', close);
+  overlay.addEventListener('click', function(e){ if(e.target===overlay) close(); });
+  document.addEventListener('keydown', function(e){ if(e.key==='Escape') close(); });
 
-  // Kick everything off with random initial delays so the page doesn't
-  // fire all three at once.
-  setTimeout(bumpGlobalCallsToday, jitter(8000, 18000));
-  setInterval(bumpGlobalCallsToday, jitter(20000, 35000));   // gentle background
-  scheduleAgentBump();
-  scheduleRinging();
+  if(createConfirm) createConfirm.addEventListener('click', function(){
+    close();
+    showToast('Agent created (demo)');
+  });
+})();
+
+/* ── view details (demo) ── */
+(function(){
+  document.addEventListener('click', function(e){
+    var btn=e.target.closest('[data-view]'); if(!btn) return;
+    showToast(btn.getAttribute('data-view')+' — details coming soon (demo)');
+  });
+})();
+
+/* ── toast ── */
+var _toastTimer;
+function showToast(msg){
+  var t=document.getElementById('toast');
+  var m=document.getElementById('toastMsg');
+  if(!t) return;
+  if(m) m.textContent=msg||'Done';
+  t.classList.add('show');
+  clearTimeout(_toastTimer);
+  _toastTimer=setTimeout(function(){ t.classList.remove('show'); },2600);
+}
+
+/* ── reveal on scroll ── */
+(function(){
+  var els=document.querySelectorAll('.rv');
+  if(!('IntersectionObserver' in window)){ els.forEach(function(el){ el.classList.add('in'); }); return; }
+  var io=new IntersectionObserver(function(entries){
+    entries.forEach(function(en){ if(en.isIntersecting){ en.target.classList.add('in'); io.unobserve(en.target); } });
+  },{threshold:.12});
+  els.forEach(function(el){ io.observe(el); });
+})();
+
+/* ── scroll progress ── */
+(function(){
+  var bar=document.getElementById('prog'); if(!bar) return;
+  function upd(){
+    var h=document.documentElement;
+    var max=(h.scrollHeight-h.clientHeight)||1;
+    bar.style.width=((h.scrollTop||document.body.scrollTop)/max*100)+'%';
+  }
+  window.addEventListener('scroll', upd, {passive:true});
+  window.addEventListener('resize', upd);
+  upd();
+})();
+
+/* ── gentle live "calls today" ticker (cosmetic) ── */
+(function(){
+  var el=document.getElementById('callsKpi'); if(!el) return;
+  if(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  var n=247;
+  setInterval(function(){
+    n+=1; el.textContent=n.toLocaleString();
+    el.style.transition='color .3s'; el.style.color='#0F9D6E';
+    setTimeout(function(){ el.style.color=''; },600);
+  }, 9000);
 })();
 </script>
 </body>

@@ -3,2010 +3,585 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Cynea Voice Engine — Operations Center</title>
+<title>Cynea — Voice Operations Center</title>
+<meta name="description" content="Cynea Voice Operations Center — live analytics for human-like AI voice agents serving businesses worldwide." />
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Syne:wght@600;700;800&family=DM+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
-*, *::before, *::after { box-sizing: border-box; }
-html, body { margin: 0; padding: 0; background: #F5F1EA; color: #1A1A1A; }
-body {
-  font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  font-size: 14px; line-height: 1.5;
-  -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale;
-  min-height: 100vh;
-  background:
-    radial-gradient(1200px 600px at 0% -10%, #00D4FF0F, transparent 60%),
-    radial-gradient(1000px 500px at 100% -10%, #00D4FF06, transparent 60%),
-    #F5F1EA;
-}
-main { max-width: 1240px; margin: 0 auto; padding: 40px 32px 80px; }
+:root{--cream:#F5F1EA;--cream-2:#EFEAE0;--surface:#FFFFFF;--surface-2:#FBF8F2;--ink:#161616;--muted:#6B6660;--faint:#9A938A;--line:#E6E0D5;--black:#0A0A0A;--accent:#00D4FF;--accent-ink:#0089A8;--ok:#10B981;--warn:#F59E0B;--r:18px;--r-lg:28px;--maxw:1240px}
+*,*::before,*::after{box-sizing:border-box}html{scroll-behavior:smooth}
+body{margin:0;background:var(--cream);color:var(--ink);font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;font-size:15px;line-height:1.5;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important}}
+a{color:inherit;text-decoration:none}.wrap{max-width:var(--maxw);margin:0 auto;padding:0 24px}.mono{font-family:'JetBrains Mono',monospace;font-feature-settings:"tnum" 1}
+.eyebrow{font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--accent-ink);font-weight:500}
+h1,h2,h3{letter-spacing:-.02em;font-weight:600;margin:0}.muted{color:var(--muted)}
+.btn{display:inline-flex;align-items:center;gap:8px;font-family:inherit;font-size:14px;font-weight:500;padding:9px 16px;border-radius:999px;border:1px solid var(--line);background:var(--surface);color:var(--ink);cursor:pointer;transition:transform .18s,box-shadow .2s,background .2s,border-color .2s}
+.btn:hover{transform:translateY(-1px)}.btn-dark{background:var(--black);color:#fff;border-color:var(--black)}.btn-dark:hover{background:#262626;box-shadow:0 10px 28px rgba(0,0,0,.18)}.btn-sm{padding:7px 13px;font-size:13px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);box-shadow:0 1px 2px rgba(22,22,22,.03)}
+.nav{position:sticky;top:0;z-index:60;background:rgba(245,241,234,.82);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border-bottom:1px solid var(--line)}
+.nav-in{display:flex;align-items:center;gap:24px;height:60px;max-width:var(--maxw);margin:0 auto;padding:0 24px}
+.brand{display:inline-flex;align-items:baseline;gap:9px}.brand b{font-weight:700;font-size:19px;letter-spacing:.02em}.brand span{font-size:10px;letter-spacing:.28em;color:var(--faint);font-weight:600}
+.nav-links{display:flex;gap:24px;margin:0 auto}.nav-links a{font-size:14px;color:var(--muted);font-weight:500}.nav-links a:hover,.nav-links a.active{color:var(--ink)}
+.nav-right{display:flex;align-items:center;gap:12px}.nav-signin{font-size:14px;color:var(--ink);font-weight:500}
+@media(max-width:920px){.nav-links{display:none}.nav-signin{display:none}}
+.pill{display:inline-flex;align-items:center;gap:6px;padding:3px 10px;border-radius:999px;font-size:11px;font-weight:600;border:1px solid}
+.pill-ok{color:#0F9D6E;border-color:rgba(16,185,129,.3);background:rgba(16,185,129,.1)}
+.pill-warn{color:#B45309;border-color:rgba(245,158,11,.3);background:rgba(245,158,11,.1)}
+.dot{width:8px;height:8px;border-radius:50%;background:var(--ok);box-shadow:0 0 0 0 rgba(16,185,129,.6);animation:pulse 1.8s infinite}
+@keyframes pulse{0%{box-shadow:0 0 0 0 rgba(16,185,129,.5)}70%{box-shadow:0 0 0 9px rgba(16,185,129,0)}100%{box-shadow:0 0 0 0 rgba(16,185,129,0)}}
+.foot{padding:48px 0 32px;border-top:1px solid var(--line);margin-top:32px}.foot-in{max-width:var(--maxw);margin:0 auto;padding:0 24px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:16px;font-size:13px;color:var(--faint)}
+.rv{opacity:0;transform:translateY(18px);transition:opacity .6s cubic-bezier(.2,.8,.2,1),transform .6s cubic-bezier(.2,.8,.2,1)}.rv.in{opacity:1;transform:none}
+#prog{position:fixed;top:0;left:0;height:2px;width:0;background:linear-gradient(90deg,#00D4FF,#7C5CFC);z-index:80}
 
-/* ── header ─────────────────────────────────────────────────────── */
-.hero { margin-bottom: 28px; }
-.brand-row {
-  display: flex; align-items: center; justify-content: space-between;
-  margin-bottom: 28px;
-}
-.brand { display: flex; align-items: baseline; gap: 12px; }
-.brand-mark {
-  font-family: 'Syne', sans-serif; font-weight: 800;
-  font-size: 22px; letter-spacing: 0.18em;
-  color: #00D4FF;
-  text-shadow: 0 0 20px #00D4FF66;
-}
-.brand-mark.small { font-size: 13px; letter-spacing: 0.16em; }
-.brand-tag {
-  font-family: 'Syne', sans-serif; font-weight: 600;
-  font-size: 11px; letter-spacing: 0.32em; color: #6B6B6B;
-}
-.hero-controls { display: flex; gap: 8px; align-items: center; }
-.clock {
-  font-family: 'JetBrains Mono', monospace; font-size: 13px; font-weight: 500;
-  color: #6B6B6B; padding: 6px 10px;
-  border: 1px solid #E4DED2; border-radius: 8px;
-  background: #FBF8F2;
-  font-feature-settings: "tnum" 1;
-}
-.btn {
-  font-family: inherit; font-weight: 500; font-size: 13px;
-  padding: 7px 14px; border-radius: 8px; cursor: pointer;
-  border: 1px solid #E4DED2; background: #FBF8F2; color: #1A1A1A;
-  transition: border-color 120ms ease, background 120ms ease, transform 120ms ease;
-}
-.btn:hover { border-color: #00D4FF77; }
-.btn:active { transform: translateY(1px); }
-.btn-primary {
-  background: #00D4FF; color: #001218;
-  border-color: #00D4FF;
-  font-weight: 600;
-}
-.btn-primary:hover { filter: brightness(1.05); border-color: #00D4FF; }
-.btn-ghost { background: transparent; }
+/* ========= PAGE: Voice Operations Center ========= */
+.ops{padding:28px 0}
+.section{margin-bottom:20px}
 
-.hero-title { display: flex; align-items: center; gap: 14px; }
-h1 {
-  font-family: 'Syne', sans-serif; font-weight: 800;
-  font-size: 44px; line-height: 1.05; margin: 0 0 8px;
-  letter-spacing: -0.01em;
-}
-.subtitle { font-size: 17px; margin: 0 0 4px; font-weight: 500; }
-.subtitle .sep { color: #9A938A; margin: 0 8px; }
-.daterange {
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 12px; color: #6B6B6B; margin: 0;
-}
+/* header */
+.ops-head{display:flex;align-items:flex-start;justify-content:space-between;gap:24px;flex-wrap:wrap;padding:26px}
+.ops-head h1{font-size:40px;line-height:1.04;margin-bottom:8px}
+@media(max-width:640px){.ops-head h1{font-size:30px}}
+.ops-head .sub{font-size:15px;color:var(--muted)}
+.ops-head .sub .sep{color:var(--faint);margin:0 8px}
+.head-right{display:flex;flex-direction:column;align-items:flex-end;gap:10px}
+.clock{font-family:'JetBrains Mono',monospace;font-size:22px;font-weight:500;letter-spacing:.01em;font-feature-settings:"tnum" 1}
+.clock-date{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--faint);letter-spacing:.06em;text-transform:uppercase}
 
-.pill {
-  display: inline-flex; align-items: center; gap: 6px;
-  padding: 4px 10px; border-radius: 999px;
-  font-size: 11px; font-weight: 600; letter-spacing: 0.05em;
-  text-transform: uppercase; border: 1px solid; line-height: 1;
-}
-.pill-green { color: #10B981; border-color: #10B98133; background: #10B98114; }
-.pill-amber { color: #F59E0B; border-color: #F59E0B33; background: #F59E0B14; }
-.pill-muted { color: #6B6B6B; border-color: #6B6B6B33; background: #6B6B6B14; }
+/* KPI row */
+.kpi-row{display:grid;grid-template-columns:repeat(4,1fr);gap:20px}
+@media(max-width:900px){.kpi-row{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:520px){.kpi-row{grid-template-columns:1fr}}
+.kpi{padding:22px;position:relative;overflow:hidden}
+.kpi::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,212,255,.05),transparent 55%);pointer-events:none}
+.kpi .label{font-size:11px;text-transform:uppercase;letter-spacing:.12em;color:var(--muted);font-weight:600;display:flex;align-items:center;gap:8px}
+.kpi .value{font-family:'JetBrains Mono',monospace;font-size:38px;font-weight:500;margin:14px 0 8px;letter-spacing:-.02em;font-feature-settings:"tnum" 1}
+.kpi .trend{font-size:12px;font-weight:500}
+.kpi .trend.up{color:var(--ok)}.kpi .trend.dn{color:var(--warn)}
 
-/* ── KPI cards ──────────────────────────────────────────────────── */
-.kpis {
-  display: grid; gap: 16px; margin: 32px 0;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-}
-@media (max-width: 1000px) { .kpis { grid-template-columns: repeat(2, 1fr); } }
-@media (max-width: 540px) { .kpis { grid-template-columns: 1fr; } }
+/* agent status */
+.agent-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+@media(max-width:1000px){.agent-grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:520px){.agent-grid{grid-template-columns:1fr}}
+.agent{padding:18px}
+.agent-top{display:flex;align-items:center;gap:11px;margin-bottom:14px}
+.avatar{width:42px;height:42px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:16px;box-shadow:0 4px 14px rgba(0,0,0,.12)}
+.agent-name{font-size:15px;font-weight:600;line-height:1.2}
+.agent-role{font-size:12px;color:var(--muted)}
+.agent-mid{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+.agent-timer{font-family:'JetBrains Mono',monospace;font-size:20px;font-weight:500;font-feature-settings:"tnum" 1}
+.agent-timer.idle{color:var(--faint);font-size:15px}
+.agent-stats{display:flex;justify-content:space-between;padding-top:11px;border-top:1px solid var(--line);font-size:12px;color:var(--muted)}
+.agent-stats b{display:block;color:var(--ink);font-family:'JetBrains Mono',monospace;font-size:14px;font-weight:600;margin-top:2px}
 
-.card {
-  background: #FFFFFF;
-  border: 1px solid #E4DED2;
-  border-radius: 14px;
-  padding: 20px;
-  position: relative;
-  overflow: hidden;
-}
-.kpi {
-  padding: 22px 22px 18px;
-  background: linear-gradient(160deg, #FFFFFF 0%, #F4EFE6 100%);
-}
-.kpi::before {
-  content: ""; position: absolute; inset: 0; pointer-events: none;
-  background: linear-gradient(180deg, #00D4FF08, transparent 50%);
-}
-.kpi .label {
-  font-size: 11px; text-transform: uppercase; letter-spacing: 0.12em;
-  color: #6B6B6B; font-weight: 600;
-}
-.kpi .value {
-  font-family: 'JetBrains Mono', monospace; font-weight: 500;
-  font-size: 36px; margin: 12px 0 6px; letter-spacing: -0.02em;
-  font-feature-settings: "tnum" 1;
-  transition: opacity 240ms ease;
-}
-.kpi-foot { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; }
-.trend {
-  font-family: 'JetBrains Mono', monospace; font-size: 12px; font-weight: 500;
-}
-.sub { font-size: 12px; color: #9A938A; text-align: right; }
+/* card header */
+.ch{display:flex;align-items:baseline;justify-content:space-between;padding:18px 22px 14px;border-bottom:1px solid var(--line)}
+.ch h2{font-size:15px;font-weight:600}
+.ch .meta{font-size:12px;color:var(--faint);font-family:'JetBrains Mono',monospace}
+.cbody{padding:20px 22px 22px}
 
-.meter {
-  position: relative; height: 4px; margin-top: 12px;
-  background: #DED7C9; border-radius: 999px; overflow: visible;
-}
-.meter-bar {
-  height: 100%; border-radius: 999px;
-  transition: width 800ms cubic-bezier(.2,.8,.2,1);
-}
-.meter-target {
-  position: absolute; top: -3px; width: 2px; height: 10px;
-  background: #F59E0B;
-}
+/* global coverage */
+.worldmap{position:relative;min-height:300px;border-radius:var(--r);overflow:hidden;background-color:#0E1014;background-image:radial-gradient(rgba(255,255,255,.10) 1.1px,transparent 1.1px),linear-gradient(135deg,#0E1014,#1A1D24);background-size:22px 22px,100% 100%;background-position:0 0,0 0}
+.worldmap img{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;opacity:.9}
+.node{position:absolute;width:9px;height:9px;border-radius:50%;background:var(--accent);box-shadow:0 0 0 0 rgba(0,212,255,.55),0 0 14px 3px rgba(0,212,255,.7);animation:nodePulse 2.6s infinite}
+@keyframes nodePulse{0%{box-shadow:0 0 0 0 rgba(0,212,255,.5),0 0 14px 3px rgba(0,212,255,.6)}70%{box-shadow:0 0 0 12px rgba(0,212,255,0),0 0 14px 3px rgba(0,212,255,.6)}100%{box-shadow:0 0 0 0 rgba(0,212,255,0),0 0 14px 3px rgba(0,212,255,.6)}}
+.wm-lines{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+.wm-cap{position:absolute;left:18px;bottom:16px;font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.04em;color:rgba(255,255,255,.86);background:rgba(0,0,0,.35);padding:6px 12px;border-radius:999px;border:1px solid rgba(0,212,255,.3)}
+.wm-cap b{color:var(--accent)}
 
-/* ── live monitor ────────────────────────────────────────────────── */
-.monitor { padding: 0; margin-bottom: 24px; }
-.monitor-grid {
-  display: grid; grid-template-columns: repeat(4, 1fr);
-  gap: 0;
-}
-@media (max-width: 900px) { .monitor-grid { grid-template-columns: repeat(2, 1fr); } }
-.monitor-cell {
-  padding: 18px 22px;
-  border-right: 1px solid #E4DED2;
-}
-.monitor-cell:last-child { border-right: none; }
-.monitor-label { font-size: 11px; text-transform: uppercase; letter-spacing: 0.1em; color: #6B6B6B; font-weight: 600; }
-.monitor-value {
-  display: flex; align-items: baseline; gap: 8px;
-  margin-top: 8px;
-}
-.value-num {
-  font-family: 'JetBrains Mono', monospace; font-size: 22px; font-weight: 500;
-}
-.monitor-sub { font-size: 11px; color: #9A938A; margin-top: 4px; }
-.pulse {
-  width: 8px; height: 8px; border-radius: 50%; background: #10B981;
-  box-shadow: 0 0 0 0 #10B981AA;
-  animation: pulse 1.6s infinite;
-}
-@keyframes pulse {
-  0% { box-shadow: 0 0 0 0 #10B981AA; }
-  70% { box-shadow: 0 0 0 12px transparent; }
-  100% { box-shadow: 0 0 0 0 transparent; }
-}
+/* bar chart */
+.bars{display:flex;align-items:flex-end;gap:5px;height:170px}
+.bar-col{flex:1;display:flex;flex-direction:column;align-items:center;gap:6px;height:100%;min-width:0}
+.bar-track{flex:1;width:100%;display:flex;align-items:flex-end}
+.bar-fill{width:100%;border-radius:4px 4px 0 0;background:linear-gradient(180deg,#00D4FF,#0089A8);opacity:.9;transition:height .8s cubic-bezier(.2,.8,.2,1);min-height:2px}
+.bars-axis{display:flex;justify-content:space-between;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--faint);margin-top:8px;padding-top:8px;border-top:1px solid var(--line)}
 
-/* ── panels ──────────────────────────────────────────────────────── */
-.panel {
-  background: #FFFFFF; border: 1px solid #E4DED2;
-  border-radius: 14px; padding: 0; margin-bottom: 24px;
-}
-.panel-head {
-  display: flex; align-items: baseline; justify-content: space-between;
-  padding: 18px 22px 12px; border-bottom: 1px solid #E4DED2;
-}
-.panel-head h2 {
-  font-family: 'Syne', sans-serif; font-weight: 700;
-  font-size: 14px; margin: 0; letter-spacing: 0.06em;
-  text-transform: uppercase;
-}
-.muted { color: #6B6B6B; font-size: 13px; }
-.dim { color: #9A938A; }
-.small { font-size: 11px; }
+/* charts row */
+.charts3{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+@media(max-width:980px){.charts3{grid-template-columns:1fr}}
+.sline{width:100%;height:150px;display:block}
+.donut-wrap{display:flex;align-items:center;gap:20px}
+.donut{width:130px;height:130px;border-radius:50%;flex-shrink:0;position:relative}
+.donut-hole{position:absolute;inset:26px;border-radius:50%;background:var(--surface);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center}
+.donut-hole .t{font-family:'JetBrains Mono',monospace;font-size:18px;font-weight:600}
+.donut-hole .l{font-size:10px;color:var(--faint);text-transform:uppercase;letter-spacing:.1em}
+.legend{list-style:none;margin:0;padding:0;flex:1;font-size:13px}
+.legend li{display:grid;grid-template-columns:12px 1fr auto;gap:9px;align-items:center;padding:5px 0}
+.legend .ld{width:11px;height:11px;border-radius:3px}
+.legend .lv{font-family:'JetBrains Mono',monospace;font-weight:600}
+.cont-big{font-family:'JetBrains Mono',monospace;font-size:52px;font-weight:600;letter-spacing:-.03em;text-align:center;margin:8px 0 4px}
+.cont-sub{text-align:center;font-size:12px;color:var(--muted);margin-bottom:20px}
+.meter{height:8px;background:var(--cream-2);border-radius:999px;overflow:hidden}
+.meter>div{height:100%;border-radius:999px;background:linear-gradient(90deg,#00D4FF,#10B981);width:0;transition:width 1.1s cubic-bezier(.2,.8,.2,1)}
+.cont-scale{display:flex;justify-content:space-between;font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--faint);margin-top:6px}
 
-/* ── charts ──────────────────────────────────────────────────────── */
-.charts-grid {
-  display: grid; gap: 16px; margin-bottom: 24px;
-  grid-template-columns: 1.1fr 1.1fr 1fr;
-}
-@media (max-width: 1000px) { .charts-grid { grid-template-columns: 1fr; } }
-.chart-card { padding: 0; }
-.chart-body { padding: 18px 22px 22px; min-height: 200px; }
-.bar-chart { display: flex; align-items: flex-end; gap: 10px; height: 160px; }
-.bar-col { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 6px; height: 100%; }
-.bar-track { flex: 1; width: 100%; display: flex; align-items: flex-end; }
-.bar-fill {
-  width: 100%; border-radius: 4px 4px 0 0; opacity: 0.85;
-  transition: height 700ms cubic-bezier(.2,.8,.2,1);
-  box-shadow: inset 0 -1px 0 0 #00D4FF33;
-}
-.bar-x { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: #6B6B6B; }
+/* cost comparison */
+.roi{display:grid;grid-template-columns:1fr auto 1fr;gap:20px;align-items:stretch}
+@media(max-width:720px){.roi{grid-template-columns:1fr}.roi-vs{display:none}}
+.roi-side{padding:20px;border-radius:14px;background:var(--surface-2);border:1px solid var(--line);display:flex;flex-direction:column;gap:6px}
+.roi-cynea{border-color:rgba(0,212,255,.35);background:linear-gradient(160deg,var(--surface-2),rgba(0,212,255,.07))}
+.roi-side .rl{font-size:11px;text-transform:uppercase;letter-spacing:.1em;font-weight:600;color:var(--muted)}
+.roi-side .ra{font-family:'JetBrains Mono',monospace;font-size:32px;font-weight:600;letter-spacing:-.02em}
+.roi-side .rd{font-size:12px;color:var(--faint)}
+.roi-vs{align-self:center;font-family:'JetBrains Mono',monospace;font-weight:600;font-size:13px;letter-spacing:.16em;color:var(--faint)}
+.roi-save{margin-top:18px;padding:20px;text-align:center;border-top:1px solid var(--line)}
+.roi-save .rsl{font-size:11px;text-transform:uppercase;letter-spacing:.1em;font-weight:600;color:var(--muted)}
+.roi-save .rsn{font-family:'JetBrains Mono',monospace;font-size:50px;font-weight:700;color:var(--ok);letter-spacing:-.02em;line-height:1.05;margin:8px 0 4px}
+.roi-save .rsp{font-size:13px;color:var(--muted)}
 
-.line-chart { width: 100%; height: 160px; }
-.chart-pie-wrap { display: flex; align-items: center; gap: 18px; }
-.pie {
-  width: 130px; height: 130px; border-radius: 50%;
-  position: relative; flex-shrink: 0;
-}
-.pie-hole {
-  position: absolute; inset: 24px; border-radius: 50%;
-  background: #FFFFFF;
-  display: flex; flex-direction: column; align-items: center; justify-content: center;
-  text-align: center;
-}
-.pie-total { font-size: 16px; }
-.pie-legend { list-style: none; padding: 0; margin: 0; flex: 1; }
-.pie-legend li {
-  display: grid; grid-template-columns: 12px 1fr auto; gap: 8px;
-  align-items: center; padding: 4px 0;
-}
-.legend-dot { width: 10px; height: 10px; border-radius: 50%; }
+/* call log feed */
+.feed{max-height:300px;overflow-y:auto;padding:6px 22px 18px;scrollbar-width:thin;scrollbar-color:var(--line) transparent}
+.feed::-webkit-scrollbar{width:6px}.feed::-webkit-scrollbar-thumb{background:var(--line);border-radius:999px}
+.feed-row{display:grid;grid-template-columns:78px 80px 1fr;gap:12px;align-items:baseline;padding:10px 0;border-bottom:1px solid var(--line);font-size:13px;animation:feedIn .35s ease}
+.feed-row:last-child{border-bottom:none}
+.feed-row .ft{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--faint)}
+.feed-row .fa{font-size:12px;font-weight:600;color:var(--accent-ink)}
+@keyframes feedIn{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:none}}
+@media(max-width:560px){.feed-row{grid-template-columns:70px 1fr}.feed-row .fa{grid-column:1/-1}}
 
-/* ── agent cards ─────────────────────────────────────────────────── */
-.agent-grid {
-  display: grid; gap: 16px; margin-bottom: 24px;
-  grid-template-columns: 1fr 1fr;
-}
-@media (max-width: 800px) { .agent-grid { grid-template-columns: 1fr; } }
-.agent-card { padding: 22px; }
-.agent-head { display: flex; align-items: baseline; gap: 12px; margin-bottom: 18px; }
-.agent-head h2 {
-  font-family: 'Syne', sans-serif; font-weight: 700; font-size: 18px; margin: 0;
-}
-.agent-stats {
-  display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-bottom: 16px;
-}
-.value-md { font-size: 22px; font-weight: 500; margin-top: 2px; }
-.agent-bar {
-  position: relative; height: 6px;
-  background: #DED7C9; border-radius: 999px;
-}
-.agent-bar-fill { height: 100%; border-radius: 999px; transition: width 800ms ease; }
-.agent-bar-target { position: absolute; top: -3px; width: 2px; height: 12px; background: #F59E0B; }
-.agent-foot { margin-top: 6px; }
-
-/* ── call history table ──────────────────────────────────────────── */
-.table-wrap { overflow-x: auto; }
-table { width: 100%; border-collapse: collapse; }
-thead th {
-  text-align: left; font-size: 11px; text-transform: uppercase;
-  letter-spacing: 0.08em; color: #6B6B6B; font-weight: 600;
-  padding: 14px 22px; border-bottom: 1px solid #E4DED2;
-  background: #FBF8F2;
-  cursor: pointer; user-select: none;
-}
-thead th[aria-sort="ascending"], thead th[aria-sort="descending"] { color: #00D4FF; }
-thead th.num { text-align: right; }
-tbody td {
-  padding: 12px 22px; font-size: 13px;
-  border-bottom: 1px solid #E4DED2;
-  vertical-align: middle;
-}
-.call-row { cursor: pointer; }
-.call-row:hover td { background: #00D4FF08; }
-.call-row.expanded td { background: #00D4FF10; }
-.call-detail td {
-  background: #FBF8F2; padding: 18px 22px;
-  border-bottom: 1px solid #E4DED2;
-}
-.detail-grid {
-  display: grid; grid-template-columns: 1.4fr 1fr; gap: 22px;
-}
-@media (max-width: 800px) { .detail-grid { grid-template-columns: 1fr; } }
-.detail-kvs { display: grid; grid-template-columns: 1fr 1fr; gap: 6px 18px; }
-.kv { display: flex; justify-content: space-between; gap: 8px; padding: 4px 0; border-bottom: 1px dashed #E4DED2; }
-.kv:last-child { border-bottom: none; }
-.detail-section-label {
-  font-size: 11px; text-transform: uppercase; letter-spacing: 0.1em;
-  color: #6B6B6B; font-weight: 600; margin-bottom: 8px;
-}
-.cost-row { display: grid; grid-template-columns: 80px 1fr 60px; gap: 10px; align-items: center; padding: 4px 0; }
-.cost-bar { background: #DED7C9; height: 6px; border-radius: 999px; overflow: hidden; }
-.cost-bar > div { height: 100%; transition: width 600ms ease; }
-
-.num { text-align: right; font-family: 'JetBrains Mono', monospace; font-feature-settings: "tnum" 1; }
-.mono { font-family: 'JetBrains Mono', monospace; font-feature-settings: "tnum" 1; }
-
-/* sentiment bar in row */
-.sbar {
-  position: relative; width: 110px; height: 8px; display: inline-block;
-  background: #DED7C9; border-radius: 999px; vertical-align: middle;
-}
-.sbar-axis { position: absolute; left: 50%; top: -2px; bottom: -2px; width: 1px; background: #DED7C9; }
-.sbar-fill { position: absolute; top: 0; bottom: 0; border-radius: 999px; }
-.sbar-pos { left: 50%; }
-.sbar-neg { right: 50%; }
-
-.empty { padding: 44px 22px; text-align: center; color: #6B6B6B; }
-
-.badge {
-  display: inline-flex; align-items: center; gap: 6px;
-  padding: 4px 10px; border-radius: 999px;
-  font-size: 12px; font-weight: 500;
-  border: 1px solid; line-height: 1; font-family: 'DM Sans', sans-serif;
-}
-.badge .dot { width: 6px; height: 6px; border-radius: 50%; display: inline-block; }
-
-/* ── export row ──────────────────────────────────────────────────── */
-.export-row {
-  display: flex; gap: 10px; align-items: center; flex-wrap: wrap;
-  margin: 16px 0 32px;
-}
-.export-row .small { margin-left: auto; }
-
-/* ── footer ──────────────────────────────────────────────────────── */
-footer {
-  display: flex; justify-content: space-between; align-items: center;
-  margin-top: 32px; padding-top: 18px;
-  border-top: 1px solid #E4DED2;
-  font-size: 12px;
-}
-
-/* ── toast ───────────────────────────────────────────────────────── */
-#toast {
-  position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%);
-  background: #00D4FF; color: #001218; padding: 10px 16px;
-  border-radius: 999px; font-weight: 600; font-size: 13px;
-  opacity: 0; pointer-events: none; transition: opacity 200ms ease;
-  z-index: 100;
-}
-#toast.show { opacity: 1; }
-
-/* ── demo mode highlight ────────────────────────────────────────── */
-body.demo-mode .pill-amber {
-  box-shadow: 0 0 0 1px #F59E0B, 0 0 18px #F59E0B55;
-}
-body.demo-mode .hero::after {
-  content: ""; position: absolute; inset: 0;
-  background: repeating-linear-gradient(
-    -45deg, transparent 0 18px, #F59E0B06 18px 19px
-  );
-  pointer-events: none;
-}
-.hero { position: relative; }
-
-/* ── print stylesheet ────────────────────────────────────────────── */
-@media print {
-  @page { margin: 14mm; }
-  body { background: white; color: #FFFFFF; }
-  .hero-controls, .export-row, #toast { display: none !important; }
-  .card, .panel, .pie-hole {
-    background: white !important; border-color: #ddd !important; color: #FFFFFF !important;
-  }
-  .kpi::before, .hero::after, body { background: white !important; }
-  .label, .muted, .dim, .sub, .bar-x, thead th, .monitor-label, .agent-foot, .small {
-    color: #555 !important;
-  }
-  .value, .value-num, .value-md, .pie-total, .mono, .num, .brand-mark, .brand-tag {
-    color: #FFFFFF !important; text-shadow: none !important;
-  }
-  .pill, .badge { color: #FFFFFF !important; background: white !important; border-color: #888 !important; }
-  .meter, .agent-bar, .sbar, .cost-bar { background: #eee !important; }
-  .meter-bar, .agent-bar-fill, .sbar-fill, .cost-bar > div { background: #444 !important; }
-  thead th { background: #1A1A1A !important; color: #FFFFFF !important; }
-  tbody td, .call-detail td { background: white !important; border-color: #ddd !important; }
-  .pulse { display: none; }
-  h1 { color: #FFFFFF !important; }
-  .panel, .card, .kpi { break-inside: avoid; }
-  .charts-grid { break-inside: avoid; }
-}
-
-/* ── call-center extension ──────────────────────────────────────── */
-/* All selectors prefixed `.cc-` so the styles never collide with the
-   landing page (which inlines this stylesheet but doesn't render the
-   call-center sections).                                             */
-
-.cc-section { margin-bottom: 24px; }
-.cc-section-head {
-  display: flex; align-items: baseline; justify-content: space-between;
-  padding: 4px 4px 14px; margin: 0 4px;
-}
-.cc-section-head h2 {
-  font-family: 'Syne', sans-serif; font-weight: 700;
-  font-size: 14px; margin: 0; letter-spacing: 0.06em;
-  text-transform: uppercase;
-}
-
-/* operations bar ─────────────────────────────────────────────────── */
-.cc-bar {
-  display: flex; align-items: center; justify-content: space-between;
-  gap: 24px; flex-wrap: wrap;
-  margin: 24px 0;
-  padding: 18px 22px;
-  background: linear-gradient(160deg, #FFFFFF 0%, #F4EFE6 100%);
-  border: 1px solid #E4DED2; border-radius: 14px;
-  position: relative; overflow: hidden;
-}
-.cc-bar::before {
-  content: ""; position: absolute; inset: 0; pointer-events: none;
-  background-image:
-    linear-gradient(#00D4FF0F 1px, transparent 1px),
-    linear-gradient(90deg, #00D4FF0F 1px, transparent 1px);
-  background-size: 24px 24px;
-  opacity: 0.5;
-}
-.cc-bar-title {
-  display: flex; align-items: center; gap: 12px;
-  position: relative; z-index: 1;
-}
-.cc-bar-title h2 {
-  font-family: 'Syne', sans-serif; font-weight: 700;
-  font-size: 18px; margin: 0; letter-spacing: 0.02em;
-}
-.cc-bar-stats {
-  display: flex; gap: 28px; flex-wrap: wrap;
-  position: relative; z-index: 1;
-}
-.cc-bar-stat { display: flex; flex-direction: column; gap: 2px; min-width: 86px; }
-.cc-stat-label {
-  font-size: 11px; text-transform: uppercase; letter-spacing: 0.08em;
-  color: #6B6B6B; font-weight: 600;
-}
-.cc-stat-value {
-  font-size: 22px; font-weight: 600; color: #00D4FF;
-  font-feature-settings: "tnum" 1; letter-spacing: -0.01em;
-}
-.cc-bar-clock .cc-stat-value { color: #1A1A1A; }
-@media (max-width: 720px) {
-  .cc-bar-stats { gap: 16px; }
-  .cc-bar-stat { min-width: 70px; }
-  .cc-stat-value { font-size: 18px; }
-}
-
-/* agent status board ─────────────────────────────────────────────── */
-.cc-agent-grid {
-  display: grid; gap: 16px;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-}
-@media (max-width: 1000px) { .cc-agent-grid { grid-template-columns: repeat(2, 1fr); } }
-@media (max-width: 540px)  { .cc-agent-grid { grid-template-columns: 1fr; } }
-.cc-agent {
-  padding: 18px;
-  background: linear-gradient(160deg, #FFFFFF 0%, #F4EFE6 100%);
-  border: 1px solid #E4DED2; border-radius: 14px;
-  position: relative; overflow: hidden;
-}
-.cc-agent::before {
-  content: ""; position: absolute; inset: 0; pointer-events: none;
-  background: linear-gradient(180deg, var(--accent, #00D4FF)0F, transparent 40%);
-}
-.cc-agent-head {
-  display: flex; align-items: center; gap: 10px;
-  margin-bottom: 12px; position: relative; z-index: 1;
-}
-.cc-agent-head .agent-avatar { width: 38px; height: 38px; font-size: 16px; }
-.cc-agent-id { flex: 1; min-width: 0; }
-.cc-agent-id h3 { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 15px; margin: 0; }
-.cc-agent-id p { margin: 2px 0 0; }
-.cc-status-pill {
-  display: inline-flex; align-items: center; gap: 5px;
-  padding: 3px 8px; border-radius: 999px;
-  font-size: 10px; font-weight: 600; letter-spacing: 0.06em;
-  text-transform: uppercase; border: 1px solid; line-height: 1;
-  white-space: nowrap;
-}
-.cc-status-dot { width: 6px; height: 6px; border-radius: 50%; display: inline-block; }
-.cc-agent-caller { font-size: 12px; margin-bottom: 6px; position: relative; z-index: 1; }
-.cc-agent-timer {
-  font-size: 22px; font-weight: 600; color: #00D4FF;
-  font-feature-settings: "tnum" 1; letter-spacing: -0.01em;
-  margin-bottom: 12px; position: relative; z-index: 1;
-}
-.cc-agent-timer-idle { color: #9A938A; font-weight: 500; }
-.cc-agent-foot {
-  display: flex; justify-content: space-between; align-items: baseline;
-  padding-top: 10px;
-  border-top: 1px solid #E4DED2;
-  position: relative; z-index: 1;
-}
-
-/* call queue ─────────────────────────────────────────────────────── */
-.cc-queue-list { padding: 10px 22px 18px; }
-.cc-queue-row {
-  display: grid;
-  grid-template-columns: 36px 1fr auto auto;
-  gap: 14px; align-items: center;
-  padding: 12px 0;
-  border-bottom: 1px solid #E4DED2;
-  font-size: 13px;
-}
-.cc-queue-row:last-child { border-bottom: none; }
-.cc-queue-pos { color: #00D4FF; font-weight: 600; }
-.cc-queue-caller { color: #1A1A1A; }
-.cc-queue-dept { font-size: 11px; }
-.cc-queue-wait {
-  color: #F59E0B; font-weight: 600;
-  min-width: 48px; text-align: right;
-}
-
-/* department cards ───────────────────────────────────────────────── */
-.cc-dept-grid {
-  display: grid; gap: 16px;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-}
-@media (max-width: 1000px) { .cc-dept-grid { grid-template-columns: repeat(2, 1fr); } }
-@media (max-width: 540px)  { .cc-dept-grid { grid-template-columns: 1fr; } }
-.cc-dept-card {
-  padding: 18px; border-radius: 14px;
-  background: #FFFFFF; border: 1px solid #E4DED2;
-}
-.cc-dept-head {
-  display: flex; justify-content: space-between; align-items: center;
-  margin-bottom: 12px;
-}
-.cc-dept-head h3 { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 14px; margin: 0; }
-.cc-dept-badge {
-  padding: 3px 8px; border-radius: 999px;
-  font-size: 11px; font-weight: 600;
-  border: 1px solid;
-}
-.cc-dept-stats {
-  display: flex; justify-content: space-between; gap: 16px;
-  padding: 8px 0 12px;
-}
-.cc-dept-stat { display: flex; flex-direction: column; gap: 2px; }
-.cc-dept-stat .mono { font-size: 16px; font-weight: 600; }
-.cc-spark {
-  display: flex; align-items: flex-end; gap: 3px;
-  height: 32px; padding-top: 4px;
-  border-top: 1px solid #E4DED2;
-}
-.cc-spark-bar {
-  flex: 1; min-height: 3px;
-  border-radius: 2px 2px 0 0;
-  opacity: 0.85;
-}
-
-/* ROI ─────────────────────────────────────────────────────────────── */
-.cc-roi { padding: 0; }
-.cc-roi-body {
-  display: grid; grid-template-columns: 1fr auto 1fr;
-  gap: 24px; align-items: stretch;
-  padding: 22px;
-}
-@media (max-width: 720px) {
-  .cc-roi-body { grid-template-columns: 1fr; gap: 12px; }
-  .cc-roi-vs { display: none; }
-}
-.cc-roi-side {
-  padding: 18px;
-  background: #FBF8F2; border: 1px solid #E4DED2;
-  border-radius: 12px;
-  display: flex; flex-direction: column; gap: 6px;
-}
-.cc-roi-cynea {
-  border-color: #00D4FF33;
-  background: linear-gradient(160deg, #FBF8F2 0%, #00D4FF0E 100%);
-}
-.cc-roi-label {
-  text-transform: uppercase; letter-spacing: 0.08em; font-weight: 600;
-}
-.cc-roi-formula { font-size: 12px; color: #6B6B6B; }
-.cc-roi-amount {
-  font-size: 32px; font-weight: 600; letter-spacing: -0.02em;
-  font-feature-settings: "tnum" 1;
-}
-.cc-roi-vs {
-  align-self: center;
-  font-family: 'Syne', sans-serif; font-weight: 700;
-  font-size: 14px; letter-spacing: 0.16em;
-  text-transform: uppercase; color: #6B6B6B;
-}
-.cc-roi-savings {
-  border-top: 1px solid #E4DED2;
-  padding: 18px 22px 22px;
-  text-align: center;
-}
-.cc-roi-savings-label {
-  text-transform: uppercase; letter-spacing: 0.08em; font-weight: 600;
-}
-.cc-roi-savings-num {
-  font-size: 56px; font-weight: 700; color: #10B981;
-  letter-spacing: -0.02em; line-height: 1;
-  margin: 6px 0 8px;
-  font-feature-settings: "tnum" 1;
-}
-.cc-roi-savings-pct { color: #1A1A1A; font-size: 13px; }
-
-/* heatmap ─────────────────────────────────────────────────────────── */
-.cc-heatmap { padding: 0; }
-.cc-heat-chart {
-  display: grid; grid-template-columns: repeat(24, 1fr); gap: 4px;
-  padding: 18px 22px 22px;
-  align-items: end;
-  height: 200px;
-}
-.cc-heat-col {
-  display: flex; flex-direction: column; align-items: center; gap: 4px;
-  height: 100%;
-}
-.cc-heat-bar {
-  width: 100%;
-  background: linear-gradient(180deg, #00D4FF 0%, #0088AA 100%);
-  border-radius: 3px 3px 0 0;
-  transition: opacity 200ms ease;
-}
-.cc-heat-col:hover .cc-heat-bar { opacity: 1 !important; }
-.cc-heat-label { font-size: 9px; color: #6B6B6B; }
-@media (max-width: 720px) {
-  .cc-heat-label { display: none; }
-  .cc-heat-chart { height: 140px; padding: 14px 16px 18px; }
-}
-
-/* real-time call log ─────────────────────────────────────────────── */
-.cc-feed { padding: 0; }
-.cc-feed-list {
-  max-height: 320px; overflow-y: auto;
-  padding: 8px 22px 18px;
-  scrollbar-width: thin; scrollbar-color: #DED7C9 transparent;
-}
-.cc-feed-list::-webkit-scrollbar { width: 6px; }
-.cc-feed-list::-webkit-scrollbar-thumb { background: #DED7C9; border-radius: 999px; }
-.cc-feed-row {
-  display: grid; grid-template-columns: 86px 78px 1fr;
-  gap: 14px; align-items: baseline;
-  padding: 10px 0;
-  border-bottom: 1px solid #E4DED2;
-  font-size: 13px;
-  animation: ccFeedIn 320ms ease;
-}
-.cc-feed-row:last-child { border-bottom: none; }
-.cc-feed-time { color: #6B6B6B; font-size: 11px; }
-.cc-feed-actor { color: #00D4FF; font-size: 12px; }
-.cc-feed-msg { color: #1A1A1A; }
-@keyframes ccFeedIn {
-  from { opacity: 0; transform: translateY(-4px); }
-  to   { opacity: 1; transform: translateY(0); }
-}
-@media (max-width: 720px) {
-  .cc-feed-row { grid-template-columns: 70px 1fr; }
-  .cc-feed-actor { grid-column: 1 / -1; }
-}
-
-/* simulator transitions — slide-in for new queue rows, fade-out for
-   the row that just got "connected", green flash for new feed entries */
-.cc-queue-row.cc-sim-new {
-  opacity: 0; transform: translateX(20px);
-  transition: opacity 320ms ease, transform 320ms cubic-bezier(.2,.8,.2,1);
-}
-.cc-queue-row.cc-sim-new:not(.cc-sim-leaving) {
-  /* trigger transition from JS via requestAnimationFrame removing the class */
-}
-.cc-queue-row, .cc-feed-row {
-  transition: opacity 320ms ease, transform 320ms ease, background 600ms ease;
-}
-.cc-queue-row.cc-sim-leaving, .cc-feed-row.cc-sim-leaving {
-  opacity: 0; transform: translateX(-20px);
-}
-.cc-feed-row.cc-sim-flash {
-  background: rgba(16,185,129,0.10);
-  box-shadow: inset 3px 0 0 0 #10B981;
-}
-
-/* print ───────────────────────────────────────────────────────────── */
-@media print {
-  .cc-bar, .cc-roi-savings-num {
-    background: white !important; color: #FFFFFF !important;
-  }
-  .cc-heat-bar, .cc-spark-bar {
-    background: #444 !important;
-  }
-  .cc-status-pill, .cc-dept-badge {
-    background: white !important; color: #FFFFFF !important; border-color: #888 !important;
-  }
-  .cc-agent::before, .cc-bar::before { display: none !important; }
-  .cc-agent, .cc-dept-card, .cc-feed, .cc-queue, .cc-roi, .cc-heatmap {
-    background: white !important; color: #FFFFFF !important; border-color: #ddd !important;
-  }
-  .cc-roi-side, .cc-roi-cynea { background: #fafafa !important; }
-  .cc-stat-value, .cc-agent-timer, .cc-roi-amount, .cc-roi-savings-num { color: #FFFFFF !important; }
-  .cc-feed-list { max-height: none !important; overflow: visible !important; }
-}
-
-/* ════ CY-LIGHT — ElevenLabs-style light skin (Cynea) ════ */
-body{font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;}
-h1,h2,h3,h4{font-family:'Inter',sans-serif;letter-spacing:-0.02em;}
-.brand-mark{font-family:'Inter',sans-serif;font-weight:700;letter-spacing:0.04em;color:#1A1A1A;text-shadow:none;}
-.brand-tag{color:#9A938A;}
-.btn-primary{background:#0A0A0A;color:#FFFFFF;border-color:#0A0A0A;}
-.btn-primary:hover{background:#222;border-color:#222;filter:none;box-shadow:0 8px 24px rgba(0,0,0,0.16);}
-
-/* ════ CY-LIGHT · wow polish ════ */
-html{scroll-behavior:smooth;}
-@media (prefers-reduced-motion:no-preference){
-  body{animation:cyPageIn 0.55s cubic-bezier(.2,.8,.2,1) both;}
-  @keyframes cyPageIn{from{opacity:0;}to{opacity:1;}}
-}
+/* table */
+.tw{overflow-x:auto}
+table{width:100%;border-collapse:collapse}
+thead th{text-align:left;font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);font-weight:600;padding:13px 18px;border-bottom:1px solid var(--line);background:var(--surface-2);cursor:pointer;user-select:none;white-space:nowrap}
+thead th .arr{opacity:.35;font-size:10px}
+thead th[aria-sort="ascending"],thead th[aria-sort="descending"]{color:var(--accent-ink)}
+thead th[aria-sort="ascending"] .arr,thead th[aria-sort="descending"] .arr{opacity:1}
+thead th.r{text-align:right}
+tbody td{padding:12px 18px;font-size:13px;border-bottom:1px solid var(--line);vertical-align:middle;white-space:nowrap}
+tbody tr:hover td{background:rgba(0,212,255,.04)}
+.tnum{text-align:right;font-family:'JetBrains Mono',monospace;font-feature-settings:"tnum" 1}
+.sbar{position:relative;width:90px;height:8px;background:var(--cream-2);border-radius:999px;display:inline-block;vertical-align:middle;overflow:hidden}
+.sbar>div{position:absolute;top:0;bottom:0;left:0;border-radius:999px}
 </style>
 </head>
-<body class="demo-mode">
-<main>
-  
-<header class="hero">
-  <div class="brand-row">
-    <div class="brand">
-      <span class="brand-mark">CYNEA</span>
-      <span class="brand-tag">VOICE ENGINE</span>
-    </div>
-    <div class="hero-controls">
-      <span class="clock" id="clock" aria-label="Current local time">--:--:--</span>
-      <button class="btn btn-ghost" id="refreshBtn" type="button" title="Reload data">↻ Refresh</button>
-      <button class="btn btn-ghost" id="demoToggle" type="button" title="Toggle demo overlay">Demo mode</button>
-    </div>
-  </div>
-  <div class="hero-title">
-    <h1>Voice AI Operations Center</h1>
-    <span class="pill pill-amber">Demo data</span>
-  </div>
-  <p class="subtitle">Multi-agent fleet <span class="sep">·</span> Adinkra Hotel &amp; KCB Bank</p>
-  <p class="daterange">Apr 26 → Apr 28, 2026</p>
-</header>
+<body>
+<div id="prog"></div>
+<nav class="nav"><div class="nav-in"><a class="brand" href="index.html"><b>CYNEA</b><span>VOICE ENGINE</span></a><div class="nav-links"><a href="index.html#agents">Agents</a><a href="index.html#platform">Platform</a><a href="product_tour.html">Product tour</a><a class="active" href="agent_manager.html">Dashboard</a><a href="help_center.html">Docs</a></div><div class="nav-right"><a class="nav-signin" href="signin.html">Sign in</a><a class="btn btn-dark btn-sm" href="agent_manager.html">Agent Manager</a></div></div></nav>
 
-  
-<section class="cc-bar" id="cc-bar">
-  <div class="cc-bar-title">
-    <span class="brand-mark small">CYNEA</span>
-    <h2>Operations Center</h2>
-    <span class="pill pill-green pill-sm">
-      <span class="pulse-dot"></span> Online
-    </span>
-  </div>
-  <div class="cc-bar-stats">
-    <div class="cc-bar-stat">
-      <span class="cc-stat-label">Active agents</span>
-      <span class="cc-stat-value mono" data-cc-counter="active_agents">4</span>
-    </div>
-    <div class="cc-bar-stat">
-      <span class="cc-stat-label">Calls today</span>
-      <span class="cc-stat-value mono" data-cc-counter="calls_today">247</span>
-    </div>
-    <div class="cc-bar-stat">
-      <span class="cc-stat-label">Waiting</span>
-      <span class="cc-stat-value mono" data-cc-counter="waiting">3</span>
-    </div>
-    <div class="cc-bar-stat">
-      <span class="cc-stat-label">Avg wait</span>
-      <span class="cc-stat-value mono" data-cc-counter="avg_wait">12s</span>
-    </div>
-    <div class="cc-bar-stat cc-bar-clock">
-      <span class="cc-stat-label">Local time</span>
-      <span class="cc-stat-value mono" id="cc-local-clock">--:--:--</span>
-    </div>
-  </div>
-</section>
+<main class="wrap ops">
 
-  
-<section class="cc-section" id="cc-agent-board">
-  <header class="cc-section-head">
-    <h2>Agent status</h2>
-    <span class="muted">Four agents · four departments</span>
-  </header>
-  <div class="cc-agent-grid">
-<article class="cc-agent panel" data-status="on_call" style="--accent:#00D4FF">
-  <header class="cc-agent-head">
-    <div class="agent-avatar" style="--accent:#00D4FF" aria-hidden="true">
-      <span>K</span>
+  <!-- 1. HEADER -->
+  <section class="section">
+    <div class="card ops-head rv">
+      <div>
+        <p class="eyebrow" style="margin-bottom:12px">Live operations</p>
+        <h1>Voice Operations Center</h1>
+        <p class="sub">Multi-agent <span class="sep">·</span> live across every market</p>
+      </div>
+      <div class="head-right">
+        <span class="pill pill-ok"><span class="dot"></span> Live</span>
+        <span class="clock mono" id="clock" aria-label="Current time">--:--:--</span>
+        <span class="clock-date" id="clockDate">—</span>
+      </div>
     </div>
-    <div class="cc-agent-id">
-      <h3>Kwame</h3>
-      <p class="muted small">Hotel Desk</p>
-    </div>
-    <span class="cc-status-pill"
-          style="color:#10B981;border-color:#10B98133;background:#10B98114">
-      <span class="cc-status-dot" style="background:#10B981"></span>On call
-    </span>
-  </header>
-  <div class="cc-agent-caller mono small">+233 54 XXX XXXX</div>
-  <div class="cc-agent-timer mono" data-cc-timer="754">12m 34s</div>
-  <footer class="cc-agent-foot muted small">
-    <span>Today</span>
-    <span class="mono">32 calls</span>
-  </footer>
-</article>
+  </section>
 
-<article class="cc-agent panel" data-status="on_call" style="--accent:#A78BFA">
-  <header class="cc-agent-head">
-    <div class="agent-avatar" style="--accent:#A78BFA" aria-hidden="true">
-      <span>A</span>
+  <!-- 2. KPI ROW -->
+  <section class="section">
+    <div class="kpi-row">
+      <div class="card kpi rv">
+        <span class="label">Calls today</span>
+        <div class="value mono" data-count="1247" data-suffix="">0</div>
+        <span class="trend up">&#9650; 8.4% vs yesterday</span>
+      </div>
+      <div class="card kpi rv">
+        <span class="label">Avg containment</span>
+        <div class="value mono" data-count="86.7" data-decimals="1" data-suffix="%">0</div>
+        <span class="trend up">&#9650; 2.1 pts this week</span>
+      </div>
+      <div class="card kpi rv">
+        <span class="label">Avg cost / call</span>
+        <div class="value mono" data-count="4.2" data-decimals="1" data-suffix="&#162;">0</div>
+        <span class="trend up">&#9660; 0.6&#162; vs last month</span>
+      </div>
+      <div class="card kpi rv">
+        <span class="label"><span class="dot"></span> Active agents</span>
+        <div class="value mono" data-count="3" data-suffix="">0</div>
+        <span class="trend" style="color:var(--muted)">3 live &middot; 1 idle</span>
+      </div>
     </div>
-    <div class="cc-agent-id">
-      <h3>Amina</h3>
-      <p class="muted small">Banking</p>
+  </section>
+
+  <!-- 3. AGENT STATUS -->
+  <section class="section">
+    <div class="agent-grid" id="agentGrid"></div>
+  </section>
+
+  <!-- 4. GLOBAL COVERAGE -->
+  <section class="section">
+    <div class="card rv">
+      <div class="ch"><h2>Global coverage</h2><span class="meta">edge routing &middot; live</span></div>
+      <div class="cbody">
+        <div class="worldmap">
+          <img src="assets/world-map.svg" alt="Global coverage map" onerror="this.style.display='none'">
+          <!-- drop assets/world-map.svg / world-map.png / world-map.mp4 here; this is the global coverage visual -->
+          <svg class="wm-lines" viewBox="0 0 100 56" preserveAspectRatio="none" aria-hidden="true">
+            <g stroke="rgba(0,212,255,.32)" stroke-width="0.25" fill="none">
+              <path d="M22,20 Q40,8 52,18"/>
+              <path d="M52,18 Q70,12 82,24"/>
+              <path d="M22,20 Q34,34 48,38"/>
+              <path d="M48,38 Q66,42 78,34"/>
+              <path d="M52,18 Q56,30 48,38"/>
+              <path d="M82,24 Q88,36 78,34"/>
+            </g>
+          </svg>
+          <span class="node" style="left:22%;top:36%"></span>
+          <span class="node" style="left:52%;top:32%;animation-delay:.4s"></span>
+          <span class="node" style="left:82%;top:43%;animation-delay:.8s"></span>
+          <span class="node" style="left:48%;top:68%;animation-delay:1.2s"></span>
+          <span class="node" style="left:78%;top:61%;animation-delay:1.6s"></span>
+          <span class="node" style="left:34%;top:58%;animation-delay:2s"></span>
+          <span class="wm-cap">Available worldwide &middot; <b>40+ markets</b></span>
+        </div>
+      </div>
     </div>
-    <span class="cc-status-pill"
-          style="color:#10B981;border-color:#10B98133;background:#10B98114">
-      <span class="cc-status-dot" style="background:#10B981"></span>On call
-    </span>
-  </header>
-  <div class="cc-agent-caller mono small">+254 72 XXX XXXX</div>
-  <div class="cc-agent-timer mono" data-cc-timer="312">5m 12s</div>
-  <footer class="cc-agent-foot muted small">
-    <span>Today</span>
-    <span class="mono">41 calls</span>
-  </footer>
-</article>
+  </section>
 
-<article class="cc-agent panel" data-status="available" style="--accent:#10B981">
-  <header class="cc-agent-head">
-    <div class="agent-avatar" style="--accent:#10B981" aria-hidden="true">
-      <span>K</span>
+  <!-- 5. CALL VOLUME -->
+  <section class="section">
+    <div class="card rv">
+      <div class="ch"><h2>Calls by hour</h2><span class="meta">last 24h &middot; UTC</span></div>
+      <div class="cbody">
+        <div class="bars" id="bars"></div>
+        <div class="bars-axis"><span>00:00</span><span>06:00</span><span>12:00</span><span>18:00</span><span>23:00</span></div>
+      </div>
     </div>
-    <div class="cc-agent-id">
-      <h3>Kofi</h3>
-      <p class="muted small">Support</p>
-    </div>
-    <span class="cc-status-pill"
-          style="color:#F59E0B;border-color:#F59E0B33;background:#F59E0B14">
-      <span class="cc-status-dot" style="background:#F59E0B"></span>Available
-    </span>
-  </header>
-  <div class="cc-agent-caller muted small">awaiting next call</div>
-  <div class="cc-agent-timer cc-agent-timer-idle mono">—</div>
-  <footer class="cc-agent-foot muted small">
-    <span>Today</span>
-    <span class="mono">18 calls</span>
-  </footer>
-</article>
+  </section>
 
-<article class="cc-agent panel" data-status="break" style="--accent:#F59E0B">
-  <header class="cc-agent-head">
-    <div class="agent-avatar" style="--accent:#F59E0B" aria-hidden="true">
-      <span>A</span>
-    </div>
-    <div class="cc-agent-id">
-      <h3>Adwoa</h3>
-      <p class="muted small">Complaints</p>
-    </div>
-    <span class="cc-status-pill"
-          style="color:#EF4444;border-color:#EF444433;background:#EF444414">
-      <span class="cc-status-dot" style="background:#EF4444"></span>On break
-    </span>
-  </header>
-  <div class="cc-agent-caller muted small">awaiting next call</div>
-  <div class="cc-agent-timer cc-agent-timer-idle mono">—</div>
-  <footer class="cc-agent-foot muted small">
-    <span>Today</span>
-    <span class="mono">9 calls</span>
-  </footer>
-</article>
-</div>
-</section>
-
-  
-<section class="cc-section panel" id="cc-queue">
-  <header class="panel-head">
-    <h2>Call queue</h2>
-    <span class="muted"><span class="mono" data-cc-counter="waiting-mirror">3</span> waiting</span>
-  </header>
-  <div class="cc-queue-list">
-<div class="cc-queue-row">
-  <span class="cc-queue-pos mono">#1</span>
-  <span class="cc-queue-caller mono">+233 24 XXX XXXX</span>
-  <span class="cc-queue-dept muted small">Hotel Desk</span>
-  <span class="cc-queue-wait mono" data-cc-wait="47">47s</span>
-</div>
-
-<div class="cc-queue-row">
-  <span class="cc-queue-pos mono">#2</span>
-  <span class="cc-queue-caller mono">+254 71 XXX XXXX</span>
-  <span class="cc-queue-dept muted small">Banking</span>
-  <span class="cc-queue-wait mono" data-cc-wait="22">22s</span>
-</div>
-
-<div class="cc-queue-row">
-  <span class="cc-queue-pos mono">#3</span>
-  <span class="cc-queue-caller mono">+233 50 XXX XXXX</span>
-  <span class="cc-queue-dept muted small">Support</span>
-  <span class="cc-queue-wait mono" data-cc-wait="8">8s</span>
-</div>
-</div>
-</section>
-
-  <section class="kpis"><article class="card kpi" data-animate-value>  <div class="label">Total calls handled</div>  <div class="value" style="color:#00D4FF" data-final="15">15</div>  <div class="kpi-foot">    <span class="trend" style="color:#10B981">▲ +1</span>    <span class="sub">Since deployment</span>  </div>  </article><article class="card kpi" data-animate-value>  <div class="label">Containment rate</div>  <div class="value" style="color:#10B981" data-final="86.7%">86.7%</div>  <div class="kpi-foot">    <span class="trend" style="color:#10B981">▲ +1.8pp</span>    <span class="sub">Target ≥ 80%</span>  </div>  
-          <div class="meter">
-            <div class="meter-bar" style="width:86.7%;background:#10B981"></div>
-            <div class="meter-target" style="left:80.0%" title="Target 80%"></div>
+  <!-- 6. CHARTS ROW -->
+  <section class="section">
+    <div class="charts3">
+      <!-- sentiment -->
+      <div class="card rv">
+        <div class="ch"><h2>Sentiment trend</h2><span class="meta">7-day</span></div>
+        <div class="cbody">
+          <svg class="sline" viewBox="0 0 300 150" preserveAspectRatio="none" aria-label="Sentiment trend line chart">
+            <defs><linearGradient id="sgrad" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="rgba(0,212,255,.25)"/><stop offset="100%" stop-color="rgba(0,212,255,0)"/>
+            </linearGradient></defs>
+            <line x1="0" y1="38" x2="300" y2="38" stroke="#E6E0D5" stroke-width="1"/>
+            <line x1="0" y1="75" x2="300" y2="75" stroke="#E6E0D5" stroke-width="1"/>
+            <line x1="0" y1="112" x2="300" y2="112" stroke="#E6E0D5" stroke-width="1"/>
+            <polygon points="0,150 0,90 50,72 100,80 150,52 200,58 250,34 300,40 300,150" fill="url(#sgrad)"/>
+            <polyline points="0,90 50,72 100,80 150,52 200,58 250,34 300,40" fill="none" stroke="#00D4FF" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+            <circle cx="300" cy="40" r="3.5" fill="#00D4FF"/>
+          </svg>
+          <div style="display:flex;justify-content:space-between;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--faint);margin-top:6px"><span>Mon</span><span>Wed</span><span>Fri</span><span>Sun</span></div>
+          <p class="muted" style="font-size:12px;margin:10px 0 0">Positive sentiment trending up &middot; <b style="color:var(--ok)">+0.18</b> this week</p>
+        </div>
+      </div>
+      <!-- cost donut -->
+      <div class="card rv">
+        <div class="ch"><h2>Cost breakdown</h2><span class="meta">per call</span></div>
+        <div class="cbody">
+          <div class="donut-wrap">
+            <div class="donut" style="background:conic-gradient(#00D4FF 0 34%,#7C5CFC 34% 60%,#10B981 60% 82%,#F59E0B 82% 100%)">
+              <div class="donut-hole"><span class="t">4.2&#162;</span><span class="l">avg</span></div>
+            </div>
+            <ul class="legend">
+              <li><span class="ld" style="background:#00D4FF"></span><span>STT</span><span class="lv">34%</span></li>
+              <li><span class="ld" style="background:#7C5CFC"></span><span>LLM</span><span class="lv">26%</span></li>
+              <li><span class="ld" style="background:#10B981"></span><span>TTS</span><span class="lv">22%</span></li>
+              <li><span class="ld" style="background:#F59E0B"></span><span>Telephony</span><span class="lv">18%</span></li>
+            </ul>
           </div>
-        </article><article class="card kpi" data-animate-value>  <div class="label">Avg cost / call</div>  <div class="value" style="color:#00D4FF" data-final="10.1¢">10.1¢</div>  <div class="kpi-foot">    <span class="trend" style="color:#EF4444">▲ +0.86¢</span>    <span class="sub">All-in unit economics</span>  </div>  </article><article class="card kpi" data-animate-value>  <div class="label">Customer satisfaction</div>  <div class="value" style="color:#EF4444" data-final="63/100">63/100</div>  <div class="kpi-foot">    <span class="trend" style="color:#10B981">▲ +0.09</span>    <span class="sub">Avg sentiment +0.26</span>  </div>  </article></section>
-  
-<section class="panel monitor">
-  <header class="panel-head">
-    <h2>Live monitor</h2>
-    <span class="muted">Real-time</span>
-  </header>
-  <div class="monitor-grid">
-    <div class="monitor-cell">
-      <div class="monitor-label">Active calls</div>
-      <div class="monitor-value">
-        <span class="pulse"></span>
-        <span class="value-num">0</span>
+        </div>
       </div>
-      <div class="monitor-sub">Live integration coming online</div>
-    </div>
-    <div class="monitor-cell">
-      <div class="monitor-label">Agents online</div>
-      <div class="monitor-value"><span class="value-num">2</span></div>
-      <div class="monitor-sub">Kwame + Amina, plus your custom personas</div>
-    </div>
-    <div class="monitor-cell">
-      <div class="monitor-label">Uptime (30d)</div>
-      <div class="monitor-value"><span class="value-num">99.9%</span></div>
-      <div class="monitor-sub">Within SLO window</div>
-    </div>
-    <div class="monitor-cell">
-      <div class="monitor-label">P95 response latency</div>
-      <div class="monitor-value"><span class="value-num">820ms</span></div>
-      <div class="monitor-sub">Includes STT → LLM → TTS path</div>
-    </div>
-  </div>
-</section>
-
-  
-<section class="cc-section" id="cc-departments">
-  <header class="cc-section-head">
-    <h2>Department performance</h2>
-    <span class="muted">Today</span>
-  </header>
-  <div class="cc-dept-grid">
-<article class="cc-dept-card panel" style="--accent:#00D4FF">
-  <header class="cc-dept-head">
-    <h3>Hotel Desk</h3>
-    <span class="cc-dept-badge"
-          style="background:#00D4FF14;color:#00D4FF;border-color:#00D4FF33">
-      124 calls
-    </span>
-  </header>
-  <div class="cc-dept-stats">
-    <div class="cc-dept-stat">
-      <span class="muted small">Containment</span>
-      <span class="mono" style="color:#10B981">94%</span>
-    </div>
-    <div class="cc-dept-stat">
-      <span class="muted small">Sentiment</span>
-      <span class="mono" style="color:#10B981">+0.31</span>
-    </div>
-  </div>
-  <div class="cc-spark" aria-hidden="true"><div class="cc-spark-bar" style="height:9%; background:#00D4FF"></div><div class="cc-spark-bar" style="height:14%; background:#00D4FF"></div><div class="cc-spark-bar" style="height:23%; background:#00D4FF"></div><div class="cc-spark-bar" style="height:40%; background:#00D4FF"></div><div class="cc-spark-bar" style="height:63%; background:#00D4FF"></div><div class="cc-spark-bar" style="height:80%; background:#00D4FF"></div><div class="cc-spark-bar" style="height:91%; background:#00D4FF"></div><div class="cc-spark-bar" style="height:100%; background:#00D4FF"></div><div class="cc-spark-bar" style="height:89%; background:#00D4FF"></div><div class="cc-spark-bar" style="height:74%; background:#00D4FF"></div><div class="cc-spark-bar" style="height:63%; background:#00D4FF"></div><div class="cc-spark-bar" style="height:51%; background:#00D4FF"></div></div>
-</article>
-
-<article class="cc-dept-card panel" style="--accent:#A78BFA">
-  <header class="cc-dept-head">
-    <h3>Banking</h3>
-    <span class="cc-dept-badge"
-          style="background:#A78BFA14;color:#A78BFA;border-color:#A78BFA33">
-      89 calls
-    </span>
-  </header>
-  <div class="cc-dept-stats">
-    <div class="cc-dept-stat">
-      <span class="muted small">Containment</span>
-      <span class="mono" style="color:#10B981">88%</span>
-    </div>
-    <div class="cc-dept-stat">
-      <span class="muted small">Sentiment</span>
-      <span class="mono" style="color:#10B981">+0.24</span>
-    </div>
-  </div>
-  <div class="cc-spark" aria-hidden="true"><div class="cc-spark-bar" style="height:7%; background:#A78BFA"></div><div class="cc-spark-bar" style="height:14%; background:#A78BFA"></div><div class="cc-spark-bar" style="height:21%; background:#A78BFA"></div><div class="cc-spark-bar" style="height:36%; background:#A78BFA"></div><div class="cc-spark-bar" style="height:57%; background:#A78BFA"></div><div class="cc-spark-bar" style="height:79%; background:#A78BFA"></div><div class="cc-spark-bar" style="height:93%; background:#A78BFA"></div><div class="cc-spark-bar" style="height:100%; background:#A78BFA"></div><div class="cc-spark-bar" style="height:89%; background:#A78BFA"></div><div class="cc-spark-bar" style="height:75%; background:#A78BFA"></div><div class="cc-spark-bar" style="height:61%; background:#A78BFA"></div><div class="cc-spark-bar" style="height:46%; background:#A78BFA"></div></div>
-</article>
-
-<article class="cc-dept-card panel" style="--accent:#10B981">
-  <header class="cc-dept-head">
-    <h3>Support</h3>
-    <span class="cc-dept-badge"
-          style="background:#10B98114;color:#10B981;border-color:#10B98133">
-      34 calls
-    </span>
-  </header>
-  <div class="cc-dept-stats">
-    <div class="cc-dept-stat">
-      <span class="muted small">Containment</span>
-      <span class="mono" style="color:#F59E0B">76%</span>
-    </div>
-    <div class="cc-dept-stat">
-      <span class="muted small">Sentiment</span>
-      <span class="mono" style="color:#6B6B6B">+0.12</span>
-    </div>
-  </div>
-  <div class="cc-spark" aria-hidden="true"><div class="cc-spark-bar" style="height:8%; background:#10B981"></div><div class="cc-spark-bar" style="height:17%; background:#10B981"></div><div class="cc-spark-bar" style="height:25%; background:#10B981"></div><div class="cc-spark-bar" style="height:42%; background:#10B981"></div><div class="cc-spark-bar" style="height:58%; background:#10B981"></div><div class="cc-spark-bar" style="height:75%; background:#10B981"></div><div class="cc-spark-bar" style="height:92%; background:#10B981"></div><div class="cc-spark-bar" style="height:100%; background:#10B981"></div><div class="cc-spark-bar" style="height:92%; background:#10B981"></div><div class="cc-spark-bar" style="height:75%; background:#10B981"></div><div class="cc-spark-bar" style="height:58%; background:#10B981"></div><div class="cc-spark-bar" style="height:50%; background:#10B981"></div></div>
-</article>
-
-<article class="cc-dept-card panel" style="--accent:#F59E0B">
-  <header class="cc-dept-head">
-    <h3>Complaints</h3>
-    <span class="cc-dept-badge"
-          style="background:#F59E0B14;color:#F59E0B;border-color:#F59E0B33">
-      12 calls
-    </span>
-  </header>
-  <div class="cc-dept-stats">
-    <div class="cc-dept-stat">
-      <span class="muted small">Containment</span>
-      <span class="mono" style="color:#EF4444">45%</span>
-    </div>
-    <div class="cc-dept-stat">
-      <span class="muted small">Sentiment</span>
-      <span class="mono" style="color:#6B6B6B">-0.08</span>
-    </div>
-  </div>
-  <div class="cc-spark" aria-hidden="true"><div class="cc-spark-bar" style="height:0%; background:#F59E0B"></div><div class="cc-spark-bar" style="height:25%; background:#F59E0B"></div><div class="cc-spark-bar" style="height:25%; background:#F59E0B"></div><div class="cc-spark-bar" style="height:50%; background:#F59E0B"></div><div class="cc-spark-bar" style="height:75%; background:#F59E0B"></div><div class="cc-spark-bar" style="height:75%; background:#F59E0B"></div><div class="cc-spark-bar" style="height:100%; background:#F59E0B"></div><div class="cc-spark-bar" style="height:100%; background:#F59E0B"></div><div class="cc-spark-bar" style="height:75%; background:#F59E0B"></div><div class="cc-spark-bar" style="height:75%; background:#F59E0B"></div><div class="cc-spark-bar" style="height:50%; background:#F59E0B"></div><div class="cc-spark-bar" style="height:50%; background:#F59E0B"></div></div>
-</article>
-</div>
-</section>
-
-  
-<section class="cc-section panel cc-roi" id="cc-roi">
-  <header class="panel-head">
-    <h2>Cost comparison</h2>
-    <span class="muted">Monthly · four-agent operation · 10,000 minutes</span>
-  </header>
-  <div class="cc-roi-body">
-    <div class="cc-roi-side cc-roi-human">
-      <div class="cc-roi-label muted small">Human agents</div>
-      <div class="cc-roi-formula mono">4 agents × $800</div>
-      <div class="cc-roi-amount mono">$3,200<span class="muted small"> / month</span></div>
-    </div>
-    <div class="cc-roi-vs muted">vs</div>
-    <div class="cc-roi-side cc-roi-cynea">
-      <div class="cc-roi-label small" style="color:#00D4FF">Cynea AI</div>
-      <div class="cc-roi-formula mono">4 agents × $0.04 × 10,000 min</div>
-      <div class="cc-roi-amount mono" style="color:#00D4FF">$400<span class="muted small"> / month</span></div>
-    </div>
-  </div>
-  <div class="cc-roi-savings">
-    <div class="cc-roi-savings-label muted small">Monthly savings</div>
-    <div class="cc-roi-savings-num mono">$2,800</div>
-    <div class="cc-roi-savings-pct">87.5% reduction · annual savings <span class="mono">$33,600</span></div>
-  </div>
-</section>
-
-  
-<section class="cc-section panel cc-heatmap" id="cc-heatmap">
-  <header class="panel-head">
-    <h2>Call volume by hour</h2>
-    <span class="muted">Today · 24-hour</span>
-  </header>
-  <div class="cc-heat-chart">
-<div class="cc-heat-col" data-hour="0" data-value="2" title="00:00 — 2 calls">
-  <div class="cc-heat-bar" style="height:6%; opacity:0.39"></div>
-  <div class="cc-heat-label mono">00</div>
-</div>
-
-<div class="cc-heat-col" data-hour="1" data-value="1" title="01:00 — 1 calls">
-  <div class="cc-heat-bar" style="height:3%; opacity:0.37"></div>
-  <div class="cc-heat-label mono">01</div>
-</div>
-
-<div class="cc-heat-col" data-hour="2" data-value="1" title="02:00 — 1 calls">
-  <div class="cc-heat-bar" style="height:3%; opacity:0.37"></div>
-  <div class="cc-heat-label mono">02</div>
-</div>
-
-<div class="cc-heat-col" data-hour="3" data-value="0" title="03:00 — 0 calls">
-  <div class="cc-heat-bar" style="height:0%; opacity:0.35"></div>
-  <div class="cc-heat-label mono">03</div>
-</div>
-
-<div class="cc-heat-col" data-hour="4" data-value="0" title="04:00 — 0 calls">
-  <div class="cc-heat-bar" style="height:0%; opacity:0.35"></div>
-  <div class="cc-heat-label mono">04</div>
-</div>
-
-<div class="cc-heat-col" data-hour="5" data-value="1" title="05:00 — 1 calls">
-  <div class="cc-heat-bar" style="height:3%; opacity:0.37"></div>
-  <div class="cc-heat-label mono">05</div>
-</div>
-
-<div class="cc-heat-col" data-hour="6" data-value="3" title="06:00 — 3 calls">
-  <div class="cc-heat-bar" style="height:9%; opacity:0.41"></div>
-  <div class="cc-heat-label mono">06</div>
-</div>
-
-<div class="cc-heat-col" data-hour="7" data-value="5" title="07:00 — 5 calls">
-  <div class="cc-heat-bar" style="height:14%; opacity:0.44"></div>
-  <div class="cc-heat-label mono">07</div>
-</div>
-
-<div class="cc-heat-col" data-hour="8" data-value="8" title="08:00 — 8 calls">
-  <div class="cc-heat-bar" style="height:23%; opacity:0.50"></div>
-  <div class="cc-heat-label mono">08</div>
-</div>
-
-<div class="cc-heat-col" data-hour="9" data-value="14" title="09:00 — 14 calls">
-  <div class="cc-heat-bar" style="height:40%; opacity:0.61"></div>
-  <div class="cc-heat-label mono">09</div>
-</div>
-
-<div class="cc-heat-col" data-hour="10" data-value="22" title="10:00 — 22 calls">
-  <div class="cc-heat-bar" style="height:63%; opacity:0.76"></div>
-  <div class="cc-heat-label mono">10</div>
-</div>
-
-<div class="cc-heat-col" data-hour="11" data-value="28" title="11:00 — 28 calls">
-  <div class="cc-heat-bar" style="height:80%; opacity:0.87"></div>
-  <div class="cc-heat-label mono">11</div>
-</div>
-
-<div class="cc-heat-col" data-hour="12" data-value="32" title="12:00 — 32 calls">
-  <div class="cc-heat-bar" style="height:91%; opacity:0.94"></div>
-  <div class="cc-heat-label mono">12</div>
-</div>
-
-<div class="cc-heat-col" data-hour="13" data-value="35" title="13:00 — 35 calls">
-  <div class="cc-heat-bar" style="height:100%; opacity:1.00"></div>
-  <div class="cc-heat-label mono">13</div>
-</div>
-
-<div class="cc-heat-col" data-hour="14" data-value="31" title="14:00 — 31 calls">
-  <div class="cc-heat-bar" style="height:89%; opacity:0.93"></div>
-  <div class="cc-heat-label mono">14</div>
-</div>
-
-<div class="cc-heat-col" data-hour="15" data-value="26" title="15:00 — 26 calls">
-  <div class="cc-heat-bar" style="height:74%; opacity:0.83"></div>
-  <div class="cc-heat-label mono">15</div>
-</div>
-
-<div class="cc-heat-col" data-hour="16" data-value="22" title="16:00 — 22 calls">
-  <div class="cc-heat-bar" style="height:63%; opacity:0.76"></div>
-  <div class="cc-heat-label mono">16</div>
-</div>
-
-<div class="cc-heat-col" data-hour="17" data-value="18" title="17:00 — 18 calls">
-  <div class="cc-heat-bar" style="height:51%; opacity:0.68"></div>
-  <div class="cc-heat-label mono">17</div>
-</div>
-
-<div class="cc-heat-col" data-hour="18" data-value="14" title="18:00 — 14 calls">
-  <div class="cc-heat-bar" style="height:40%; opacity:0.61"></div>
-  <div class="cc-heat-label mono">18</div>
-</div>
-
-<div class="cc-heat-col" data-hour="19" data-value="11" title="19:00 — 11 calls">
-  <div class="cc-heat-bar" style="height:31%; opacity:0.55"></div>
-  <div class="cc-heat-label mono">19</div>
-</div>
-
-<div class="cc-heat-col" data-hour="20" data-value="8" title="20:00 — 8 calls">
-  <div class="cc-heat-bar" style="height:23%; opacity:0.50"></div>
-  <div class="cc-heat-label mono">20</div>
-</div>
-
-<div class="cc-heat-col" data-hour="21" data-value="5" title="21:00 — 5 calls">
-  <div class="cc-heat-bar" style="height:14%; opacity:0.44"></div>
-  <div class="cc-heat-label mono">21</div>
-</div>
-
-<div class="cc-heat-col" data-hour="22" data-value="3" title="22:00 — 3 calls">
-  <div class="cc-heat-bar" style="height:9%; opacity:0.41"></div>
-  <div class="cc-heat-label mono">22</div>
-</div>
-
-<div class="cc-heat-col" data-hour="23" data-value="2" title="23:00 — 2 calls">
-  <div class="cc-heat-bar" style="height:6%; opacity:0.39"></div>
-  <div class="cc-heat-label mono">23</div>
-</div>
-</div>
-</section>
-
-  
-<section class="charts-grid">
-  <article class="card chart-card">
-    <header class="panel-head"><h2>Call volume</h2><span class="muted">Last 7 days</span></header>
-    <div class="chart-body"><div class="bar-chart"><div class="bar-col"><div class="bar-track"><div class="bar-fill" style="height:33.3%;background:#00D4FF" title="Sun: 3 calls"></div></div><div class="bar-x">Sun</div></div><div class="bar-col"><div class="bar-track"><div class="bar-fill" style="height:100.0%;background:#00D4FF" title="Mon: 9 calls"></div></div><div class="bar-x">Mon</div></div><div class="bar-col"><div class="bar-track"><div class="bar-fill" style="height:33.3%;background:#00D4FF" title="Tue: 3 calls"></div></div><div class="bar-x">Tue</div></div><div class="bar-col"><div class="bar-track"><div class="bar-fill" style="height:0.0%;background:#00D4FF" title="Wed: 0 calls"></div></div><div class="bar-x">Wed</div></div><div class="bar-col"><div class="bar-track"><div class="bar-fill" style="height:0.0%;background:#00D4FF" title="Thu: 0 calls"></div></div><div class="bar-x">Thu</div></div><div class="bar-col"><div class="bar-track"><div class="bar-fill" style="height:0.0%;background:#00D4FF" title="Fri: 0 calls"></div></div><div class="bar-x">Fri</div></div><div class="bar-col"><div class="bar-track"><div class="bar-fill" style="height:0.0%;background:#00D4FF" title="Sat: 0 calls"></div></div><div class="bar-x">Sat</div></div></div></div>
-  </article>
-  <article class="card chart-card">
-    <header class="panel-head"><h2>Sentiment trend</h2><span class="muted">Daily average</span></header>
-    <div class="chart-body">
-<svg viewBox="0 0 360 140" preserveAspectRatio="xMidYMid meet" class="line-chart" role="img" aria-label="Sentiment trend chart">
-  <line x1="28" x2="348" y1="116.0" y2="116.0" stroke="#E4DED2" stroke-width="1" stroke-dasharray="2 4"/><line x1="28" x2="348" y1="66.0" y2="66.0" stroke="#E4DED2" stroke-width="1" stroke-dasharray="2 4"/><line x1="28" x2="348" y1="16.0" y2="16.0" stroke="#E4DED2" stroke-width="1" stroke-dasharray="2 4"/>
-  <text x="22" y="119.0" text-anchor="end" fill="#6B6B6B" font-size="10" font-family="JetBrains Mono, monospace">-1.0</text><text x="22" y="69.0" text-anchor="end" fill="#6B6B6B" font-size="10" font-family="JetBrains Mono, monospace">+0.0</text><text x="22" y="19.0" text-anchor="end" fill="#6B6B6B" font-size="10" font-family="JetBrains Mono, monospace">+1.0</text>
-  <polyline points="28.0,47.2 81.3,55.6 134.7,51.0 188.0,66.0 241.3,66.0 294.7,66.0 348.0,66.0" fill="none" stroke="#00D4FF" stroke-width="2" />
-  <circle cx="28.0" cy="47.2" r="3" fill="#00D4FF" /><circle cx="81.3" cy="55.6" r="3" fill="#00D4FF" /><circle cx="134.7" cy="51.0" r="3" fill="#00D4FF" /><circle cx="188.0" cy="66.0" r="3" fill="#00D4FF" /><circle cx="241.3" cy="66.0" r="3" fill="#00D4FF" /><circle cx="294.7" cy="66.0" r="3" fill="#00D4FF" /><circle cx="348.0" cy="66.0" r="3" fill="#00D4FF" />
-  <text x="28.0" y="134" text-anchor="middle" fill="#6B6B6B" font-size="10" font-family="JetBrains Mono, monospace">Sun</text><text x="81.3" y="134" text-anchor="middle" fill="#6B6B6B" font-size="10" font-family="JetBrains Mono, monospace">Mon</text><text x="134.7" y="134" text-anchor="middle" fill="#6B6B6B" font-size="10" font-family="JetBrains Mono, monospace">Tue</text><text x="188.0" y="134" text-anchor="middle" fill="#6B6B6B" font-size="10" font-family="JetBrains Mono, monospace">Wed</text><text x="241.3" y="134" text-anchor="middle" fill="#6B6B6B" font-size="10" font-family="JetBrains Mono, monospace">Thu</text><text x="294.7" y="134" text-anchor="middle" fill="#6B6B6B" font-size="10" font-family="JetBrains Mono, monospace">Fri</text><text x="348.0" y="134" text-anchor="middle" fill="#6B6B6B" font-size="10" font-family="JetBrains Mono, monospace">Sat</text>
-</svg>
-</div>
-  </article>
-  <article class="card chart-card">
-    <header class="panel-head"><h2>Cost breakdown</h2><span class="muted">Whole window</span></header>
-    <div class="chart-body chart-pie-wrap">
-<div class="pie" style="background:conic-gradient(#0088AA 0.00deg 0.00deg, #00D4FF 0.00deg 140.18deg, #A78BFA 140.18deg 140.18deg, #F59E0B 140.18deg 360.00deg)">
-  <div class="pie-hole">
-    <div class="pie-total mono">152.2¢</div>
-    <div class="muted small">total</div>
-  </div>
-</div>
-<ul class="pie-legend"><li><span class="legend-dot" style="background:#0088AA"></span><span class="muted small">STT</span><span class="mono small">0%</span></li><li><span class="legend-dot" style="background:#00D4FF"></span><span class="muted small">LLM</span><span class="mono small">39%</span></li><li><span class="legend-dot" style="background:#A78BFA"></span><span class="muted small">TTS</span><span class="mono small">0%</span></li><li><span class="legend-dot" style="background:#F59E0B"></span><span class="muted small">Telephony</span><span class="mono small">61%</span></li></ul>
-</div>
-  </article>
-</section>
-
-  <section class="agent-grid">
-<article class="card agent-card">
-  <header class="agent-head">
-    <span class="brand-mark small" style="color:#00D4FF">CYNEA</span>
-    <h2>Amina · Customer service (Kenya)</h2>
-  </header>
-  <div class="agent-stats">
-    <div class="agent-stat">
-      <div class="muted small">Calls</div>
-      <div class="value-md mono">7</div>
-    </div>
-    <div class="agent-stat">
-      <div class="muted small">Avg sentiment</div>
-      <div class="value-md mono" style="color:#10B981">+0.21</div>
-    </div>
-    <div class="agent-stat">
-      <div class="muted small">Containment</div>
-      <div class="value-md mono" style="color:#F59E0B">71.4%</div>
-    </div>
-    <div class="agent-stat">
-      <div class="muted small">Avg duration</div>
-      <div class="value-md mono">1m 48s</div>
-    </div>
-  </div>
-  <div class="agent-bar">
-    <div class="agent-bar-fill" style="width:71.4%;background:#F59E0B"></div>
-    <div class="agent-bar-target" style="left:80%" title="Containment target 80%"></div>
-  </div>
-  <div class="agent-foot muted small">Containment vs 80% target</div>
-</article>
-
-<article class="card agent-card">
-  <header class="agent-head">
-    <span class="brand-mark small" style="color:#00D4FF">CYNEA</span>
-    <h2>Kwame · Hospitality (Ghana)</h2>
-  </header>
-  <div class="agent-stats">
-    <div class="agent-stat">
-      <div class="muted small">Calls</div>
-      <div class="value-md mono">8</div>
-    </div>
-    <div class="agent-stat">
-      <div class="muted small">Avg sentiment</div>
-      <div class="value-md mono" style="color:#10B981">+0.31</div>
-    </div>
-    <div class="agent-stat">
-      <div class="muted small">Containment</div>
-      <div class="value-md mono" style="color:#10B981">100.0%</div>
-    </div>
-    <div class="agent-stat">
-      <div class="muted small">Avg duration</div>
-      <div class="value-md mono">45s</div>
-    </div>
-  </div>
-  <div class="agent-bar">
-    <div class="agent-bar-fill" style="width:100.0%;background:#10B981"></div>
-    <div class="agent-bar-target" style="left:80%" title="Containment target 80%"></div>
-  </div>
-  <div class="agent-foot muted small">Containment vs 80% target</div>
-</article>
-</section>
-  
-<section class="cc-section panel cc-feed" id="cc-feed">
-  <header class="panel-head">
-    <h2>Real-time call log</h2>
-    <span class="muted">Last hour</span>
-  </header>
-  <div class="cc-feed-list">
-<div class="cc-feed-row" data-cc-feed-offset="6">
-  <span class="cc-feed-time mono"></span>
-  <span class="cc-feed-actor mono">Kwame</span>
-  <span class="cc-feed-msg">booked deluxe room for Mr. Osei — $120</span>
-</div>
-
-<div class="cc-feed-row" data-cc-feed-offset="39">
-  <span class="cc-feed-time mono"></span>
-  <span class="cc-feed-actor mono">Amina</span>
-  <span class="cc-feed-msg">resolved balance inquiry for +254 71 XXX XXXX</span>
-</div>
-
-<div class="cc-feed-row" data-cc-feed-offset="123">
-  <span class="cc-feed-time mono"></span>
-  <span class="cc-feed-actor mono">Kofi</span>
-  <span class="cc-feed-msg">answered FAQ about business hours</span>
-</div>
-
-<div class="cc-feed-row" data-cc-feed-offset="167">
-  <span class="cc-feed-time mono"></span>
-  <span class="cc-feed-actor mono">Adwoa</span>
-  <span class="cc-feed-msg">escalated complaint to human manager</span>
-</div>
-
-<div class="cc-feed-row" data-cc-feed-offset="245">
-  <span class="cc-feed-time mono"></span>
-  <span class="cc-feed-actor mono">Kwame</span>
-  <span class="cc-feed-msg">confirmed reservation for Adinkra Hotel</span>
-</div>
-
-<div class="cc-feed-row" data-cc-feed-offset="318">
-  <span class="cc-feed-time mono"></span>
-  <span class="cc-feed-actor mono">Amina</span>
-  <span class="cc-feed-msg">blocked lost card for +254 72 XXX XXXX</span>
-</div>
-
-<div class="cc-feed-row" data-cc-feed-offset="390">
-  <span class="cc-feed-time mono"></span>
-  <span class="cc-feed-actor mono">Kofi</span>
-  <span class="cc-feed-msg">explained data bundle options</span>
-</div>
-
-<div class="cc-feed-row" data-cc-feed-offset="451">
-  <span class="cc-feed-time mono"></span>
-  <span class="cc-feed-actor mono">Kwame</span>
-  <span class="cc-feed-msg">took restaurant booking for 4 guests</span>
-</div>
-
-<div class="cc-feed-row" data-cc-feed-offset="522">
-  <span class="cc-feed-time mono"></span>
-  <span class="cc-feed-actor mono">Amina</span>
-  <span class="cc-feed-msg">processed M-Pesa reversal — KES 2,000</span>
-</div>
-
-<div class="cc-feed-row" data-cc-feed-offset="605">
-  <span class="cc-feed-time mono"></span>
-  <span class="cc-feed-actor mono">Adwoa</span>
-  <span class="cc-feed-msg">logged complaint about WiFi outage</span>
-</div>
-</div>
-</section>
-
-  <section class="panel"><header class="panel-head"><h2>Call history</h2><span class="muted">15 calls · click a row to expand</span></header><div class="table-wrap"><table id="callsTable"><thead><tr><th data-sort="time" aria-sort="descending">Time ⇅</th><th data-sort="agent">Agent ⇅</th><th data-sort="caller">Caller ⇅</th><th data-sort="duration" class="num">Duration ⇅</th><th data-sort="turns" class="num">Turns ⇅</th><th data-sort="sentiment">Sentiment ⇅</th><th data-sort="cost" class="num">Cost ⇅</th><th data-sort="status">Status ⇅</th></tr></thead><tbody><tr class="call-row" data-time="1777347983" data-agent="Kwame" data-caller="John" data-duration="27" data-turns="7" data-sentiment="0.150" data-cost="4.1940" data-status="Resolved"><td class="mono">Apr 28 · 06:46</td><td>Kwame</td><td>John</td><td class="num">27s</td><td class="num">7</td><td><div class="sbar"><div class="sbar-axis"></div><div class="sbar-fill sbar-pos" style="width:7.5%;background:#6B6B6B"></div></div><span class="mono small">+0.15</span></td><td class="num">4.2¢</td><td><span class="pill" style="color:#10B981;border-color:#10B98133;background:#10B98114">Resolved</span></td></tr>
-<tr class="call-detail" hidden>
-  <td colspan="8">
-    <div class="detail-grid">
-      <div class="detail-kvs"><div class="kv"><span class="muted">Call ID</span><span class="mono">call-015-john</span></div><div class="kv"><span class="muted">Status</span><span class="mono">Resolved</span></div><div class="kv"><span class="muted">Sentiment score</span><span class="mono">+0.150</span></div><div class="kv"><span class="muted">STT seconds</span><span class="mono">10.8</span></div><div class="kv"><span class="muted">Telephony seconds</span><span class="mono">27.0</span></div><div class="kv"><span class="muted">LLM input tokens</span><span class="mono">90</span></div><div class="kv"><span class="muted">LLM output tokens</span><span class="mono">72</span></div><div class="kv"><span class="muted">TTS characters</span><span class="mono">260</span></div><div class="kv"><span class="muted">Interruptions</span><span class="mono">0</span></div><div class="kv"><span class="muted">Containment</span><span class="mono">Yes</span></div><div class="kv"><span class="muted">Resolution</span><span class="mono">Yes</span></div><div class="kv"><span class="muted">Handoff reason</span><span class="mono">—</span></div></div>
-      <div class="detail-cost">
-        <div class="detail-section-label">Cost breakdown</div>
-        <div class="cost-row"><span class="muted small">STT</span><div class="cost-bar"><div style="width:0.0%;background:#0088AA"></div></div><span class="mono small">0.00¢</span></div><div class="cost-row"><span class="muted small">LLM</span><div class="cost-bar"><div style="width:46.4%;background:#00D4FF"></div></div><span class="mono small">1.94¢</span></div><div class="cost-row"><span class="muted small">TTS</span><div class="cost-bar"><div style="width:0.0%;background:#A78BFA"></div></div><span class="mono small">0.00¢</span></div><div class="cost-row"><span class="muted small">Telephony</span><div class="cost-bar"><div style="width:53.6%;background:#F59E0B"></div></div><span class="mono small">2.25¢</span></div>
+      <!-- containment -->
+      <div class="card rv">
+        <div class="ch"><h2>Containment</h2><span class="meta">resolved by AI</span></div>
+        <div class="cbody">
+          <div class="cont-big mono"><span data-count="86.7" data-decimals="1" data-suffix="%">0</span></div>
+          <div class="cont-sub">of calls resolved without a human handoff</div>
+          <div class="meter"><div id="contMeter" data-w="86.7"></div></div>
+          <div class="cont-scale"><span>0%</span><span>target 80%</span><span>100%</span></div>
+        </div>
       </div>
     </div>
-  </td>
-</tr>
-<tr class="call-row" data-time="1777338013" data-agent="Amina" data-caller="Mary" data-duration="94" data-turns="17" data-sentiment="0.400" data-cost="12.6573" data-status="Resolved"><td class="mono">Apr 28 · 04:00</td><td>Amina</td><td>Mary</td><td class="num">1m 34s</td><td class="num">17</td><td><div class="sbar"><div class="sbar-axis"></div><div class="sbar-fill sbar-pos" style="width:20.0%;background:#10B981"></div></div><span class="mono small">+0.40</span></td><td class="num">12.7¢</td><td><span class="pill" style="color:#10B981;border-color:#10B98133;background:#10B98114">Resolved</span></td></tr>
-<tr class="call-detail" hidden>
-  <td colspan="8">
-    <div class="detail-grid">
-      <div class="detail-kvs"><div class="kv"><span class="muted">Call ID</span><span class="mono">call-014-mary</span></div><div class="kv"><span class="muted">Status</span><span class="mono">Resolved</span></div><div class="kv"><span class="muted">Sentiment score</span><span class="mono">+0.400</span></div><div class="kv"><span class="muted">STT seconds</span><span class="mono">37.6</span></div><div class="kv"><span class="muted">Telephony seconds</span><span class="mono">94.0</span></div><div class="kv"><span class="muted">LLM input tokens</span><span class="mono">240</span></div><div class="kv"><span class="muted">LLM output tokens</span><span class="mono">162</span></div><div class="kv"><span class="muted">TTS characters</span><span class="mono">585</span></div><div class="kv"><span class="muted">Interruptions</span><span class="mono">1</span></div><div class="kv"><span class="muted">Containment</span><span class="mono">Yes</span></div><div class="kv"><span class="muted">Resolution</span><span class="mono">Yes</span></div><div class="kv"><span class="muted">Handoff reason</span><span class="mono">—</span></div></div>
-      <div class="detail-cost">
-        <div class="detail-section-label">Cost breakdown</div>
-        <div class="cost-row"><span class="muted small">STT</span><div class="cost-bar"><div style="width:0.0%;background:#0088AA"></div></div><span class="mono small">0.00¢</span></div><div class="cost-row"><span class="muted small">LLM</span><div class="cost-bar"><div style="width:38.1%;background:#00D4FF"></div></div><span class="mono small">4.82¢</span></div><div class="cost-row"><span class="muted small">TTS</span><div class="cost-bar"><div style="width:0.0%;background:#A78BFA"></div></div><span class="mono small">0.00¢</span></div><div class="cost-row"><span class="muted small">Telephony</span><div class="cost-bar"><div style="width:61.9%;background:#F59E0B"></div></div><span class="mono small">7.83¢</span></div>
-      </div>
-    </div>
-  </td>
-</tr>
-<tr class="call-row" data-time="1777328043" data-agent="Kwame" data-caller="James" data-duration="51" data-turns="11" data-sentiment="0.350" data-cost="7.3460" data-status="Resolved"><td class="mono">Apr 28 · 01:14</td><td>Kwame</td><td>James</td><td class="num">51s</td><td class="num">11</td><td><div class="sbar"><div class="sbar-axis"></div><div class="sbar-fill sbar-pos" style="width:17.5%;background:#10B981"></div></div><span class="mono small">+0.35</span></td><td class="num">7.3¢</td><td><span class="pill" style="color:#10B981;border-color:#10B98133;background:#10B98114">Resolved</span></td></tr>
-<tr class="call-detail" hidden>
-  <td colspan="8">
-    <div class="detail-grid">
-      <div class="detail-kvs"><div class="kv"><span class="muted">Call ID</span><span class="mono">call-013-james</span></div><div class="kv"><span class="muted">Status</span><span class="mono">Resolved</span></div><div class="kv"><span class="muted">Sentiment score</span><span class="mono">+0.350</span></div><div class="kv"><span class="muted">STT seconds</span><span class="mono">20.4</span></div><div class="kv"><span class="muted">Telephony seconds</span><span class="mono">51.0</span></div><div class="kv"><span class="muted">LLM input tokens</span><span class="mono">150</span></div><div class="kv"><span class="muted">LLM output tokens</span><span class="mono">108</span></div><div class="kv"><span class="muted">TTS characters</span><span class="mono">390</span></div><div class="kv"><span class="muted">Interruptions</span><span class="mono">0</span></div><div class="kv"><span class="muted">Containment</span><span class="mono">Yes</span></div><div class="kv"><span class="muted">Resolution</span><span class="mono">Yes</span></div><div class="kv"><span class="muted">Handoff reason</span><span class="mono">—</span></div></div>
-      <div class="detail-cost">
-        <div class="detail-section-label">Cost breakdown</div>
-        <div class="cost-row"><span class="muted small">STT</span><div class="cost-bar"><div style="width:0.0%;background:#0088AA"></div></div><span class="mono small">0.00¢</span></div><div class="cost-row"><span class="muted small">LLM</span><div class="cost-bar"><div style="width:42.1%;background:#00D4FF"></div></div><span class="mono small">3.10¢</span></div><div class="cost-row"><span class="muted small">TTS</span><div class="cost-bar"><div style="width:0.0%;background:#A78BFA"></div></div><span class="mono small">0.00¢</span></div><div class="cost-row"><span class="muted small">Telephony</span><div class="cost-bar"><div style="width:57.9%;background:#F59E0B"></div></div><span class="mono small">4.25¢</span></div>
-      </div>
-    </div>
-  </td>
-</tr>
-<tr class="call-row" data-time="1777318883" data-agent="Amina" data-caller="Lucy" data-duration="76" data-turns="13" data-sentiment="0.200" data-cost="10.0053" data-status="Resolved"><td class="mono">Apr 27 · 22:41</td><td>Amina</td><td>Lucy</td><td class="num">1m 16s</td><td class="num">13</td><td><div class="sbar"><div class="sbar-axis"></div><div class="sbar-fill sbar-pos" style="width:10.0%;background:#10B981"></div></div><span class="mono small">+0.20</span></td><td class="num">10.0¢</td><td><span class="pill" style="color:#10B981;border-color:#10B98133;background:#10B98114">Resolved</span></td></tr>
-<tr class="call-detail" hidden>
-  <td colspan="8">
-    <div class="detail-grid">
-      <div class="detail-kvs"><div class="kv"><span class="muted">Call ID</span><span class="mono">call-012-lucy</span></div><div class="kv"><span class="muted">Status</span><span class="mono">Resolved</span></div><div class="kv"><span class="muted">Sentiment score</span><span class="mono">+0.200</span></div><div class="kv"><span class="muted">STT seconds</span><span class="mono">30.4</span></div><div class="kv"><span class="muted">Telephony seconds</span><span class="mono">76.0</span></div><div class="kv"><span class="muted">LLM input tokens</span><span class="mono">180</span></div><div class="kv"><span class="muted">LLM output tokens</span><span class="mono">126</span></div><div class="kv"><span class="muted">TTS characters</span><span class="mono">455</span></div><div class="kv"><span class="muted">Interruptions</span><span class="mono">0</span></div><div class="kv"><span class="muted">Containment</span><span class="mono">Yes</span></div><div class="kv"><span class="muted">Resolution</span><span class="mono">Yes</span></div><div class="kv"><span class="muted">Handoff reason</span><span class="mono">—</span></div></div>
-      <div class="detail-cost">
-        <div class="detail-section-label">Cost breakdown</div>
-        <div class="cost-row"><span class="muted small">STT</span><div class="cost-bar"><div style="width:0.0%;background:#0088AA"></div></div><span class="mono small">0.00¢</span></div><div class="cost-row"><span class="muted small">LLM</span><div class="cost-bar"><div style="width:36.7%;background:#00D4FF"></div></div><span class="mono small">3.67¢</span></div><div class="cost-row"><span class="muted small">TTS</span><div class="cost-bar"><div style="width:0.0%;background:#A78BFA"></div></div><span class="mono small">0.00¢</span></div><div class="cost-row"><span class="muted small">Telephony</span><div class="cost-bar"><div style="width:63.3%;background:#F59E0B"></div></div><span class="mono small">6.33¢</span></div>
-      </div>
-    </div>
-  </td>
-</tr>
-<tr class="call-row" data-time="1777308913" data-agent="Kwame" data-caller="Daniel" data-duration="38" data-turns="9" data-sentiment="0.500" data-cost="5.6867" data-status="Resolved"><td class="mono">Apr 27 · 19:55</td><td>Kwame</td><td>Daniel</td><td class="num">38s</td><td class="num">9</td><td><div class="sbar"><div class="sbar-axis"></div><div class="sbar-fill sbar-pos" style="width:25.0%;background:#10B981"></div></div><span class="mono small">+0.50</span></td><td class="num">5.7¢</td><td><span class="pill" style="color:#10B981;border-color:#10B98133;background:#10B98114">Resolved</span></td></tr>
-<tr class="call-detail" hidden>
-  <td colspan="8">
-    <div class="detail-grid">
-      <div class="detail-kvs"><div class="kv"><span class="muted">Call ID</span><span class="mono">call-011-daniel</span></div><div class="kv"><span class="muted">Status</span><span class="mono">Resolved</span></div><div class="kv"><span class="muted">Sentiment score</span><span class="mono">+0.500</span></div><div class="kv"><span class="muted">STT seconds</span><span class="mono">15.2</span></div><div class="kv"><span class="muted">Telephony seconds</span><span class="mono">38.0</span></div><div class="kv"><span class="muted">LLM input tokens</span><span class="mono">120</span></div><div class="kv"><span class="muted">LLM output tokens</span><span class="mono">90</span></div><div class="kv"><span class="muted">TTS characters</span><span class="mono">325</span></div><div class="kv"><span class="muted">Interruptions</span><span class="mono">0</span></div><div class="kv"><span class="muted">Containment</span><span class="mono">Yes</span></div><div class="kv"><span class="muted">Resolution</span><span class="mono">Yes</span></div><div class="kv"><span class="muted">Handoff reason</span><span class="mono">—</span></div></div>
-      <div class="detail-cost">
-        <div class="detail-section-label">Cost breakdown</div>
-        <div class="cost-row"><span class="muted small">STT</span><div class="cost-bar"><div style="width:0.0%;background:#0088AA"></div></div><span class="mono small">0.00¢</span></div><div class="cost-row"><span class="muted small">LLM</span><div class="cost-bar"><div style="width:44.3%;background:#00D4FF"></div></div><span class="mono small">2.52¢</span></div><div class="cost-row"><span class="muted small">TTS</span><div class="cost-bar"><div style="width:0.0%;background:#A78BFA"></div></div><span class="mono small">0.00¢</span></div><div class="cost-row"><span class="muted small">Telephony</span><div class="cost-bar"><div style="width:55.7%;background:#F59E0B"></div></div><span class="mono small">3.17¢</span></div>
-      </div>
-    </div>
-  </td>
-</tr>
-<tr class="call-row" data-time="1777298943" data-agent="Amina" data-caller="Sarah" data-duration="211" data-turns="29" data-sentiment="0.050" data-cost="25.8633" data-status="Escalated"><td class="mono">Apr 27 · 17:09</td><td>Amina</td><td>Sarah</td><td class="num">3m 31s</td><td class="num">29</td><td><div class="sbar"><div class="sbar-axis"></div><div class="sbar-fill sbar-pos" style="width:2.5%;background:#6B6B6B"></div></div><span class="mono small">+0.05</span></td><td class="num">25.9¢</td><td><span class="pill" style="color:#F59E0B;border-color:#F59E0B33;background:#F59E0B14">Escalated</span></td></tr>
-<tr class="call-detail" hidden>
-  <td colspan="8">
-    <div class="detail-grid">
-      <div class="detail-kvs"><div class="kv"><span class="muted">Call ID</span><span class="mono">call-010-sarah</span></div><div class="kv"><span class="muted">Status</span><span class="mono">Escalated</span></div><div class="kv"><span class="muted">Sentiment score</span><span class="mono">+0.050</span></div><div class="kv"><span class="muted">STT seconds</span><span class="mono">84.4</span></div><div class="kv"><span class="muted">Telephony seconds</span><span class="mono">211.0</span></div><div class="kv"><span class="muted">LLM input tokens</span><span class="mono">420</span></div><div class="kv"><span class="muted">LLM output tokens</span><span class="mono">270</span></div><div class="kv"><span class="muted">TTS characters</span><span class="mono">975</span></div><div class="kv"><span class="muted">Interruptions</span><span class="mono">1</span></div><div class="kv"><span class="muted">Containment</span><span class="mono">No</span></div><div class="kv"><span class="muted">Resolution</span><span class="mono">No</span></div><div class="kv"><span class="muted">Handoff reason</span><span class="mono">fraud reported</span></div></div>
-      <div class="detail-cost">
-        <div class="detail-section-label">Cost breakdown</div>
-        <div class="cost-row"><span class="muted small">STT</span><div class="cost-bar"><div style="width:0.0%;background:#0088AA"></div></div><span class="mono small">0.00¢</span></div><div class="cost-row"><span class="muted small">LLM</span><div class="cost-bar"><div style="width:32.0%;background:#00D4FF"></div></div><span class="mono small">8.28¢</span></div><div class="cost-row"><span class="muted small">TTS</span><div class="cost-bar"><div style="width:0.0%;background:#A78BFA"></div></div><span class="mono small">0.00¢</span></div><div class="cost-row"><span class="muted small">Telephony</span><div class="cost-bar"><div style="width:68.0%;background:#F59E0B"></div></div><span class="mono small">17.58¢</span></div>
-      </div>
-    </div>
-  </td>
-</tr>
-<tr class="call-row" data-time="1777289783" data-agent="Kwame" data-caller="Peter" data-duration="89" data-turns="15" data-sentiment="0.300" data-cost="11.6647" data-status="Resolved"><td class="mono">Apr 27 · 14:36</td><td>Kwame</td><td>Peter</td><td class="num">1m 29s</td><td class="num">15</td><td><div class="sbar"><div class="sbar-axis"></div><div class="sbar-fill sbar-pos" style="width:15.0%;background:#10B981"></div></div><span class="mono small">+0.30</span></td><td class="num">11.7¢</td><td><span class="pill" style="color:#10B981;border-color:#10B98133;background:#10B98114">Resolved</span></td></tr>
-<tr class="call-detail" hidden>
-  <td colspan="8">
-    <div class="detail-grid">
-      <div class="detail-kvs"><div class="kv"><span class="muted">Call ID</span><span class="mono">call-009-peter</span></div><div class="kv"><span class="muted">Status</span><span class="mono">Resolved</span></div><div class="kv"><span class="muted">Sentiment score</span><span class="mono">+0.300</span></div><div class="kv"><span class="muted">STT seconds</span><span class="mono">35.6</span></div><div class="kv"><span class="muted">Telephony seconds</span><span class="mono">89.0</span></div><div class="kv"><span class="muted">LLM input tokens</span><span class="mono">210</span></div><div class="kv"><span class="muted">LLM output tokens</span><span class="mono">144</span></div><div class="kv"><span class="muted">TTS characters</span><span class="mono">520</span></div><div class="kv"><span class="muted">Interruptions</span><span class="mono">1</span></div><div class="kv"><span class="muted">Containment</span><span class="mono">Yes</span></div><div class="kv"><span class="muted">Resolution</span><span class="mono">Yes</span></div><div class="kv"><span class="muted">Handoff reason</span><span class="mono">—</span></div></div>
-      <div class="detail-cost">
-        <div class="detail-section-label">Cost breakdown</div>
-        <div class="cost-row"><span class="muted small">STT</span><div class="cost-bar"><div style="width:0.0%;background:#0088AA"></div></div><span class="mono small">0.00¢</span></div><div class="cost-row"><span class="muted small">LLM</span><div class="cost-bar"><div style="width:36.4%;background:#00D4FF"></div></div><span class="mono small">4.25¢</span></div><div class="cost-row"><span class="muted small">TTS</span><div class="cost-bar"><div style="width:0.0%;background:#A78BFA"></div></div><span class="mono small">0.00¢</span></div><div class="cost-row"><span class="muted small">Telephony</span><div class="cost-bar"><div style="width:63.6%;background:#F59E0B"></div></div><span class="mono small">7.42¢</span></div>
-      </div>
-    </div>
-  </td>
-</tr>
-<tr class="call-row" data-time="1777279813" data-agent="Amina" data-caller="Grace" data-duration="49" data-turns="10" data-sentiment="0.450" data-cost="6.9633" data-status="Resolved"><td class="mono">Apr 27 · 11:50</td><td>Amina</td><td>Grace</td><td class="num">49s</td><td class="num">10</td><td><div class="sbar"><div class="sbar-axis"></div><div class="sbar-fill sbar-pos" style="width:22.5%;background:#10B981"></div></div><span class="mono small">+0.45</span></td><td class="num">7.0¢</td><td><span class="pill" style="color:#10B981;border-color:#10B98133;background:#10B98114">Resolved</span></td></tr>
-<tr class="call-detail" hidden>
-  <td colspan="8">
-    <div class="detail-grid">
-      <div class="detail-kvs"><div class="kv"><span class="muted">Call ID</span><span class="mono">call-008-grace</span></div><div class="kv"><span class="muted">Status</span><span class="mono">Resolved</span></div><div class="kv"><span class="muted">Sentiment score</span><span class="mono">+0.450</span></div><div class="kv"><span class="muted">STT seconds</span><span class="mono">19.6</span></div><div class="kv"><span class="muted">Telephony seconds</span><span class="mono">49.0</span></div><div class="kv"><span class="muted">LLM input tokens</span><span class="mono">150</span></div><div class="kv"><span class="muted">LLM output tokens</span><span class="mono">90</span></div><div class="kv"><span class="muted">TTS characters</span><span class="mono">325</span></div><div class="kv"><span class="muted">Interruptions</span><span class="mono">0</span></div><div class="kv"><span class="muted">Containment</span><span class="mono">Yes</span></div><div class="kv"><span class="muted">Resolution</span><span class="mono">Yes</span></div><div class="kv"><span class="muted">Handoff reason</span><span class="mono">—</span></div></div>
-      <div class="detail-cost">
-        <div class="detail-section-label">Cost breakdown</div>
-        <div class="cost-row"><span class="muted small">STT</span><div class="cost-bar"><div style="width:0.0%;background:#0088AA"></div></div><span class="mono small">0.00¢</span></div><div class="cost-row"><span class="muted small">LLM</span><div class="cost-bar"><div style="width:41.4%;background:#00D4FF"></div></div><span class="mono small">2.88¢</span></div><div class="cost-row"><span class="muted small">TTS</span><div class="cost-bar"><div style="width:0.0%;background:#A78BFA"></div></div><span class="mono small">0.00¢</span></div><div class="cost-row"><span class="muted small">Telephony</span><div class="cost-bar"><div style="width:58.6%;background:#F59E0B"></div></div><span class="mono small">4.08¢</span></div>
-      </div>
-    </div>
-  </td>
-</tr>
-<tr class="call-row" data-time="1777269843" data-agent="Kwame" data-caller="Kofi" data-duration="58" data-turns="13" data-sentiment="0.620" data-cost="8.5053" data-status="Resolved"><td class="mono">Apr 27 · 09:04</td><td>Kwame</td><td>Kofi</td><td class="num">58s</td><td class="num">13</td><td><div class="sbar"><div class="sbar-axis"></div><div class="sbar-fill sbar-pos" style="width:31.0%;background:#10B981"></div></div><span class="mono small">+0.62</span></td><td class="num">8.5¢</td><td><span class="pill" style="color:#10B981;border-color:#10B98133;background:#10B98114">Resolved</span></td></tr>
-<tr class="call-detail" hidden>
-  <td colspan="8">
-    <div class="detail-grid">
-      <div class="detail-kvs"><div class="kv"><span class="muted">Call ID</span><span class="mono">call-007-kofi</span></div><div class="kv"><span class="muted">Status</span><span class="mono">Resolved</span></div><div class="kv"><span class="muted">Sentiment score</span><span class="mono">+0.620</span></div><div class="kv"><span class="muted">STT seconds</span><span class="mono">23.2</span></div><div class="kv"><span class="muted">Telephony seconds</span><span class="mono">58.0</span></div><div class="kv"><span class="muted">LLM input tokens</span><span class="mono">180</span></div><div class="kv"><span class="muted">LLM output tokens</span><span class="mono">126</span></div><div class="kv"><span class="muted">TTS characters</span><span class="mono">455</span></div><div class="kv"><span class="muted">Interruptions</span><span class="mono">0</span></div><div class="kv"><span class="muted">Containment</span><span class="mono">Yes</span></div><div class="kv"><span class="muted">Resolution</span><span class="mono">Yes</span></div><div class="kv"><span class="muted">Handoff reason</span><span class="mono">—</span></div></div>
-      <div class="detail-cost">
-        <div class="detail-section-label">Cost breakdown</div>
-        <div class="cost-row"><span class="muted small">STT</span><div class="cost-bar"><div style="width:0.0%;background:#0088AA"></div></div><span class="mono small">0.00¢</span></div><div class="cost-row"><span class="muted small">LLM</span><div class="cost-bar"><div style="width:43.2%;background:#00D4FF"></div></div><span class="mono small">3.67¢</span></div><div class="cost-row"><span class="muted small">TTS</span><div class="cost-bar"><div style="width:0.0%;background:#A78BFA"></div></div><span class="mono small">0.00¢</span></div><div class="cost-row"><span class="muted small">Telephony</span><div class="cost-bar"><div style="width:56.8%;background:#F59E0B"></div></div><span class="mono small">4.83¢</span></div>
-      </div>
-    </div>
-  </td>
-</tr>
-<tr class="call-row" data-time="1777260683" data-agent="Amina" data-caller="Njeri" data-duration="154" data-turns="25" data-sentiment="-0.300" data-cost="19.9613" data-status="Escalated"><td class="mono">Apr 27 · 06:31</td><td>Amina</td><td>Njeri</td><td class="num">2m 34s</td><td class="num">25</td><td><div class="sbar"><div class="sbar-axis"></div><div class="sbar-fill sbar-neg" style="width:15.0%;background:#EF4444"></div></div><span class="mono small">-0.30</span></td><td class="num">20.0¢</td><td><span class="pill" style="color:#F59E0B;border-color:#F59E0B33;background:#F59E0B14">Escalated</span></td></tr>
-<tr class="call-detail" hidden>
-  <td colspan="8">
-    <div class="detail-grid">
-      <div class="detail-kvs"><div class="kv"><span class="muted">Call ID</span><span class="mono">call-006-njeri</span></div><div class="kv"><span class="muted">Status</span><span class="mono">Escalated</span></div><div class="kv"><span class="muted">Sentiment score</span><span class="mono">-0.300</span></div><div class="kv"><span class="muted">STT seconds</span><span class="mono">61.6</span></div><div class="kv"><span class="muted">Telephony seconds</span><span class="mono">154.0</span></div><div class="kv"><span class="muted">LLM input tokens</span><span class="mono">360</span></div><div class="kv"><span class="muted">LLM output tokens</span><span class="mono">234</span></div><div class="kv"><span class="muted">TTS characters</span><span class="mono">845</span></div><div class="kv"><span class="muted">Interruptions</span><span class="mono">2</span></div><div class="kv"><span class="muted">Containment</span><span class="mono">No</span></div><div class="kv"><span class="muted">Resolution</span><span class="mono">No</span></div><div class="kv"><span class="muted">Handoff reason</span><span class="mono">angry caller</span></div></div>
-      <div class="detail-cost">
-        <div class="detail-section-label">Cost breakdown</div>
-        <div class="cost-row"><span class="muted small">STT</span><div class="cost-bar"><div style="width:0.0%;background:#0088AA"></div></div><span class="mono small">0.00¢</span></div><div class="cost-row"><span class="muted small">LLM</span><div class="cost-bar"><div style="width:35.7%;background:#00D4FF"></div></div><span class="mono small">7.13¢</span></div><div class="cost-row"><span class="muted small">TTS</span><div class="cost-bar"><div style="width:0.0%;background:#A78BFA"></div></div><span class="mono small">0.00¢</span></div><div class="cost-row"><span class="muted small">Telephony</span><div class="cost-bar"><div style="width:64.3%;background:#F59E0B"></div></div><span class="mono small">12.83¢</span></div>
-      </div>
-    </div>
-  </td>
-</tr>
-<tr class="call-row" data-time="1777250713" data-agent="Kwame" data-caller="Otieno" data-duration="22" data-turns="6" data-sentiment="-0.050" data-cost="3.5613" data-status="Abandoned"><td class="mono">Apr 27 · 03:45</td><td>Kwame</td><td>Otieno</td><td class="num">22s</td><td class="num">6</td><td><div class="sbar"><div class="sbar-axis"></div><div class="sbar-fill sbar-neg" style="width:2.5%;background:#6B6B6B"></div></div><span class="mono small">-0.05</span></td><td class="num">3.6¢</td><td><span class="pill" style="color:#EF4444;border-color:#EF444433;background:#EF444414">Abandoned</span></td></tr>
-<tr class="call-detail" hidden>
-  <td colspan="8">
-    <div class="detail-grid">
-      <div class="detail-kvs"><div class="kv"><span class="muted">Call ID</span><span class="mono">call-005-otieno</span></div><div class="kv"><span class="muted">Status</span><span class="mono">Abandoned</span></div><div class="kv"><span class="muted">Sentiment score</span><span class="mono">-0.050</span></div><div class="kv"><span class="muted">STT seconds</span><span class="mono">8.8</span></div><div class="kv"><span class="muted">Telephony seconds</span><span class="mono">22.0</span></div><div class="kv"><span class="muted">LLM input tokens</span><span class="mono">90</span></div><div class="kv"><span class="muted">LLM output tokens</span><span class="mono">54</span></div><div class="kv"><span class="muted">TTS characters</span><span class="mono">195</span></div><div class="kv"><span class="muted">Interruptions</span><span class="mono">0</span></div><div class="kv"><span class="muted">Containment</span><span class="mono">Yes</span></div><div class="kv"><span class="muted">Resolution</span><span class="mono">No</span></div><div class="kv"><span class="muted">Handoff reason</span><span class="mono">—</span></div></div>
-      <div class="detail-cost">
-        <div class="detail-section-label">Cost breakdown</div>
-        <div class="cost-row"><span class="muted small">STT</span><div class="cost-bar"><div style="width:0.0%;background:#0088AA"></div></div><span class="mono small">0.00¢</span></div><div class="cost-row"><span class="muted small">LLM</span><div class="cost-bar"><div style="width:48.5%;background:#00D4FF"></div></div><span class="mono small">1.73¢</span></div><div class="cost-row"><span class="muted small">TTS</span><div class="cost-bar"><div style="width:0.0%;background:#A78BFA"></div></div><span class="mono small">0.00¢</span></div><div class="cost-row"><span class="muted small">Telephony</span><div class="cost-bar"><div style="width:51.5%;background:#F59E0B"></div></div><span class="mono small">1.83¢</span></div>
-      </div>
-    </div>
-  </td>
-</tr>
-<tr class="call-row" data-time="1777240743" data-agent="Amina" data-caller="Wanjiku" data-duration="105" data-turns="19" data-sentiment="0.100" data-cost="14.1500" data-status="Resolved"><td class="mono">Apr 27 · 00:59</td><td>Amina</td><td>Wanjiku</td><td class="num">1m 45s</td><td class="num">19</td><td><div class="sbar"><div class="sbar-axis"></div><div class="sbar-fill sbar-pos" style="width:5.0%;background:#6B6B6B"></div></div><span class="mono small">+0.10</span></td><td class="num">14.2¢</td><td><span class="pill" style="color:#10B981;border-color:#10B98133;background:#10B98114">Resolved</span></td></tr>
-<tr class="call-detail" hidden>
-  <td colspan="8">
-    <div class="detail-grid">
-      <div class="detail-kvs"><div class="kv"><span class="muted">Call ID</span><span class="mono">call-004-wanjiku</span></div><div class="kv"><span class="muted">Status</span><span class="mono">Resolved</span></div><div class="kv"><span class="muted">Sentiment score</span><span class="mono">+0.100</span></div><div class="kv"><span class="muted">STT seconds</span><span class="mono">42.0</span></div><div class="kv"><span class="muted">Telephony seconds</span><span class="mono">105.0</span></div><div class="kv"><span class="muted">LLM input tokens</span><span class="mono">270</span></div><div class="kv"><span class="muted">LLM output tokens</span><span class="mono">180</span></div><div class="kv"><span class="muted">TTS characters</span><span class="mono">650</span></div><div class="kv"><span class="muted">Interruptions</span><span class="mono">1</span></div><div class="kv"><span class="muted">Containment</span><span class="mono">Yes</span></div><div class="kv"><span class="muted">Resolution</span><span class="mono">Yes</span></div><div class="kv"><span class="muted">Handoff reason</span><span class="mono">—</span></div></div>
-      <div class="detail-cost">
-        <div class="detail-section-label">Cost breakdown</div>
-        <div class="cost-row"><span class="muted small">STT</span><div class="cost-bar"><div style="width:0.0%;background:#0088AA"></div></div><span class="mono small">0.00¢</span></div><div class="cost-row"><span class="muted small">LLM</span><div class="cost-bar"><div style="width:38.2%;background:#00D4FF"></div></div><span class="mono small">5.40¢</span></div><div class="cost-row"><span class="muted small">TTS</span><div class="cost-bar"><div style="width:0.0%;background:#A78BFA"></div></div><span class="mono small">0.00¢</span></div><div class="cost-row"><span class="muted small">Telephony</span><div class="cost-bar"><div style="width:61.8%;background:#F59E0B"></div></div><span class="mono small">8.75¢</span></div>
-      </div>
-    </div>
-  </td>
-</tr>
-<tr class="call-row" data-time="1777231583" data-agent="Kwame" data-caller="Adwoa" data-duration="31" data-turns="9" data-sentiment="0.180" data-cost="5.1033" data-status="Resolved"><td class="mono">Apr 26 · 22:26</td><td>Kwame</td><td>Adwoa</td><td class="num">31s</td><td class="num">9</td><td><div class="sbar"><div class="sbar-axis"></div><div class="sbar-fill sbar-pos" style="width:9.0%;background:#6B6B6B"></div></div><span class="mono small">+0.18</span></td><td class="num">5.1¢</td><td><span class="pill" style="color:#10B981;border-color:#10B98133;background:#10B98114">Resolved</span></td></tr>
-<tr class="call-detail" hidden>
-  <td colspan="8">
-    <div class="detail-grid">
-      <div class="detail-kvs"><div class="kv"><span class="muted">Call ID</span><span class="mono">call-003-adwoa</span></div><div class="kv"><span class="muted">Status</span><span class="mono">Resolved</span></div><div class="kv"><span class="muted">Sentiment score</span><span class="mono">+0.180</span></div><div class="kv"><span class="muted">STT seconds</span><span class="mono">12.4</span></div><div class="kv"><span class="muted">Telephony seconds</span><span class="mono">31.0</span></div><div class="kv"><span class="muted">LLM input tokens</span><span class="mono">120</span></div><div class="kv"><span class="muted">LLM output tokens</span><span class="mono">90</span></div><div class="kv"><span class="muted">TTS characters</span><span class="mono">325</span></div><div class="kv"><span class="muted">Interruptions</span><span class="mono">0</span></div><div class="kv"><span class="muted">Containment</span><span class="mono">Yes</span></div><div class="kv"><span class="muted">Resolution</span><span class="mono">Yes</span></div><div class="kv"><span class="muted">Handoff reason</span><span class="mono">—</span></div></div>
-      <div class="detail-cost">
-        <div class="detail-section-label">Cost breakdown</div>
-        <div class="cost-row"><span class="muted small">STT</span><div class="cost-bar"><div style="width:0.0%;background:#0088AA"></div></div><span class="mono small">0.00¢</span></div><div class="cost-row"><span class="muted small">LLM</span><div class="cost-bar"><div style="width:49.4%;background:#00D4FF"></div></div><span class="mono small">2.52¢</span></div><div class="cost-row"><span class="muted small">TTS</span><div class="cost-bar"><div style="width:0.0%;background:#A78BFA"></div></div><span class="mono small">0.00¢</span></div><div class="cost-row"><span class="muted small">Telephony</span><div class="cost-bar"><div style="width:50.6%;background:#F59E0B"></div></div><span class="mono small">2.58¢</span></div>
-      </div>
-    </div>
-  </td>
-</tr>
-<tr class="call-row" data-time="1777221613" data-agent="Amina" data-caller="Kojo" data-duration="68" data-turns="15" data-sentiment="0.550" data-cost="9.9147" data-status="Resolved"><td class="mono">Apr 26 · 19:40</td><td>Amina</td><td>Kojo</td><td class="num">1m 08s</td><td class="num">15</td><td><div class="sbar"><div class="sbar-axis"></div><div class="sbar-fill sbar-pos" style="width:27.5%;background:#10B981"></div></div><span class="mono small">+0.55</span></td><td class="num">9.9¢</td><td><span class="pill" style="color:#10B981;border-color:#10B98133;background:#10B98114">Resolved</span></td></tr>
-<tr class="call-detail" hidden>
-  <td colspan="8">
-    <div class="detail-grid">
-      <div class="detail-kvs"><div class="kv"><span class="muted">Call ID</span><span class="mono">call-002-kojo</span></div><div class="kv"><span class="muted">Status</span><span class="mono">Resolved</span></div><div class="kv"><span class="muted">Sentiment score</span><span class="mono">+0.550</span></div><div class="kv"><span class="muted">STT seconds</span><span class="mono">27.2</span></div><div class="kv"><span class="muted">Telephony seconds</span><span class="mono">68.0</span></div><div class="kv"><span class="muted">LLM input tokens</span><span class="mono">210</span></div><div class="kv"><span class="muted">LLM output tokens</span><span class="mono">144</span></div><div class="kv"><span class="muted">TTS characters</span><span class="mono">520</span></div><div class="kv"><span class="muted">Interruptions</span><span class="mono">0</span></div><div class="kv"><span class="muted">Containment</span><span class="mono">Yes</span></div><div class="kv"><span class="muted">Resolution</span><span class="mono">Yes</span></div><div class="kv"><span class="muted">Handoff reason</span><span class="mono">—</span></div></div>
-      <div class="detail-cost">
-        <div class="detail-section-label">Cost breakdown</div>
-        <div class="cost-row"><span class="muted small">STT</span><div class="cost-bar"><div style="width:0.0%;background:#0088AA"></div></div><span class="mono small">0.00¢</span></div><div class="cost-row"><span class="muted small">LLM</span><div class="cost-bar"><div style="width:42.8%;background:#00D4FF"></div></div><span class="mono small">4.25¢</span></div><div class="cost-row"><span class="muted small">TTS</span><div class="cost-bar"><div style="width:0.0%;background:#A78BFA"></div></div><span class="mono small">0.00¢</span></div><div class="cost-row"><span class="muted small">Telephony</span><div class="cost-bar"><div style="width:57.2%;background:#F59E0B"></div></div><span class="mono small">5.67¢</span></div>
-      </div>
-    </div>
-  </td>
-</tr>
-<tr class="call-row" data-time="1777211643" data-agent="Kwame" data-caller="Ama" data-duration="42" data-turns="11" data-sentiment="0.400" data-cost="6.5960" data-status="Resolved"><td class="mono">Apr 26 · 16:54</td><td>Kwame</td><td>Ama</td><td class="num">42s</td><td class="num">11</td><td><div class="sbar"><div class="sbar-axis"></div><div class="sbar-fill sbar-pos" style="width:20.0%;background:#10B981"></div></div><span class="mono small">+0.40</span></td><td class="num">6.6¢</td><td><span class="pill" style="color:#10B981;border-color:#10B98133;background:#10B98114">Resolved</span></td></tr>
-<tr class="call-detail" hidden>
-  <td colspan="8">
-    <div class="detail-grid">
-      <div class="detail-kvs"><div class="kv"><span class="muted">Call ID</span><span class="mono">call-001-ama</span></div><div class="kv"><span class="muted">Status</span><span class="mono">Resolved</span></div><div class="kv"><span class="muted">Sentiment score</span><span class="mono">+0.400</span></div><div class="kv"><span class="muted">STT seconds</span><span class="mono">16.8</span></div><div class="kv"><span class="muted">Telephony seconds</span><span class="mono">42.0</span></div><div class="kv"><span class="muted">LLM input tokens</span><span class="mono">150</span></div><div class="kv"><span class="muted">LLM output tokens</span><span class="mono">108</span></div><div class="kv"><span class="muted">TTS characters</span><span class="mono">390</span></div><div class="kv"><span class="muted">Interruptions</span><span class="mono">1</span></div><div class="kv"><span class="muted">Containment</span><span class="mono">Yes</span></div><div class="kv"><span class="muted">Resolution</span><span class="mono">Yes</span></div><div class="kv"><span class="muted">Handoff reason</span><span class="mono">—</span></div></div>
-      <div class="detail-cost">
-        <div class="detail-section-label">Cost breakdown</div>
-        <div class="cost-row"><span class="muted small">STT</span><div class="cost-bar"><div style="width:0.0%;background:#0088AA"></div></div><span class="mono small">0.00¢</span></div><div class="cost-row"><span class="muted small">LLM</span><div class="cost-bar"><div style="width:46.9%;background:#00D4FF"></div></div><span class="mono small">3.10¢</span></div><div class="cost-row"><span class="muted small">TTS</span><div class="cost-bar"><div style="width:0.0%;background:#A78BFA"></div></div><span class="mono small">0.00¢</span></div><div class="cost-row"><span class="muted small">Telephony</span><div class="cost-bar"><div style="width:53.1%;background:#F59E0B"></div></div><span class="mono small">3.50¢</span></div>
-      </div>
-    </div>
-  </td>
-</tr>
-</tbody></table></div></section>
-  
-<section class="export-row">
-  <button class="btn btn-primary" id="exportPdf" type="button">Export report (PDF)</button>
-  <button class="btn" id="exportCsv" type="button">Download CSV</button>
-  <button class="btn btn-ghost" id="shareLink" type="button">Share dashboard</button>
-  <span class="muted small">Reports include call detail, agent performance, and cost breakdown.</span>
-</section>
+  </section>
 
-  <footer>
-    <div><strong>Cynea AI</strong><span class="dim"> — Made in Kenya · May 02, 2026 · 16:54</span></div>
-    <div class="dim">Voice Engine v0.1 · Tender preview</div>
-  </footer>
+  <!-- 7. COST COMPARISON -->
+  <section class="section">
+    <div class="card rv">
+      <div class="ch"><h2>Cost comparison</h2><span class="meta">monthly &middot; illustrative</span></div>
+      <div class="cbody">
+        <div class="roi">
+          <div class="roi-side">
+            <span class="rl">Human team</span>
+            <span class="ra">$3,200<span style="font-size:14px;color:var(--faint)">/mo</span></span>
+            <span class="rd">Salaried agents, shifts &amp; overhead</span>
+          </div>
+          <div class="roi-vs">VS</div>
+          <div class="roi-side roi-cynea">
+            <span class="rl" style="color:var(--accent-ink)">Cynea</span>
+            <span class="ra">$490<span style="font-size:14px;color:var(--faint)">/mo</span></span>
+            <span class="rd">Usage-based &middot; scales automatically</span>
+          </div>
+        </div>
+        <div class="roi-save">
+          <span class="rsl">Estimated monthly saving</span>
+          <div class="rsn mono">$2,710</div>
+          <span class="rsp">&asymp; 85% lower cost &middot; 24/7 coverage in every market</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 8. REAL-TIME CALL LOG -->
+  <section class="section">
+    <div class="card rv">
+      <div class="ch"><h2>Real-time call log</h2><span class="meta"><span class="dot" style="display:inline-block;vertical-align:middle"></span> streaming</span></div>
+      <div class="feed" id="feed"></div>
+    </div>
+  </section>
+
+  <!-- 9. CALL HISTORY TABLE -->
+  <section class="section">
+    <div class="card rv">
+      <div class="ch"><h2>Call history</h2><span class="meta">click a column to sort</span></div>
+      <div class="tw">
+        <table id="histTable">
+          <thead><tr>
+            <th data-key="time" data-type="string" aria-sort="none">Time <span class="arr">&#8597;</span></th>
+            <th data-key="agent" data-type="string" aria-sort="none">Agent <span class="arr">&#8597;</span></th>
+            <th data-key="caller" data-type="string" aria-sort="none">Caller <span class="arr">&#8597;</span></th>
+            <th class="r" data-key="duration" data-type="num" aria-sort="none">Duration <span class="arr">&#8597;</span></th>
+            <th class="r" data-key="turns" data-type="num" aria-sort="none">Turns <span class="arr">&#8597;</span></th>
+            <th data-key="sentiment" data-type="num" aria-sort="none">Sentiment <span class="arr">&#8597;</span></th>
+            <th class="r" data-key="cost" data-type="num" aria-sort="none">Cost <span class="arr">&#8597;</span></th>
+            <th data-key="status" data-type="string" aria-sort="none">Status <span class="arr">&#8597;</span></th>
+          </tr></thead>
+          <tbody id="histBody"></tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
 </main>
-<div id="toast" role="status" aria-live="polite"></div>
+
+<footer class="foot"><div class="foot-in"><span>&copy; 2026 Cynea AI &middot; Voice agents worldwide</span><span>Operations dashboard</span></div></footer>
+
 <script>
-'use strict';
-window.__cyneaCalls = [{"call_id": "call-001-ama", "agent": "kwame_adinkra", "started_at": 1777211643.033917, "ended_at": 1777211685.033917, "duration_s": 42, "user_turns": 5, "assistant_turns": 6, "interruptions": 1, "sentiment_score": 0.4, "containment": true, "resolution": true, "handoff_reason": null, "stt_seconds": 16.8, "telephony_seconds": 42.0, "llm_input_tokens": 150, "llm_output_tokens": 108, "tts_characters": 390, "cost_total_cents": 6.596, "cost_breakdown": {"stt_cents": 0.0, "llm_cents": 3.096, "tts_cents": 0.0, "telephony_cents": 3.5}}, {"call_id": "call-002-kojo", "agent": "amina_kcb", "started_at": 1777221613.033917, "ended_at": 1777221681.033917, "duration_s": 68, "user_turns": 7, "assistant_turns": 8, "interruptions": 0, "sentiment_score": 0.55, "containment": true, "resolution": true, "handoff_reason": null, "stt_seconds": 27.2, "telephony_seconds": 68.0, "llm_input_tokens": 210, "llm_output_tokens": 144, "tts_characters": 520, "cost_total_cents": 9.9147, "cost_breakdown": {"stt_cents": 0.0, "llm_cents": 4.248, "tts_cents": 0.0, "telephony_cents": 5.6667}}, {"call_id": "call-003-adwoa", "agent": "kwame_adinkra", "started_at": 1777231583.033917, "ended_at": 1777231614.033917, "duration_s": 31, "user_turns": 4, "assistant_turns": 5, "interruptions": 0, "sentiment_score": 0.18, "containment": true, "resolution": true, "handoff_reason": null, "stt_seconds": 12.4, "telephony_seconds": 31.0, "llm_input_tokens": 120, "llm_output_tokens": 90, "tts_characters": 325, "cost_total_cents": 5.1033, "cost_breakdown": {"stt_cents": 0.0, "llm_cents": 2.52, "tts_cents": 0.0, "telephony_cents": 2.5833}}, {"call_id": "call-004-wanjiku", "agent": "amina_kcb", "started_at": 1777240743.033917, "ended_at": 1777240848.033917, "duration_s": 105, "user_turns": 9, "assistant_turns": 10, "interruptions": 1, "sentiment_score": 0.1, "containment": true, "resolution": true, "handoff_reason": null, "stt_seconds": 42.0, "telephony_seconds": 105.0, "llm_input_tokens": 270, "llm_output_tokens": 180, "tts_characters": 650, "cost_total_cents": 14.15, "cost_breakdown": {"stt_cents": 0.0, "llm_cents": 5.4, "tts_cents": 0.0, "telephony_cents": 8.75}}, {"call_id": "call-005-otieno", "agent": "kwame_adinkra", "started_at": 1777250713.033917, "ended_at": 1777250735.033917, "duration_s": 22, "user_turns": 3, "assistant_turns": 3, "interruptions": 0, "sentiment_score": -0.05, "containment": true, "resolution": false, "handoff_reason": null, "stt_seconds": 8.8, "telephony_seconds": 22.0, "llm_input_tokens": 90, "llm_output_tokens": 54, "tts_characters": 195, "cost_total_cents": 3.5613, "cost_breakdown": {"stt_cents": 0.0, "llm_cents": 1.728, "tts_cents": 0.0, "telephony_cents": 1.8333}}, {"call_id": "call-006-njeri", "agent": "amina_kcb", "started_at": 1777260683.033917, "ended_at": 1777260837.033917, "duration_s": 154, "user_turns": 12, "assistant_turns": 13, "interruptions": 2, "sentiment_score": -0.3, "containment": false, "resolution": false, "handoff_reason": "angry caller", "stt_seconds": 61.6, "telephony_seconds": 154.0, "llm_input_tokens": 360, "llm_output_tokens": 234, "tts_characters": 845, "cost_total_cents": 19.9613, "cost_breakdown": {"stt_cents": 0.0, "llm_cents": 7.128, "tts_cents": 0.0, "telephony_cents": 12.8333}}, {"call_id": "call-007-kofi", "agent": "kwame_adinkra", "started_at": 1777269843.033917, "ended_at": 1777269901.033917, "duration_s": 58, "user_turns": 6, "assistant_turns": 7, "interruptions": 0, "sentiment_score": 0.62, "containment": true, "resolution": true, "handoff_reason": null, "stt_seconds": 23.2, "telephony_seconds": 58.0, "llm_input_tokens": 180, "llm_output_tokens": 126, "tts_characters": 455, "cost_total_cents": 8.5053, "cost_breakdown": {"stt_cents": 0.0, "llm_cents": 3.672, "tts_cents": 0.0, "telephony_cents": 4.8333}}, {"call_id": "call-008-grace", "agent": "amina_kcb", "started_at": 1777279813.033917, "ended_at": 1777279862.033917, "duration_s": 49, "user_turns": 5, "assistant_turns": 5, "interruptions": 0, "sentiment_score": 0.45, "containment": true, "resolution": true, "handoff_reason": null, "stt_seconds": 19.6, "telephony_seconds": 49.0, "llm_input_tokens": 150, "llm_output_tokens": 90, "tts_characters": 325, "cost_total_cents": 6.9633, "cost_breakdown": {"stt_cents": 0.0, "llm_cents": 2.88, "tts_cents": 0.0, "telephony_cents": 4.0833}}, {"call_id": "call-009-peter", "agent": "kwame_adinkra", "started_at": 1777289783.033917, "ended_at": 1777289872.033917, "duration_s": 89, "user_turns": 7, "assistant_turns": 8, "interruptions": 1, "sentiment_score": 0.3, "containment": true, "resolution": true, "handoff_reason": null, "stt_seconds": 35.6, "telephony_seconds": 89.0, "llm_input_tokens": 210, "llm_output_tokens": 144, "tts_characters": 520, "cost_total_cents": 11.6647, "cost_breakdown": {"stt_cents": 0.0, "llm_cents": 4.248, "tts_cents": 0.0, "telephony_cents": 7.4167}}, {"call_id": "call-010-sarah", "agent": "amina_kcb", "started_at": 1777298943.033917, "ended_at": 1777299154.033917, "duration_s": 211, "user_turns": 14, "assistant_turns": 15, "interruptions": 1, "sentiment_score": 0.05, "containment": false, "resolution": false, "handoff_reason": "fraud reported", "stt_seconds": 84.4, "telephony_seconds": 211.0, "llm_input_tokens": 420, "llm_output_tokens": 270, "tts_characters": 975, "cost_total_cents": 25.8633, "cost_breakdown": {"stt_cents": 0.0, "llm_cents": 8.28, "tts_cents": 0.0, "telephony_cents": 17.5833}}, {"call_id": "call-011-daniel", "agent": "kwame_adinkra", "started_at": 1777308913.033917, "ended_at": 1777308951.033917, "duration_s": 38, "user_turns": 4, "assistant_turns": 5, "interruptions": 0, "sentiment_score": 0.5, "containment": true, "resolution": true, "handoff_reason": null, "stt_seconds": 15.2, "telephony_seconds": 38.0, "llm_input_tokens": 120, "llm_output_tokens": 90, "tts_characters": 325, "cost_total_cents": 5.6867, "cost_breakdown": {"stt_cents": 0.0, "llm_cents": 2.52, "tts_cents": 0.0, "telephony_cents": 3.1667}}, {"call_id": "call-012-lucy", "agent": "amina_kcb", "started_at": 1777318883.033917, "ended_at": 1777318959.033917, "duration_s": 76, "user_turns": 6, "assistant_turns": 7, "interruptions": 0, "sentiment_score": 0.2, "containment": true, "resolution": true, "handoff_reason": null, "stt_seconds": 30.4, "telephony_seconds": 76.0, "llm_input_tokens": 180, "llm_output_tokens": 126, "tts_characters": 455, "cost_total_cents": 10.0053, "cost_breakdown": {"stt_cents": 0.0, "llm_cents": 3.672, "tts_cents": 0.0, "telephony_cents": 6.3333}}, {"call_id": "call-013-james", "agent": "kwame_adinkra", "started_at": 1777328043.033917, "ended_at": 1777328094.033917, "duration_s": 51, "user_turns": 5, "assistant_turns": 6, "interruptions": 0, "sentiment_score": 0.35, "containment": true, "resolution": true, "handoff_reason": null, "stt_seconds": 20.4, "telephony_seconds": 51.0, "llm_input_tokens": 150, "llm_output_tokens": 108, "tts_characters": 390, "cost_total_cents": 7.346, "cost_breakdown": {"stt_cents": 0.0, "llm_cents": 3.096, "tts_cents": 0.0, "telephony_cents": 4.25}}, {"call_id": "call-014-mary", "agent": "amina_kcb", "started_at": 1777338013.033917, "ended_at": 1777338107.033917, "duration_s": 94, "user_turns": 8, "assistant_turns": 9, "interruptions": 1, "sentiment_score": 0.4, "containment": true, "resolution": true, "handoff_reason": null, "stt_seconds": 37.6, "telephony_seconds": 94.0, "llm_input_tokens": 240, "llm_output_tokens": 162, "tts_characters": 585, "cost_total_cents": 12.6573, "cost_breakdown": {"stt_cents": 0.0, "llm_cents": 4.824, "tts_cents": 0.0, "telephony_cents": 7.8333}}, {"call_id": "call-015-john", "agent": "kwame_adinkra", "started_at": 1777347983.033917, "ended_at": 1777348010.033917, "duration_s": 27, "user_turns": 3, "assistant_turns": 4, "interruptions": 0, "sentiment_score": 0.15, "containment": true, "resolution": true, "handoff_reason": null, "stt_seconds": 10.8, "telephony_seconds": 27.0, "llm_input_tokens": 90, "llm_output_tokens": 72, "tts_characters": 260, "cost_total_cents": 4.194, "cost_breakdown": {"stt_cents": 0.0, "llm_cents": 1.944, "tts_cents": 0.0, "telephony_cents": 2.25}}];
+(function(){
+  "use strict";
+  var reduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion:reduce)').matches;
 
-// -- live clock --------------------------------------------------------
-function tickClock() {
-  const el = document.getElementById('clock');
-  if (!el) return;
-  const now = new Date();
-  el.textContent = now.toLocaleTimeString();
-}
-tickClock();
-setInterval(tickClock, 1000);
-
-// -- refresh -----------------------------------------------------------
-const refreshBtn = document.getElementById('refreshBtn');
-if (refreshBtn) refreshBtn.addEventListener('click', () => location.reload());
-
-// -- demo-mode body toggle --------------------------------------------
-const demoBtn = document.getElementById('demoToggle');
-if (demoBtn) demoBtn.addEventListener('click', () => {
-  document.body.classList.toggle('demo-mode');
-  showToast(document.body.classList.contains('demo-mode')
-    ? 'Demo highlight on' : 'Demo highlight off');
-});
-
-// -- expand-on-click rows ---------------------------------------------
-document.querySelectorAll('tr.call-row').forEach(row => {
-  row.addEventListener('click', () => {
-    const detail = row.nextElementSibling;
-    if (!detail || !detail.classList.contains('call-detail')) return;
-    const expanded = row.classList.toggle('expanded');
-    detail.hidden = !expanded;
-  });
-});
-
-// -- sortable table ---------------------------------------------------
-(function setupSort() {
-  const table = document.getElementById('callsTable');
-  if (!table) return;
-  const headers = table.querySelectorAll('thead th[data-sort]');
-  headers.forEach(h => h.addEventListener('click', () => {
-    const key = h.getAttribute('data-sort');
-    const current = h.getAttribute('aria-sort');
-    const dir = current === 'ascending' ? 'descending' : 'ascending';
-    headers.forEach(o => o.setAttribute('aria-sort', 'none'));
-    h.setAttribute('aria-sort', dir);
-
-    const tbody = table.tBodies[0];
-    // Pair each call-row with its detail row so we move them together.
-    const pairs = [];
-    Array.from(tbody.rows).forEach(r => {
-      if (r.classList.contains('call-row')) pairs.push([r, r.nextElementSibling]);
-    });
-
-    const numeric = (v) => { const n = parseFloat(v); return isNaN(n) ? -Infinity : n; };
-    const numericKeys = new Set(['time', 'duration', 'turns', 'sentiment', 'cost']);
-
-    pairs.sort((a, b) => {
-      const av = a[0].getAttribute('data-' + key) || '';
-      const bv = b[0].getAttribute('data-' + key) || '';
-      let cmp;
-      if (numericKeys.has(key)) cmp = numeric(av) - numeric(bv);
-      else cmp = av.localeCompare(bv);
-      return dir === 'ascending' ? cmp : -cmp;
-    });
-
-    pairs.forEach(([row, detail]) => {
-      tbody.appendChild(row);
-      if (detail && detail.classList.contains('call-detail')) tbody.appendChild(detail);
-    });
-  }));
-})();
-
-// -- export PDF (just print) ------------------------------------------
-const pdfBtn = document.getElementById('exportPdf');
-if (pdfBtn) pdfBtn.addEventListener('click', () => window.print());
-
-// -- export CSV -------------------------------------------------------
-const csvBtn = document.getElementById('exportCsv');
-if (csvBtn) csvBtn.addEventListener('click', () => {
-  const calls = window.__cyneaCalls || [];
-  if (!calls.length) { showToast('No calls to export'); return; }
-  const headers = [
-    'call_id','agent','started_at','duration_s','user_turns','assistant_turns',
-    'interruptions','sentiment_score','containment','resolution',
-    'handoff_reason','cost_total_cents'
-  ];
-  const csvLines = [headers.join(',')];
-  calls.forEach(c => {
-    const row = headers.map(h => {
-      const v = c[h];
-      if (v === null || v === undefined) return '';
-      const s = String(v);
-      return /[",\n]/.test(s) ? '"' + s.replace(/"/g, '""') + '"' : s;
-    });
-    csvLines.push(row.join(','));
-  });
-  const blob = new Blob([csvLines.join('\n')], { type: 'text/csv;charset=utf-8' });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url; a.download = 'cynea-calls.csv';
-  document.body.appendChild(a); a.click();
-  setTimeout(() => { URL.revokeObjectURL(url); a.remove(); }, 0);
-  showToast('CSV downloaded');
-});
-
-// -- share link -------------------------------------------------------
-const shareBtn = document.getElementById('shareLink');
-if (shareBtn) shareBtn.addEventListener('click', async () => {
-  const url = location.href;
-  try {
-    if (navigator.clipboard && navigator.clipboard.writeText) {
-      await navigator.clipboard.writeText(url);
-      showToast('Link copied to clipboard');
-    } else {
-      window.prompt('Copy this dashboard link:', url);
-    }
-  } catch (e) {
-    window.prompt('Copy this dashboard link:', url);
+  /* ---- live clock ---- */
+  function tick(){
+    var now = new Date();
+    var p = function(n){return (n<10?'0':'')+n;};
+    var c = document.getElementById('clock');
+    var d = document.getElementById('clockDate');
+    if(c) c.textContent = p(now.getHours())+':'+p(now.getMinutes())+':'+p(now.getSeconds());
+    if(d) d.textContent = now.toLocaleDateString(undefined,{weekday:'short',month:'short',day:'numeric',year:'numeric'});
   }
-});
+  tick(); setInterval(tick,1000);
 
-// -- toast ------------------------------------------------------------
-let toastTimer = null;
-function showToast(msg, duration) {
-  const el = document.getElementById('toast');
-  if (!el) return;
-  el.textContent = msg;
-  el.classList.add('show');
-  if (toastTimer) clearTimeout(toastTimer);
-  toastTimer = setTimeout(() => el.classList.remove('show'), duration || 1800);
-}
+  /* ---- scroll progress ---- */
+  var prog = document.getElementById('prog');
+  function onScroll(){
+    if(!prog) return;
+    var h = document.documentElement;
+    var max = h.scrollHeight - h.clientHeight;
+    prog.style.width = (max>0 ? (h.scrollTop/max*100) : 0) + '%';
+  }
+  window.addEventListener('scroll', onScroll, {passive:true}); onScroll();
 
-// -- KPI count-up animation ------------------------------------------
-(function animateKpis() {
-  const cards = document.querySelectorAll('[data-animate-value]');
-  cards.forEach(card => {
-    const valEl = card.querySelector('.value');
-    if (!valEl) return;
-    const final = valEl.getAttribute('data-final') || valEl.textContent;
-    const m = final.match(/^(-?[\d,]+\.?\d*)(.*)$/);
-    if (!m) return;
-    const target = parseFloat(m[1].replace(/,/g, ''));
-    if (isNaN(target)) return;
-    const suffix = m[2];
-    const isInt = !final.includes('.');
-    const start = performance.now();
-    const dur = 700;
-    function step(now) {
-      const t = Math.min(1, (now - start) / dur);
-      const eased = 1 - Math.pow(1 - t, 3);
-      const v = target * eased;
-      valEl.textContent = (isInt ? Math.round(v).toLocaleString() : v.toFixed(1)) + suffix;
-      if (t < 1) requestAnimationFrame(step);
-      else valEl.textContent = final;  // final exact value
+  /* ---- count-up helpers ---- */
+  function fmt(v,dec){
+    if(dec>0) return v.toFixed(dec);
+    return Math.round(v).toLocaleString('en-US');
+  }
+  function countUp(el){
+    var target = parseFloat(el.getAttribute('data-count')) || 0;
+    var dec = parseInt(el.getAttribute('data-decimals')||'0',10);
+    var suffix = el.getAttribute('data-suffix') || '';
+    if(reduced){ el.textContent = fmt(target,dec)+suffix; return; }
+    var start = performance.now(), dur = 1100;
+    function step(t){
+      var p = Math.min(1,(t-start)/dur);
+      var e = 1-Math.pow(1-p,3);
+      el.textContent = fmt(target*e,dec)+suffix;
+      if(p<1) requestAnimationFrame(step); else el.textContent = fmt(target,dec)+suffix;
     }
     requestAnimationFrame(step);
-  });
-})();
-
-// -- call-center extension ---------------------------------------------
-// Live tickers for the dashboard's operations sections. Every handler
-// is gated on its target element existing, so this code is a no-op on
-// the landing page (which inlines this script but doesn't render any
-// of the cc-* elements).
-
-(function() {
-  // ── Local clock with seconds (cc-bar). Separate id from the main
-  // dashboard clock so neither steps on the other.
-  const clockEl = document.getElementById('cc-local-clock');
-  if (clockEl) {
-    const tick = () => { clockEl.textContent = new Date().toLocaleTimeString(); };
-    tick(); setInterval(tick, 1000);
   }
 
-  // ── Agent on-call timers — each ticks up every second.
-  const timers = document.querySelectorAll('[data-cc-timer]');
-  timers.forEach((el) => {
-    let s = parseInt(el.getAttribute('data-cc-timer'), 10) || 0;
-    setInterval(() => {
-      s += 1;
-      const m = Math.floor(s / 60);
-      const sec = s % 60;
-      el.textContent = m + 'm ' + String(sec).padStart(2, '0') + 's';
-    }, 1000);
-  });
-
-  // ── Queue wait timers — increment every second so the wait grows
-  // realistically while the page is open.
-  const waits = document.querySelectorAll('[data-cc-wait]');
-  waits.forEach((el) => {
-    let s = parseInt(el.getAttribute('data-cc-wait'), 10) || 0;
-    setInterval(() => {
-      s += 1;
-      el.textContent = s + 's';
-    }, 1000);
-  });
-
-  // ── Calls-today counter: bump by 1 every ~8 seconds. Subtle enough
-  // that a CTO won't notice the regularity, lively enough to feel real.
-  const callsTodayEls = document.querySelectorAll('[data-cc-counter="calls_today"]');
-  if (callsTodayEls.length) {
-    let v = parseInt((callsTodayEls[0].textContent || '247').replace(/[^0-9]/g, ''), 10) || 247;
-    setInterval(() => {
-      v += 1;
-      callsTodayEls.forEach((el) => { el.textContent = v.toLocaleString(); });
-    }, 8000);
-  }
-
-  // ── Avg-wait jitter: re-sample every 5 seconds in a believable band.
-  const avgWaitEls = document.querySelectorAll('[data-cc-counter="avg_wait"]');
-  if (avgWaitEls.length) {
-    setInterval(() => {
-      const v = 10 + Math.floor(Math.random() * 6);  // 10-15 seconds
-      avgWaitEls.forEach((el) => { el.textContent = v + 's'; });
-    }, 5000);
-  }
-
-  // ── Real-time feed: render each row's timestamp as `HH:MM:SS` based
-  // on `now - data-cc-feed-offset` so the times scroll forward at wall-
-  // clock pace. Refresh once a second so the seconds field stays live.
-  const feedRows = document.querySelectorAll('[data-cc-feed-offset]');
-  if (feedRows.length) {
-    const refresh = () => {
-      const now = Date.now();
-      feedRows.forEach((row) => {
-        const offset = parseInt(row.getAttribute('data-cc-feed-offset'), 10) || 0;
-        const t = new Date(now - offset * 1000);
-        const hh = String(t.getHours()).padStart(2, '0');
-        const mm = String(t.getMinutes()).padStart(2, '0');
-        const ss = String(t.getSeconds()).padStart(2, '0');
-        const slot = row.querySelector('.cc-feed-time');
-        if (slot) slot.textContent = hh + ':' + mm + ':' + ss;
-      });
-    };
-    refresh();
-    setInterval(refresh, 1000);
-  }
-})();
-
-// -- live call-center simulator ---------------------------------------
-//
-// Rotates queue rows, agent on-call cycles, and the call-log feed at
-// realistic intervals so the dashboard feels like a breathing call
-// center. Auto-detects which DOM hooks are present, so it's safe to
-// run on the landing page (no-ops there) and the dashboard alike.
-//
-// Numbers are pseudo-data — no real ops behind them. State lives at
-// `window.CALL_CENTER_STATE` for inspection.
-
-(function() {
-  if (window.__cyneaSimulatorRunning) return;
-  const queueListEl = document.querySelector('#cc-queue .cc-queue-list');
-  const feedListEl  = document.querySelector('#cc-feed .cc-feed-list');
-  const agentBoardEl = document.getElementById('cc-agent-board');
-  if (!queueListEl && !feedListEl && !agentBoardEl) return;
-  window.__cyneaSimulatorRunning = true;
-
-  // ── State ────────────────────────────────────────────────────────
-  const STATE = window.CALL_CENTER_STATE = {
-    queueIdSeq: 1000,
-    feedIdSeq:  2000,
-    callsToday: 247,
-  };
-
-  const DEPT_LIST = ['Hotel Desk', 'Banking', 'Restaurant', 'Support'];
-  const CALL_TYPES = {
-    'Hotel Desk':  ['Booking', 'Inquiry', 'Reservation change'],
-    'Banking':     ['Balance inquiry', 'Card lost', 'Transfer'],
-    'Restaurant':  ['Order', 'Delivery'],
-    'Support':     ['Inquiry', 'Tech help'],
-  };
-
-  const ACTION_TEMPLATES = [
-    {actor: 'Kwame',  text: 'booked deluxe room for {phone} — ${amt}',         amt: () => [80,120,200][Math.floor(Math.random()*3)] },
-    {actor: 'Kwame',  text: 'confirmed reservation for {phone}',                amt: null },
-    {actor: 'Kwame',  text: 'took restaurant booking for {phone} — {n} guests', amt: () => 4 + Math.floor(Math.random()*8) },
-    {actor: 'Amina',  text: 'resolved balance inquiry for {phone}',             amt: null },
-    {actor: 'Amina',  text: 'blocked lost card for {phone}',                    amt: null },
-    {actor: 'Amina',  text: 'processed M-Pesa reversal for {phone} — KES {amt}', amt: () => [1000,2000,5000][Math.floor(Math.random()*3)] },
-    {actor: 'Kofi',   text: 'took jollof order for {phone} — {amt} cedis',    amt: () => [35,50,65,85][Math.floor(Math.random()*4)] },
-    {actor: 'Kofi',   text: 'took banku order for {phone} — {amt} cedis',     amt: () => [25,45,60][Math.floor(Math.random()*3)] },
-    {actor: 'Kofi',   text: 'confirmed delivery for {phone} — {amt} min ETA', amt: () => [20,25,30,35][Math.floor(Math.random()*4)] },
-    {actor: 'Adwoa',  text: 'escalated complaint to human manager',               amt: null },
-    {actor: 'Adwoa',  text: 'logged complaint about WiFi outage',                 amt: null },
-  ];
-
-  function pick(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
-  function ghanaPhone() {
-    const c = pick(['20', '24', '50', '54', '57']);
-    const a = String(Math.floor(100 + Math.random()*900));
-    const b = String(Math.floor(1000 + Math.random()*9000));
-    return '+233 ' + c + ' ' + a + ' ' + b;
-  }
-  function kenyaPhone() {
-    const c = pick(['71', '72', '79']);
-    const a = String(Math.floor(100 + Math.random()*900));
-    const b = String(Math.floor(1000 + Math.random()*9000));
-    return '+254 ' + c + ' ' + a + ' ' + b;
-  }
-  function callerPhone(dept) { return dept === 'Banking' ? kenyaPhone() : ghanaPhone(); }
-  function nowHHMMSS() {
-    const t = new Date();
-    return String(t.getHours()).padStart(2,'0') + ':' +
-           String(t.getMinutes()).padStart(2,'0') + ':' +
-           String(t.getSeconds()).padStart(2,'0');
-  }
-  function jitter(minMs, maxMs) { return minMs + Math.random() * (maxMs - minMs); }
-
-  // ── Queue rotation ───────────────────────────────────────────────
-  // Maintain 1-4 rows. Every 30-75 s either add a new caller (slide
-  // in from right) or "connect" the oldest (fade out, simulating
-  // pickup). Keeps wait times monotonically increasing on each row.
-
-  function renumberQueue() {
-    if (!queueListEl) return;
-    const rows = queueListEl.querySelectorAll('.cc-queue-row');
-    rows.forEach((row, i) => {
-      const pos = row.querySelector('.cc-queue-pos');
-      if (pos) pos.textContent = '#' + (i + 1);
-    });
-    // Update the "waiting" mirror counter.
-    const mirror = document.querySelector('[data-cc-counter="waiting-mirror"]');
-    if (mirror) mirror.textContent = String(rows.length);
-    const main = document.querySelector('[data-cc-counter="waiting"]');
-    if (main) main.textContent = String(rows.length);
-  }
-
-  function addQueueRow() {
-    if (!queueListEl) return;
-    const rows = queueListEl.querySelectorAll('.cc-queue-row');
-    if (rows.length >= 4) return;  // cap
-    const dept = pick(DEPT_LIST);
-    const phone = callerPhone(dept);
-    const row = document.createElement('div');
-    row.className = 'cc-queue-row cc-sim-new';
-    row.setAttribute('data-cc-sim', 'true');
-    row.innerHTML =
-      '<span class="cc-queue-pos mono">#' + (rows.length + 1) + '</span>' +
-      '<span class="cc-queue-caller mono">' + phone + '</span>' +
-      '<span class="cc-queue-dept muted small">' + dept + '</span>' +
-      '<span class="cc-queue-wait mono" data-cc-wait="0">0s</span>';
-    queueListEl.appendChild(row);
-    requestAnimationFrame(() => row.classList.remove('cc-sim-new'));
-    // Hook the new row's wait counter into the existing 1s ticker.
-    let s = 0;
-    const waitEl = row.querySelector('[data-cc-wait]');
-    const t = setInterval(() => {
-      if (!row.isConnected) { clearInterval(t); return; }
-      s += 1;
-      if (waitEl) waitEl.textContent = s + 's';
-    }, 1000);
-    renumberQueue();
-  }
-
-  function removeOldestQueueRow() {
-    if (!queueListEl) return;
-    const first = queueListEl.querySelector('.cc-queue-row');
-    if (!first) return;
-    first.classList.add('cc-sim-leaving');
-    setTimeout(() => {
-      first.remove();
-      renumberQueue();
-    }, 320);
-  }
-
-  function rotateQueue() {
-    const rows = queueListEl ? queueListEl.querySelectorAll('.cc-queue-row').length : 0;
-    // Rough policy: 50% add, 50% connect, biased toward keeping ~2-3 in queue.
-    const r = Math.random();
-    if (rows <= 1) addQueueRow();
-    else if (rows >= 4) removeOldestQueueRow();
-    else if (r < 0.6) addQueueRow();
-    else removeOldestQueueRow();
-    setTimeout(rotateQueue, jitter(30000, 75000));
-  }
-  if (queueListEl) setTimeout(rotateQueue, jitter(20000, 45000));
-
-  // ── Call log feed rotation ───────────────────────────────────────
-  // Prepend a new call-log entry every 45-120 s. Keep max 20 visible.
-  // New entries flash green briefly.
-
-  function prependFeedRow() {
-    if (!feedListEl) return;
-    const tmpl = pick(ACTION_TEMPLATES);
-    const phone = tmpl.text.includes('{phone}') ? callerPhone(pick(DEPT_LIST)) : '';
-    let detail = tmpl.text.replace('{phone}', phone);
-    if (tmpl.amt) {
-      const v = tmpl.amt();
-      detail = detail.replace('{amt}', String(v)).replace('{n}', String(v));
-    }
-    const row = document.createElement('div');
-    row.className = 'cc-feed-row cc-sim-flash';
-    row.innerHTML =
-      '<span class="cc-feed-time mono">' + nowHHMMSS() + '</span>' +
-      '<span class="cc-feed-actor mono">' + tmpl.actor + '</span>' +
-      '<span class="cc-feed-msg">' + detail + '</span>';
-    feedListEl.insertBefore(row, feedListEl.firstChild);
-    setTimeout(() => row.classList.remove('cc-sim-flash'), 1600);
-    // Trim to 20.
-    const allRows = feedListEl.querySelectorAll('.cc-feed-row');
-    for (let i = 20; i < allRows.length; i++) {
-      allRows[i].classList.add('cc-sim-leaving');
-      setTimeout((el => () => el.remove())(allRows[i]), 320);
-    }
-    // Bump global counter.
-    STATE.callsToday += 1;
-    document.querySelectorAll('[data-cc-counter="calls_today"]').forEach((el) => {
-      el.textContent = STATE.callsToday.toLocaleString();
-    });
-  }
-
-  function rotateFeed() {
-    prependFeedRow();
-    setTimeout(rotateFeed, jitter(45000, 120000));
-  }
-  if (feedListEl) setTimeout(rotateFeed, jitter(20000, 45000));
-
-  // ── Agent on-call cycling ────────────────────────────────────────
-  // Periodically: pick an on_call agent, briefly mark wrap-up, then
-  // re-engage with a new caller. Visual cue: the timer resets, the
-  // pill flashes amber for ~2 s, then back to green "On call".
-
-  function cycleAgent() {
-    if (!agentBoardEl) { setTimeout(cycleAgent, 60000); return; }
-    const onCallAgents = agentBoardEl.querySelectorAll('article.cc-agent[data-status="on_call"]');
-    if (onCallAgents.length) {
-      const target = pick(Array.from(onCallAgents));
-      const pill = target.querySelector('.cc-status-pill');
-      const dot  = target.querySelector('.cc-status-dot');
-      const timer = target.querySelector('[data-cc-timer]');
-      const callerEl = target.querySelector('.cc-agent-caller');
-      // Flash to "Wrap up" briefly.
-      if (pill) {
-        pill.style.color = '#F59E0B';
-        pill.style.borderColor = 'rgba(245,158,11,0.25)';
-        pill.style.background = 'rgba(245,158,11,0.10)';
-        if (dot) dot.style.background = '#F59E0B';
-        const labelNode = pill.lastChild;
-        const original = labelNode && labelNode.nodeType === 3 ? labelNode.textContent : 'On call';
-        if (labelNode && labelNode.nodeType === 3) labelNode.textContent = 'Wrap up';
-        setTimeout(() => {
-          pill.style.color = '#10B981';
-          pill.style.borderColor = 'rgba(16,185,129,0.25)';
-          pill.style.background = 'rgba(16,185,129,0.10)';
-          if (dot) dot.style.background = '#10B981';
-          if (labelNode && labelNode.nodeType === 3) labelNode.textContent = original;
-          // Reset timer to 0 + new caller.
-          if (timer) {
-            timer.setAttribute('data-cc-timer', '0');
-            timer.textContent = '0m 00s';
-          }
-          if (callerEl) {
-            const dept = target.querySelector('.cc-agent-id p')
-              ? target.querySelector('.cc-agent-id p').textContent : '';
-            callerEl.textContent = callerPhone(dept);
-          }
-          // Bump that agent's "today" counter.
-          const todaySpan = target.querySelector('.cc-agent-foot .mono');
-          if (todaySpan) {
-            const m = todaySpan.textContent.match(/(\d+)/);
-            const n = m ? parseInt(m[1], 10) + 1 : 1;
-            todaySpan.textContent = n + ' calls';
-          }
-          STATE.callsToday += 1;
-          document.querySelectorAll('[data-cc-counter="calls_today"]').forEach((el) => {
-            el.textContent = STATE.callsToday.toLocaleString();
-          });
-        }, 2200);
+  /* ---- reveal + count-up observer ---- */
+  var io = ('IntersectionObserver' in window) ? new IntersectionObserver(function(entries){
+    entries.forEach(function(en){
+      if(!en.isIntersecting) return;
+      var el = en.target;
+      el.classList.add('in');
+      if(el.querySelectorAll){
+        el.querySelectorAll('[data-count]').forEach(function(c){
+          if(!c.__done){ c.__done=true; countUp(c); }
+        });
       }
-    }
-    setTimeout(cycleAgent, jitter(60000, 180000));
+      if(el.hasAttribute && el.hasAttribute('data-count') && !el.__done){ el.__done=true; countUp(el); }
+      io.unobserve(el);
+    });
+  },{threshold:.18}) : null;
+
+  document.querySelectorAll('.rv').forEach(function(el){
+    if(io) io.observe(el);
+    else { el.classList.add('in'); el.querySelectorAll('[data-count]').forEach(function(c){ if(!c.__done){c.__done=true;countUp(c);} }); }
+  });
+  // standalone count-ups not inside a .rv (containment %)
+  document.querySelectorAll('[data-count]').forEach(function(c){
+    if(c.closest('.rv')) return;
+    if(io){ io.observe(c); } else if(!c.__done){ c.__done=true; countUp(c); }
+  });
+
+  /* ---- containment meter ---- */
+  var meter = document.getElementById('contMeter');
+  if(meter){
+    var setMeter = function(){ meter.style.width = (meter.getAttribute('data-w')||'0')+'%'; };
+    if('IntersectionObserver' in window){
+      var mio = new IntersectionObserver(function(es){
+        es.forEach(function(e){ if(e.isIntersecting){ setMeter(); mio.unobserve(meter); } });
+      },{threshold:.3});
+      mio.observe(meter);
+    } else { setMeter(); }
   }
-  if (agentBoardEl) setTimeout(cycleAgent, jitter(30000, 90000));
+
+  /* ---- agent status cards ---- */
+  var agents = [
+    {name:'Kwame', role:'Hotel reception',   grad:'linear-gradient(135deg,#00D4FF,#0089A8)', oncall:true,  secs:142, calls:38, cont:'91%'},
+    {name:'Amina', role:'Customer service',  grad:'linear-gradient(135deg,#7C5CFC,#4F32C9)', oncall:true,  secs:67,  calls:52, cont:'88%'},
+    {name:'Kofi',  role:'Restaurant orders', grad:'linear-gradient(135deg,#10B981,#0B8B63)', oncall:false, secs:0,   calls:41, cont:'84%'},
+    {name:'Maya',  role:'Bookings',          grad:'linear-gradient(135deg,#F59E0B,#D97706)', oncall:true,  secs:213, calls:29, cont:'90%'}
+  ];
+  var grid = document.getElementById('agentGrid');
+  function fmtTimer(s){ var m=Math.floor(s/60), ss=s%60; return m+':'+(ss<10?'0':'')+ss; }
+  if(grid){
+    agents.forEach(function(a){
+      var card = document.createElement('div');
+      card.className = 'card agent rv';
+      card.innerHTML =
+        '<div class="agent-top">'+
+          '<div class="avatar" style="background:'+a.grad+'">'+a.name.charAt(0)+'</div>'+
+          '<div><div class="agent-name">'+a.name+'</div><div class="agent-role">'+a.role+'</div></div>'+
+        '</div>'+
+        '<div class="agent-mid">'+
+          '<span class="pill '+(a.oncall?'pill-warn':'pill-ok')+'">'+(a.oncall?'On call':'<span class="dot"></span> Available')+'</span>'+
+          '<span class="agent-timer'+(a.oncall?'':' idle')+'">'+(a.oncall?fmtTimer(a.secs):'idle')+'</span>'+
+        '</div>'+
+        '<div class="agent-stats"><span>Calls today<b>'+a.calls+'</b></span><span>Containment<b>'+a.cont+'</b></span></div>';
+      grid.appendChild(card);
+      a.__timer = card.querySelector('.agent-timer');
+      if(io) io.observe(card); else card.classList.add('in');
+    });
+    if(!reduced) setInterval(function(){
+      agents.forEach(function(a){
+        if(a.oncall){ a.secs++; if(a.__timer) a.__timer.textContent=fmtTimer(a.secs); }
+      });
+    },1000);
+  }
+
+  /* ---- call volume bars ---- */
+  var bars = document.getElementById('bars');
+  if(bars){
+    var pattern = [12,8,5,4,3,5,14,32,55,72,80,76,68,71,84,90,78,65,58,49,40,30,22,16];
+    var peak = Math.max.apply(null, pattern);
+    pattern.forEach(function(v,i){
+      var col = document.createElement('div'); col.className='bar-col';
+      var track = document.createElement('div'); track.className='bar-track';
+      var fill = document.createElement('div'); fill.className='bar-fill';
+      track.appendChild(fill); col.appendChild(track); bars.appendChild(col);
+      var pct = Math.round(v/peak*100);
+      if(reduced){ fill.style.height = pct+'%'; }
+      else { fill.style.height='0%'; setTimeout(function(){ fill.style.height=pct+'%'; }, 200 + i*28); }
+    });
+  }
+
+  /* ---- real-time call log ---- */
+  var feed = document.getElementById('feed');
+  var feedAgents = ['Kwame','Amina','Kofi','Maya'];
+  var feedEvents = [
+    'booked a room for +1•••• 4821',
+    'resolved a billing query',
+    'took a dinner reservation for 4',
+    'confirmed a booking change',
+    'answered an availability question',
+    'processed a takeaway order',
+    'handled a VIP guest request',
+    'completed a satisfaction survey',
+    'rescheduled an appointment',
+    'captured a callback request',
+    'verified an account for +44••• 0192',
+    'handled a refund enquiry'
+  ];
+  function nowTime(){ var n=new Date(),p=function(x){return(x<10?'0':'')+x;}; return p(n.getHours())+':'+p(n.getMinutes())+':'+p(n.getSeconds()); }
+  function addFeed(){
+    if(!feed) return;
+    var a = feedAgents[Math.floor(Math.random()*feedAgents.length)];
+    var ev = feedEvents[Math.floor(Math.random()*feedEvents.length)];
+    var row = document.createElement('div'); row.className='feed-row';
+    row.innerHTML = '<span class="ft">'+nowTime()+'</span><span class="fa">'+a+'</span><span class="fm">'+a+' '+ev+'</span>';
+    feed.insertBefore(row, feed.firstChild);
+    while(feed.children.length>40) feed.removeChild(feed.lastChild);
+  }
+  for(var i=0;i<7;i++) addFeed();
+  if(!reduced) setInterval(addFeed, 3500);
+
+  /* ---- call history table ---- */
+  var rows = [
+    {time:'14:32', agent:'Kwame', caller:'+1 ••• 4821',  duration:182, turns:9,  sentiment:0.62, cost:4.4, status:'Resolved'},
+    {time:'14:28', agent:'Amina', caller:'+44 ••• 0192', duration:96,  turns:6,  sentiment:0.31, cost:3.1, status:'Resolved'},
+    {time:'14:21', agent:'Maya',  caller:'+61 ••• 7733', duration:240, turns:12, sentiment:0.78, cost:5.6, status:'Resolved'},
+    {time:'14:15', agent:'Kofi',  caller:'+1 ••• 9054',  duration:71,  turns:4,  sentiment:-0.18,cost:2.4, status:'Escalated'},
+    {time:'14:09', agent:'Amina', caller:'+49 ••• 2210', duration:133, turns:8,  sentiment:0.45, cost:3.9, status:'Resolved'},
+    {time:'14:02', agent:'Kwame', caller:'+1 ••• 6612',  duration:58,  turns:3,  sentiment:0.12, cost:2.0, status:'Missed'}
+  ];
+  var body = document.getElementById('histBody');
+  function sentBar(v){
+    var mag = Math.min(1,Math.abs(v));
+    var color = v>=0.15?'var(--ok)':(v<=-0.05?'var(--warn)':'var(--faint)');
+    return '<span class="sbar" title="'+v.toFixed(2)+'"><div style="width:'+Math.round(mag*100)+'%;background:'+color+'"></div></span>';
+  }
+  function statusPill(s){
+    if(s==='Resolved') return '<span class="pill pill-ok"><span class="dot" style="display:inline-block;vertical-align:middle"></span>Resolved</span>';
+    if(s==='Escalated') return '<span class="pill pill-warn">Escalated</span>';
+    return '<span class="pill" style="color:var(--faint);border-color:var(--line);background:var(--surface-2)">Missed</span>';
+  }
+  function fmtDur(s){ var m=Math.floor(s/60), ss=s%60; return m+':'+(ss<10?'0':'')+ss; }
+  function render(){
+    if(!body) return;
+    body.innerHTML = '';
+    rows.forEach(function(r){
+      var tr = document.createElement('tr');
+      tr.innerHTML =
+        '<td class="mono">'+r.time+'</td>'+
+        '<td>'+r.agent+'</td>'+
+        '<td class="mono">'+r.caller+'</td>'+
+        '<td class="tnum">'+fmtDur(r.duration)+'</td>'+
+        '<td class="tnum">'+r.turns+'</td>'+
+        '<td>'+sentBar(r.sentiment)+'</td>'+
+        '<td class="tnum">'+r.cost.toFixed(1)+'¢</td>'+
+        '<td>'+statusPill(r.status)+'</td>';
+      body.appendChild(tr);
+    });
+  }
+  render();
+  var ths = document.querySelectorAll('#histTable thead th');
+  ths.forEach(function(th){
+    th.addEventListener('click', function(){
+      var key = th.getAttribute('data-key');
+      var type = th.getAttribute('data-type');
+      var asc = th.getAttribute('aria-sort')!=='ascending';
+      ths.forEach(function(o){ o.setAttribute('aria-sort','none'); });
+      th.setAttribute('aria-sort', asc?'ascending':'descending');
+      rows.sort(function(a,b){
+        var x=a[key], y=b[key];
+        if(type==='num'){ return asc ? x-y : y-x; }
+        x=(''+x).toLowerCase(); y=(''+y).toLowerCase();
+        return asc ? (x<y?-1:x>y?1:0) : (x>y?-1:x<y?1:0);
+      });
+      render();
+    });
+  });
+
 })();
 </script>
 </body>

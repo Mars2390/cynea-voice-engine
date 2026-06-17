@@ -7,7 +7,7 @@
 <meta name="description" content="Manage your Cynea voice agents — create, configure, and monitor calls across Africa." />
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=DM+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Syne:wght@600;700;800&family=DM+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
 *, *::before, *::after { box-sizing: border-box; }
 html, body { margin: 0; padding: 0; }
@@ -15,8 +15,8 @@ body {
   font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   font-size: 14px; line-height: 1.5;
   -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale;
-  color: #F5F5F5;
-  background: #050505;
+  color: #1A1A1A;
+  background: #F5F1EA;
   min-height: 100vh;
 }
 @media (prefers-reduced-motion: reduce) {
@@ -41,8 +41,8 @@ body {
 /* ── sidebar ──────────────────────────────────────────────────── */
 .am-sidebar {
   position: sticky; top: 0; height: 100vh;
-  background: #0A0A0A;
-  border-right: 1px solid #1E1E1E;
+  background: #F5F1EA;
+  border-right: 1px solid #E4DED2;
   display: flex; flex-direction: column;
   padding: 20px 0;
   overflow: hidden;
@@ -50,7 +50,7 @@ body {
 .am-sidebar-brand {
   display: flex; align-items: center; gap: 10px;
   padding: 0 20px 20px;
-  border-bottom: 1px solid #1E1E1E;
+  border-bottom: 1px solid #E4DED2;
   margin-bottom: 12px;
   text-decoration: none;
 }
@@ -62,7 +62,7 @@ body {
 }
 .am-sidebar-brand .brand-tag {
   font-family: 'Syne', sans-serif; font-weight: 600;
-  font-size: 9px; letter-spacing: 0.32em; color: #8A8A8A;
+  font-size: 9px; letter-spacing: 0.32em; color: #6B6B6B;
   white-space: nowrap;
 }
 .am-layout.sidebar-collapsed .brand-tag,
@@ -73,25 +73,25 @@ body {
 .am-sidebar-toggle {
   position: absolute; top: 24px; right: 12px;
   width: 24px; height: 24px;
-  background: transparent; color: #8A8A8A;
+  background: transparent; color: #6B6B6B;
   border: none; cursor: pointer;
   font-size: 14px;
   display: inline-flex; align-items: center; justify-content: center;
   transition: color 120ms ease;
 }
-.am-sidebar-toggle:hover { color: #F5F5F5; }
+.am-sidebar-toggle:hover { color: #1A1A1A; }
 
 .am-sidebar-nav { display: flex; flex-direction: column; padding: 0 12px; gap: 2px; }
 .am-sidebar-link {
   display: flex; align-items: center; gap: 12px;
   padding: 10px 12px;
   border-radius: 8px;
-  color: #8A8A8A; text-decoration: none;
+  color: #6B6B6B; text-decoration: none;
   font-size: 13px; font-weight: 500;
   transition: background 150ms ease, color 150ms ease;
   white-space: nowrap;
 }
-.am-sidebar-link:hover { background: #111; color: #F5F5F5; }
+.am-sidebar-link:hover { background: #FFFFFF; color: #1A1A1A; }
 .am-sidebar-link.active {
   background: rgba(0,212,255,0.10);
   color: #00D4FF;
@@ -108,15 +108,15 @@ body {
   min-width: 0;
   background:
     radial-gradient(900px 500px at 100% 0%, rgba(0,212,255,0.06), transparent 60%),
-    #050505;
+    #F5F1EA;
 }
 
 /* ── top nav ──────────────────────────────────────────────────── */
 .am-topnav {
   display: flex; align-items: center; gap: 24px;
   padding: 16px 32px;
-  border-bottom: 1px solid #1E1E1E;
-  background: rgba(5,5,5,0.85);
+  border-bottom: 1px solid #E4DED2;
+  background: rgba(245,241,234,0.85);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
   position: sticky; top: 0; z-index: 30;
@@ -151,13 +151,13 @@ body {
   display: flex; gap: 22px;
 }
 .am-topnav-links a {
-  color: #8A8A8A; text-decoration: none;
+  color: #6B6B6B; text-decoration: none;
   font-size: 13px; font-weight: 500;
   position: relative; padding-bottom: 2px;
   transition: color 120ms ease;
 }
-.am-topnav-links a:hover { color: #F5F5F5; }
-.am-topnav-links a.active { color: #F5F5F5; }
+.am-topnav-links a:hover { color: #1A1A1A; }
+.am-topnav-links a.active { color: #1A1A1A; }
 .am-topnav-links a.active::after {
   content: ""; position: absolute; left: 0; right: 0; bottom: -2px;
   height: 1px; background: #00D4FF;
@@ -181,7 +181,7 @@ body {
 .am-user-avatar:hover { filter: brightness(1.05); }
 .am-user-menu {
   position: absolute; right: 0; top: calc(100% + 10px);
-  background: #111; border: 1px solid #1E1E1E; border-radius: 10px;
+  background: #FFFFFF; border: 1px solid #E4DED2; border-radius: 10px;
   min-width: 180px;
   padding: 6px;
   box-shadow: 0 18px 50px rgba(0,0,0,0.6);
@@ -191,12 +191,12 @@ body {
 .am-user-menu a {
   display: block;
   padding: 9px 12px; border-radius: 6px;
-  color: #F5F5F5; text-decoration: none;
+  color: #1A1A1A; text-decoration: none;
   font-size: 13px;
   transition: background 120ms ease, color 120ms ease;
 }
-.am-user-menu a:hover { background: #1A1A1A; color: #00D4FF; }
-.am-user-menu hr { border: none; border-top: 1px solid #1E1E1E; margin: 6px 4px; }
+.am-user-menu a:hover { background: #FFFFFF; color: #00D4FF; }
+.am-user-menu hr { border: none; border-top: 1px solid #E4DED2; margin: 6px 4px; }
 .am-user-menu .danger:hover { color: #EF4444; }
 
 /* ── content padding ──────────────────────────────────────────── */
@@ -214,8 +214,8 @@ body {
   font-size: 28px; letter-spacing: -0.01em;
   margin: 0 0 6px;
 }
-.am-welcome p { margin: 0; color: #8A8A8A; font-size: 14px; }
-.am-welcome p span.dot { color: #5F5F5F; margin: 0 8px; }
+.am-welcome p { margin: 0; color: #6B6B6B; font-size: 14px; }
+.am-welcome p span.dot { color: #9A938A; margin: 0 8px; }
 
 /* ── stats bar ────────────────────────────────────────────────── */
 .am-stats {
@@ -223,8 +223,8 @@ body {
   grid-template-columns: repeat(5, 1fr);
   margin-bottom: 28px;
   padding: 18px;
-  background: linear-gradient(160deg, #111111 0%, #0E0E0E 100%);
-  border: 1px solid #1E1E1E; border-radius: 14px;
+  background: linear-gradient(160deg, #FFFFFF 0%, #FBF8F2 100%);
+  border: 1px solid #E4DED2; border-radius: 14px;
   position: relative; overflow: hidden;
 }
 .am-stats::before {
@@ -237,13 +237,13 @@ body {
 .am-stat {
   display: flex; flex-direction: column; gap: 2px;
   padding: 0 14px;
-  border-right: 1px solid #1E1E1E;
+  border-right: 1px solid #E4DED2;
   position: relative; z-index: 1;
 }
 .am-stat:last-child { border-right: none; }
 .am-stat-label {
   font-size: 10px; text-transform: uppercase; letter-spacing: 0.10em;
-  color: #8A8A8A; font-weight: 600;
+  color: #6B6B6B; font-weight: 600;
 }
 .am-stat-value {
   font-family: 'JetBrains Mono', monospace; font-weight: 600;
@@ -268,7 +268,7 @@ body {
 .btn {
   font-family: inherit; font-weight: 600; font-size: 13px;
   padding: 9px 16px; border-radius: 10px; cursor: pointer;
-  border: 1px solid #1E1E1E; background: #0E0E0E; color: #F5F5F5;
+  border: 1px solid #E4DED2; background: #FBF8F2; color: #1A1A1A;
   transition: transform 180ms cubic-bezier(.2,.8,.2,1), box-shadow 220ms ease, filter 120ms ease, background 200ms ease, border-color 150ms ease;
   text-decoration: none;
   display: inline-flex; align-items: center; justify-content: center; gap: 8px;
@@ -289,8 +289,8 @@ body {
 
 .am-wizard {
   margin-bottom: 28px;
-  background: linear-gradient(160deg, #111111 0%, #0E0E0E 100%);
-  border: 1px solid #1E1E1E; border-radius: 14px;
+  background: linear-gradient(160deg, #FFFFFF 0%, #FBF8F2 100%);
+  border: 1px solid #E4DED2; border-radius: 14px;
   overflow: hidden;
   animation: wizardIn 320ms cubic-bezier(.2,.8,.2,1);
 }
@@ -301,7 +301,7 @@ body {
 }
 .am-wizard-head {
   display: flex; align-items: center; justify-content: space-between;
-  padding: 16px 22px; border-bottom: 1px solid #1E1E1E;
+  padding: 16px 22px; border-bottom: 1px solid #E4DED2;
 }
 .am-wizard-head h3 {
   font-family: 'Syne', sans-serif; font-weight: 700;
@@ -309,14 +309,14 @@ body {
   margin: 0;
 }
 .am-wizard-close {
-  background: transparent; border: none; color: #8A8A8A;
+  background: transparent; border: none; color: #6B6B6B;
   font-size: 22px; cursor: pointer; padding: 0; line-height: 1;
 }
-.am-wizard-close:hover { color: #F5F5F5; }
+.am-wizard-close:hover { color: #1A1A1A; }
 
 .am-wizard-progress {
   display: flex; gap: 4px;
-  padding: 14px 22px; border-bottom: 1px solid #1E1E1E;
+  padding: 14px 22px; border-bottom: 1px solid #E4DED2;
   overflow-x: auto;
   scrollbar-width: none;
 }
@@ -324,7 +324,7 @@ body {
 .am-wizard-step {
   font-size: 11px; font-weight: 600;
   padding: 6px 12px; border-radius: 999px;
-  color: #5F5F5F; background: transparent; border: 1px solid #1E1E1E;
+  color: #9A938A; background: transparent; border: 1px solid #E4DED2;
   white-space: nowrap;
   transition: all 200ms ease;
 }
@@ -338,12 +338,12 @@ body {
 .am-wizard-pane label.field-label {
   display: block;
   font-size: 11px; text-transform: uppercase; letter-spacing: 0.08em;
-  color: #8A8A8A; font-weight: 600; margin-bottom: 8px;
+  color: #6B6B6B; font-weight: 600; margin-bottom: 8px;
 }
 .am-input, .am-select {
   width: 100%; max-width: 480px;
-  background: #0E0E0E; color: #F5F5F5;
-  border: 1px solid #1E1E1E; border-radius: 10px;
+  background: #FBF8F2; color: #1A1A1A;
+  border: 1px solid #E4DED2; border-radius: 10px;
   padding: 10px 14px;
   font-family: inherit; font-size: 14px;
   outline: none;
@@ -354,13 +354,13 @@ body {
   box-shadow: 0 0 0 3px rgba(0,212,255,0.15);
 }
 .am-help-text {
-  font-size: 12px; color: #8A8A8A; margin-top: 8px;
+  font-size: 12px; color: #6B6B6B; margin-top: 8px;
 }
 
 .am-dropzone {
   margin-top: 6px;
   padding: 32px 18px;
-  border: 1.5px dashed #2A2A2A; border-radius: 12px;
+  border: 1.5px dashed #DED7C9; border-radius: 12px;
   text-align: center;
   background: rgba(0,212,255,0.02);
   transition: border-color 200ms ease, background 200ms ease;
@@ -369,13 +369,13 @@ body {
 .am-dropzone:hover, .am-dropzone.drag-over {
   border-color: #00D4FF; background: rgba(0,212,255,0.06);
 }
-.am-dropzone p { margin: 0 0 10px; color: #8A8A8A; font-size: 13px; }
+.am-dropzone p { margin: 0 0 10px; color: #6B6B6B; font-size: 13px; }
 .am-file-list { list-style: none; margin: 12px 0 0; padding: 0; }
 .am-file-list li {
   display: flex; align-items: center; gap: 10px;
-  padding: 8px 12px; border: 1px solid #1E1E1E; border-radius: 8px;
-  background: #0E0E0E;
-  font-size: 12px; color: #F5F5F5; margin-top: 6px;
+  padding: 8px 12px; border: 1px solid #E4DED2; border-radius: 8px;
+  background: #FBF8F2;
+  font-size: 12px; color: #1A1A1A; margin-top: 6px;
 }
 .am-file-list li::before {
   content: "📄"; flex-shrink: 0;
@@ -386,8 +386,8 @@ body {
   display: grid; grid-template-columns: 36px 1fr; gap: 12px;
   align-items: center;
   padding: 10px 14px;
-  border: 1px solid #1E1E1E; border-radius: 10px;
-  background: #0E0E0E;
+  border: 1px solid #E4DED2; border-radius: 10px;
+  background: #FBF8F2;
   cursor: pointer;
   transition: border-color 150ms ease, background 150ms ease;
 }
@@ -405,10 +405,10 @@ body {
 .am-voice-play[data-playing="true"] { background: #00D4FF; color: #001218; }
 .am-voice-info { display: flex; flex-direction: column; gap: 2px; }
 .am-voice-name { font-weight: 600; font-size: 13px; }
-.am-voice-desc { font-size: 11px; color: #8A8A8A; }
+.am-voice-desc { font-size: 11px; color: #6B6B6B; }
 
 .am-deploy-summary {
-  background: #0E0E0E; border: 1px solid #1E1E1E;
+  background: #FBF8F2; border: 1px solid #E4DED2;
   border-radius: 12px; padding: 18px; margin-bottom: 18px;
   font-size: 13px;
 }
@@ -416,9 +416,9 @@ body {
   display: grid; grid-template-columns: 130px 1fr; gap: 8px 16px;
   margin: 0;
 }
-.am-deploy-summary dt { color: #8A8A8A; font-size: 12px; }
+.am-deploy-summary dt { color: #6B6B6B; font-size: 12px; }
 .am-deploy-summary dd {
-  margin: 0; color: #F5F5F5;
+  margin: 0; color: #1A1A1A;
   font-family: 'JetBrains Mono', monospace; font-size: 12px;
 }
 
@@ -433,7 +433,7 @@ body {
 @keyframes spin { to { transform: rotate(360deg); } }
 .am-deploy-loading {
   display: flex; flex-direction: column; align-items: center;
-  padding: 24px; color: #8A8A8A; font-size: 13px;
+  padding: 24px; color: #6B6B6B; font-size: 13px;
 }
 .am-deploy-success {
   padding: 24px;
@@ -457,7 +457,7 @@ body {
   font-family: 'Syne', sans-serif; font-weight: 700;
   font-size: 16px; margin: 0 0 6px;
 }
-.am-deploy-success p { font-size: 13px; color: #F5F5F5; margin: 0; }
+.am-deploy-success p { font-size: 13px; color: #1A1A1A; margin: 0; }
 .am-deploy-success code {
   font-family: 'JetBrains Mono', monospace;
   background: rgba(255,255,255,0.04);
@@ -467,7 +467,7 @@ body {
 
 .am-wizard-foot {
   display: flex; justify-content: space-between; align-items: center;
-  padding: 14px 22px; border-top: 1px solid #1E1E1E;
+  padding: 14px 22px; border-top: 1px solid #E4DED2;
 }
 
 /* ── section heads ───────────────────────────────────────────── */
@@ -480,7 +480,7 @@ body {
   font-size: 13px; letter-spacing: 0.08em; text-transform: uppercase;
   margin: 0;
 }
-.am-section-head .muted { color: #8A8A8A; font-size: 12px; }
+.am-section-head .muted { color: #6B6B6B; font-size: 12px; }
 
 /* ── agent overview cards ─────────────────────────────────────── */
 .am-agent-grid {
@@ -492,8 +492,8 @@ body {
 @media (max-width: 540px)  { .am-agent-grid { grid-template-columns: 1fr; } }
 
 .am-agent-card {
-  background: linear-gradient(160deg, #111111 0%, #0E0E0E 100%);
-  border: 1px solid #1E1E1E; border-radius: 14px;
+  background: linear-gradient(160deg, #FFFFFF 0%, #FBF8F2 100%);
+  border: 1px solid #E4DED2; border-radius: 14px;
   padding: 20px;
   display: flex; flex-direction: column; gap: 14px;
   position: relative; overflow: hidden;
@@ -523,7 +523,7 @@ body {
   font-family: 'Syne', sans-serif; font-weight: 700; font-size: 15px;
   margin: 0;
 }
-.am-agent-id p { margin: 2px 0 0; font-size: 11px; color: #8A8A8A; }
+.am-agent-id p { margin: 2px 0 0; font-size: 11px; color: #6B6B6B; }
 .am-agent-card .pill {
   align-self: center;
   flex-shrink: 0;
@@ -535,15 +535,15 @@ body {
   font-size: 12px;
   position: relative; z-index: 1;
 }
-.am-agent-stat-label { color: #8A8A8A; font-size: 11px; }
+.am-agent-stat-label { color: #6B6B6B; font-size: 11px; }
 .am-agent-stat-value {
   font-family: 'JetBrains Mono', monospace; font-weight: 600;
-  font-size: 14px; color: #F5F5F5;
+  font-size: 14px; color: #1A1A1A;
 }
 
 .am-agent-card-foot {
   display: flex; gap: 8px;
-  border-top: 1px solid #1E1E1E;
+  border-top: 1px solid #E4DED2;
   padding-top: 12px;
   position: relative; z-index: 1;
 }
@@ -571,15 +571,15 @@ body {
 
 /* ── recent agents table ─────────────────────────────────────── */
 .am-table-wrap {
-  background: #111; border: 1px solid #1E1E1E; border-radius: 14px;
+  background: #FFFFFF; border: 1px solid #E4DED2; border-radius: 14px;
   overflow: hidden;
 }
 .am-table { width: 100%; border-collapse: collapse; }
 .am-table thead th {
   text-align: left; font-size: 11px; text-transform: uppercase;
-  letter-spacing: 0.08em; color: #8A8A8A; font-weight: 600;
-  padding: 14px 18px; border-bottom: 1px solid #1E1E1E;
-  background: #0E0E0E;
+  letter-spacing: 0.08em; color: #6B6B6B; font-weight: 600;
+  padding: 14px 18px; border-bottom: 1px solid #E4DED2;
+  background: #FBF8F2;
   cursor: pointer; user-select: none;
   white-space: nowrap;
 }
@@ -589,7 +589,7 @@ body {
 .am-table thead th.actions { text-align: right; cursor: default; }
 .am-table tbody td {
   padding: 12px 18px; font-size: 13px;
-  border-bottom: 1px solid #1E1E1E;
+  border-bottom: 1px solid #E4DED2;
   vertical-align: middle;
 }
 .am-table tbody tr:last-child td { border-bottom: none; }
@@ -613,10 +613,25 @@ body {
   display: flex; justify-content: space-between; align-items: center;
   padding: 24px 0 0;
   margin-top: 32px;
-  border-top: 1px solid #1E1E1E;
-  font-size: 12px; color: #8A8A8A;
+  border-top: 1px solid #E4DED2;
+  font-size: 12px; color: #6B6B6B;
 }
-.am-footer .dim { color: #5F5F5F; }
+.am-footer .dim { color: #9A938A; }
+
+/* ════ CY-LIGHT — ElevenLabs-style light skin (Cynea) ════ */
+body{font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;}
+h1,h2,h3,h4{font-family:'Inter',sans-serif;letter-spacing:-0.02em;}
+.brand-mark{font-family:'Inter',sans-serif;font-weight:700;letter-spacing:0.04em;color:#1A1A1A;text-shadow:none;}
+.brand-tag{color:#9A938A;}
+.btn-primary{background:#0A0A0A;color:#FFFFFF;border-color:#0A0A0A;}
+.btn-primary:hover{background:#222;border-color:#222;filter:none;box-shadow:0 8px 24px rgba(0,0,0,0.16);}
+
+/* ════ CY-LIGHT · wow polish ════ */
+html{scroll-behavior:smooth;}
+@media (prefers-reduced-motion:no-preference){
+  body{animation:cyPageIn 0.55s cubic-bezier(.2,.8,.2,1) both;}
+  @keyframes cyPageIn{from{opacity:0;}to{opacity:1;}}
+}
 </style>
 </head>
 <body>
@@ -702,7 +717,7 @@ body {
       <div class="am-create-row">
         <div>
           <h3 style="font-family: 'Syne', sans-serif; font-weight:700; font-size:18px; margin:0;">Your agents</h3>
-          <p style="margin:4px 0 0; color:#8A8A8A; font-size:13px;">Create, configure, and monitor your voice agents.</p>
+          <p style="margin:4px 0 0; color:#6B6B6B; font-size:13px;">Create, configure, and monitor your voice agents.</p>
         </div>
         <button class="btn btn-primary btn-large" id="createAgentBtn" type="button">+ Create New Agent</button>
       </div>
@@ -939,7 +954,7 @@ const AGENTS = [
     card.className = 'am-agent-card';
     card.style.setProperty('--accent', a.accent);
     card.style.setProperty('--accent-soft', a.accent + '40');
-    const sentimentColor = a.sentiment >= 0.2 ? '#10B981' : a.sentiment <= -0.2 ? '#EF4444' : '#8A8A8A';
+    const sentimentColor = a.sentiment >= 0.2 ? '#10B981' : a.sentiment <= -0.2 ? '#EF4444' : '#6B6B6B';
     const containmentColor = a.containment >= 80 ? '#10B981' : a.containment >= 60 ? '#F59E0B' : '#EF4444';
     card.innerHTML = `
       <div class="am-agent-card-head">
@@ -1160,7 +1175,7 @@ renderTable(AGENTS);
     Array.from(files).forEach((f) => {
       const li = document.createElement('li');
       const sizeKb = (f.size / 1024).toFixed(1);
-      li.innerHTML = `<span>${f.name}</span><span style="margin-left:auto;color:#5F5F5F;font-size:11px;">${sizeKb} KB</span>`;
+      li.innerHTML = `<span>${f.name}</span><span style="margin-left:auto;color:#9A938A;font-size:11px;">${sizeKb} KB</span>`;
       fileList.appendChild(li);
     });
   }

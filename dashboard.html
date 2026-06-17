@@ -6,10 +6,10 @@
 <title>Cynea Voice Engine — Operations Center</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=DM+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Syne:wght@600;700;800&family=DM+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
 *, *::before, *::after { box-sizing: border-box; }
-html, body { margin: 0; padding: 0; background: #050505; color: #F5F5F5; }
+html, body { margin: 0; padding: 0; background: #F5F1EA; color: #1A1A1A; }
 body {
   font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   font-size: 14px; line-height: 1.5;
@@ -18,7 +18,7 @@ body {
   background:
     radial-gradient(1200px 600px at 0% -10%, #00D4FF0F, transparent 60%),
     radial-gradient(1000px 500px at 100% -10%, #00D4FF06, transparent 60%),
-    #050505;
+    #F5F1EA;
 }
 main { max-width: 1240px; margin: 0 auto; padding: 40px 32px 80px; }
 
@@ -38,20 +38,20 @@ main { max-width: 1240px; margin: 0 auto; padding: 40px 32px 80px; }
 .brand-mark.small { font-size: 13px; letter-spacing: 0.16em; }
 .brand-tag {
   font-family: 'Syne', sans-serif; font-weight: 600;
-  font-size: 11px; letter-spacing: 0.32em; color: #8A8A8A;
+  font-size: 11px; letter-spacing: 0.32em; color: #6B6B6B;
 }
 .hero-controls { display: flex; gap: 8px; align-items: center; }
 .clock {
   font-family: 'JetBrains Mono', monospace; font-size: 13px; font-weight: 500;
-  color: #8A8A8A; padding: 6px 10px;
-  border: 1px solid #1E1E1E; border-radius: 8px;
-  background: #0E0E0E;
+  color: #6B6B6B; padding: 6px 10px;
+  border: 1px solid #E4DED2; border-radius: 8px;
+  background: #FBF8F2;
   font-feature-settings: "tnum" 1;
 }
 .btn {
   font-family: inherit; font-weight: 500; font-size: 13px;
   padding: 7px 14px; border-radius: 8px; cursor: pointer;
-  border: 1px solid #1E1E1E; background: #0E0E0E; color: #F5F5F5;
+  border: 1px solid #E4DED2; background: #FBF8F2; color: #1A1A1A;
   transition: border-color 120ms ease, background 120ms ease, transform 120ms ease;
 }
 .btn:hover { border-color: #00D4FF77; }
@@ -71,10 +71,10 @@ h1 {
   letter-spacing: -0.01em;
 }
 .subtitle { font-size: 17px; margin: 0 0 4px; font-weight: 500; }
-.subtitle .sep { color: #5F5F5F; margin: 0 8px; }
+.subtitle .sep { color: #9A938A; margin: 0 8px; }
 .daterange {
   font-family: 'JetBrains Mono', monospace;
-  font-size: 12px; color: #8A8A8A; margin: 0;
+  font-size: 12px; color: #6B6B6B; margin: 0;
 }
 
 .pill {
@@ -85,7 +85,7 @@ h1 {
 }
 .pill-green { color: #10B981; border-color: #10B98133; background: #10B98114; }
 .pill-amber { color: #F59E0B; border-color: #F59E0B33; background: #F59E0B14; }
-.pill-muted { color: #8A8A8A; border-color: #8A8A8A33; background: #8A8A8A14; }
+.pill-muted { color: #6B6B6B; border-color: #6B6B6B33; background: #6B6B6B14; }
 
 /* ── KPI cards ──────────────────────────────────────────────────── */
 .kpis {
@@ -96,8 +96,8 @@ h1 {
 @media (max-width: 540px) { .kpis { grid-template-columns: 1fr; } }
 
 .card {
-  background: #111111;
-  border: 1px solid #1E1E1E;
+  background: #FFFFFF;
+  border: 1px solid #E4DED2;
   border-radius: 14px;
   padding: 20px;
   position: relative;
@@ -105,7 +105,7 @@ h1 {
 }
 .kpi {
   padding: 22px 22px 18px;
-  background: linear-gradient(160deg, #111111 0%, #161616 100%);
+  background: linear-gradient(160deg, #FFFFFF 0%, #F4EFE6 100%);
 }
 .kpi::before {
   content: ""; position: absolute; inset: 0; pointer-events: none;
@@ -113,7 +113,7 @@ h1 {
 }
 .kpi .label {
   font-size: 11px; text-transform: uppercase; letter-spacing: 0.12em;
-  color: #8A8A8A; font-weight: 600;
+  color: #6B6B6B; font-weight: 600;
 }
 .kpi .value {
   font-family: 'JetBrains Mono', monospace; font-weight: 500;
@@ -125,11 +125,11 @@ h1 {
 .trend {
   font-family: 'JetBrains Mono', monospace; font-size: 12px; font-weight: 500;
 }
-.sub { font-size: 12px; color: #5F5F5F; text-align: right; }
+.sub { font-size: 12px; color: #9A938A; text-align: right; }
 
 .meter {
   position: relative; height: 4px; margin-top: 12px;
-  background: #2A2A2A; border-radius: 999px; overflow: visible;
+  background: #DED7C9; border-radius: 999px; overflow: visible;
 }
 .meter-bar {
   height: 100%; border-radius: 999px;
@@ -149,10 +149,10 @@ h1 {
 @media (max-width: 900px) { .monitor-grid { grid-template-columns: repeat(2, 1fr); } }
 .monitor-cell {
   padding: 18px 22px;
-  border-right: 1px solid #1E1E1E;
+  border-right: 1px solid #E4DED2;
 }
 .monitor-cell:last-child { border-right: none; }
-.monitor-label { font-size: 11px; text-transform: uppercase; letter-spacing: 0.1em; color: #8A8A8A; font-weight: 600; }
+.monitor-label { font-size: 11px; text-transform: uppercase; letter-spacing: 0.1em; color: #6B6B6B; font-weight: 600; }
 .monitor-value {
   display: flex; align-items: baseline; gap: 8px;
   margin-top: 8px;
@@ -160,7 +160,7 @@ h1 {
 .value-num {
   font-family: 'JetBrains Mono', monospace; font-size: 22px; font-weight: 500;
 }
-.monitor-sub { font-size: 11px; color: #5F5F5F; margin-top: 4px; }
+.monitor-sub { font-size: 11px; color: #9A938A; margin-top: 4px; }
 .pulse {
   width: 8px; height: 8px; border-radius: 50%; background: #10B981;
   box-shadow: 0 0 0 0 #10B981AA;
@@ -174,20 +174,20 @@ h1 {
 
 /* ── panels ──────────────────────────────────────────────────────── */
 .panel {
-  background: #111111; border: 1px solid #1E1E1E;
+  background: #FFFFFF; border: 1px solid #E4DED2;
   border-radius: 14px; padding: 0; margin-bottom: 24px;
 }
 .panel-head {
   display: flex; align-items: baseline; justify-content: space-between;
-  padding: 18px 22px 12px; border-bottom: 1px solid #1E1E1E;
+  padding: 18px 22px 12px; border-bottom: 1px solid #E4DED2;
 }
 .panel-head h2 {
   font-family: 'Syne', sans-serif; font-weight: 700;
   font-size: 14px; margin: 0; letter-spacing: 0.06em;
   text-transform: uppercase;
 }
-.muted { color: #8A8A8A; font-size: 13px; }
-.dim { color: #5F5F5F; }
+.muted { color: #6B6B6B; font-size: 13px; }
+.dim { color: #9A938A; }
 .small { font-size: 11px; }
 
 /* ── charts ──────────────────────────────────────────────────────── */
@@ -206,7 +206,7 @@ h1 {
   transition: height 700ms cubic-bezier(.2,.8,.2,1);
   box-shadow: inset 0 -1px 0 0 #00D4FF33;
 }
-.bar-x { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: #8A8A8A; }
+.bar-x { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: #6B6B6B; }
 
 .line-chart { width: 100%; height: 160px; }
 .chart-pie-wrap { display: flex; align-items: center; gap: 18px; }
@@ -216,7 +216,7 @@ h1 {
 }
 .pie-hole {
   position: absolute; inset: 24px; border-radius: 50%;
-  background: #111111;
+  background: #FFFFFF;
   display: flex; flex-direction: column; align-items: center; justify-content: center;
   text-align: center;
 }
@@ -245,7 +245,7 @@ h1 {
 .value-md { font-size: 22px; font-weight: 500; margin-top: 2px; }
 .agent-bar {
   position: relative; height: 6px;
-  background: #2A2A2A; border-radius: 999px;
+  background: #DED7C9; border-radius: 999px;
 }
 .agent-bar-fill { height: 100%; border-radius: 999px; transition: width 800ms ease; }
 .agent-bar-target { position: absolute; top: -3px; width: 2px; height: 12px; background: #F59E0B; }
@@ -256,38 +256,38 @@ h1 {
 table { width: 100%; border-collapse: collapse; }
 thead th {
   text-align: left; font-size: 11px; text-transform: uppercase;
-  letter-spacing: 0.08em; color: #8A8A8A; font-weight: 600;
-  padding: 14px 22px; border-bottom: 1px solid #1E1E1E;
-  background: #0E0E0E;
+  letter-spacing: 0.08em; color: #6B6B6B; font-weight: 600;
+  padding: 14px 22px; border-bottom: 1px solid #E4DED2;
+  background: #FBF8F2;
   cursor: pointer; user-select: none;
 }
 thead th[aria-sort="ascending"], thead th[aria-sort="descending"] { color: #00D4FF; }
 thead th.num { text-align: right; }
 tbody td {
   padding: 12px 22px; font-size: 13px;
-  border-bottom: 1px solid #1E1E1E;
+  border-bottom: 1px solid #E4DED2;
   vertical-align: middle;
 }
 .call-row { cursor: pointer; }
 .call-row:hover td { background: #00D4FF08; }
 .call-row.expanded td { background: #00D4FF10; }
 .call-detail td {
-  background: #0E0E0E; padding: 18px 22px;
-  border-bottom: 1px solid #1E1E1E;
+  background: #FBF8F2; padding: 18px 22px;
+  border-bottom: 1px solid #E4DED2;
 }
 .detail-grid {
   display: grid; grid-template-columns: 1.4fr 1fr; gap: 22px;
 }
 @media (max-width: 800px) { .detail-grid { grid-template-columns: 1fr; } }
 .detail-kvs { display: grid; grid-template-columns: 1fr 1fr; gap: 6px 18px; }
-.kv { display: flex; justify-content: space-between; gap: 8px; padding: 4px 0; border-bottom: 1px dashed #1E1E1E; }
+.kv { display: flex; justify-content: space-between; gap: 8px; padding: 4px 0; border-bottom: 1px dashed #E4DED2; }
 .kv:last-child { border-bottom: none; }
 .detail-section-label {
   font-size: 11px; text-transform: uppercase; letter-spacing: 0.1em;
-  color: #8A8A8A; font-weight: 600; margin-bottom: 8px;
+  color: #6B6B6B; font-weight: 600; margin-bottom: 8px;
 }
 .cost-row { display: grid; grid-template-columns: 80px 1fr 60px; gap: 10px; align-items: center; padding: 4px 0; }
-.cost-bar { background: #2A2A2A; height: 6px; border-radius: 999px; overflow: hidden; }
+.cost-bar { background: #DED7C9; height: 6px; border-radius: 999px; overflow: hidden; }
 .cost-bar > div { height: 100%; transition: width 600ms ease; }
 
 .num { text-align: right; font-family: 'JetBrains Mono', monospace; font-feature-settings: "tnum" 1; }
@@ -296,14 +296,14 @@ tbody td {
 /* sentiment bar in row */
 .sbar {
   position: relative; width: 110px; height: 8px; display: inline-block;
-  background: #2A2A2A; border-radius: 999px; vertical-align: middle;
+  background: #DED7C9; border-radius: 999px; vertical-align: middle;
 }
-.sbar-axis { position: absolute; left: 50%; top: -2px; bottom: -2px; width: 1px; background: #2A2A2A; }
+.sbar-axis { position: absolute; left: 50%; top: -2px; bottom: -2px; width: 1px; background: #DED7C9; }
 .sbar-fill { position: absolute; top: 0; bottom: 0; border-radius: 999px; }
 .sbar-pos { left: 50%; }
 .sbar-neg { right: 50%; }
 
-.empty { padding: 44px 22px; text-align: center; color: #8A8A8A; }
+.empty { padding: 44px 22px; text-align: center; color: #6B6B6B; }
 
 .badge {
   display: inline-flex; align-items: center; gap: 6px;
@@ -324,7 +324,7 @@ tbody td {
 footer {
   display: flex; justify-content: space-between; align-items: center;
   margin-top: 32px; padding-top: 18px;
-  border-top: 1px solid #1E1E1E;
+  border-top: 1px solid #E4DED2;
   font-size: 12px;
 }
 
@@ -354,25 +354,25 @@ body.demo-mode .hero::after {
 /* ── print stylesheet ────────────────────────────────────────────── */
 @media print {
   @page { margin: 14mm; }
-  body { background: white; color: #111; }
+  body { background: white; color: #FFFFFF; }
   .hero-controls, .export-row, #toast { display: none !important; }
   .card, .panel, .pie-hole {
-    background: white !important; border-color: #ddd !important; color: #111 !important;
+    background: white !important; border-color: #ddd !important; color: #FFFFFF !important;
   }
   .kpi::before, .hero::after, body { background: white !important; }
   .label, .muted, .dim, .sub, .bar-x, thead th, .monitor-label, .agent-foot, .small {
     color: #555 !important;
   }
   .value, .value-num, .value-md, .pie-total, .mono, .num, .brand-mark, .brand-tag {
-    color: #111 !important; text-shadow: none !important;
+    color: #FFFFFF !important; text-shadow: none !important;
   }
-  .pill, .badge { color: #111 !important; background: white !important; border-color: #888 !important; }
+  .pill, .badge { color: #FFFFFF !important; background: white !important; border-color: #888 !important; }
   .meter, .agent-bar, .sbar, .cost-bar { background: #eee !important; }
   .meter-bar, .agent-bar-fill, .sbar-fill, .cost-bar > div { background: #444 !important; }
-  thead th { background: #f5f5f5 !important; color: #111 !important; }
+  thead th { background: #1A1A1A !important; color: #FFFFFF !important; }
   tbody td, .call-detail td { background: white !important; border-color: #ddd !important; }
   .pulse { display: none; }
-  h1 { color: #111 !important; }
+  h1 { color: #FFFFFF !important; }
   .panel, .card, .kpi { break-inside: avoid; }
   .charts-grid { break-inside: avoid; }
 }
@@ -399,8 +399,8 @@ body.demo-mode .hero::after {
   gap: 24px; flex-wrap: wrap;
   margin: 24px 0;
   padding: 18px 22px;
-  background: linear-gradient(160deg, #111111 0%, #161616 100%);
-  border: 1px solid #1E1E1E; border-radius: 14px;
+  background: linear-gradient(160deg, #FFFFFF 0%, #F4EFE6 100%);
+  border: 1px solid #E4DED2; border-radius: 14px;
   position: relative; overflow: hidden;
 }
 .cc-bar::before {
@@ -426,13 +426,13 @@ body.demo-mode .hero::after {
 .cc-bar-stat { display: flex; flex-direction: column; gap: 2px; min-width: 86px; }
 .cc-stat-label {
   font-size: 11px; text-transform: uppercase; letter-spacing: 0.08em;
-  color: #8A8A8A; font-weight: 600;
+  color: #6B6B6B; font-weight: 600;
 }
 .cc-stat-value {
   font-size: 22px; font-weight: 600; color: #00D4FF;
   font-feature-settings: "tnum" 1; letter-spacing: -0.01em;
 }
-.cc-bar-clock .cc-stat-value { color: #F5F5F5; }
+.cc-bar-clock .cc-stat-value { color: #1A1A1A; }
 @media (max-width: 720px) {
   .cc-bar-stats { gap: 16px; }
   .cc-bar-stat { min-width: 70px; }
@@ -448,8 +448,8 @@ body.demo-mode .hero::after {
 @media (max-width: 540px)  { .cc-agent-grid { grid-template-columns: 1fr; } }
 .cc-agent {
   padding: 18px;
-  background: linear-gradient(160deg, #111111 0%, #161616 100%);
-  border: 1px solid #1E1E1E; border-radius: 14px;
+  background: linear-gradient(160deg, #FFFFFF 0%, #F4EFE6 100%);
+  border: 1px solid #E4DED2; border-radius: 14px;
   position: relative; overflow: hidden;
 }
 .cc-agent::before {
@@ -478,11 +478,11 @@ body.demo-mode .hero::after {
   font-feature-settings: "tnum" 1; letter-spacing: -0.01em;
   margin-bottom: 12px; position: relative; z-index: 1;
 }
-.cc-agent-timer-idle { color: #5F5F5F; font-weight: 500; }
+.cc-agent-timer-idle { color: #9A938A; font-weight: 500; }
 .cc-agent-foot {
   display: flex; justify-content: space-between; align-items: baseline;
   padding-top: 10px;
-  border-top: 1px solid #1E1E1E;
+  border-top: 1px solid #E4DED2;
   position: relative; z-index: 1;
 }
 
@@ -493,12 +493,12 @@ body.demo-mode .hero::after {
   grid-template-columns: 36px 1fr auto auto;
   gap: 14px; align-items: center;
   padding: 12px 0;
-  border-bottom: 1px solid #1E1E1E;
+  border-bottom: 1px solid #E4DED2;
   font-size: 13px;
 }
 .cc-queue-row:last-child { border-bottom: none; }
 .cc-queue-pos { color: #00D4FF; font-weight: 600; }
-.cc-queue-caller { color: #F5F5F5; }
+.cc-queue-caller { color: #1A1A1A; }
 .cc-queue-dept { font-size: 11px; }
 .cc-queue-wait {
   color: #F59E0B; font-weight: 600;
@@ -514,7 +514,7 @@ body.demo-mode .hero::after {
 @media (max-width: 540px)  { .cc-dept-grid { grid-template-columns: 1fr; } }
 .cc-dept-card {
   padding: 18px; border-radius: 14px;
-  background: #111111; border: 1px solid #1E1E1E;
+  background: #FFFFFF; border: 1px solid #E4DED2;
 }
 .cc-dept-head {
   display: flex; justify-content: space-between; align-items: center;
@@ -535,7 +535,7 @@ body.demo-mode .hero::after {
 .cc-spark {
   display: flex; align-items: flex-end; gap: 3px;
   height: 32px; padding-top: 4px;
-  border-top: 1px solid #1E1E1E;
+  border-top: 1px solid #E4DED2;
 }
 .cc-spark-bar {
   flex: 1; min-height: 3px;
@@ -556,18 +556,18 @@ body.demo-mode .hero::after {
 }
 .cc-roi-side {
   padding: 18px;
-  background: #0E0E0E; border: 1px solid #1E1E1E;
+  background: #FBF8F2; border: 1px solid #E4DED2;
   border-radius: 12px;
   display: flex; flex-direction: column; gap: 6px;
 }
 .cc-roi-cynea {
   border-color: #00D4FF33;
-  background: linear-gradient(160deg, #0E0E0E 0%, #00D4FF0E 100%);
+  background: linear-gradient(160deg, #FBF8F2 0%, #00D4FF0E 100%);
 }
 .cc-roi-label {
   text-transform: uppercase; letter-spacing: 0.08em; font-weight: 600;
 }
-.cc-roi-formula { font-size: 12px; color: #8A8A8A; }
+.cc-roi-formula { font-size: 12px; color: #6B6B6B; }
 .cc-roi-amount {
   font-size: 32px; font-weight: 600; letter-spacing: -0.02em;
   font-feature-settings: "tnum" 1;
@@ -576,10 +576,10 @@ body.demo-mode .hero::after {
   align-self: center;
   font-family: 'Syne', sans-serif; font-weight: 700;
   font-size: 14px; letter-spacing: 0.16em;
-  text-transform: uppercase; color: #8A8A8A;
+  text-transform: uppercase; color: #6B6B6B;
 }
 .cc-roi-savings {
-  border-top: 1px solid #1E1E1E;
+  border-top: 1px solid #E4DED2;
   padding: 18px 22px 22px;
   text-align: center;
 }
@@ -592,7 +592,7 @@ body.demo-mode .hero::after {
   margin: 6px 0 8px;
   font-feature-settings: "tnum" 1;
 }
-.cc-roi-savings-pct { color: #F5F5F5; font-size: 13px; }
+.cc-roi-savings-pct { color: #1A1A1A; font-size: 13px; }
 
 /* heatmap ─────────────────────────────────────────────────────────── */
 .cc-heatmap { padding: 0; }
@@ -613,7 +613,7 @@ body.demo-mode .hero::after {
   transition: opacity 200ms ease;
 }
 .cc-heat-col:hover .cc-heat-bar { opacity: 1 !important; }
-.cc-heat-label { font-size: 9px; color: #8A8A8A; }
+.cc-heat-label { font-size: 9px; color: #6B6B6B; }
 @media (max-width: 720px) {
   .cc-heat-label { display: none; }
   .cc-heat-chart { height: 140px; padding: 14px 16px 18px; }
@@ -624,22 +624,22 @@ body.demo-mode .hero::after {
 .cc-feed-list {
   max-height: 320px; overflow-y: auto;
   padding: 8px 22px 18px;
-  scrollbar-width: thin; scrollbar-color: #2A2A2A transparent;
+  scrollbar-width: thin; scrollbar-color: #DED7C9 transparent;
 }
 .cc-feed-list::-webkit-scrollbar { width: 6px; }
-.cc-feed-list::-webkit-scrollbar-thumb { background: #2A2A2A; border-radius: 999px; }
+.cc-feed-list::-webkit-scrollbar-thumb { background: #DED7C9; border-radius: 999px; }
 .cc-feed-row {
   display: grid; grid-template-columns: 86px 78px 1fr;
   gap: 14px; align-items: baseline;
   padding: 10px 0;
-  border-bottom: 1px solid #1E1E1E;
+  border-bottom: 1px solid #E4DED2;
   font-size: 13px;
   animation: ccFeedIn 320ms ease;
 }
 .cc-feed-row:last-child { border-bottom: none; }
-.cc-feed-time { color: #8A8A8A; font-size: 11px; }
+.cc-feed-time { color: #6B6B6B; font-size: 11px; }
 .cc-feed-actor { color: #00D4FF; font-size: 12px; }
-.cc-feed-msg { color: #F5F5F5; }
+.cc-feed-msg { color: #1A1A1A; }
 @keyframes ccFeedIn {
   from { opacity: 0; transform: translateY(-4px); }
   to   { opacity: 1; transform: translateY(0); }
@@ -672,21 +672,36 @@ body.demo-mode .hero::after {
 /* print ───────────────────────────────────────────────────────────── */
 @media print {
   .cc-bar, .cc-roi-savings-num {
-    background: white !important; color: #111 !important;
+    background: white !important; color: #FFFFFF !important;
   }
   .cc-heat-bar, .cc-spark-bar {
     background: #444 !important;
   }
   .cc-status-pill, .cc-dept-badge {
-    background: white !important; color: #111 !important; border-color: #888 !important;
+    background: white !important; color: #FFFFFF !important; border-color: #888 !important;
   }
   .cc-agent::before, .cc-bar::before { display: none !important; }
   .cc-agent, .cc-dept-card, .cc-feed, .cc-queue, .cc-roi, .cc-heatmap {
-    background: white !important; color: #111 !important; border-color: #ddd !important;
+    background: white !important; color: #FFFFFF !important; border-color: #ddd !important;
   }
   .cc-roi-side, .cc-roi-cynea { background: #fafafa !important; }
-  .cc-stat-value, .cc-agent-timer, .cc-roi-amount, .cc-roi-savings-num { color: #111 !important; }
+  .cc-stat-value, .cc-agent-timer, .cc-roi-amount, .cc-roi-savings-num { color: #FFFFFF !important; }
   .cc-feed-list { max-height: none !important; overflow: visible !important; }
+}
+
+/* ════ CY-LIGHT — ElevenLabs-style light skin (Cynea) ════ */
+body{font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;}
+h1,h2,h3,h4{font-family:'Inter',sans-serif;letter-spacing:-0.02em;}
+.brand-mark{font-family:'Inter',sans-serif;font-weight:700;letter-spacing:0.04em;color:#1A1A1A;text-shadow:none;}
+.brand-tag{color:#9A938A;}
+.btn-primary{background:#0A0A0A;color:#FFFFFF;border-color:#0A0A0A;}
+.btn-primary:hover{background:#222;border-color:#222;filter:none;box-shadow:0 8px 24px rgba(0,0,0,0.16);}
+
+/* ════ CY-LIGHT · wow polish ════ */
+html{scroll-behavior:smooth;}
+@media (prefers-reduced-motion:no-preference){
+  body{animation:cyPageIn 0.55s cubic-bezier(.2,.8,.2,1) both;}
+  @keyframes cyPageIn{from{opacity:0;}to{opacity:1;}}
 }
 </style>
 </head>
@@ -976,7 +991,7 @@ body.demo-mode .hero::after {
     </div>
     <div class="cc-dept-stat">
       <span class="muted small">Sentiment</span>
-      <span class="mono" style="color:#8A8A8A">+0.12</span>
+      <span class="mono" style="color:#6B6B6B">+0.12</span>
     </div>
   </div>
   <div class="cc-spark" aria-hidden="true"><div class="cc-spark-bar" style="height:8%; background:#10B981"></div><div class="cc-spark-bar" style="height:17%; background:#10B981"></div><div class="cc-spark-bar" style="height:25%; background:#10B981"></div><div class="cc-spark-bar" style="height:42%; background:#10B981"></div><div class="cc-spark-bar" style="height:58%; background:#10B981"></div><div class="cc-spark-bar" style="height:75%; background:#10B981"></div><div class="cc-spark-bar" style="height:92%; background:#10B981"></div><div class="cc-spark-bar" style="height:100%; background:#10B981"></div><div class="cc-spark-bar" style="height:92%; background:#10B981"></div><div class="cc-spark-bar" style="height:75%; background:#10B981"></div><div class="cc-spark-bar" style="height:58%; background:#10B981"></div><div class="cc-spark-bar" style="height:50%; background:#10B981"></div></div>
@@ -997,7 +1012,7 @@ body.demo-mode .hero::after {
     </div>
     <div class="cc-dept-stat">
       <span class="muted small">Sentiment</span>
-      <span class="mono" style="color:#8A8A8A">-0.08</span>
+      <span class="mono" style="color:#6B6B6B">-0.08</span>
     </div>
   </div>
   <div class="cc-spark" aria-hidden="true"><div class="cc-spark-bar" style="height:0%; background:#F59E0B"></div><div class="cc-spark-bar" style="height:25%; background:#F59E0B"></div><div class="cc-spark-bar" style="height:25%; background:#F59E0B"></div><div class="cc-spark-bar" style="height:50%; background:#F59E0B"></div><div class="cc-spark-bar" style="height:75%; background:#F59E0B"></div><div class="cc-spark-bar" style="height:75%; background:#F59E0B"></div><div class="cc-spark-bar" style="height:100%; background:#F59E0B"></div><div class="cc-spark-bar" style="height:100%; background:#F59E0B"></div><div class="cc-spark-bar" style="height:75%; background:#F59E0B"></div><div class="cc-spark-bar" style="height:75%; background:#F59E0B"></div><div class="cc-spark-bar" style="height:50%; background:#F59E0B"></div><div class="cc-spark-bar" style="height:50%; background:#F59E0B"></div></div>
@@ -1170,11 +1185,11 @@ body.demo-mode .hero::after {
     <header class="panel-head"><h2>Sentiment trend</h2><span class="muted">Daily average</span></header>
     <div class="chart-body">
 <svg viewBox="0 0 360 140" preserveAspectRatio="xMidYMid meet" class="line-chart" role="img" aria-label="Sentiment trend chart">
-  <line x1="28" x2="348" y1="116.0" y2="116.0" stroke="#1E1E1E" stroke-width="1" stroke-dasharray="2 4"/><line x1="28" x2="348" y1="66.0" y2="66.0" stroke="#1E1E1E" stroke-width="1" stroke-dasharray="2 4"/><line x1="28" x2="348" y1="16.0" y2="16.0" stroke="#1E1E1E" stroke-width="1" stroke-dasharray="2 4"/>
-  <text x="22" y="119.0" text-anchor="end" fill="#8A8A8A" font-size="10" font-family="JetBrains Mono, monospace">-1.0</text><text x="22" y="69.0" text-anchor="end" fill="#8A8A8A" font-size="10" font-family="JetBrains Mono, monospace">+0.0</text><text x="22" y="19.0" text-anchor="end" fill="#8A8A8A" font-size="10" font-family="JetBrains Mono, monospace">+1.0</text>
+  <line x1="28" x2="348" y1="116.0" y2="116.0" stroke="#E4DED2" stroke-width="1" stroke-dasharray="2 4"/><line x1="28" x2="348" y1="66.0" y2="66.0" stroke="#E4DED2" stroke-width="1" stroke-dasharray="2 4"/><line x1="28" x2="348" y1="16.0" y2="16.0" stroke="#E4DED2" stroke-width="1" stroke-dasharray="2 4"/>
+  <text x="22" y="119.0" text-anchor="end" fill="#6B6B6B" font-size="10" font-family="JetBrains Mono, monospace">-1.0</text><text x="22" y="69.0" text-anchor="end" fill="#6B6B6B" font-size="10" font-family="JetBrains Mono, monospace">+0.0</text><text x="22" y="19.0" text-anchor="end" fill="#6B6B6B" font-size="10" font-family="JetBrains Mono, monospace">+1.0</text>
   <polyline points="28.0,47.2 81.3,55.6 134.7,51.0 188.0,66.0 241.3,66.0 294.7,66.0 348.0,66.0" fill="none" stroke="#00D4FF" stroke-width="2" />
   <circle cx="28.0" cy="47.2" r="3" fill="#00D4FF" /><circle cx="81.3" cy="55.6" r="3" fill="#00D4FF" /><circle cx="134.7" cy="51.0" r="3" fill="#00D4FF" /><circle cx="188.0" cy="66.0" r="3" fill="#00D4FF" /><circle cx="241.3" cy="66.0" r="3" fill="#00D4FF" /><circle cx="294.7" cy="66.0" r="3" fill="#00D4FF" /><circle cx="348.0" cy="66.0" r="3" fill="#00D4FF" />
-  <text x="28.0" y="134" text-anchor="middle" fill="#8A8A8A" font-size="10" font-family="JetBrains Mono, monospace">Sun</text><text x="81.3" y="134" text-anchor="middle" fill="#8A8A8A" font-size="10" font-family="JetBrains Mono, monospace">Mon</text><text x="134.7" y="134" text-anchor="middle" fill="#8A8A8A" font-size="10" font-family="JetBrains Mono, monospace">Tue</text><text x="188.0" y="134" text-anchor="middle" fill="#8A8A8A" font-size="10" font-family="JetBrains Mono, monospace">Wed</text><text x="241.3" y="134" text-anchor="middle" fill="#8A8A8A" font-size="10" font-family="JetBrains Mono, monospace">Thu</text><text x="294.7" y="134" text-anchor="middle" fill="#8A8A8A" font-size="10" font-family="JetBrains Mono, monospace">Fri</text><text x="348.0" y="134" text-anchor="middle" fill="#8A8A8A" font-size="10" font-family="JetBrains Mono, monospace">Sat</text>
+  <text x="28.0" y="134" text-anchor="middle" fill="#6B6B6B" font-size="10" font-family="JetBrains Mono, monospace">Sun</text><text x="81.3" y="134" text-anchor="middle" fill="#6B6B6B" font-size="10" font-family="JetBrains Mono, monospace">Mon</text><text x="134.7" y="134" text-anchor="middle" fill="#6B6B6B" font-size="10" font-family="JetBrains Mono, monospace">Tue</text><text x="188.0" y="134" text-anchor="middle" fill="#6B6B6B" font-size="10" font-family="JetBrains Mono, monospace">Wed</text><text x="241.3" y="134" text-anchor="middle" fill="#6B6B6B" font-size="10" font-family="JetBrains Mono, monospace">Thu</text><text x="294.7" y="134" text-anchor="middle" fill="#6B6B6B" font-size="10" font-family="JetBrains Mono, monospace">Fri</text><text x="348.0" y="134" text-anchor="middle" fill="#6B6B6B" font-size="10" font-family="JetBrains Mono, monospace">Sat</text>
 </svg>
 </div>
   </article>
@@ -1322,7 +1337,7 @@ body.demo-mode .hero::after {
 </div>
 </section>
 
-  <section class="panel"><header class="panel-head"><h2>Call history</h2><span class="muted">15 calls · click a row to expand</span></header><div class="table-wrap"><table id="callsTable"><thead><tr><th data-sort="time" aria-sort="descending">Time ⇅</th><th data-sort="agent">Agent ⇅</th><th data-sort="caller">Caller ⇅</th><th data-sort="duration" class="num">Duration ⇅</th><th data-sort="turns" class="num">Turns ⇅</th><th data-sort="sentiment">Sentiment ⇅</th><th data-sort="cost" class="num">Cost ⇅</th><th data-sort="status">Status ⇅</th></tr></thead><tbody><tr class="call-row" data-time="1777347983" data-agent="Kwame" data-caller="John" data-duration="27" data-turns="7" data-sentiment="0.150" data-cost="4.1940" data-status="Resolved"><td class="mono">Apr 28 · 06:46</td><td>Kwame</td><td>John</td><td class="num">27s</td><td class="num">7</td><td><div class="sbar"><div class="sbar-axis"></div><div class="sbar-fill sbar-pos" style="width:7.5%;background:#8A8A8A"></div></div><span class="mono small">+0.15</span></td><td class="num">4.2¢</td><td><span class="pill" style="color:#10B981;border-color:#10B98133;background:#10B98114">Resolved</span></td></tr>
+  <section class="panel"><header class="panel-head"><h2>Call history</h2><span class="muted">15 calls · click a row to expand</span></header><div class="table-wrap"><table id="callsTable"><thead><tr><th data-sort="time" aria-sort="descending">Time ⇅</th><th data-sort="agent">Agent ⇅</th><th data-sort="caller">Caller ⇅</th><th data-sort="duration" class="num">Duration ⇅</th><th data-sort="turns" class="num">Turns ⇅</th><th data-sort="sentiment">Sentiment ⇅</th><th data-sort="cost" class="num">Cost ⇅</th><th data-sort="status">Status ⇅</th></tr></thead><tbody><tr class="call-row" data-time="1777347983" data-agent="Kwame" data-caller="John" data-duration="27" data-turns="7" data-sentiment="0.150" data-cost="4.1940" data-status="Resolved"><td class="mono">Apr 28 · 06:46</td><td>Kwame</td><td>John</td><td class="num">27s</td><td class="num">7</td><td><div class="sbar"><div class="sbar-axis"></div><div class="sbar-fill sbar-pos" style="width:7.5%;background:#6B6B6B"></div></div><span class="mono small">+0.15</span></td><td class="num">4.2¢</td><td><span class="pill" style="color:#10B981;border-color:#10B98133;background:#10B98114">Resolved</span></td></tr>
 <tr class="call-detail" hidden>
   <td colspan="8">
     <div class="detail-grid">
@@ -1382,7 +1397,7 @@ body.demo-mode .hero::after {
     </div>
   </td>
 </tr>
-<tr class="call-row" data-time="1777298943" data-agent="Amina" data-caller="Sarah" data-duration="211" data-turns="29" data-sentiment="0.050" data-cost="25.8633" data-status="Escalated"><td class="mono">Apr 27 · 17:09</td><td>Amina</td><td>Sarah</td><td class="num">3m 31s</td><td class="num">29</td><td><div class="sbar"><div class="sbar-axis"></div><div class="sbar-fill sbar-pos" style="width:2.5%;background:#8A8A8A"></div></div><span class="mono small">+0.05</span></td><td class="num">25.9¢</td><td><span class="pill" style="color:#F59E0B;border-color:#F59E0B33;background:#F59E0B14">Escalated</span></td></tr>
+<tr class="call-row" data-time="1777298943" data-agent="Amina" data-caller="Sarah" data-duration="211" data-turns="29" data-sentiment="0.050" data-cost="25.8633" data-status="Escalated"><td class="mono">Apr 27 · 17:09</td><td>Amina</td><td>Sarah</td><td class="num">3m 31s</td><td class="num">29</td><td><div class="sbar"><div class="sbar-axis"></div><div class="sbar-fill sbar-pos" style="width:2.5%;background:#6B6B6B"></div></div><span class="mono small">+0.05</span></td><td class="num">25.9¢</td><td><span class="pill" style="color:#F59E0B;border-color:#F59E0B33;background:#F59E0B14">Escalated</span></td></tr>
 <tr class="call-detail" hidden>
   <td colspan="8">
     <div class="detail-grid">
@@ -1442,7 +1457,7 @@ body.demo-mode .hero::after {
     </div>
   </td>
 </tr>
-<tr class="call-row" data-time="1777250713" data-agent="Kwame" data-caller="Otieno" data-duration="22" data-turns="6" data-sentiment="-0.050" data-cost="3.5613" data-status="Abandoned"><td class="mono">Apr 27 · 03:45</td><td>Kwame</td><td>Otieno</td><td class="num">22s</td><td class="num">6</td><td><div class="sbar"><div class="sbar-axis"></div><div class="sbar-fill sbar-neg" style="width:2.5%;background:#8A8A8A"></div></div><span class="mono small">-0.05</span></td><td class="num">3.6¢</td><td><span class="pill" style="color:#EF4444;border-color:#EF444433;background:#EF444414">Abandoned</span></td></tr>
+<tr class="call-row" data-time="1777250713" data-agent="Kwame" data-caller="Otieno" data-duration="22" data-turns="6" data-sentiment="-0.050" data-cost="3.5613" data-status="Abandoned"><td class="mono">Apr 27 · 03:45</td><td>Kwame</td><td>Otieno</td><td class="num">22s</td><td class="num">6</td><td><div class="sbar"><div class="sbar-axis"></div><div class="sbar-fill sbar-neg" style="width:2.5%;background:#6B6B6B"></div></div><span class="mono small">-0.05</span></td><td class="num">3.6¢</td><td><span class="pill" style="color:#EF4444;border-color:#EF444433;background:#EF444414">Abandoned</span></td></tr>
 <tr class="call-detail" hidden>
   <td colspan="8">
     <div class="detail-grid">
@@ -1454,7 +1469,7 @@ body.demo-mode .hero::after {
     </div>
   </td>
 </tr>
-<tr class="call-row" data-time="1777240743" data-agent="Amina" data-caller="Wanjiku" data-duration="105" data-turns="19" data-sentiment="0.100" data-cost="14.1500" data-status="Resolved"><td class="mono">Apr 27 · 00:59</td><td>Amina</td><td>Wanjiku</td><td class="num">1m 45s</td><td class="num">19</td><td><div class="sbar"><div class="sbar-axis"></div><div class="sbar-fill sbar-pos" style="width:5.0%;background:#8A8A8A"></div></div><span class="mono small">+0.10</span></td><td class="num">14.2¢</td><td><span class="pill" style="color:#10B981;border-color:#10B98133;background:#10B98114">Resolved</span></td></tr>
+<tr class="call-row" data-time="1777240743" data-agent="Amina" data-caller="Wanjiku" data-duration="105" data-turns="19" data-sentiment="0.100" data-cost="14.1500" data-status="Resolved"><td class="mono">Apr 27 · 00:59</td><td>Amina</td><td>Wanjiku</td><td class="num">1m 45s</td><td class="num">19</td><td><div class="sbar"><div class="sbar-axis"></div><div class="sbar-fill sbar-pos" style="width:5.0%;background:#6B6B6B"></div></div><span class="mono small">+0.10</span></td><td class="num">14.2¢</td><td><span class="pill" style="color:#10B981;border-color:#10B98133;background:#10B98114">Resolved</span></td></tr>
 <tr class="call-detail" hidden>
   <td colspan="8">
     <div class="detail-grid">
@@ -1466,7 +1481,7 @@ body.demo-mode .hero::after {
     </div>
   </td>
 </tr>
-<tr class="call-row" data-time="1777231583" data-agent="Kwame" data-caller="Adwoa" data-duration="31" data-turns="9" data-sentiment="0.180" data-cost="5.1033" data-status="Resolved"><td class="mono">Apr 26 · 22:26</td><td>Kwame</td><td>Adwoa</td><td class="num">31s</td><td class="num">9</td><td><div class="sbar"><div class="sbar-axis"></div><div class="sbar-fill sbar-pos" style="width:9.0%;background:#8A8A8A"></div></div><span class="mono small">+0.18</span></td><td class="num">5.1¢</td><td><span class="pill" style="color:#10B981;border-color:#10B98133;background:#10B98114">Resolved</span></td></tr>
+<tr class="call-row" data-time="1777231583" data-agent="Kwame" data-caller="Adwoa" data-duration="31" data-turns="9" data-sentiment="0.180" data-cost="5.1033" data-status="Resolved"><td class="mono">Apr 26 · 22:26</td><td>Kwame</td><td>Adwoa</td><td class="num">31s</td><td class="num">9</td><td><div class="sbar"><div class="sbar-axis"></div><div class="sbar-fill sbar-pos" style="width:9.0%;background:#6B6B6B"></div></div><span class="mono small">+0.18</span></td><td class="num">5.1¢</td><td><span class="pill" style="color:#10B981;border-color:#10B98133;background:#10B98114">Resolved</span></td></tr>
 <tr class="call-detail" hidden>
   <td colspan="8">
     <div class="detail-grid">

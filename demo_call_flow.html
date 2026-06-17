@@ -7,7 +7,7 @@
 <meta name="description" content="Listen to a real Cynea AI agent take an anniversary booking — see the live metrics as the call unfolds." />
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=DM+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Syne:wght@600;700;800&family=DM+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
 *, *::before, *::after { box-sizing: border-box; }
 html, body { margin: 0; padding: 0; }
@@ -15,11 +15,11 @@ body {
   font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   font-size: 14px; line-height: 1.55;
   -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale;
-  color: #F5F5F5;
+  color: #1A1A1A;
   background:
     radial-gradient(900px 500px at 0% -10%, rgba(0,212,255,0.10), transparent 60%),
     radial-gradient(800px 460px at 100% -10%, rgba(167,139,250,0.06), transparent 65%),
-    #050505;
+    #F5F1EA;
   min-height: 100vh;
 }
 @media (prefers-reduced-motion: reduce) {
@@ -34,10 +34,10 @@ body {
   position: sticky; top: 0; z-index: 30;
   display: flex; align-items: center; gap: 16px;
   padding: 14px 32px;
-  background: rgba(5,5,5,0.85);
+  background: rgba(245,241,234,0.85);
   backdrop-filter: blur(14px);
   -webkit-backdrop-filter: blur(14px);
-  border-bottom: 1px solid #1E1E1E;
+  border-bottom: 1px solid #E4DED2;
 }
 .nav-brand { display: inline-flex; align-items: baseline; gap: 10px; text-decoration: none; }
 .brand-mark {
@@ -47,15 +47,15 @@ body {
 }
 .brand-tag {
   font-family: 'Syne', sans-serif; font-weight: 600;
-  font-size: 9px; letter-spacing: 0.32em; color: #8A8A8A;
+  font-size: 9px; letter-spacing: 0.32em; color: #6B6B6B;
 }
 .nav-links { list-style: none; padding: 0; margin: 0 auto; display: flex; gap: 26px; }
 .nav-links a {
-  color: #8A8A8A; text-decoration: none; font-size: 13px; font-weight: 500;
+  color: #6B6B6B; text-decoration: none; font-size: 13px; font-weight: 500;
   position: relative; padding-bottom: 2px; transition: color 120ms ease;
 }
-.nav-links a:hover { color: #F5F5F5; }
-.nav-links a.active { color: #F5F5F5; }
+.nav-links a:hover { color: #1A1A1A; }
+.nav-links a.active { color: #1A1A1A; }
 .nav-links a.active::after {
   content: ""; position: absolute; left: 0; right: 0; bottom: -2px;
   height: 1px; background: #00D4FF;
@@ -63,7 +63,7 @@ body {
 .btn {
   font-family: inherit; font-weight: 600; font-size: 13px;
   padding: 9px 18px; border-radius: 999px; cursor: pointer;
-  border: 1px solid #1E1E1E; background: #0E0E0E; color: #F5F5F5;
+  border: 1px solid #E4DED2; background: #FBF8F2; color: #1A1A1A;
   text-decoration: none;
   display: inline-flex; align-items: center; justify-content: center; gap: 8px;
   transition: transform 180ms cubic-bezier(.2,.8,.2,1), box-shadow 220ms ease, filter 120ms ease;
@@ -74,8 +74,8 @@ body {
 .btn-outline:hover { background: rgba(0,212,255,0.08); }
 .btn-primary { background: #00D4FF; color: #001218; border-color: #00D4FF; }
 .btn-primary:hover { box-shadow: 0 0 0 1px #00D4FF, 0 0 24px rgba(0,212,255,0.45); }
-.btn-ghost { background: transparent; color: #8A8A8A; border-color: transparent; }
-.btn-ghost:hover { color: #F5F5F5; }
+.btn-ghost { background: transparent; color: #6B6B6B; border-color: transparent; }
+.btn-ghost:hover { color: #1A1A1A; }
 @media (max-width: 720px) { .nav-links { display: none; } }
 
 /* ── layout ───────────────────────────────────────────────────── */
@@ -93,7 +93,7 @@ main { max-width: 1180px; margin: 0 auto; padding: 48px 32px 80px; }
   font-size: clamp(30px, 4.5vw, 44px); margin: 0 0 12px;
   letter-spacing: -0.01em;
 }
-.demo-hero p { color: #8A8A8A; margin: 0 auto; max-width: 600px; }
+.demo-hero p { color: #6B6B6B; margin: 0 auto; max-width: 600px; }
 
 /* ── stage: phone left, metrics right ─────────────────────────── */
 .demo-stage {
@@ -112,13 +112,13 @@ main { max-width: 1180px; margin: 0 auto; padding: 48px 32px 80px; }
 }
 .phone {
   width: 100%; aspect-ratio: 320 / 660;
-  background: linear-gradient(180deg, #0a0a0a, #050505);
+  background: linear-gradient(180deg, #F5F1EA, #F5F1EA);
   border-radius: 44px;
-  border: 1px solid #1E1E1E;
+  border: 1px solid #E4DED2;
   padding: 12px;
   position: relative; overflow: hidden;
   box-shadow:
-    0 0 0 4px #1E1E1E,
+    0 0 0 4px #E4DED2,
     0 30px 80px rgba(0,212,255,0.18),
     0 60px 120px rgba(0,0,0,0.7);
   transition: transform 120ms ease;
@@ -153,24 +153,24 @@ main { max-width: 1180px; margin: 0 auto; padding: 48px 32px 80px; }
 .phone:not(.ringing) ~ .phone-rings { display: none; }
 .phone-notch {
   position: absolute; top: 12px; left: 50%; transform: translateX(-50%);
-  width: 110px; height: 22px; background: #050505;
+  width: 110px; height: 22px; background: #F5F1EA;
   border-radius: 0 0 14px 14px; z-index: 2;
 }
 .phone-screen {
   width: 100%; height: 100%; border-radius: 32px;
-  background: linear-gradient(180deg, #050505 0%, #0E0E0E 100%);
+  background: linear-gradient(180deg, #F5F1EA 0%, #FBF8F2 100%);
   padding: 36px 12px 12px; display: flex; flex-direction: column; gap: 8px;
   overflow: hidden;
 }
 .phone-status {
   font-family: 'JetBrains Mono', monospace; font-size: 10px;
-  color: #5F5F5F; text-align: center; padding: 4px 0;
+  color: #9A938A; text-align: center; padding: 4px 0;
   letter-spacing: 0.1em;
 }
 .phone-callee {
   display: flex; align-items: center; gap: 10px;
-  padding: 10px; border: 1px solid #1E1E1E; border-radius: 12px;
-  background: #0E0E0E;
+  padding: 10px; border: 1px solid #E4DED2; border-radius: 12px;
+  background: #FBF8F2;
 }
 .phone-avatar {
   width: 32px; height: 32px; border-radius: 50%;
@@ -182,7 +182,7 @@ main { max-width: 1180px; margin: 0 auto; padding: 48px 32px 80px; }
 }
 .phone-callee-id { flex: 1; min-width: 0; line-height: 1.2; }
 .phone-name { font-weight: 600; font-size: 13px; }
-.phone-role { font-size: 10px; color: #8A8A8A; }
+.phone-role { font-size: 10px; color: #6B6B6B; }
 .pulse-dot {
   width: 7px; height: 7px; border-radius: 50%;
   background: #10B981; display: inline-block;
@@ -222,7 +222,7 @@ main { max-width: 1180px; margin: 0 auto; padding: 48px 32px 80px; }
   font-size: 18px; margin: 0;
 }
 .phone-ringing-splash .subline {
-  font-size: 12px; color: #8A8A8A; text-align: center;
+  font-size: 12px; color: #6B6B6B; text-align: center;
 }
 .phone-ringing-splash .ringing-state {
   font-family: 'JetBrains Mono', monospace; font-size: 11px;
@@ -252,10 +252,10 @@ main { max-width: 1180px; margin: 0 auto; padding: 48px 32px 80px; }
   flex: 1; min-height: 0; overflow-y: auto;
   display: flex; flex-direction: column; gap: 6px;
   padding: 4px 4px 8px;
-  scrollbar-width: thin; scrollbar-color: #2A2A2A transparent;
+  scrollbar-width: thin; scrollbar-color: #DED7C9 transparent;
 }
 .phone-convo::-webkit-scrollbar { width: 4px; }
-.phone-convo::-webkit-scrollbar-thumb { background: #2A2A2A; border-radius: 999px; }
+.phone-convo::-webkit-scrollbar-thumb { background: #DED7C9; border-radius: 999px; }
 .phone-convo[hidden] { display: none; }
 
 .bubble {
@@ -272,16 +272,16 @@ main { max-width: 1180px; margin: 0 auto; padding: 48px 32px 80px; }
 }
 .bubble-kwame {
   align-self: flex-start;
-  background: #2a2a2a; color: #F5F5F5;
-  border: 1px solid #1E1E1E;
+  background: #DED7C9; color: #1A1A1A;
+  border: 1px solid #E4DED2;
   border-bottom-left-radius: 4px;
   cursor: pointer;
   transition: background 200ms ease, border-color 200ms ease;
 }
-.bubble-kwame:hover { background: #313131; border-color: #2A2A2A; }
+.bubble-kwame:hover { background: #313131; border-color: #DED7C9; }
 .bubble-kwame.speaking {
   border-color: rgba(0,212,255,0.35);
-  background: linear-gradient(180deg, #2A2A2A, rgba(0,212,255,0.04));
+  background: linear-gradient(180deg, #DED7C9, rgba(0,212,255,0.04));
 }
 .bubble-caller {
   align-self: flex-end;
@@ -318,7 +318,7 @@ main { max-width: 1180px; margin: 0 auto; padding: 48px 32px 80px; }
   align-self: flex-start;
   display: inline-flex; gap: 6px; align-items: center;
   padding: 7px 12px;
-  background: #2a2a2a; border: 1px solid rgba(0,212,255,0.25);
+  background: #DED7C9; border: 1px solid rgba(0,212,255,0.25);
   border-radius: 14px;
   color: #00D4FF; font-size: 11px;
 }
@@ -333,8 +333,8 @@ main { max-width: 1180px; margin: 0 auto; padding: 48px 32px 80px; }
 }
 .hw-btn {
   width: 44px; height: 44px; border-radius: 50%;
-  background: #111; border: 1px solid #1E1E1E;
-  color: #F5F5F5; cursor: pointer; font-size: 16px;
+  background: #FFFFFF; border: 1px solid #E4DED2;
+  color: #1A1A1A; cursor: pointer; font-size: 16px;
   display: inline-flex; align-items: center; justify-content: center;
   transition: background 150ms ease, border-color 150ms ease, transform 120ms ease;
 }
@@ -354,7 +354,7 @@ main { max-width: 1180px; margin: 0 auto; padding: 48px 32px 80px; }
 }
 .phone-controls .progress-bar {
   flex: 1; height: 4px;
-  background: #1E1E1E; border-radius: 999px;
+  background: #E4DED2; border-radius: 999px;
   overflow: hidden;
   min-width: 100px;
 }
@@ -375,21 +375,21 @@ main { max-width: 1180px; margin: 0 auto; padding: 48px 32px 80px; }
 .speed-pill {
   font-family: 'JetBrains Mono', monospace; font-size: 11px; font-weight: 600;
   padding: 6px 10px; border-radius: 999px;
-  background: #0E0E0E; border: 1px solid #1E1E1E;
-  cursor: pointer; color: #F5F5F5;
+  background: #FBF8F2; border: 1px solid #E4DED2;
+  cursor: pointer; color: #1A1A1A;
   transition: border-color 120ms ease, color 120ms ease;
 }
 .speed-pill:hover { border-color: rgba(0,212,255,0.5); color: #00D4FF; }
 .audio-status {
   font-family: 'JetBrains Mono', monospace; font-size: 10px;
-  color: #5F5F5F;
+  color: #9A938A;
   margin-top: 8px; text-align: center;
 }
 
 /* ── live metrics panel ──────────────────────────────────────── */
 .metrics-panel {
-  background: linear-gradient(160deg, #111111 0%, #0E0E0E 100%);
-  border: 1px solid #1E1E1E; border-radius: 16px;
+  background: linear-gradient(160deg, #FFFFFF 0%, #FBF8F2 100%);
+  border: 1px solid #E4DED2; border-radius: 16px;
   padding: 24px; position: relative; overflow: hidden;
 }
 .metrics-panel::before {
@@ -422,12 +422,12 @@ main { max-width: 1180px; margin: 0 auto; padding: 48px 32px 80px; }
 }
 @media (max-width: 540px) { .metric-grid { grid-template-columns: 1fr; } }
 .metric-cell {
-  padding: 16px; border: 1px solid #1E1E1E; border-radius: 12px;
-  background: #0E0E0E;
+  padding: 16px; border: 1px solid #E4DED2; border-radius: 12px;
+  background: #FBF8F2;
 }
 .metric-label {
   font-size: 11px; text-transform: uppercase; letter-spacing: 0.08em;
-  color: #8A8A8A; font-weight: 600; display: block;
+  color: #6B6B6B; font-weight: 600; display: block;
 }
 .metric-value {
   font-family: 'JetBrains Mono', monospace; font-weight: 600;
@@ -435,7 +435,7 @@ main { max-width: 1180px; margin: 0 auto; padding: 48px 32px 80px; }
   margin-top: 6px; letter-spacing: -0.02em;
   font-feature-settings: "tnum" 1;
 }
-.metric-sub { font-size: 11px; color: #8A8A8A; margin-top: 4px; }
+.metric-sub { font-size: 11px; color: #6B6B6B; margin-top: 4px; }
 .containment-cell .metric-value { color: #10B981; font-size: 22px; }
 .satisfaction-stars { letter-spacing: 4px; font-size: 26px; color: #444; }
 .satisfaction-stars.full { color: #F59E0B; text-shadow: 0 0 12px rgba(245,158,11,0.45); }
@@ -448,24 +448,24 @@ main { max-width: 1180px; margin: 0 auto; padding: 48px 32px 80px; }
   text-align: center;
 }
 .compare-section .sub {
-  text-align: center; color: #8A8A8A; margin: 0 0 28px;
+  text-align: center; color: #6B6B6B; margin: 0 0 28px;
 }
 .compare-table {
-  background: linear-gradient(160deg, #111111 0%, #0E0E0E 100%);
-  border: 1px solid #1E1E1E; border-radius: 16px;
+  background: linear-gradient(160deg, #FFFFFF 0%, #FBF8F2 100%);
+  border: 1px solid #E4DED2; border-radius: 16px;
   overflow: hidden;
   max-width: 720px; margin: 0 auto;
 }
 .compare-row {
   display: grid; grid-template-columns: 1fr 1fr 1fr;
-  border-bottom: 1px solid #1E1E1E;
+  border-bottom: 1px solid #E4DED2;
 }
 .compare-row:last-child { border-bottom: none; }
 .compare-cell {
   padding: 18px 20px; text-align: center;
 }
 .compare-cell.label {
-  text-align: left; color: #8A8A8A; font-size: 12px;
+  text-align: left; color: #6B6B6B; font-size: 12px;
   text-transform: uppercase; letter-spacing: 0.06em; font-weight: 600;
 }
 .compare-cell.human {
@@ -478,11 +478,11 @@ main { max-width: 1180px; margin: 0 auto; padding: 48px 32px 80px; }
   background: rgba(0,212,255,0.04);
 }
 .compare-head {
-  background: #0E0E0E;
+  background: #FBF8F2;
   font-family: 'Syne', sans-serif; font-weight: 700;
   font-size: 12px; letter-spacing: 0.06em; text-transform: uppercase;
 }
-.compare-head .compare-cell { color: #F5F5F5; }
+.compare-head .compare-cell { color: #1A1A1A; }
 .compare-head .compare-cell.cynea { color: #00D4FF; }
 
 .cta-row { text-align: center; margin: 36px 0 0; }
@@ -490,14 +490,29 @@ main { max-width: 1180px; margin: 0 auto; padding: 48px 32px 80px; }
 
 /* ── footer ───────────────────────────────────────────────────── */
 .demo-footer {
-  border-top: 1px solid #1E1E1E;
+  border-top: 1px solid #E4DED2;
   margin-top: 56px; padding-top: 22px;
   display: flex; justify-content: space-between; align-items: center;
-  font-size: 12px; color: #8A8A8A;
+  font-size: 12px; color: #6B6B6B;
 }
-.demo-footer .dim { color: #5F5F5F; }
+.demo-footer .dim { color: #9A938A; }
 @media (max-width: 540px) {
   .demo-footer { flex-direction: column; gap: 8px; text-align: center; }
+}
+
+/* ════ CY-LIGHT — ElevenLabs-style light skin (Cynea) ════ */
+body{font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;}
+h1,h2,h3,h4{font-family:'Inter',sans-serif;letter-spacing:-0.02em;}
+.brand-mark{font-family:'Inter',sans-serif;font-weight:700;letter-spacing:0.04em;color:#1A1A1A;text-shadow:none;}
+.brand-tag{color:#9A938A;}
+.btn-primary{background:#0A0A0A;color:#FFFFFF;border-color:#0A0A0A;}
+.btn-primary:hover{background:#222;border-color:#222;filter:none;box-shadow:0 8px 24px rgba(0,0,0,0.16);}
+
+/* ════ CY-LIGHT · wow polish ════ */
+html{scroll-behavior:smooth;}
+@media (prefers-reduced-motion:no-preference){
+  body{animation:cyPageIn 0.55s cubic-bezier(.2,.8,.2,1) both;}
+  @keyframes cyPageIn{from{opacity:0;}to{opacity:1;}}
 }
 </style>
 </head>

@@ -7,7 +7,7 @@
 <meta name="description" content="Sign in to your Cynea voice agent dashboard." />
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=DM+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Syne:wght@600;700;800&family=DM+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
 *, *::before, *::after { box-sizing: border-box; }
 html, body { margin: 0; padding: 0; }
@@ -15,8 +15,8 @@ body {
   font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   font-size: 14px; line-height: 1.5;
   -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale;
-  color: #F5F5F5;
-  background: #050505;
+  color: #1A1A1A;
+  background: #F5F1EA;
   min-height: 100vh;
   position: relative;
   overflow-x: hidden;
@@ -34,7 +34,7 @@ body {
   background:
     radial-gradient(900px 500px at 30% 30%, rgba(0,212,255,0.18), transparent 60%),
     radial-gradient(800px 460px at 70% 70%, rgba(167,139,250,0.10), transparent 65%),
-    #050505;
+    #F5F1EA;
 }
 .signin-bg::after {
   content: ""; position: absolute; inset: 0;
@@ -69,7 +69,7 @@ body {
 }
 .brand-tag {
   font-family: 'Syne', sans-serif; font-weight: 600;
-  font-size: 11px; letter-spacing: 0.32em; color: #8A8A8A;
+  font-size: 11px; letter-spacing: 0.32em; color: #6B6B6B;
 }
 @keyframes brandGlowPulse {
   0%, 100% { filter: drop-shadow(0 0 12px rgba(0,212,255,0.35)); }
@@ -79,8 +79,8 @@ body {
 /* ── card ─────────────────────────────────────────────────────── */
 .signin-card {
   width: 100%; max-width: 420px;
-  background: linear-gradient(160deg, #111111 0%, #0E0E0E 100%);
-  border: 1px solid #1E1E1E; border-radius: 16px;
+  background: linear-gradient(160deg, #FFFFFF 0%, #FBF8F2 100%);
+  border: 1px solid #E4DED2; border-radius: 16px;
   padding: 32px;
   box-shadow:
     0 0 0 1px rgba(255,255,255,0.03) inset,
@@ -98,7 +98,7 @@ body {
   position: relative; z-index: 1;
 }
 .signin-card .lead {
-  font-size: 13px; color: #8A8A8A; margin: 0 0 22px;
+  font-size: 13px; color: #6B6B6B; margin: 0 0 22px;
   position: relative; z-index: 1;
 }
 
@@ -110,12 +110,12 @@ body {
 .signin-field { display: flex; flex-direction: column; gap: 6px; }
 .signin-label {
   font-size: 11px; text-transform: uppercase; letter-spacing: 0.08em;
-  color: #8A8A8A; font-weight: 600;
+  color: #6B6B6B; font-weight: 600;
 }
 .signin-input {
   width: 100%;
-  background: #0E0E0E; color: #F5F5F5;
-  border: 1px solid #1E1E1E; border-radius: 10px;
+  background: #FBF8F2; color: #1A1A1A;
+  border: 1px solid #E4DED2; border-radius: 10px;
   padding: 11px 14px;
   font-family: inherit; font-size: 14px;
   outline: none;
@@ -125,13 +125,13 @@ body {
   border-color: #00D4FF;
   box-shadow: 0 0 0 3px rgba(0,212,255,0.18);
 }
-.signin-input::placeholder { color: #5F5F5F; }
+.signin-input::placeholder { color: #9A938A; }
 
 /* ── buttons ──────────────────────────────────────────────────── */
 .btn {
   font-family: inherit; font-weight: 600; font-size: 14px;
   padding: 11px 18px; border-radius: 10px; cursor: pointer;
-  border: 1px solid #1E1E1E; background: #0E0E0E; color: #F5F5F5;
+  border: 1px solid #E4DED2; background: #FBF8F2; color: #1A1A1A;
   transition: transform 180ms cubic-bezier(.2,.8,.2,1), box-shadow 220ms ease, filter 120ms ease, background 200ms ease;
 }
 .btn:hover { transform: translateY(-1px) scale(1.02); }
@@ -149,7 +149,7 @@ body {
   display: inline-flex; align-items: center; justify-content: center; gap: 10px;
   padding: 11px 16px;
 }
-.btn-google:hover { background: #F5F5F5; }
+.btn-google:hover { background: #1A1A1A; }
 .btn-google svg { width: 18px; height: 18px; flex-shrink: 0; }
 
 /* ── divider ──────────────────────────────────────────────────── */
@@ -160,17 +160,17 @@ body {
 }
 .signin-divider::before,
 .signin-divider::after {
-  content: ""; flex: 1; height: 1px; background: #1E1E1E;
+  content: ""; flex: 1; height: 1px; background: #E4DED2;
 }
 .signin-divider span {
   font-size: 11px; text-transform: uppercase; letter-spacing: 0.12em;
-  color: #5F5F5F; font-weight: 600;
+  color: #9A938A; font-weight: 600;
 }
 
 /* ── footer link ──────────────────────────────────────────────── */
 .signin-aside {
   text-align: center; margin: 22px 0 0;
-  font-size: 13px; color: #8A8A8A;
+  font-size: 13px; color: #6B6B6B;
   position: relative; z-index: 1;
 }
 .signin-aside a { color: #00D4FF; text-decoration: none; font-weight: 500; }
@@ -178,13 +178,28 @@ body {
 
 .signin-page-footer {
   font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase;
-  color: #5F5F5F; font-weight: 600;
+  color: #9A938A; font-weight: 600;
 }
 
 /* mobile */
 @media (max-width: 480px) {
   .signin-card { padding: 24px; border-radius: 14px; }
   .signin-card h1 { font-size: 19px; }
+}
+
+/* ════ CY-LIGHT — ElevenLabs-style light skin (Cynea) ════ */
+body{font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;}
+h1,h2,h3,h4{font-family:'Inter',sans-serif;letter-spacing:-0.02em;}
+.brand-mark{font-family:'Inter',sans-serif;font-weight:700;letter-spacing:0.04em;color:#1A1A1A;text-shadow:none;}
+.brand-tag{color:#9A938A;}
+.btn-primary{background:#0A0A0A;color:#FFFFFF;border-color:#0A0A0A;}
+.btn-primary:hover{background:#222;border-color:#222;filter:none;box-shadow:0 8px 24px rgba(0,0,0,0.16);}
+
+/* ════ CY-LIGHT · wow polish ════ */
+html{scroll-behavior:smooth;}
+@media (prefers-reduced-motion:no-preference){
+  body{animation:cyPageIn 0.55s cubic-bezier(.2,.8,.2,1) both;}
+  @keyframes cyPageIn{from{opacity:0;}to{opacity:1;}}
 }
 </style>
 </head>

@@ -293,35 +293,62 @@ h1,h2,h3{letter-spacing:-.02em;font-weight:600;margin:0}
 .sec-vid-overlay.light{background:linear-gradient(180deg,rgba(245,241,234,.60) 0%,rgba(245,241,234,.74) 60%,rgba(245,241,234,.92) 100%)}
 .sec-vid-overlay.dark{background:linear-gradient(135deg,rgba(11,11,12,.72),rgba(21,23,28,.80))}
 
-/* incoming-call preview — rotating gradient orb + answer flow */
+/* incoming-call preview — LIVING gradient orb (pure-CSS motion) */
 .callprev{position:relative;overflow:hidden;border-radius:var(--r-lg);border:1px solid var(--line);
   background:linear-gradient(160deg,#FCF8F1,#F2EADC);aspect-ratio:4/5;
   box-shadow:0 30px 70px rgba(22,22,22,.12),0 2px 8px rgba(22,22,22,.04);display:flex;flex-direction:column}
-.cp-badge{position:absolute;left:16px;top:16px;z-index:4;display:inline-flex;align-items:center;gap:8px;font-size:13px;font-weight:500;color:var(--ink);background:rgba(255,255,255,.72);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);padding:8px 14px;border-radius:999px;border:1px solid var(--line)}
+.cp-badge{position:absolute;left:16px;top:16px;z-index:5;display:inline-flex;align-items:center;gap:8px;font-size:13px;font-weight:500;color:var(--ink);background:rgba(255,255,255,.72);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);padding:8px 14px;border-radius:999px;border:1px solid var(--line)}
 .cp-dot{width:8px;height:8px;border-radius:50%;background:#10B981;animation:ringPulse 1.6s infinite}
-.cp-stage{flex:1;display:grid;place-items:center;position:relative}
-.cp-rings{position:absolute;width:210px;height:210px;border-radius:50%;border:1px solid rgba(0,212,255,.4);animation:cpRing 1.8s ease-out infinite}
+.callprev[data-state="ringing"] #callStatus{animation:txtPulse 1.3s ease-in-out infinite}
+@keyframes txtPulse{0%,100%{opacity:.6}50%{opacity:1}}
+
+.cp-stage{flex:1;position:relative;display:grid;place-items:center}
+
+/* expanding signal ripples — ringing only, a new ring every ~0.7s */
+.cp-rings{position:absolute;left:50%;top:50%;width:0;height:0}
+.cp-rings span{position:absolute;left:50%;top:50%;width:200px;height:200px;margin:-100px 0 0 -100px;border-radius:50%;border:1.5px solid rgba(0,212,255,.5);opacity:0;animation:cpRing 2.1s ease-out infinite}
+.cp-rings span:nth-child(2){animation-delay:.7s}
+.cp-rings span:nth-child(3){animation-delay:1.4s}
+@keyframes cpRing{0%{transform:scale(.65);opacity:.55}80%{opacity:.05}100%{transform:scale(1.75);opacity:0}}
 .callprev[data-state="live"] .cp-rings{display:none}
-@keyframes cpRing{0%{transform:scale(.85);opacity:.6}100%{transform:scale(1.55);opacity:0}}
-.orb{position:relative;width:210px;height:210px;border-radius:50%;overflow:hidden;
+
+/* pulsing aura glow behind the orb */
+.orb-aura{position:absolute;left:50%;top:50%;width:250px;height:250px;margin:-125px 0 0 -125px;border-radius:50%;
+  background:radial-gradient(circle,rgba(0,212,255,.42),transparent 66%);filter:blur(16px);animation:auraPulse 1.4s ease-in-out infinite}
+@keyframes auraPulse{0%,100%{transform:scale(.9);opacity:.5}50%{transform:scale(1.1);opacity:.9}}
+.callprev[data-state="live"] .orb-aura{animation-duration:5s;background:radial-gradient(circle,rgba(124,92,252,.34),transparent 66%)}
+
+/* sound-wave bars circling the orb (each bar: --a angle, --d delay) */
+.orb-bars{position:absolute;left:50%;top:50%;width:0;height:0}
+.orb-bars i{position:absolute;left:50%;top:50%;width:3px;height:18px;margin:-9px 0 0 -1.5px;border-radius:2px;
+  background:linear-gradient(180deg,#00D4FF,#7C5CFC);opacity:.85;transform-origin:center;
+  transform:rotate(var(--a)) translateY(-118px) scaleY(.4);
+  animation:barEq 1.1s ease-in-out infinite;animation-delay:var(--d)}
+@keyframes barEq{0%,100%{transform:rotate(var(--a)) translateY(-118px) scaleY(.35)}50%{transform:rotate(var(--a)) translateY(-118px) scaleY(1)}}
+.callprev[data-state="ringing"] .orb-bars i{animation-duration:.85s}
+.callprev[data-state="live"] .orb-bars i{animation-duration:1.7s;opacity:.55}
+
+/* the orb body */
+.orb{position:relative;z-index:1;width:210px;height:210px;border-radius:50%;overflow:hidden;
   box-shadow:0 24px 60px rgba(124,92,252,.30),0 0 0 1px rgba(255,255,255,.4) inset;animation:orbBreathe 6s ease-in-out infinite}
-.orb-grad{position:absolute;inset:-26%;border-radius:50%;filter:blur(2px) saturate(1.12);
-  background:
-    radial-gradient(38% 38% at 30% 30%, #8FD2FF, transparent 60%),
-    radial-gradient(42% 42% at 72% 34%, #C9B6FF, transparent 60%),
-    radial-gradient(48% 48% at 62% 74%, #FFB489, transparent 62%),
-    radial-gradient(44% 44% at 30% 72%, #5BE0B0, transparent 60%),
-    linear-gradient(135deg,#00B4D8,#7C5CFC);
-  animation:orbSpin 18s linear infinite}
-.orb-shade{position:absolute;inset:0;border-radius:50%;
-  background:radial-gradient(circle at 34% 28%, rgba(255,255,255,.55), transparent 42%),
-             radial-gradient(circle at 66% 80%, rgba(10,12,20,.30), transparent 56%)}
-.orb-grain{position:absolute;inset:0;border-radius:50%;opacity:.15;mix-blend-mode:overlay;
-  background-image:radial-gradient(rgba(0,0,0,.6) .5px,transparent .7px);background-size:3px 3px}
-@keyframes orbSpin{to{transform:rotate(360deg)}}
+.callprev[data-state="ringing"] .orb{animation:orbBeat 1.3s ease-in-out infinite;filter:saturate(1.15) brightness(1.05)}
+.callprev[data-state="live"] .orb{animation:orbBreathe 5s ease-in-out infinite;box-shadow:0 24px 72px rgba(0,212,255,.45),0 0 0 1px rgba(255,255,255,.5) inset}
 @keyframes orbBreathe{0%,100%{transform:scale(1)}50%{transform:scale(1.035)}}
-.callprev[data-state="live"] .orb-grad{animation-duration:7s}
-.callprev[data-state="live"] .orb{box-shadow:0 24px 72px rgba(0,212,255,.45),0 0 0 1px rgba(255,255,255,.5) inset}
+@keyframes orbBeat{0%{transform:scale(1)}12%{transform:scale(1.07)}24%{transform:scale(1)}38%{transform:scale(1.045)}52%,100%{transform:scale(1)}}
+.orb-grad{position:absolute;inset:-26%;border-radius:50%;filter:blur(2px) saturate(1.12);
+  background:radial-gradient(38% 38% at 30% 30%,#8FD2FF,transparent 60%),radial-gradient(42% 42% at 72% 34%,#C9B6FF,transparent 60%),radial-gradient(48% 48% at 62% 74%,#FFB489,transparent 62%),radial-gradient(44% 44% at 30% 72%,#5BE0B0,transparent 60%),linear-gradient(135deg,#00B4D8,#7C5CFC);
+  animation:orbSpin 18s linear infinite}
+.orb-grad2{position:absolute;inset:-30%;border-radius:50%;mix-blend-mode:screen;opacity:.55;filter:blur(7px);
+  background:radial-gradient(40% 40% at 62% 38%,#19E3FF,transparent 60%),radial-gradient(46% 46% at 34% 66%,#B79CFF,transparent 60%);
+  animation:orbSpin2 22s linear infinite}
+.orb-light{position:absolute;inset:0;border-radius:50%;background:radial-gradient(circle at 50% 15%,rgba(255,255,255,.55),transparent 34%);animation:orbSpin 9s linear infinite}
+.orb-shade{position:absolute;inset:0;border-radius:50%;
+  background:radial-gradient(circle at 34% 28%,rgba(255,255,255,.5),transparent 42%),radial-gradient(circle at 66% 80%,rgba(10,12,20,.3),transparent 56%)}
+.orb-grain{position:absolute;inset:0;border-radius:50%;opacity:.15;mix-blend-mode:overlay;background-image:radial-gradient(rgba(0,0,0,.6) .5px,transparent .7px);background-size:3px 3px}
+@keyframes orbSpin{to{transform:rotate(360deg)}}
+@keyframes orbSpin2{to{transform:rotate(-360deg)}}
+
+/* foot / answer controls */
 .cp-foot{position:relative;z-index:3;padding:0 22px 24px;text-align:center;color:var(--ink)}
 .cp-name{font-size:21px;font-weight:600;letter-spacing:-.01em}
 .cp-sub{font-size:13px;color:var(--muted);margin-top:3px;font-family:'JetBrains Mono',monospace}
@@ -493,9 +520,13 @@ h1,h2,h3{letter-spacing:-.02em;font-weight:600;margin:0}
     <div class="callprev rv" id="callprev" data-state="ringing">
       <div class="cp-badge"><span class="cp-dot"></span><span id="callStatus">Incoming call</span></div>
       <div class="cp-stage">
-        <div class="cp-rings" aria-hidden="true"></div>
+        <div class="cp-rings" aria-hidden="true"><span></span><span></span><span></span></div>
+        <div class="orb-aura" aria-hidden="true"></div>
+        <div class="orb-bars" aria-hidden="true"><i style="--a:0deg;--d:0s"></i><i style="--a:15deg;--d:.05s"></i><i style="--a:30deg;--d:.1s"></i><i style="--a:45deg;--d:.15s"></i><i style="--a:60deg;--d:.2s"></i><i style="--a:75deg;--d:.25s"></i><i style="--a:90deg;--d:.3s"></i><i style="--a:105deg;--d:.35s"></i><i style="--a:120deg;--d:.4s"></i><i style="--a:135deg;--d:.45s"></i><i style="--a:150deg;--d:.5s"></i><i style="--a:165deg;--d:.55s"></i><i style="--a:180deg;--d:.6s"></i><i style="--a:195deg;--d:.65s"></i><i style="--a:210deg;--d:.7s"></i><i style="--a:225deg;--d:.75s"></i><i style="--a:240deg;--d:.8s"></i><i style="--a:255deg;--d:.85s"></i><i style="--a:270deg;--d:.9s"></i><i style="--a:285deg;--d:.95s"></i><i style="--a:300deg;--d:1s"></i><i style="--a:315deg;--d:1.05s"></i><i style="--a:330deg;--d:1.1s"></i><i style="--a:345deg;--d:1.15s"></i></div>
         <div class="orb" id="orb">
           <div class="orb-grad"></div>
+          <div class="orb-grad2"></div>
+          <div class="orb-light"></div>
           <div class="orb-shade"></div>
           <div class="orb-grain"></div>
         </div>

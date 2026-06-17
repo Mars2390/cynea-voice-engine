@@ -285,6 +285,38 @@ h1,h2,h3{letter-spacing:-.02em;font-weight:600;margin:0}
 .clip:hover{background:rgba(255,255,255,.16)}
 .clip.is-on{background:#00D4FF;color:#04323d;border-color:#00D4FF;font-weight:600}
 
+/* ── media backgrounds (video sections) ──────────────────────────── */
+.hero,.metrics,.cta{isolation:isolate}
+.sec-vid{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:-2;border:0}
+.hero .sec-vid{opacity:.5}
+.sec-vid-overlay{position:absolute;inset:0;z-index:-1;pointer-events:none}
+.sec-vid-overlay.light{background:linear-gradient(180deg,rgba(245,241,234,.60) 0%,rgba(245,241,234,.74) 60%,rgba(245,241,234,.92) 100%)}
+.sec-vid-overlay.dark{background:linear-gradient(135deg,rgba(11,11,12,.72),rgba(21,23,28,.80))}
+
+/* incoming-call video preview */
+.callprev{position:relative;overflow:hidden;border-radius:var(--r-lg);border:1px solid var(--line);
+  background:linear-gradient(160deg,#0E1014,#1A1D24);aspect-ratio:4/5;box-shadow:0 30px 70px rgba(22,22,22,.18),0 2px 8px rgba(22,22,22,.05)}
+.callprev .call-vid{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block}
+.callprev-badge{position:absolute;left:16px;top:16px;z-index:2;display:inline-flex;align-items:center;gap:8px;
+  font-size:13px;font-weight:500;color:#fff;background:rgba(0,0,0,.42);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);
+  padding:8px 14px;border-radius:999px;border:1px solid rgba(255,255,255,.18)}
+.callprev-badge .dot-live{width:8px;height:8px;border-radius:50%;background:#10B981;box-shadow:0 0 0 0 rgba(16,185,129,.6);animation:wmPulse 1.8s infinite}
+
+/* product switcher media */
+.tile-media{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0}
+.tile-play{position:relative;z-index:1}
+
+/* world coverage video overrides */
+.wm-video{z-index:1;opacity:1}
+.wm-grid{z-index:0}
+.wm-overlay{position:absolute;inset:0;z-index:2;pointer-events:none;background:radial-gradient(ellipse 82% 78% at 50% 46%,transparent 34%,rgba(10,12,16,.55))}
+.wm-cap{z-index:3}
+
+/* mobile: drop heavy videos, keep clean gradient fallbacks */
+@media(max-width:760px){
+  .sec-vid,.sec-vid-overlay,.callprev .call-vid,video.tile-media,.wm-video{display:none!important}
+}
+
 /* ── world map (global coverage) ──────────────────────────────────── */
 .worldmap{position:relative;overflow:hidden;border-radius:var(--r-lg);min-height:400px;border:1px solid var(--line);
   background:linear-gradient(135deg,#0E1014,#1A1D24);display:flex;align-items:flex-end;justify-content:center;padding:26px}
@@ -293,7 +325,7 @@ h1,h2,h3{letter-spacing:-.02em;font-weight:600;margin:0}
   -webkit-mask-image:radial-gradient(ellipse 72% 70% at 50% 46%,#000 38%,transparent 80%);mask-image:radial-gradient(ellipse 72% 70% at 50% 46%,#000 38%,transparent 80%)}
 .wm-node{position:absolute;width:11px;height:11px;border-radius:50%;background:#00D4FF;box-shadow:0 0 12px rgba(0,212,255,.8);animation:wmPulse 2.4s ease-out infinite}
 @keyframes wmPulse{0%{box-shadow:0 0 0 0 rgba(0,212,255,.5),0 0 12px rgba(0,212,255,.8)}70%{box-shadow:0 0 0 16px rgba(0,212,255,0),0 0 12px rgba(0,212,255,.8)}100%{box-shadow:0 0 0 0 rgba(0,212,255,0),0 0 12px rgba(0,212,255,.8)}}
-.wm-cap{position:relative;z-index:1;font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:#9FE9FF;background:rgba(0,0,0,.35);padding:8px 16px;border-radius:999px;border:1px solid rgba(159,233,255,.2)}
+.wm-cap{position:relative;z-index:3;font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:#9FE9FF;background:rgba(0,0,0,.35);padding:8px 16px;border-radius:999px;border:1px solid rgba(159,233,255,.2)}
 </style>
 </head>
 <body>
@@ -319,6 +351,10 @@ h1,h2,h3{letter-spacing:-.02em;font-weight:600;margin:0}
 
 <!-- ─── HERO ────────────────────────────────────────────────────── -->
 <header class="hero" id="top">
+  <video class="sec-vid" autoplay muted loop playsinline preload="auto" aria-hidden="true">
+    <source src="assets/Hero-bg%201.mp4" type="video/mp4">
+  </video>
+  <div class="sec-vid-overlay light" aria-hidden="true"></div>
   <div class="hero-orb orb-a"></div>
   <div class="hero-orb orb-b"></div>
   <div class="hero-orb orb-c"></div>
@@ -336,22 +372,12 @@ h1,h2,h3{letter-spacing:-.02em;font-weight:600;margin:0}
       </div>
     </div>
 
-    <!-- phone-call ring → live preview -->
-    <div class="callcard" id="callcard">
-      <div class="call-top">
-        <div class="call-av ringing" id="callav">K</div>
-        <div class="call-id">
-          <b>Adinkra Hotel</b>
-          <span id="callsub">Incoming call</span>
-        </div>
-        <div class="call-state" id="callstate">Ringing…</div>
-      </div>
-      <div class="call-wave" id="callwave"></div>
-      <div class="call-log" id="calllog"></div>
-      <div class="call-actions" id="callactions">
-        <button class="btn call-accept" id="acceptBtn" type="button">Accept call</button>
-        <button class="btn call-decline" id="declineBtn" type="button" aria-label="Decline">✕</button>
-      </div>
+    <!-- incoming-call preview (real video) -->
+    <div class="callprev rv">
+      <video class="call-vid" autoplay muted loop playsinline preload="auto" aria-label="Adinkra Hotel incoming call">
+        <source src="assets/Adinkra%20Hotel.mp4" type="video/mp4">
+      </video>
+      <div class="callprev-badge"><span class="dot-live"></span> Incoming call · Adinkra Hotel</div>
     </div>
   </div>
 </header>
@@ -362,15 +388,15 @@ h1,h2,h3{letter-spacing:-.02em;font-weight:600;margin:0}
     <div class="switcher rv">
       <div class="switch-tiles">
         <div class="tile" data-audio="assets/kwame_test_1.mp3">
-          <div class="tile-orb a"><div class="tile-play">▶</div></div>
+          <div class="tile-orb a"><img class="tile-media" src="assets/Voice%20Agents.jpg" alt="" loading="lazy" onerror="this.remove()"><div class="tile-play">▶</div></div>
           <div class="tile-cap"><b>Voice Agents</b><span>Answer &amp; resolve calls</span></div>
         </div>
         <div class="tile" data-audio="assets/amina_test_1.mp3">
-          <div class="tile-orb b"><div class="tile-play">▶</div></div>
+          <div class="tile-orb b"><video class="tile-media" autoplay muted loop playsinline preload="metadata" aria-hidden="true"><source src="assets/Telephony.mp4" type="video/mp4"></video><div class="tile-play">▶</div></div>
           <div class="tile-cap"><b>Telephony</b><span>Twilio · SIP · worldwide</span></div>
         </div>
         <div class="tile" data-audio="assets/kofi_test_1.mp3">
-          <div class="tile-orb c"><div class="tile-play">▶</div></div>
+          <div class="tile-orb c"><video class="tile-media" autoplay muted loop playsinline preload="metadata" aria-hidden="true"><source src="assets/Analytics.mp4" type="video/mp4"></video><div class="tile-play">▶</div></div>
           <div class="tile-cap"><b>Analytics</b><span>Sentiment &amp; cost per call</span></div>
         </div>
       </div>
@@ -400,6 +426,10 @@ h1,h2,h3{letter-spacing:-.02em;font-weight:600;margin:0}
 
 <!-- ─── CINEMATIC STATS BAND ────────────────────────────────────── -->
 <section class="metrics">
+  <video class="sec-vid" autoplay muted loop playsinline preload="metadata" aria-hidden="true">
+    <source src="assets/Hero-bg%202.mp4" type="video/mp4">
+  </video>
+  <div class="sec-vid-overlay dark" aria-hidden="true"></div>
   <div class="metrics-orb a"></div>
   <div class="metrics-orb b"></div>
   <div class="wrap metrics-in">
@@ -528,16 +558,11 @@ h1,h2,h3{letter-spacing:-.02em;font-weight:600;margin:0}
     <p>Deploy voice agents anywhere — any language, any carrier, any time zone.</p>
   </div>
   <div class="worldmap rv">
-    <!-- DROP YOUR WORLD MAP HERE → assets/world-map.svg (or .png / .mp4). It auto-shows when present. -->
-    <img src="assets/world-map.svg" alt="Global coverage" onerror="this.style.display='none'">
-    <video class="wm-video" autoplay muted loop playsinline onerror="this.style.display='none'" style="display:none"></video>
+    <video class="wm-video" autoplay muted loop playsinline preload="auto" aria-label="Global coverage">
+      <source src="assets/world.mp4" type="video/mp4">
+    </video>
     <div class="wm-grid" aria-hidden="true"></div>
-    <span class="wm-node" style="left:21%;top:40%"></span>
-    <span class="wm-node" style="left:33%;top:60%;animation-delay:.4s"></span>
-    <span class="wm-node" style="left:47%;top:31%;animation-delay:.8s"></span>
-    <span class="wm-node" style="left:55%;top:55%;animation-delay:1.2s"></span>
-    <span class="wm-node" style="left:72%;top:43%;animation-delay:.6s"></span>
-    <span class="wm-node" style="left:83%;top:64%;animation-delay:1.6s"></span>
+    <div class="wm-overlay" aria-hidden="true"></div>
     <div class="wm-cap">Available worldwide · 40+ markets</div>
   </div>
 </section>
@@ -559,6 +584,10 @@ h1,h2,h3{letter-spacing:-.02em;font-weight:600;margin:0}
 <!-- ─── CTA ─────────────────────────────────────────────────────── -->
 <section class="sec">
   <div class="cta rv">
+    <video class="sec-vid" autoplay muted loop playsinline preload="metadata" aria-hidden="true">
+      <source src="assets/Hero-bg%203.mp4" type="video/mp4">
+    </video>
+    <div class="sec-vid-overlay dark" aria-hidden="true"></div>
     <h2>Put a voice agent on your line this week</h2>
     <p>Book a 30-minute demo and hear your own script in a natural, human-like voice.</p>
     <div class="cta-row">
@@ -613,74 +642,12 @@ document.querySelectorAll('[data-audio]:not(.clip)').forEach(function(el){
   el.addEventListener('click',function(){ play(el.getAttribute('data-audio'),el.getAttribute('data-audio2')); });
 });
 
-/* ── phone-call ring → live preview ────────────────────────────── */
-var card=document.getElementById('callcard');
-var av=document.getElementById('callav');
-var stateEl=document.getElementById('callstate');
-var subEl=document.getElementById('callsub');
-var logEl=document.getElementById('calllog');
-var waveEl=document.getElementById('callwave');
-var actions=document.getElementById('callactions');
-
-for(var i=0;i<28;i++){ waveEl.appendChild(document.createElement('i')); }
-
-var script=[
-  {s:'Kwame',c:'agent',t:"Hello? Adinkra Hotel, how can I help you?"},
-  {s:'Caller',c:'caller',t:"Hi, I'd like to book a room for Friday."},
-  {s:'Kwame',c:'agent',t:"Of course — for how many nights, and how many guests?"},
-  {s:'Caller',c:'caller',t:"Two nights, two adults."},
-  {s:'Kwame',c:'agent',t:"We have a double at $120 a night. Shall I confirm it?"},
-  {s:'Caller',c:'caller',t:"Yes please."},
-  {s:'Kwame',c:'agent',t:"Done — I've sent a confirmation by SMS. Anything else?"}
-];
-var secs=0, timer=null, typing=null;
-
-function addLine(idx){
-  if(idx>=script.length){ endCall(); return; }
-  var line=script[idx];
-  var b=document.createElement('div');
-  b.className='bubble '+line.c;
-  b.innerHTML='<small></small>';
-  b.querySelector('small').textContent=line.s;
-  b.appendChild(document.createTextNode(line.t));
-  logEl.appendChild(b);
-  while(logEl.children.length>4){ logEl.removeChild(logEl.firstChild); }
-  typing=setTimeout(function(){ addLine(idx+1); }, 1700+line.t.length*22);
-}
-function tick(){ secs++; var m=Math.floor(secs/60), s=secs%60; stateEl.textContent=(m<10?'0':'')+m+':'+(s<10?'0':'')+s; }
-
-function accept(){
-  if(card.classList.contains('live')) return;
-  av.classList.remove('ringing');
-  card.classList.add('live');
-  subEl.textContent='Connected';
-  actions.innerHTML='<button class="btn call-replay" id="replayBtn" type="button">↻ Replay call</button>';
-  document.getElementById('replayBtn').addEventListener('click',reset);
-  stateEl.textContent='00:00'; secs=0;
-  timer=setInterval(tick,1000);
-  logEl.innerHTML='';
-  play('assets/demo_kwame_02.mp3');
-  addLine(0);
-}
-function endCall(){ if(timer){clearInterval(timer);timer=null;} stateEl.textContent='Call ended'; }
-function reset(){
-  if(timer){clearInterval(timer);timer=null;}
-  if(typing){clearTimeout(typing);typing=null;}
-  try{player.pause();}catch(e){}
-  card.classList.remove('live');
-  av.classList.add('ringing');
-  subEl.textContent='Incoming call';
-  stateEl.textContent='Ringing…';
-  logEl.innerHTML='';
-  actions.innerHTML='<button class="btn call-accept" id="acceptBtn" type="button">Accept call</button><button class="btn call-decline" id="declineBtn" type="button" aria-label="Decline">✕</button>';
-  document.getElementById('acceptBtn').addEventListener('click',accept);
-  document.getElementById('declineBtn').addEventListener('click',reset);
-}
-document.getElementById('acceptBtn').addEventListener('click',accept);
-document.getElementById('declineBtn').addEventListener('click',reset);
-document.getElementById('hearBtn').addEventListener('click',function(){
-  document.getElementById('top').scrollIntoView({behavior:'smooth'});
-  accept();
+/* ── hero "Hear a live call" → jump to the audio showcase & play ── */
+var hearBtn=document.getElementById('hearBtn');
+if(hearBtn) hearBtn.addEventListener('click',function(){
+  var listen=document.getElementById('listen');
+  if(listen) listen.scrollIntoView({behavior:'smooth'});
+  play('assets/demo_kwame_02.mp3','assets/kwame_test_1.mp3');
 });
 
 /* ── count-up stats band ───────────────────────────────────────── */
@@ -710,12 +677,10 @@ var mband=document.querySelector('.metrics'); if(mband) mio.observe(mband);
   player.addEventListener('ended',function(){ sc.classList.remove('on'); playBtn.textContent='▶'; });
 })();
 
-/* ── world map: auto-use a dropped video if present ────────────── */
-(function(){
-  var v=document.querySelector('.wm-video'); if(!v) return;
-  var src='assets/world-map.mp4';
-  fetch(src,{method:'HEAD'}).then(function(r){ if(r.ok){ v.src=src; v.style.display='block'; } }).catch(function(){});
-})();
+/* ── ensure muted autoplay videos start (some mobile browsers) ─── */
+document.querySelectorAll('video').forEach(function(v){
+  v.muted=true; var p=v.play&&v.play(); if(p&&p.catch)p.catch(function(){});
+});
 </script>
 </body>
 </html>

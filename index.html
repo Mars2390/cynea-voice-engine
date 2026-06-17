@@ -293,23 +293,45 @@ h1,h2,h3{letter-spacing:-.02em;font-weight:600;margin:0}
 .sec-vid-overlay.light{background:linear-gradient(180deg,rgba(245,241,234,.60) 0%,rgba(245,241,234,.74) 60%,rgba(245,241,234,.92) 100%)}
 .sec-vid-overlay.dark{background:linear-gradient(135deg,rgba(11,11,12,.72),rgba(21,23,28,.80))}
 
-/* incoming-call interactive preview (receive → hear voice) */
+/* incoming-call preview — rotating gradient orb + answer flow */
 .callprev{position:relative;overflow:hidden;border-radius:var(--r-lg);border:1px solid var(--line);
-  background:linear-gradient(160deg,#0E1014,#1A1D24);aspect-ratio:4/5;box-shadow:0 30px 70px rgba(22,22,22,.18),0 2px 8px rgba(22,22,22,.05)}
-.callprev .call-vid{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block;z-index:0}
-.cp-scrim{position:absolute;inset:0;z-index:1;pointer-events:none;background:linear-gradient(180deg,rgba(10,12,16,.22) 0%,transparent 30%,rgba(10,12,16,.70) 100%)}
-.cp-badge{position:absolute;left:16px;top:16px;z-index:3;display:inline-flex;align-items:center;gap:8px;font-size:13px;font-weight:500;color:#fff;background:rgba(0,0,0,.42);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);padding:8px 14px;border-radius:999px;border:1px solid rgba(255,255,255,.18)}
+  background:linear-gradient(160deg,#FCF8F1,#F2EADC);aspect-ratio:4/5;
+  box-shadow:0 30px 70px rgba(22,22,22,.12),0 2px 8px rgba(22,22,22,.04);display:flex;flex-direction:column}
+.cp-badge{position:absolute;left:16px;top:16px;z-index:4;display:inline-flex;align-items:center;gap:8px;font-size:13px;font-weight:500;color:var(--ink);background:rgba(255,255,255,.72);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);padding:8px 14px;border-radius:999px;border:1px solid var(--line)}
 .cp-dot{width:8px;height:8px;border-radius:50%;background:#10B981;animation:ringPulse 1.6s infinite}
-.cp-foot{position:absolute;left:0;right:0;bottom:0;z-index:3;padding:22px 22px 24px;text-align:center;color:#fff}
+.cp-stage{flex:1;display:grid;place-items:center;position:relative}
+.cp-rings{position:absolute;width:210px;height:210px;border-radius:50%;border:1px solid rgba(0,212,255,.4);animation:cpRing 1.8s ease-out infinite}
+.callprev[data-state="live"] .cp-rings{display:none}
+@keyframes cpRing{0%{transform:scale(.85);opacity:.6}100%{transform:scale(1.55);opacity:0}}
+.orb{position:relative;width:210px;height:210px;border-radius:50%;overflow:hidden;
+  box-shadow:0 24px 60px rgba(124,92,252,.30),0 0 0 1px rgba(255,255,255,.4) inset;animation:orbBreathe 6s ease-in-out infinite}
+.orb-grad{position:absolute;inset:-26%;border-radius:50%;filter:blur(2px) saturate(1.12);
+  background:
+    radial-gradient(38% 38% at 30% 30%, #8FD2FF, transparent 60%),
+    radial-gradient(42% 42% at 72% 34%, #C9B6FF, transparent 60%),
+    radial-gradient(48% 48% at 62% 74%, #FFB489, transparent 62%),
+    radial-gradient(44% 44% at 30% 72%, #5BE0B0, transparent 60%),
+    linear-gradient(135deg,#00B4D8,#7C5CFC);
+  animation:orbSpin 18s linear infinite}
+.orb-shade{position:absolute;inset:0;border-radius:50%;
+  background:radial-gradient(circle at 34% 28%, rgba(255,255,255,.55), transparent 42%),
+             radial-gradient(circle at 66% 80%, rgba(10,12,20,.30), transparent 56%)}
+.orb-grain{position:absolute;inset:0;border-radius:50%;opacity:.15;mix-blend-mode:overlay;
+  background-image:radial-gradient(rgba(0,0,0,.6) .5px,transparent .7px);background-size:3px 3px}
+@keyframes orbSpin{to{transform:rotate(360deg)}}
+@keyframes orbBreathe{0%,100%{transform:scale(1)}50%{transform:scale(1.035)}}
+.callprev[data-state="live"] .orb-grad{animation-duration:7s}
+.callprev[data-state="live"] .orb{box-shadow:0 24px 72px rgba(0,212,255,.45),0 0 0 1px rgba(255,255,255,.5) inset}
+.cp-foot{position:relative;z-index:3;padding:0 22px 24px;text-align:center;color:var(--ink)}
 .cp-name{font-size:21px;font-weight:600;letter-spacing:-.01em}
-.cp-sub{font-size:13px;color:rgba(255,255,255,.82);margin-top:3px;font-family:'JetBrains Mono',monospace}
-.cp-wave{display:flex;align-items:flex-end;justify-content:center;gap:3px;height:34px;margin:14px 0 4px}
-.cp-wave i{width:4px;flex:none;background:linear-gradient(180deg,#7FE9FF,#00D4FF);border-radius:2px;height:28%}
+.cp-sub{font-size:13px;color:var(--muted);margin-top:3px;font-family:'JetBrains Mono',monospace}
+.cp-wave{display:flex;align-items:flex-end;justify-content:center;gap:3px;height:30px;margin:12px 0 2px}
+.cp-wave i{width:4px;flex:none;background:linear-gradient(180deg,#00D4FF,#7C5CFC);border-radius:2px;height:24%}
 .callprev[data-state="live"] .cp-wave i{animation:cpWave 1s ease-in-out infinite}
 .cp-wave i:nth-child(2n){animation-delay:.3s}.cp-wave i:nth-child(3n){animation-delay:.15s}
-@keyframes cpWave{0%,100%{height:18%}50%{height:96%}}
-.cp-actions{display:flex;justify-content:center;gap:24px;margin-top:14px}
-.cp-btn{width:60px;height:60px;border-radius:50%;border:none;cursor:pointer;font-size:24px;line-height:1;display:grid;place-items:center;color:#fff;transition:transform .15s,filter .15s}
+@keyframes cpWave{0%,100%{height:16%}50%{height:92%}}
+.cp-actions{display:flex;justify-content:center;gap:24px;margin-top:16px}
+.cp-btn{width:58px;height:58px;border-radius:50%;border:none;cursor:pointer;font-size:23px;line-height:1;display:grid;place-items:center;color:#fff;transition:transform .15s,filter .15s}
 .cp-btn:hover{transform:translateY(-2px);filter:brightness(1.08)}.cp-btn:active{transform:translateY(0)}
 .cp-btn.accept{background:#10B981;animation:ringPulse 1.4s infinite}
 .cp-btn.decline,.cp-btn.end{background:#EF4444}
@@ -467,13 +489,17 @@ h1,h2,h3{letter-spacing:-.02em;font-weight:600;margin:0}
       </div>
     </div>
 
-    <!-- incoming-call preview (real video + receive→hear-voice flow) -->
+    <!-- incoming-call preview — rotating gradient orb + receive→hear-voice flow -->
     <div class="callprev rv" id="callprev" data-state="ringing">
-      <video class="call-vid" autoplay muted loop playsinline preload="auto" aria-hidden="true">
-        <source src="assets/Adinkra%20Hotel.mp4" type="video/mp4">
-      </video>
-      <div class="cp-scrim" aria-hidden="true"></div>
       <div class="cp-badge"><span class="cp-dot"></span><span id="callStatus">Incoming call</span></div>
+      <div class="cp-stage">
+        <div class="cp-rings" aria-hidden="true"></div>
+        <div class="orb" id="orb">
+          <div class="orb-grad"></div>
+          <div class="orb-shade"></div>
+          <div class="orb-grain"></div>
+        </div>
+      </div>
       <div class="cp-foot">
         <div class="cp-name">Adinkra Hotel</div>
         <div class="cp-sub" id="callSub">Voice agent · ringing…</div>

@@ -293,14 +293,43 @@ h1,h2,h3{letter-spacing:-.02em;font-weight:600;margin:0}
 .sec-vid-overlay.light{background:linear-gradient(180deg,rgba(245,241,234,.60) 0%,rgba(245,241,234,.74) 60%,rgba(245,241,234,.92) 100%)}
 .sec-vid-overlay.dark{background:linear-gradient(135deg,rgba(11,11,12,.72),rgba(21,23,28,.80))}
 
-/* incoming-call video preview */
+/* incoming-call interactive preview (receive → hear voice) */
 .callprev{position:relative;overflow:hidden;border-radius:var(--r-lg);border:1px solid var(--line);
   background:linear-gradient(160deg,#0E1014,#1A1D24);aspect-ratio:4/5;box-shadow:0 30px 70px rgba(22,22,22,.18),0 2px 8px rgba(22,22,22,.05)}
-.callprev .call-vid{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block}
-.callprev-badge{position:absolute;left:16px;top:16px;z-index:2;display:inline-flex;align-items:center;gap:8px;
-  font-size:13px;font-weight:500;color:#fff;background:rgba(0,0,0,.42);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);
-  padding:8px 14px;border-radius:999px;border:1px solid rgba(255,255,255,.18)}
-.callprev-badge .dot-live{width:8px;height:8px;border-radius:50%;background:#10B981;box-shadow:0 0 0 0 rgba(16,185,129,.6);animation:wmPulse 1.8s infinite}
+.callprev .call-vid{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block;z-index:0}
+.cp-scrim{position:absolute;inset:0;z-index:1;pointer-events:none;background:linear-gradient(180deg,rgba(10,12,16,.22) 0%,transparent 30%,rgba(10,12,16,.70) 100%)}
+.cp-badge{position:absolute;left:16px;top:16px;z-index:3;display:inline-flex;align-items:center;gap:8px;font-size:13px;font-weight:500;color:#fff;background:rgba(0,0,0,.42);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);padding:8px 14px;border-radius:999px;border:1px solid rgba(255,255,255,.18)}
+.cp-dot{width:8px;height:8px;border-radius:50%;background:#10B981;animation:ringPulse 1.6s infinite}
+.cp-foot{position:absolute;left:0;right:0;bottom:0;z-index:3;padding:22px 22px 24px;text-align:center;color:#fff}
+.cp-name{font-size:21px;font-weight:600;letter-spacing:-.01em}
+.cp-sub{font-size:13px;color:rgba(255,255,255,.82);margin-top:3px;font-family:'JetBrains Mono',monospace}
+.cp-wave{display:flex;align-items:flex-end;justify-content:center;gap:3px;height:34px;margin:14px 0 4px}
+.cp-wave i{width:4px;flex:none;background:linear-gradient(180deg,#7FE9FF,#00D4FF);border-radius:2px;height:28%}
+.callprev[data-state="live"] .cp-wave i{animation:cpWave 1s ease-in-out infinite}
+.cp-wave i:nth-child(2n){animation-delay:.3s}.cp-wave i:nth-child(3n){animation-delay:.15s}
+@keyframes cpWave{0%,100%{height:18%}50%{height:96%}}
+.cp-actions{display:flex;justify-content:center;gap:24px;margin-top:14px}
+.cp-btn{width:60px;height:60px;border-radius:50%;border:none;cursor:pointer;font-size:24px;line-height:1;display:grid;place-items:center;color:#fff;transition:transform .15s,filter .15s}
+.cp-btn:hover{transform:translateY(-2px);filter:brightness(1.08)}.cp-btn:active{transform:translateY(0)}
+.cp-btn.accept{background:#10B981;animation:ringPulse 1.4s infinite}
+.cp-btn.decline,.cp-btn.end{background:#EF4444}
+@keyframes ringPulse{0%{box-shadow:0 0 0 0 rgba(16,185,129,.5)}70%{box-shadow:0 0 0 15px rgba(16,185,129,0)}100%{box-shadow:0 0 0 0 rgba(16,185,129,0)}}
+.callprev [hidden]{display:none!important}
+
+/* ── cinematic living background (full-page, GPU-only motion) ─────── */
+.bg{position:fixed;inset:0;z-index:-1;overflow:hidden;pointer-events:none;
+  background:radial-gradient(1200px 820px at 50% -8%, rgba(255,180,137,.14), transparent 62%),
+             radial-gradient(900px 720px at 0% 102%, rgba(0,212,255,.10), transparent 60%)}
+.bg-orb{position:absolute;border-radius:50%;filter:blur(70px);opacity:.6;will-change:transform}
+.bg-o1{width:520px;height:520px;left:-8%;top:-8%;background:radial-gradient(circle,rgba(0,212,255,.55),transparent 66%);animation:bgDrift1 26s ease-in-out infinite alternate}
+.bg-o2{width:480px;height:480px;right:-6%;top:6%;background:radial-gradient(circle,rgba(124,92,252,.52),transparent 66%);animation:bgDrift2 32s ease-in-out infinite alternate}
+.bg-o3{width:560px;height:560px;left:5%;top:44%;background:radial-gradient(circle,rgba(255,150,110,.46),transparent 66%);animation:bgDrift3 30s ease-in-out infinite alternate}
+.bg-o4{width:460px;height:460px;right:2%;top:66%;background:radial-gradient(circle,rgba(143,227,194,.44),transparent 66%);animation:bgDrift1 38s ease-in-out infinite alternate-reverse}
+@keyframes bgDrift1{from{transform:translate3d(0,0,0) scale(1)}to{transform:translate3d(7%,9%,0) scale(1.14)}}
+@keyframes bgDrift2{from{transform:translate3d(0,0,0) scale(1)}to{transform:translate3d(-8%,7%,0) scale(1.1)}}
+@keyframes bgDrift3{from{transform:translate3d(0,0,0) scale(1.06)}to{transform:translate3d(6%,-8%,0) scale(.94)}}
+.bg-dots{position:absolute;inset:-64px;background-image:radial-gradient(rgba(20,22,26,.06) 1px,transparent 1.7px);background-size:32px 32px;opacity:.6;animation:bgDots 7s linear infinite;will-change:transform}
+@keyframes bgDots{from{transform:translate3d(0,0,0)}to{transform:translate3d(0,-32px,0)}}
 
 /* product switcher media */
 .tile-media{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0}
@@ -329,6 +358,13 @@ h1,h2,h3{letter-spacing:-.02em;font-weight:600;margin:0}
 </style>
 </head>
 <body>
+<div class="bg" aria-hidden="true">
+  <span class="bg-orb bg-o1"></span>
+  <span class="bg-orb bg-o2"></span>
+  <span class="bg-orb bg-o3"></span>
+  <span class="bg-orb bg-o4"></span>
+  <span class="bg-dots"></span>
+</div>
 <div id="prog"></div>
 
 <!-- ─── NAV ─────────────────────────────────────────────────────── -->
@@ -372,12 +408,23 @@ h1,h2,h3{letter-spacing:-.02em;font-weight:600;margin:0}
       </div>
     </div>
 
-    <!-- incoming-call preview (real video) -->
-    <div class="callprev rv">
-      <video class="call-vid" autoplay muted loop playsinline preload="auto" aria-label="Adinkra Hotel incoming call">
+    <!-- incoming-call preview (real video + receive→hear-voice flow) -->
+    <div class="callprev rv" id="callprev" data-state="ringing">
+      <video class="call-vid" autoplay muted loop playsinline preload="auto" aria-hidden="true">
         <source src="assets/Adinkra%20Hotel.mp4" type="video/mp4">
       </video>
-      <div class="callprev-badge"><span class="dot-live"></span> Incoming call · Adinkra Hotel</div>
+      <div class="cp-scrim" aria-hidden="true"></div>
+      <div class="cp-badge"><span class="cp-dot"></span><span id="callStatus">Incoming call</span></div>
+      <div class="cp-foot">
+        <div class="cp-name">Adinkra Hotel</div>
+        <div class="cp-sub" id="callSub">Voice agent · ringing…</div>
+        <div class="cp-wave" id="callWave" hidden></div>
+        <div class="cp-actions">
+          <button class="cp-btn decline" id="declineBtn" type="button" aria-label="Decline call">✕</button>
+          <button class="cp-btn accept" id="acceptBtn" type="button" aria-label="Accept call">📞</button>
+          <button class="cp-btn end" id="endBtn" type="button" aria-label="End call" hidden>✕</button>
+        </div>
+      </div>
     </div>
   </div>
 </header>
@@ -642,13 +689,36 @@ document.querySelectorAll('[data-audio]:not(.clip)').forEach(function(el){
   el.addEventListener('click',function(){ play(el.getAttribute('data-audio'),el.getAttribute('data-audio2')); });
 });
 
-/* ── hero "Hear a live call" → jump to the audio showcase & play ── */
-var hearBtn=document.getElementById('hearBtn');
-if(hearBtn) hearBtn.addEventListener('click',function(){
-  var listen=document.getElementById('listen');
-  if(listen) listen.scrollIntoView({behavior:'smooth'});
-  play('assets/demo_kwame_02.mp3','assets/kwame_test_1.mp3');
-});
+/* ── interactive incoming call: receive → hear the voice ───────── */
+(function(){
+  var cp=document.getElementById('callprev'); if(!cp) return;
+  var statusEl=document.getElementById('callStatus'), subEl=document.getElementById('callSub'),
+      wave=document.getElementById('callWave'), acc=document.getElementById('acceptBtn'),
+      dec=document.getElementById('declineBtn'), end=document.getElementById('endBtn');
+  for(var i=0;i<32;i++) wave.appendChild(document.createElement('i'));
+  var t=null, secs=0;
+  function fmt(s){var m=Math.floor(s/60);s%=60;return (m<10?'0':'')+m+':'+(s<10?'0':'')+s;}
+  function answer(){
+    if(cp.getAttribute('data-state')==='live') return;
+    cp.setAttribute('data-state','live');
+    statusEl.textContent='Connected'; acc.hidden=true; dec.hidden=true; end.hidden=false; wave.hidden=false;
+    secs=0; subEl.textContent='00:00';
+    t=setInterval(function(){secs++; subEl.textContent=fmt(secs);},1000);
+    play('assets/demo_kwame_02.mp3','assets/kwame_test_1.mp3');
+  }
+  function hangup(){
+    cp.setAttribute('data-state','ringing');
+    statusEl.textContent='Incoming call'; subEl.textContent='Voice agent · ringing…';
+    acc.hidden=false; dec.hidden=false; end.hidden=true; wave.hidden=true;
+    if(t){clearInterval(t);t=null;} try{player.pause();}catch(e){}
+  }
+  acc.addEventListener('click',answer);
+  dec.addEventListener('click',hangup);
+  end.addEventListener('click',hangup);
+  player.addEventListener('ended',function(){ if(cp.getAttribute('data-state')==='live') hangup(); });
+  var hb=document.getElementById('hearBtn');
+  if(hb) hb.addEventListener('click',function(){ document.getElementById('top').scrollIntoView({behavior:'smooth'}); answer(); });
+})();
 
 /* ── count-up stats band ───────────────────────────────────────── */
 function countUp(el){

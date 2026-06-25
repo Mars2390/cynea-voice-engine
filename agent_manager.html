@@ -34,15 +34,23 @@ h1,h2,h3{letter-spacing:-.02em;font-weight:600;margin:0}.muted{color:var(--muted
 #prog{position:fixed;top:0;left:0;height:2px;width:0;background:linear-gradient(90deg,#00D4FF,#7C5CFC);z-index:80}
 
 /* ════════ PAGE — Agent Manager console ════════ */
-main{padding:32px 0 16px}
+main{padding:24px 0 16px}
 .section{display:flex;flex-direction:column;gap:20px}
-.section + .section{margin-top:20px}
+.section + .section{margin-top:22px}
 
-/* header */
-.am-head{display:flex;align-items:flex-end;justify-content:space-between;gap:20px;flex-wrap:wrap}
-.am-head h1{font-size:34px;line-height:1.1}
-.am-head .sub{margin-top:8px;color:var(--muted);font-size:15px}
-@media(max-width:560px){.am-head h1{font-size:27px}}
+/* cinematic header banner */
+.am-hero{position:relative;overflow:hidden;border-radius:var(--r-lg);color:#fff;min-height:230px;display:flex;align-items:flex-end;box-shadow:0 22px 50px -16px rgba(22,22,22,.22);isolation:isolate}
+.am-hero video,.am-hero .hero-fallback{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:-2}
+.am-hero .hero-fallback{background:radial-gradient(120% 140% at 80% 10%,#16324a,#0a0e14 60%)}
+.am-hero::after{content:"";position:absolute;inset:0;z-index:-1;background:linear-gradient(105deg,rgba(7,10,15,.92) 0%,rgba(7,10,15,.72) 44%,rgba(7,10,15,.28) 100%),radial-gradient(80% 120% at 100% 0,rgba(0,212,255,.22),transparent 55%)}
+.am-hero-in{padding:30px 32px;width:100%;display:flex;align-items:flex-end;justify-content:space-between;gap:20px;flex-wrap:wrap}
+.am-hero .eyebrow{color:#5fe2ff}
+.am-hero h1{font-size:clamp(28px,4vw,40px);line-height:1.06;margin:12px 0 8px;font-weight:700}
+.am-hero .sub{color:rgba(255,255,255,.74);font-size:15px}
+.am-hero .sub strong{color:#fff}
+.am-hero .btn-dark{background:#fff;color:var(--ink);border-color:#fff}
+.am-hero .btn-dark:hover{background:#f0ece3}
+@media(max-width:560px){.am-hero-in{padding:24px}.am-hero{min-height:200px}}
 
 /* KPI strip */
 .kpi{display:flex;flex-wrap:wrap;padding:6px 0}
@@ -136,19 +144,25 @@ table.tbl .act .btn{padding:6px 11px;font-size:12px;margin-left:6px}
 <body>
 
 <div id="prog"></div>
-<nav class="nav"><div class="nav-in"><a class="brand" href="index.html"><b>CYNEA</b><span>VOICE ENGINE</span></a><div class="nav-links"><a href="index.html#agents">Agents</a><a href="index.html#platform">Platform</a><a href="product_tour.html">Product tour</a><a class="active" href="agent_manager.html">Dashboard</a><a href="help_center.html">Docs</a></div><div class="nav-right"><a class="nav-signin" href="signin.html">Sign in</a><a class="btn btn-dark btn-sm" href="dashboard.html">Operations</a></div></div></nav>
+<nav class="nav"><div class="nav-in"><a class="brand" href="index.html"><b>CYNEA</b><span>VOICE ENGINE</span></a><div class="nav-links"><a href="dashboard.html">Dashboard</a><a class="active" href="agent_manager.html">Agents</a><a href="dashboard.html#history">Call history</a><a href="help_center.html">Docs</a></div><div class="nav-right"><a class="nav-signin" href="signin.html">Sign in</a><a class="btn btn-dark btn-sm" href="dashboard.html">Operations</a></div></div></nav>
 
 <main class="wrap">
 
-  <!-- 1 · HEADER -->
+  <!-- 1 · CINEMATIC HEADER -->
   <section class="section rv">
-    <div class="am-head">
-      <div>
-        <span class="eyebrow">Agent Manager</span>
-        <h1 id="greeting" style="margin-top:10px">Good morning</h1>
-        <p class="sub">You have <strong>3 active agents</strong> handling calls across every market.</p>
+    <div class="am-hero">
+      <video autoplay muted loop playsinline preload="auto" aria-hidden="true">
+        <source src="assets/Hero-bg%202.mp4" type="video/mp4">
+      </video>
+      <div class="hero-fallback" aria-hidden="true"></div>
+      <div class="am-hero-in">
+        <div>
+          <span class="eyebrow">Agent Manager</span>
+          <h1 id="greeting">Good morning</h1>
+          <p class="sub">You have <strong>3 active agents</strong> handling calls across every market.</p>
+        </div>
+        <button class="btn btn-dark" id="createBtn" type="button">+ Create New Agent</button>
       </div>
-      <button class="btn btn-dark" id="createBtn" type="button">+ Create New Agent</button>
     </div>
   </section>
 
@@ -200,7 +214,7 @@ table.tbl .act .btn{padding:6px 11px;font-size:12px;margin-left:6px}
 
 </main>
 
-<footer class="foot"><div class="foot-in"><span>© 2026 Cynea AI · Voice agents worldwide</span><span>Agent Manager</span></div></footer>
+<footer class="foot"><div class="foot-in"><span>🇰🇪 Cynea AI — Made in Kenya</span><span class="mono">Agent Manager · v2.4.0</span></div></footer>
 
 <!-- MODAL -->
 <div class="overlay" id="overlay" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
@@ -256,6 +270,11 @@ table.tbl .act .btn{padding:6px 11px;font-size:12px;margin-left:6px}
 <script>
 'use strict';
 
+/* ── force-start muted autoplay videos (some mobile browsers) ── */
+document.querySelectorAll('video').forEach(function(v){
+  var p=v.play&&v.play(); if(p&&p.catch) p.catch(function(){});
+});
+
 /* ── data ── */
 var AGENTS = [
   { name:'Kwame', role:'Hotel Receptionist', voice:'George', status:'oncall',
@@ -268,11 +287,11 @@ var AGENTS = [
     audio:'assets/amina_test_1.mp3' },
   { name:'Kofi', role:'Restaurant Orders', voice:'Eric', status:'oncall',
     callsToday:33, containment:85, created:'Apr 20, 2026',
-    img:'', initial:'K', c1:'#34D399', c2:'#10B981',
+    img:'assets/avatar-kofi.jpg', initial:'K', c1:'#34D399', c2:'#10B981',
     audio:'assets/kofi_test_1.mp3' },
   { name:'Maya', role:'Bookings', voice:'Aria', status:'ready',
     callsToday:0, containment:0, created:'Apr 25, 2026',
-    img:'', initial:'M', c1:'#FBBF24', c2:'#F59E0B',
+    img:'assets/avatar-maya.jpg', initial:'M', c1:'#FBBF24', c2:'#F59E0B',
     audio:'assets/kofi_test_1.mp3' }
 ];
 

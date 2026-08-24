@@ -1,775 +1,1540 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Cynea — Voice Operations Center</title>
-<meta name="description" content="Cynea Voice Operations Center — live analytics for human-like AI voice agents serving businesses worldwide." />
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Operations Center · Cynea</title>
+<meta name="robots" content="noindex">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600&display=swap" rel="stylesheet">
+
 <style>
-:root{--cream:#F5F1EA;--cream-2:#EFEAE0;--surface:#FFFFFF;--surface-2:#FBF8F2;--ink:#161616;--muted:#6B6660;--faint:#9A938A;--line:#E6E0D5;--black:#0A0A0A;--accent:#00D4FF;--accent-ink:#0089A8;--violet:#7C5CFC;--ok:#10B981;--warn:#F59E0B;--danger:#EF4444;--r:18px;--r-lg:28px;--maxw:1240px;
-  --shadow:0 1px 2px rgba(22,22,22,.04),0 1px 1px rgba(22,22,22,.03);
-  --shadow-lift:0 22px 50px -16px rgba(22,22,22,.22)}
-*,*::before,*::after{box-sizing:border-box}html{scroll-behavior:smooth}
-body{margin:0;background:var(--cream);color:var(--ink);font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;font-size:15px;line-height:1.5;-webkit-font-smoothing:antialiased;overflow-x:hidden}
-@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important}}
-a{color:inherit;text-decoration:none}.wrap{max-width:var(--maxw);margin:0 auto;padding:0 24px}.mono{font-family:'JetBrains Mono',monospace;font-feature-settings:"tnum" 1}
-.eyebrow{font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--accent-ink);font-weight:500}
-h1,h2,h3{letter-spacing:-.02em;font-weight:600;margin:0}.muted{color:var(--muted)}
-.btn{display:inline-flex;align-items:center;gap:8px;font-family:inherit;font-size:14px;font-weight:500;padding:9px 16px;border-radius:999px;border:1px solid var(--line);background:var(--surface);color:var(--ink);cursor:pointer;transition:transform .18s,box-shadow .2s,background .2s,border-color .2s}
-.btn:hover{transform:translateY(-1px)}.btn-dark{background:var(--black);color:#fff;border-color:var(--black)}.btn-dark:hover{background:#262626;box-shadow:0 10px 28px rgba(0,0,0,.18)}.btn-sm{padding:7px 13px;font-size:13px}
-.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--shadow)}
-.nav{position:sticky;top:0;z-index:60;background:rgba(245,241,234,.82);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border-bottom:1px solid var(--line)}
-.nav-in{display:flex;align-items:center;gap:24px;height:60px;max-width:var(--maxw);margin:0 auto;padding:0 24px}
-.brand{display:inline-flex;align-items:baseline;gap:9px}.brand b{font-weight:700;font-size:19px;letter-spacing:.02em}.brand span{font-size:10px;letter-spacing:.28em;color:var(--faint);font-weight:600}
-.nav-links{display:flex;gap:24px;margin:0 auto}.nav-links a{font-size:14px;color:var(--muted);font-weight:500}.nav-links a:hover,.nav-links a.active{color:var(--ink)}
-.nav-right{display:flex;align-items:center;gap:12px}.nav-signin{font-size:14px;color:var(--ink);font-weight:500}
-.nav-ava{width:30px;height:30px;border-radius:50%;background:linear-gradient(135deg,#00D4FF,#7C5CFC);display:inline-grid;place-items:center;color:#04323d;font-weight:700;font-size:12px;box-shadow:0 2px 8px rgba(0,0,0,.12)}
-@media(max-width:920px){.nav-links{display:none}.nav-signin{display:none}}
-.pill{display:inline-flex;align-items:center;gap:6px;padding:3px 10px;border-radius:999px;font-size:11px;font-weight:600;border:1px solid}
-.pill-ok{color:#0F9D6E;border-color:rgba(16,185,129,.3);background:rgba(16,185,129,.1)}
-.pill-warn{color:#B45309;border-color:rgba(245,158,11,.3);background:rgba(245,158,11,.1)}
-.pill-danger{color:#B91C1C;border-color:rgba(239,68,68,.3);background:rgba(239,68,68,.1)}
-.dot{width:8px;height:8px;border-radius:50%;background:var(--ok);box-shadow:0 0 0 0 rgba(16,185,129,.6);animation:pulse 1.8s infinite}
-@keyframes pulse{0%{box-shadow:0 0 0 0 rgba(16,185,129,.5)}70%{box-shadow:0 0 0 9px rgba(16,185,129,0)}100%{box-shadow:0 0 0 0 rgba(16,185,129,0)}}
-.foot{padding:48px 0 36px;border-top:1px solid var(--line);margin-top:36px}
-.foot-in{max-width:var(--maxw);margin:0 auto;padding:0 24px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:16px;font-size:13px;color:var(--faint)}
-.foot-in .made{display:inline-flex;align-items:center;gap:8px;color:var(--muted)}
-.foot-in .flag{font-size:15px}
-.foot-links{display:flex;gap:18px}.foot-links a:hover{color:var(--ink)}
-.rv{opacity:0;transform:translateY(18px);transition:opacity .6s cubic-bezier(.2,.8,.2,1),transform .6s cubic-bezier(.2,.8,.2,1)}.rv.in{opacity:1;transform:none}
-#prog{position:fixed;top:0;left:0;height:2px;width:0;background:linear-gradient(90deg,#00D4FF,#7C5CFC);z-index:80}
+/* ═══════════════════════════════════════════════════════════════════
+   CYNEA CONSOLE — application shell
+   Chrome palette is the brand's. Data colours are a separate, validated
+   set: #00D4FF fails the lightness band (L .80) and reads 1.65:1 on the
+   panel, so it stays a UI accent and never encodes a value.
+   ═══════════════════════════════════════════════════════════════════ */
+:root{
+  /* chrome */
+  --bg:#FFFFFF; --panel:#F5F7FA; --line:#E1E4EA;
+  --ink:#0E121B; --muted:#617481; --accent:#00D4FF; --navy:#00122E;
+  --panel-2:#EEF1F6;
 
-/* ========= PAGE: Voice Operations Center ========= */
-.ops{padding:24px 0}
-.section{margin-bottom:22px}
+  /* data — validated: worst adjacent CVD ΔE 17.1 (protan), norm 30.3 */
+  --viz-1:#0E80A8; --viz-2:#eb6834; --viz-3:#4a3aa7; --viz-4:#eda100;
+  --viz-solo:#0088AA;      /* single-series mark: passes all six checks */
+  --viz-track:#D3EAF1;     /* meter track = lighter step of the same hue */
+  --grid:#E8EBF0;          /* recessive hairline, solid, never dashed */
 
-/* cinematic hero header */
-.ops-hero{position:relative;overflow:hidden;border-radius:var(--r-lg);color:#fff;min-height:260px;display:flex;align-items:flex-end;box-shadow:var(--shadow-lift);isolation:isolate}
-.ops-hero video,.ops-hero .hero-fallback{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:-2}
-.ops-hero .hero-fallback{background:radial-gradient(120% 150% at 78% -10%,#1c4763,#0e2233 45%,#080b10 80%),radial-gradient(rgba(255,255,255,.05) 1px,transparent 1px);background-size:100% 100%,24px 24px}
-.ops-hero::after{content:"";position:absolute;inset:0;z-index:-1;background:linear-gradient(100deg,rgba(7,10,15,.9) 0%,rgba(7,10,15,.62) 46%,rgba(7,10,15,.18) 100%),radial-gradient(70% 120% at 100% 0,rgba(0,212,255,.28),transparent 55%)}
-.ops-hero-in{padding:32px;width:100%;display:flex;align-items:flex-end;justify-content:space-between;gap:24px;flex-wrap:wrap}
-.ops-hero .eyebrow{color:#5fe2ff}
-.ops-hero h1{font-size:clamp(30px,4.4vw,46px);line-height:1.04;margin:12px 0 10px;font-weight:700}
-.ops-hero .sub{font-size:15px;color:rgba(255,255,255,.74)}
-.ops-hero .sub .sep{color:rgba(255,255,255,.4);margin:0 8px}
-.hero-right{display:flex;flex-direction:column;align-items:flex-end;gap:10px}
-.hero-live{display:inline-flex;align-items:center;gap:7px;padding:5px 12px;border-radius:999px;font-size:11px;font-weight:600;color:#5fe2ff;background:rgba(0,212,255,.12);border:1px solid rgba(0,212,255,.35);text-transform:uppercase;letter-spacing:.1em}
-.clock{font-family:'JetBrains Mono',monospace;font-size:30px;font-weight:500;letter-spacing:.01em;font-feature-settings:"tnum" 1;color:#fff}
-.clock-date{font-family:'JetBrains Mono',monospace;font-size:11px;color:rgba(255,255,255,.6);letter-spacing:.08em;text-transform:uppercase}
-@media(max-width:640px){.ops-hero-in{padding:24px}.ops-hero{min-height:220px}}
+  /* status — reserved, never reused as a series colour */
+  --ok:#067647; --ok-bg:#E7F5EE;
+  --warn:#B45309; --warn-bg:#FDF1E3;
+  --bad:#B42318; --bad-bg:#FDECEA;
 
-/* KPI row */
-.kpi-row{display:grid;grid-template-columns:repeat(4,1fr);gap:18px}
-@media(max-width:900px){.kpi-row{grid-template-columns:repeat(2,1fr)}}
-@media(max-width:520px){.kpi-row{grid-template-columns:1fr}}
-.kpi{padding:22px;position:relative;overflow:hidden;transition:transform .22s cubic-bezier(.2,.8,.2,1),box-shadow .25s}
-.kpi:hover{transform:translateY(-3px);box-shadow:var(--shadow-lift)}
-.kpi::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,212,255,.05),transparent 55%);pointer-events:none}
-.kpi .ktop{display:flex;align-items:center;justify-content:space-between}
-.kpi .label{font-size:11px;text-transform:uppercase;letter-spacing:.12em;color:var(--muted);font-weight:600}
-.kpi .kicon{width:30px;height:30px;border-radius:9px;display:grid;place-items:center;background:rgba(0,212,255,.1);color:var(--accent-ink);font-size:15px}
-.kpi .value{font-family:'JetBrains Mono',monospace;font-size:38px;font-weight:500;margin:14px 0 8px;letter-spacing:-.02em;font-feature-settings:"tnum" 1}
-.kpi .trend{font-size:12px;font-weight:500}
-.kpi .trend.up{color:var(--ok)}.kpi .trend.dn{color:var(--warn)}
+  --sidebar:240px;
+  --r:10px; --r-sm:8px;
+  --sans:'Inter Tight',system-ui,-apple-system,'Segoe UI',sans-serif;
+}
+*,*::before,*::after{box-sizing:border-box}
+html,body{height:100%}
+body{
+  margin:0;background:var(--bg);color:var(--ink);
+  font-family:var(--sans);font-size:14px;line-height:1.45;
+  -webkit-font-smoothing:antialiased;
+}
+h1,h2,h3,h4,p{margin:0}
+ul{margin:0;padding:0;list-style:none}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
+input,select,textarea{font:inherit;color:inherit}
+a{color:inherit;text-decoration:none}
+img{display:block;max-width:100%}
+picture{display:contents}
+:focus-visible{outline:2px solid var(--viz-solo);outline-offset:2px;border-radius:4px}
 
-/* section heading helper */
-.sh{display:flex;align-items:baseline;justify-content:space-between;gap:14px;margin-bottom:14px}
-.sh h2{font-size:13px;letter-spacing:.10em;text-transform:uppercase;color:var(--ink);font-family:'JetBrains Mono',monospace;font-weight:600}
-.sh .note{font-size:12px;color:var(--faint)}
+/* numerals: proportional for standalone figures, tabular only in columns */
+.tnum{font-variant-numeric:tabular-nums}
 
-/* agent status */
-.agent-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
-@media(max-width:1000px){.agent-grid{grid-template-columns:repeat(2,1fr)}}
-@media(max-width:520px){.agent-grid{grid-template-columns:1fr}}
-.agent{padding:18px;position:relative;overflow:hidden;transition:transform .22s cubic-bezier(.2,.8,.2,1),box-shadow .25s,border-color .25s}
-.agent:hover{transform:translateY(-3px);box-shadow:var(--shadow-lift);border-color:#D8D0C2}
-.agent::before{content:"";position:absolute;left:0;right:0;top:0;height:3px;background:linear-gradient(90deg,var(--c1,#00D4FF),var(--c2,#7C5CFC))}
-.agent-top{display:flex;align-items:center;gap:11px;margin-bottom:14px}
-.avatar{width:46px;height:46px;border-radius:50%;flex-shrink:0;overflow:hidden;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:16px;background:linear-gradient(135deg,var(--c1,#00D4FF),var(--c2,#7C5CFC));box-shadow:0 4px 14px rgba(0,0,0,.14)}
-.avatar img{width:100%;height:100%;object-fit:cover;display:block}
-.agent-name{font-size:15px;font-weight:600;line-height:1.2}
-.agent-role{font-size:12px;color:var(--muted)}
-.agent-mid{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
-.agent-timer{font-family:'JetBrains Mono',monospace;font-size:20px;font-weight:500;font-feature-settings:"tnum" 1}
-.agent-timer.idle{color:var(--faint);font-size:15px}
-.agent-stats{display:flex;justify-content:space-between;padding-top:11px;border-top:1px solid var(--line);font-size:12px;color:var(--muted)}
-.agent-stats b{display:block;color:var(--ink);font-family:'JetBrains Mono',monospace;font-size:14px;font-weight:600;margin-top:2px}
+.lbl{font-size:12px;text-transform:uppercase;letter-spacing:.02em;color:var(--muted);font-weight:500}
 
-/* card header */
-.ch{display:flex;align-items:baseline;justify-content:space-between;padding:18px 22px 14px;border-bottom:1px solid var(--line)}
-.ch h2{font-size:15px;font-weight:600}
-.ch .meta{font-size:12px;color:var(--faint);font-family:'JetBrains Mono',monospace}
-.cbody{padding:20px 22px 22px}
+/* ── buttons ──────────────────────────────────────────────────────── */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:7px;
+  height:34px;padding:0 14px;border-radius:var(--r-sm);font-size:13px;font-weight:500;
+  transition:box-shadow .16s,background .16s}
+.btn-primary{background:var(--navy);color:#fff}
+.btn-primary:hover{box-shadow:inset 0 0 0 1px rgba(255,255,255,.34)}
+.btn-ghost{box-shadow:inset 0 0 0 1px var(--line)}
+.btn-ghost:hover{box-shadow:inset 0 0 0 1px var(--ink)}
+.btn-sm{height:28px;padding:0 10px;font-size:12px}
 
-/* global coverage (video) */
-.cov-card{position:relative;overflow:hidden}
-.worldmap{position:relative;min-height:340px;border-radius:var(--r);overflow:hidden;background:#0B0E13}
-.worldmap video,.worldmap .wm-fallback{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:.92}
-.worldmap .wm-fallback{background-color:#0E1014;background-image:radial-gradient(rgba(255,255,255,.10) 1.1px,transparent 1.1px);background-size:22px 22px}
-.worldmap::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(8,11,16,.15),rgba(8,11,16,.45));pointer-events:none}
-.node{position:absolute;width:9px;height:9px;border-radius:50%;background:var(--accent);box-shadow:0 0 0 0 rgba(0,212,255,.55),0 0 14px 3px rgba(0,212,255,.7);animation:nodePulse 2.6s infinite;z-index:2}
-@keyframes nodePulse{0%{box-shadow:0 0 0 0 rgba(0,212,255,.5),0 0 14px 3px rgba(0,212,255,.6)}70%{box-shadow:0 0 0 12px rgba(0,212,255,0),0 0 14px 3px rgba(0,212,255,.6)}100%{box-shadow:0 0 0 0 rgba(0,212,255,0),0 0 14px 3px rgba(0,212,255,.6)}}
-.wm-stats{position:absolute;left:18px;right:18px;bottom:16px;display:flex;gap:10px;flex-wrap:wrap;z-index:3}
-.wm-chip{font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.03em;color:#fff;background:rgba(8,11,16,.5);padding:7px 13px;border-radius:999px;border:1px solid rgba(0,212,255,.3);backdrop-filter:blur(6px)}
-.wm-chip b{color:var(--accent)}
+/* ══ APP SHELL ════════════════════════════════════════════════════ */
+.app{display:grid;grid-template-columns:var(--sidebar) 1fr;height:100vh;overflow:hidden}
 
-/* bar chart */
-.bars{display:flex;align-items:flex-end;gap:5px;height:170px}
-.bar-col{flex:1;display:flex;flex-direction:column;align-items:center;gap:6px;height:100%;min-width:0}
-.bar-track{flex:1;width:100%;display:flex;align-items:flex-end}
-.bar-fill{width:100%;border-radius:4px 4px 0 0;background:linear-gradient(180deg,#00D4FF,#0089A8);opacity:.92;transition:height .8s cubic-bezier(.2,.8,.2,1);min-height:2px}
-.bar-col:hover .bar-fill{opacity:1;filter:brightness(1.08)}
-.bars-axis{display:flex;justify-content:space-between;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--faint);margin-top:8px;padding-top:8px;border-top:1px solid var(--line)}
+/* ── sidebar ──────────────────────────────────────────────────────── */
+.side{
+  border-right:1px solid var(--line);background:var(--bg);
+  display:flex;flex-direction:column;min-height:0;
+}
+.side-top{padding:16px 14px 10px;border-bottom:1px solid var(--line)}
+.brand{display:flex;align-items:center;gap:8px;font-size:15px;font-weight:600;letter-spacing:-.3px;padding:0 6px 12px}
+.brand i{width:9px;height:9px;border-radius:50%;background:var(--accent);flex-shrink:0}
+.ws{display:flex;align-items:center;gap:9px;width:100%;padding:7px 8px;border-radius:var(--r-sm);
+  transition:background .16s;text-align:left}
+.ws:hover{background:var(--panel)}
+.ws-av{width:26px;height:26px;border-radius:6px;background:var(--navy);color:#fff;
+  display:grid;place-items:center;font-size:11px;font-weight:600;flex-shrink:0}
+.ws b{font-size:13px;font-weight:500;display:block;line-height:1.25}
+.ws small{font-size:11px;color:var(--muted)}
+.ws svg{margin-left:auto;color:var(--muted);flex-shrink:0}
 
-/* charts row */
-.charts3{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
-@media(max-width:980px){.charts3{grid-template-columns:1fr}}
-.sline{width:100%;height:150px;display:block}
-.donut-wrap{display:flex;align-items:center;gap:20px}
-.donut{width:130px;height:130px;border-radius:50%;flex-shrink:0;position:relative}
-.donut-hole{position:absolute;inset:26px;border-radius:50%;background:var(--surface);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center}
-.donut-hole .t{font-family:'JetBrains Mono',monospace;font-size:18px;font-weight:600}
-.donut-hole .l{font-size:10px;color:var(--faint);text-transform:uppercase;letter-spacing:.1em}
-.legend{list-style:none;margin:0;padding:0;flex:1;font-size:13px}
-.legend li{display:grid;grid-template-columns:12px 1fr auto;gap:9px;align-items:center;padding:5px 0}
-.legend .ld{width:11px;height:11px;border-radius:3px}
-.legend .lv{font-family:'JetBrains Mono',monospace;font-weight:600}
-.cont-big{font-family:'JetBrains Mono',monospace;font-size:52px;font-weight:600;letter-spacing:-.03em;text-align:center;margin:8px 0 4px}
-.cont-sub{text-align:center;font-size:12px;color:var(--muted);margin-bottom:20px}
-.meter{height:8px;background:var(--cream-2);border-radius:999px;overflow:hidden}
-.meter>div{height:100%;border-radius:999px;background:linear-gradient(90deg,#00D4FF,#10B981);width:0;transition:width 1.1s cubic-bezier(.2,.8,.2,1)}
-.cont-scale{display:flex;justify-content:space-between;font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--faint);margin-top:6px}
+.side-nav{flex:1;overflow-y:auto;padding:14px 10px}
+.nav-group{margin-bottom:16px}
+.nav-group>span{display:block;font-size:11px;text-transform:uppercase;letter-spacing:.06em;
+  color:var(--muted);font-weight:600;padding:0 8px 6px}
+.nav-item{display:flex;align-items:center;gap:10px;width:100%;
+  min-height:34px;padding:6px 8px;border-radius:var(--r-sm);
+  font-size:13px;color:var(--ink);transition:background .14s}
+.nav-item:hover{background:var(--panel)}
+.nav-item[aria-current="page"]{background:var(--panel-2);font-weight:500}
+.nav-item svg{color:var(--muted);flex-shrink:0}
+.nav-item[aria-current="page"] svg{color:var(--ink)}
+.nav-item .cnt{margin-left:auto;font-size:11px;color:var(--muted);font-variant-numeric:tabular-nums}
+.nav-item .live{margin-left:auto;display:inline-flex;align-items:center;gap:5px;font-size:11px;color:var(--ok)}
+.nav-item .live i{width:6px;height:6px;border-radius:50%;background:var(--ok);animation:blink 2s ease-in-out infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.35}}
 
-/* feature media tiles (videos) */
-.media2{display:grid;grid-template-columns:1fr 1fr;gap:18px}
-@media(max-width:760px){.media2{grid-template-columns:1fr}}
-.mtile{position:relative;border-radius:var(--r);overflow:hidden;min-height:230px;display:flex;align-items:flex-end;color:#fff;box-shadow:var(--shadow);transition:transform .25s,box-shadow .25s}
-.mtile:hover{transform:translateY(-3px);box-shadow:var(--shadow-lift)}
-.mtile video,.mtile .mt-fallback{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:-2}
-.mtile .mt-fallback{background:linear-gradient(135deg,#16324a,#0a0e14)}
-.mtile::after{content:"";position:absolute;inset:0;z-index:-1;background:linear-gradient(180deg,rgba(7,10,15,.05) 30%,rgba(7,10,15,.82))}
-.mtile-in{padding:22px;width:100%}
-.mtile .mt-k{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:#5fe2ff}
-.mtile h3{font-size:20px;font-weight:600;margin:8px 0 4px}
-.mtile p{font-size:13px;color:rgba(255,255,255,.78);margin:0}
-.mt-metric{font-family:'JetBrains Mono',monospace;font-weight:600}
+.side-foot{border-top:1px solid var(--line);padding:14px}
+.gs{display:block;width:100%;text-align:left;padding:10px;border-radius:var(--r-sm);background:var(--panel);
+  transition:background .16s}
+.gs:hover{background:var(--panel-2)}
+.gs-row{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:8px}
+.gs-row b{font-size:12px;font-weight:500}
+.gs-row span{font-size:11px;color:var(--muted);font-variant-numeric:tabular-nums}
+.gs-track{height:4px;border-radius:2px;background:var(--viz-track);overflow:hidden}
+.gs-fill{height:100%;width:0%;background:var(--viz-solo);border-radius:2px}
+.trial{margin-top:12px;font-size:11px;color:var(--muted);display:flex;align-items:center;gap:6px}
+.trial i{width:6px;height:6px;border-radius:50%;background:var(--warn)}
+.who{margin-top:10px;font-size:11px;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 
-/* industries band */
-.ind-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:14px}
-@media(max-width:1000px){.ind-grid{grid-template-columns:repeat(3,1fr)}}
-@media(max-width:620px){.ind-grid{grid-template-columns:repeat(2,1fr)}}
-.ind{position:relative;border-radius:16px;overflow:hidden;aspect-ratio:3/4;display:flex;align-items:flex-end;color:#fff;box-shadow:var(--shadow);transition:transform .25s,box-shadow .25s}
-.ind:hover{transform:translateY(-4px);box-shadow:var(--shadow-lift)}
-.ind img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:-2;transition:transform .5s cubic-bezier(.2,.8,.2,1)}
-.ind:hover img{transform:scale(1.06)}
-.ind::after{content:"";position:absolute;inset:0;z-index:-1;background:linear-gradient(180deg,rgba(7,10,15,0) 35%,rgba(7,10,15,.85))}
-.ind-in{padding:14px;width:100%}
-.ind-in .nm{font-size:14px;font-weight:600}
-.ind-in .st{font-family:'JetBrains Mono',monospace;font-size:10px;color:#5fe2ff;display:flex;align-items:center;gap:6px;margin-top:3px}
-.ind-in .st .d2{width:6px;height:6px;border-radius:50%;background:var(--ok);box-shadow:0 0 8px var(--ok)}
+/* ── main column ──────────────────────────────────────────────────── */
+.main{display:flex;flex-direction:column;min-width:0;min-height:0}
+.bar{
+  display:flex;align-items:center;gap:12px;flex-wrap:wrap;
+  padding:12px 22px;border-bottom:1px solid var(--line);background:var(--bg);
+  position:sticky;top:0;z-index:20;
+}
+.bar h1{font-size:17px;font-weight:600;letter-spacing:-.3px}
+.hamb{display:none;width:36px;height:36px;border-radius:var(--r-sm);align-items:center;justify-content:center}
+.hamb:hover{background:var(--panel)}
+.bar-right{margin-left:auto;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
 
-/* cost comparison */
-.roi{display:grid;grid-template-columns:1fr auto 1fr;gap:20px;align-items:stretch}
-@media(max-width:720px){.roi{grid-template-columns:1fr}.roi-vs{display:none}}
-.roi-side{padding:20px;border-radius:14px;background:var(--surface-2);border:1px solid var(--line);display:flex;flex-direction:column;gap:6px}
-.roi-cynea{border-color:rgba(0,212,255,.35);background:linear-gradient(160deg,var(--surface-2),rgba(0,212,255,.07))}
-.roi-side .rl{font-size:11px;text-transform:uppercase;letter-spacing:.1em;font-weight:600;color:var(--muted)}
-.roi-side .ra{font-family:'JetBrains Mono',monospace;font-size:32px;font-weight:600;letter-spacing:-.02em}
-.roi-side .rd{font-size:12px;color:var(--faint)}
-.roi-vs{align-self:center;font-family:'JetBrains Mono',monospace;font-weight:600;font-size:13px;letter-spacing:.16em;color:var(--faint)}
-.roi-save{margin-top:18px;padding:20px;text-align:center;border-top:1px solid var(--line)}
-.roi-save .rsl{font-size:11px;text-transform:uppercase;letter-spacing:.1em;font-weight:600;color:var(--muted)}
-.roi-save .rsn{font-family:'JetBrains Mono',monospace;font-size:50px;font-weight:700;color:var(--ok);letter-spacing:-.02em;line-height:1.05;margin:8px 0 4px}
-.roi-save .rsp{font-size:13px;color:var(--muted)}
+/* one filter row, above the content — never inside a chart card */
+.seg{display:inline-flex;padding:2px;background:var(--panel);border-radius:var(--r-sm)}
+.seg button{min-height:28px;padding:0 11px;border-radius:6px;font-size:12px;color:var(--muted);
+  transition:background .14s,color .14s}
+.seg button[aria-pressed="true"]{background:var(--bg);color:var(--ink);font-weight:500;
+  box-shadow:0 1px 2px rgba(14,18,27,.08)}
+.sel{height:28px;padding:0 26px 0 10px;border-radius:var(--r-sm);font-size:12px;
+  box-shadow:inset 0 0 0 1px var(--line);background:var(--bg);appearance:none;cursor:pointer;
+  background-image:url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' fill='none' stroke='%23617481' stroke-width='1.5'%3E%3Cpath d='M1 1l4 4 4-4'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;background-position:right 9px center}
+.samp{display:inline-flex;align-items:center;gap:6px;height:24px;padding:0 9px;border-radius:999px;
+  background:var(--warn-bg);color:var(--warn);font-size:11px;font-weight:500}
 
-/* two-up: coverage + queue */
-.cov-row{display:grid;grid-template-columns:1.55fr 1fr;gap:18px;align-items:start}
-@media(max-width:980px){.cov-row{grid-template-columns:1fr}}
-.queue{padding:6px 22px 14px;max-height:392px;overflow-y:auto;scrollbar-width:thin;scrollbar-color:var(--line) transparent}
-.queue::-webkit-scrollbar{width:6px}.queue::-webkit-scrollbar-thumb{background:var(--line);border-radius:999px}
-.qrow{display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid var(--line)}
-.qrow:last-child{border-bottom:none}
-.qrow .qav{width:34px;height:34px;border-radius:50%;flex-shrink:0;display:grid;place-items:center;color:#fff;font-weight:700;font-size:13px;background:linear-gradient(135deg,#00D4FF,#7C5CFC)}
-.qrow .qid{flex:1;min-width:0}
-.qrow .qnum{font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:600}
-.qrow .qdept{font-size:11px;color:var(--muted)}
-.qrow .qwait{font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--accent-ink);font-weight:600;text-align:right}
-.qrow .qwait small{display:block;font-size:10px;color:var(--faint);font-weight:400}
+.scroll{flex:1;overflow-y:auto;padding:22px;min-height:0}
+.view[hidden]{display:none}
+.sec{margin-bottom:26px}
+.sec-head{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+.sec-head h2{font-size:14px;font-weight:600}
+.sec-head .lbl{margin-left:auto}
 
-/* call log feed */
-.feed{max-height:300px;overflow-y:auto;padding:6px 22px 18px;scrollbar-width:thin;scrollbar-color:var(--line) transparent}
-.feed::-webkit-scrollbar{width:6px}.feed::-webkit-scrollbar-thumb{background:var(--line);border-radius:999px}
-.feed-row{display:grid;grid-template-columns:78px 80px 1fr;gap:12px;align-items:baseline;padding:10px 0;border-bottom:1px solid var(--line);font-size:13px;animation:feedIn .35s ease}
-.feed-row:last-child{border-bottom:none}
-.feed-row .ft{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--faint)}
-.feed-row .fa{font-size:12px;font-weight:600;color:var(--accent-ink)}
-@keyframes feedIn{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:none}}
-@media(max-width:560px){.feed-row{grid-template-columns:70px 1fr}.feed-row .fa{grid-column:1/-1}}
+.panel{background:var(--bg);border:1px solid var(--line);border-radius:var(--r)}
+.panel-fill{background:var(--panel)}
+.pad{padding:20px}
 
-/* table */
-.tw{overflow-x:auto}
-table{width:100%;border-collapse:collapse}
-thead th{text-align:left;font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);font-weight:600;padding:13px 18px;border-bottom:1px solid var(--line);background:var(--surface-2);cursor:pointer;user-select:none;white-space:nowrap}
-thead th .arr{opacity:.35;font-size:10px}
-thead th[aria-sort="ascending"],thead th[aria-sort="descending"]{color:var(--accent-ink)}
-thead th[aria-sort="ascending"] .arr,thead th[aria-sort="descending"] .arr{opacity:1}
-thead th.r{text-align:right}
-tbody td{padding:12px 18px;font-size:13px;border-bottom:1px solid var(--line);vertical-align:middle;white-space:nowrap}
-tbody tr{cursor:pointer}
-tbody tr:hover td{background:rgba(0,212,255,.05)}
-tbody tr.open td{background:rgba(0,212,255,.04)}
-.tnum{text-align:right;font-family:'JetBrains Mono',monospace;font-feature-settings:"tnum" 1}
-.tava{display:inline-flex;align-items:center;gap:9px;font-weight:600}
-.tava .avatar{width:28px;height:28px;font-size:12px}
-.sbar{position:relative;width:90px;height:8px;background:var(--cream-2);border-radius:999px;display:inline-block;vertical-align:middle;overflow:hidden}
-.sbar>div{position:absolute;top:0;bottom:0;left:0;border-radius:999px}
-.trx td{padding:0;border-bottom:1px solid var(--line)}
-.trx .tx{padding:16px 22px;background:var(--surface-2);font-size:13px;color:var(--muted);line-height:1.7}
-.trx .tx b{color:var(--ink)}
-.trx .tx .tline{display:block;padding:3px 0}
-.trx .tx .tagn{color:var(--accent-ink);font-weight:600}
+/* ══ SECTION 1 · KPI stat tiles ═══════════════════════════════════ */
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.kpi{background:var(--bg);border:1px solid var(--line);border-radius:var(--r);padding:16px 18px}
+.kpi .lbl{font-size:12px;text-transform:none;letter-spacing:0;font-weight:400}
+.kpi-v{font-size:30px;font-weight:600;letter-spacing:-.8px;line-height:1.1;margin-top:6px}
+.kpi-foot{display:flex;align-items:center;gap:8px;margin-top:8px}
+.delta{display:inline-flex;align-items:center;gap:3px;font-size:12px;font-weight:500}
+.delta.up{color:var(--ok)} .delta.down{color:var(--bad)}
+.delta small{color:var(--muted);font-weight:400}
+.spark{margin-left:auto;flex-shrink:0}
+
+/* ══ SECTION 2 · live queue ═══════════════════════════════════════ */
+.qrow{display:grid;grid-template-columns:20px 1fr 140px 84px 20px;gap:12px;align-items:center;
+  width:100%;min-height:44px;padding:9px 16px;border-top:1px solid var(--line);
+  text-align:left;transition:background .14s}
+.qrow:first-of-type{border-top:0}
+.qrow:hover{background:var(--panel)}
+.q-i{width:8px;height:8px;border-radius:50%;background:var(--viz-solo);justify-self:center}
+.q-i.hot{background:var(--bad);animation:blink 1.6s ease-in-out infinite}
+.q-num{font-size:13px;font-variant-numeric:tabular-nums}
+.q-cat{font-size:12px;color:var(--muted)}
+.q-wait{font-size:13px;font-variant-numeric:tabular-nums;text-align:right}
+.q-wait.hot{color:var(--bad);font-weight:500}
+.qrow .chev{color:var(--muted);justify-self:end}
+.q-agent{font-size:12px;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+
+/* ══ SECTION 3 · agent status ═════════════════════════════════════ */
+.agents{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.acard{background:var(--bg);border:1px solid var(--line);border-radius:var(--r);
+  padding:16px;text-align:left;transition:border-color .16s}
+.acard:hover{border-color:var(--ink)}
+.acard-top{display:flex;align-items:center;gap:11px}
+.acard img{width:40px;height:40px;border-radius:50%;object-fit:cover;flex-shrink:0}
+.acard b{display:block;font-size:14px;font-weight:600}
+.acard .role{font-size:12px;color:var(--muted)}
+.acard{display:flex;flex-direction:column}
+.acard-st{display:flex;align-items:center;gap:6px;margin-top:auto;padding-top:14px;font-size:12px}
+.acard-st i{width:7px;height:7px;border-radius:50%;flex-shrink:0}
+.st-on i{background:var(--ok);animation:blink 2s ease-in-out infinite}
+.st-on{color:var(--ok)}
+.st-idle i{background:var(--muted)} .st-idle{color:var(--muted)}
+.acard-st .timer{margin-left:auto;font-variant-numeric:tabular-nums;color:var(--muted)}
+
+/* ══ SECTION 4 · charts ═══════════════════════════════════════════ */
+.charts{display:grid;grid-template-columns:1.35fr 1fr;gap:12px}
+.charts-b{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px}
+.card-head{display:flex;align-items:baseline;gap:10px;padding:16px 18px 0}
+.card-head h3{font-size:13px;font-weight:600}
+.card-head .sub{font-size:12px;color:var(--muted)}
+.card-head .tbtn{margin-left:auto;font-size:11px;color:var(--muted);padding:3px 7px;border-radius:5px}
+.card-head .tbtn:hover{background:var(--panel);color:var(--ink)}
+.plot{padding:14px 18px 18px}
+.plot svg{display:block;width:100%;height:auto;overflow:visible}
+.dtable{display:none;padding:0 18px 18px}
+.dtable.on{display:block}
+.dtable table{width:100%;border-collapse:collapse;font-size:12px}
+.dtable th,.dtable td{padding:5px 8px;border-bottom:1px solid var(--line);text-align:left}
+.dtable th{color:var(--muted);font-weight:500}
+.dtable td:last-child,.dtable th:last-child{text-align:right;font-variant-numeric:tabular-nums}
+
+/* donut legend — identity never rests on colour alone */
+.dlegend{display:flex;flex-direction:column;gap:9px;min-width:0}
+.dl{display:flex;align-items:center;gap:8px;font-size:12px;min-width:0}
+.dl i{width:9px;height:9px;border-radius:2px;flex-shrink:0}
+.dl span{color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.dl b{margin-left:auto;font-weight:500;font-variant-numeric:tabular-nums;flex-shrink:0}
+.donut-wrap{display:grid;grid-template-columns:132px 1fr;gap:18px;align-items:center}
+
+/* containment meter */
+.meter{margin-top:4px}
+.meter-v{font-size:30px;font-weight:600;letter-spacing:-.8px;line-height:1}
+.meter-track{height:10px;border-radius:5px;background:var(--viz-track);margin-top:14px;position:relative;overflow:hidden}
+.meter-fill{height:100%;border-radius:5px;background:var(--viz-solo)}
+.meter-goal{position:absolute;top:-4px;bottom:-4px;width:2px;background:var(--ink);opacity:.55}
+.meter-legend{display:flex;justify-content:space-between;margin-top:9px;font-size:11px;color:var(--muted)}
+
+/* tooltip shared by every chart */
+.tip{position:fixed;z-index:200;pointer-events:none;opacity:0;transition:opacity .12s;
+  background:var(--navy);color:#fff;font-size:12px;padding:7px 10px;border-radius:6px;
+  box-shadow:0 6px 22px rgba(14,18,27,.24);white-space:nowrap}
+.tip.on{opacity:1}
+.tip b{font-variant-numeric:tabular-nums}
+
+/* ══ SECTION 5 · call history ═════════════════════════════════════ */
+.tscroll{overflow-x:auto}
+table.hist{width:100%;border-collapse:collapse;font-size:13px;min-width:720px}
+table.hist th{font-size:12px;color:var(--muted);font-weight:500;text-align:left;
+  padding:9px 16px;border-bottom:1px solid var(--line);white-space:nowrap}
+table.hist td{padding:0;border-bottom:1px solid var(--line)}
+table.hist tr:last-child td{border-bottom:0}
+table.hist tbody tr{transition:background .14s}
+table.hist tbody tr:hover{background:var(--panel);cursor:pointer}
+.cell{display:block;padding:11px 16px;min-height:44px;display:flex;align-items:center}
+.mono{font-variant-numeric:tabular-nums}
+.who-cell{display:flex;align-items:center;gap:8px}
+.who-cell img{width:22px;height:22px;border-radius:50%;object-fit:cover;flex-shrink:0}
+.badge{display:inline-flex;align-items:center;gap:5px;height:22px;padding:0 8px;border-radius:999px;
+  font-size:11px;font-weight:500;white-space:nowrap}
+.badge svg{flex-shrink:0}
+.b-ok{background:var(--ok-bg);color:var(--ok)}
+.b-warn{background:var(--warn-bg);color:var(--warn)}
+.b-bad{background:var(--bad-bg);color:var(--bad)}
+
+/* ══ MODAL ════════════════════════════════════════════════════════ */
+.scrim{position:fixed;inset:0;z-index:300;background:rgba(14,18,27,.44);
+  display:grid;place-items:center;padding:24px}
+.scrim[hidden]{display:none}
+.modal{background:var(--bg);border-radius:14px;width:min(720px,100%);max-height:88vh;
+  display:flex;flex-direction:column;overflow:hidden;box-shadow:0 30px 80px rgba(14,18,27,.3)}
+.m-head{display:flex;align-items:center;gap:12px;padding:16px 20px;border-bottom:1px solid var(--line)}
+.m-head h2{font-size:15px;font-weight:600}
+.m-head .badge{margin-left:auto}
+.x{width:32px;height:32px;border-radius:var(--r-sm);display:grid;place-items:center;color:var(--muted)}
+.x:hover{background:var(--panel);color:var(--ink)}
+.m-body{overflow-y:auto;min-height:0}
+
+/* amplitude waveform */
+.wf-wrap{padding:18px 20px;background:var(--panel);border-bottom:1px solid var(--line)}
+.wf{display:flex;align-items:center;gap:2px;height:52px;position:relative}
+.wf i{flex:1;min-width:2px;border-radius:1px;background:var(--viz-track);transition:background .1s}
+.wf i.past{background:var(--viz-solo)}
+.playing .wf i.past{animation:amp .7s ease-in-out infinite}
+@keyframes amp{0%,100%{transform:scaleY(1)}50%{transform:scaleY(.62)}}
+.wf-ctl{display:flex;align-items:center;gap:10px;margin-top:14px}
+.rnd{width:34px;height:34px;border-radius:50%;background:var(--navy);color:#fff;display:grid;place-items:center;flex-shrink:0}
+.rnd.alt{background:transparent;color:var(--ink);box-shadow:inset 0 0 0 1px var(--line)}
+.rnd.alt:hover{box-shadow:inset 0 0 0 1px var(--ink)}
+.wf-t{font-size:12px;color:var(--muted);font-variant-numeric:tabular-nums}
+.wf-note{margin-left:auto;font-size:11px;color:var(--muted)}
+.i-pause{display:none}
+.playing .i-play{display:none}
+.playing .i-pause{display:block}
+
+.tabs{display:flex;gap:2px;padding:0 20px;border-bottom:1px solid var(--line);background:var(--bg)}
+.tab{min-height:40px;padding:0 12px;font-size:13px;color:var(--muted);position:relative}
+.tab[aria-selected="true"]{color:var(--ink);font-weight:500}
+.tab[aria-selected="true"]::after{content:"";position:absolute;left:0;right:0;bottom:-1px;height:2px;background:var(--ink)}
+.tp{padding:20px}
+.tp[hidden]{display:none}
+.summary{font-size:14px;line-height:1.55}
+.facts{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:18px}
+.fact{background:var(--panel);border-radius:var(--r-sm);padding:12px 14px}
+.fact .lbl{font-size:11px}
+.fact b{display:block;font-size:19px;font-weight:600;margin-top:3px;letter-spacing:-.4px}
+.turn{display:grid;grid-template-columns:66px 1fr;gap:12px;padding:10px 0;border-bottom:1px solid var(--line)}
+.turn:last-child{border-bottom:0}
+.turn .t{font-size:11px;color:var(--muted);font-variant-numeric:tabular-nums;padding-top:2px}
+.turn .spk{font-size:11px;text-transform:uppercase;letter-spacing:.04em;font-weight:600;color:var(--muted)}
+.turn.agent .spk{color:var(--viz-solo)}
+.turn p{font-size:13px;margin-top:2px}
+.kv{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.kv div{background:var(--panel);border-radius:var(--r-sm);padding:11px 13px}
+.kv .lbl{font-size:11px}
+.kv b{display:block;font-size:14px;font-weight:500;margin-top:2px}
+
+/* ══ AGENT EDITOR ═════════════════════════════════════════════════ */
+.ed-head{display:flex;align-items:center;gap:12px;flex-wrap:wrap;
+  padding:14px 22px;border-bottom:1px solid var(--line)}
+.ed-head img{width:34px;height:34px;border-radius:50%;object-fit:cover}
+.ed-head h1{font-size:16px;font-weight:600}
+.ver{font-size:11px;color:var(--muted);background:var(--panel);padding:2px 7px;border-radius:5px;
+  font-variant-numeric:tabular-nums}
+.ed-tabs{display:flex;gap:2px;margin-left:auto}
+/* cost strip — the editor's most consequential line */
+.cost{display:flex;align-items:center;gap:8px;flex-wrap:wrap;
+  padding:10px 22px;background:var(--panel);border-bottom:1px solid var(--line);font-size:12px}
+.cost b{font-weight:600;font-variant-numeric:tabular-nums}
+.cost .dot{color:var(--line)}
+.cost .k{color:var(--muted)}
+.ed-cols{display:grid;grid-template-columns:1.15fr 1fr .8fr;gap:12px;padding:18px 22px}
+.ed-col>h3{font-size:12px;font-weight:600;margin-bottom:9px}
+.prompt{width:100%;min-height:340px;resize:vertical;padding:14px;border-radius:var(--r-sm);
+  border:1px solid var(--line);background:var(--panel);font-size:12.5px;line-height:1.6;
+  font-family:ui-monospace,'Cascadia Mono',Menlo,monospace}
+.prompt:focus{outline:0;border-color:var(--ink);background:var(--bg)}
+.acc{border:1px solid var(--line);border-radius:var(--r-sm);overflow:hidden}
+.acc-h{width:100%;display:flex;align-items:center;gap:10px;min-height:44px;padding:11px 13px;
+  font-size:13px;font-weight:500;text-align:left;border-bottom:1px solid var(--line)}
+.acc-h:last-of-type{border-bottom:0}
+.acc-h:hover{background:var(--panel)}
+.acc-h .pm{margin-left:auto;width:16px;height:16px;position:relative;color:var(--muted);flex-shrink:0}
+.acc-h .pm::before,.acc-h .pm::after{content:"";position:absolute;background:currentColor;left:50%;top:50%}
+.acc-h .pm::before{width:10px;height:1.5px;transform:translate(-50%,-50%)}
+.acc-h .pm::after{width:1.5px;height:10px;transform:translate(-50%,-50%);transition:transform .24s}
+.acc-h[aria-expanded="true"] .pm::after{transform:translate(-50%,-50%) scaleY(0)}
+.acc-p{border-bottom:1px solid var(--line);background:var(--panel)}
+.acc-p[hidden]{display:none}
+.acc-p .in{padding:13px}
+.frow{margin-bottom:11px}
+.frow:last-child{margin-bottom:0}
+.frow label{display:block;font-size:11px;text-transform:uppercase;letter-spacing:.02em;color:var(--muted);margin-bottom:4px}
+.frow input,.frow select,.frow textarea{width:100%;min-height:36px;padding:7px 9px;border-radius:6px;
+  border:1px solid var(--line);background:var(--bg);font-size:13px}
+.frow input:focus,.frow select:focus,.frow textarea:focus{outline:0;border-color:var(--ink)}
+.hint{font-size:11px;color:var(--muted);margin-top:4px}
+.test{background:var(--panel);border:1px solid var(--line);border-radius:var(--r-sm);padding:15px}
+.test h4{font-size:13px;font-weight:600;margin-bottom:4px}
+.test p{font-size:12px;color:var(--muted);margin-bottom:13px}
+.test .btn{width:100%}
+.mic{margin-top:10px}
+.test-log{margin-top:14px;padding-top:13px;border-top:1px solid var(--line);font-size:12px;color:var(--muted);min-height:20px}
+.test-log b{color:var(--ink);font-weight:500}
+
+/* ══ empty state for the routes that aren't built ═════════════════ */
+.empty{display:grid;place-items:center;padding:80px 24px;text-align:center}
+.empty .ic{width:44px;height:44px;border-radius:50%;background:var(--panel);display:grid;place-items:center;
+  color:var(--muted);margin-bottom:16px}
+.empty h2{font-size:16px;font-weight:600}
+.empty p{font-size:13px;color:var(--muted);margin-top:6px;max-width:44ch}
+
+/* ══ RESPONSIVE ═══════════════════════════════════════════════════ */
+.ovl{display:none;position:fixed;inset:0;z-index:40;background:rgba(14,18,27,.4)}
+@media(max-width:1180px){
+  .charts{grid-template-columns:1fr}
+  .kpis{grid-template-columns:1fr 1fr}
+  .agents{grid-template-columns:1fr 1fr}
+  .ed-cols{grid-template-columns:1fr 1fr}
+  .ed-col-test{grid-column:1/-1}
+}
+@media(max-width:820px){
+  .app{grid-template-columns:1fr}
+  .side{position:fixed;inset:0 auto 0 0;width:264px;z-index:50;transform:translateX(-100%);
+    transition:transform .22s cubic-bezier(.2,.7,.2,1)}
+  .side.open{transform:none}
+  .ovl.on{display:block}
+  .hamb{display:inline-flex}
+  .kpis,.agents,.charts,.charts-b,.ed-cols,.facts,.kv{grid-template-columns:1fr}
+  .scroll{padding:16px}
+  .qrow{grid-template-columns:16px 1fr 74px 20px;row-gap:2px}
+  .q-cat,.q-agent{display:none}
+  .donut-wrap{grid-template-columns:1fr;justify-items:center}
+  .bar{padding:10px 14px}
+  .bar h1{font-size:15px}
+  .ed-head,.cost{padding-inline:14px}
+  .ed-cols{padding:14px}
+  /* every interactive control clears the 44px touch minimum on mobile */
+  .btn,.btn-sm{height:44px;padding-inline:16px}
+  .nav-item,.acc-h,.tab,.seg button{min-height:44px}
+  .sel{height:44px}
+  .x,.rnd,.hamb{width:44px;height:44px}
+  .tbtn{min-height:44px;display:inline-flex;align-items:center}
+}
+@media(prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.001ms!important;animation-iteration-count:1!important;
+    transition-duration:.001ms!important}
+}
 </style>
 </head>
 <body>
-<div id="prog"></div>
-<nav class="nav"><div class="nav-in"><a class="brand" href="index.html"><b>CYNEA</b><span>VOICE ENGINE</span></a><div class="nav-links"><a class="active" href="dashboard.html">Dashboard</a><a href="agent_manager.html">Agents</a><a href="#history">Call history</a><a href="help_center.html">Docs</a></div><div class="nav-right"><a class="nav-signin" href="signin.html">Sign in</a><a href="agent_manager.html" class="nav-ava" title="Account">AM</a></div></div></nav>
 
-<main class="wrap ops">
+<div class="ovl" id="ovl"></div>
 
-  <!-- 1. CINEMATIC HERO HEADER -->
-  <section class="section">
-    <div class="ops-hero rv">
-      <video autoplay muted loop playsinline preload="auto" aria-hidden="true">
-        <source src="assets/Hero-bg%201.mp4" type="video/mp4">
-      </video>
-      <div class="hero-fallback" aria-hidden="true"></div>
-      <div class="ops-hero-in">
-        <div>
-          <p class="eyebrow">Live operations</p>
-          <h1>Voice Operations Center</h1>
-          <p class="sub">Good <span id="dayPart">day</span> — here's what's happening with your voice agents <span class="sep">·</span> live across every market</p>
+<div class="app">
+  <!-- ══ SIDEBAR ═══════════════════════════════════════════════════ -->
+  <aside class="side" id="side">
+    <div class="side-top">
+      <div class="brand"><i aria-hidden="true"></i>CYNEA</div>
+      <button class="ws" type="button">
+        <span class="ws-av" aria-hidden="true">CW</span>
+        <span>
+          <b>Cynea Workspace</b>
+          <small>Free trial</small>
+        </span>
+        <svg width="10" height="6" viewBox="0 0 10 6" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M1 1l4 4 4-4"/></svg>
+      </button>
+    </div>
+
+    <nav class="side-nav" aria-label="Console">
+      <div class="nav-group">
+        <span>Build</span>
+        <a class="nav-item" href="#/agents">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4.5 21c0-4.1 3.4-7.5 7.5-7.5s7.5 3.4 7.5 7.5"/></svg>
+          Agents <span class="cnt tnum">4</span>
+        </a>
+        <a class="nav-item" href="#/knowledge">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 5.5A1.5 1.5 0 0 1 5.5 4H11v16H5.5A1.5 1.5 0 0 1 4 18.5z"/><path d="M20 5.5A1.5 1.5 0 0 0 18.5 4H13v16h5.5a1.5 1.5 0 0 0 1.5-1.5z"/></svg>
+          Knowledge Base
+        </a>
+        <a class="nav-item" href="#/voices">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v16M7.5 8v8M17 8v8M3.5 11v2M20.5 11v2"/></svg>
+          Voices <span class="cnt tnum">9</span>
+        </a>
+      </div>
+
+      <div class="nav-group">
+        <span>Deploy</span>
+        <a class="nav-item" href="#/numbers">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6.5 3h-3v3a14.5 14.5 0 0 0 14.5 14.5h3v-3l-4-1.5-2 2A11.5 11.5 0 0 1 9 9.5l2-2z"/></svg>
+          Phone Numbers
+        </a>
+        <a class="nav-item" href="#/batch">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h10"/></svg>
+          Batch Calls
+        </a>
+        <a class="nav-item" href="#/integrations">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 7l-5 5 5 5M15 7l5 5-5 5"/></svg>
+          Integrations
+        </a>
+      </div>
+
+      <div class="nav-group">
+        <span>Data</span>
+        <a class="nav-item" href="#/history">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/></svg>
+          Call History
+        </a>
+        <a class="nav-item" href="#/contacts">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="9" r="3.5"/><path d="M3 19c0-3.3 2.7-6 6-6s6 2.7 6 6"/><path d="M16 6h5M16 10h5M16 14h3"/></svg>
+          Contacts
+        </a>
+        <a class="nav-item" href="#/transcripts">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 3.5h9L19 8v12.5H6z"/><path d="M9 11h7M9 15h5"/></svg>
+          Transcripts
+        </a>
+      </div>
+
+      <div class="nav-group">
+        <span>Monitor</span>
+        <a class="nav-item" href="#/ops" aria-current="page">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3.5 13h4l2.5-6 3 12 2.5-6h5"/></svg>
+          Live Calls <span class="live"><i aria-hidden="true"></i>6</span>
+        </a>
+        <a class="nav-item" href="#/analytics">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg>
+          Analytics
+        </a>
+        <a class="nav-item" href="#/costs">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><path d="M14.5 9.5c-.5-1-1.5-1.5-2.5-1.5-1.4 0-2.5.8-2.5 2s1.1 1.8 2.5 2 2.5.8 2.5 2-1.1 2-2.5 2c-1 0-2-.5-2.5-1.5M12 6.5v11"/></svg>
+          Costs
+        </a>
+      </div>
+    </nav>
+
+    <div class="side-foot">
+      <button class="gs" type="button">
+        <span class="gs-row"><b>Getting started</b><span id="gsCount">0/6</span></span>
+        <span class="gs-track"><span class="gs-fill" id="gsFill"></span></span>
+      </button>
+      <p class="trial"><i aria-hidden="true"></i>Free trial · 14 days left</p>
+      <p class="who">cyneahub@gmail.com</p>
+    </div>
+  </aside>
+
+  <!-- ══ MAIN ══════════════════════════════════════════════════════ -->
+  <div class="main">
+
+    <!-- ── OPERATIONS CENTER ─────────────────────────────────────── -->
+    <div class="view" id="v-ops">
+      <header class="bar">
+        <button class="hamb" id="hamb" type="button" aria-label="Open navigation" aria-expanded="false">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+        </button>
+        <h1>Operations Center</h1>
+        <span class="samp" title="No backend is connected — every figure below is illustrative.">
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M12 8v5M12 16.5v.5"/><circle cx="12" cy="12" r="9"/></svg>
+          Sample data
+        </span>
+        <div class="bar-right">
+          <div class="seg" role="group" aria-label="Date range">
+            <button type="button" aria-pressed="true">Today</button>
+            <button type="button" aria-pressed="false">7d</button>
+            <button type="button" aria-pressed="false">30d</button>
+            <button type="button" aria-pressed="false">Custom</button>
+          </div>
+          <label class="lbl" for="fAgent" style="position:absolute;left:-9999px">Filter by agent</label>
+          <select class="sel" id="fAgent">
+            <option>All agents</option>
+            <option>Kwame</option><option>Amina</option><option>Kofi</option><option>Maya</option>
+          </select>
+          <button class="btn btn-primary" type="button" id="createAgent">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>
+            Create Agent
+          </button>
         </div>
-        <div class="hero-right">
-          <span class="hero-live"><span class="dot"></span> Live</span>
-          <span class="clock mono" id="clock" aria-label="Current time">--:--:--</span>
-          <span class="clock-date" id="clockDate">—</span>
-        </div>
+      </header>
+
+      <div class="scroll">
+        <!-- 1 · KPI ROW -->
+        <section class="sec">
+          <div class="kpis" id="kpis"></div>
+        </section>
+
+        <!-- 2 · LIVE CALL QUEUE (supervisor's first read) -->
+        <section class="sec">
+          <div class="sec-head">
+            <h2>Live call queue</h2>
+            <span class="lbl" id="qMeta">6 waiting</span>
+          </div>
+          <div class="panel" id="queue"></div>
+        </section>
+
+        <!-- 3 · AGENT STATUS -->
+        <section class="sec">
+          <div class="sec-head">
+            <h2>Agent status</h2>
+            <span class="lbl">Click an agent to configure</span>
+          </div>
+          <div class="agents" id="agentCards"></div>
+        </section>
+
+        <!-- 4 · CHARTS -->
+        <section class="sec">
+          <div class="sec-head"><h2>Performance</h2></div>
+
+          <div class="charts">
+            <div class="panel">
+              <div class="card-head">
+                <h3>Call volume</h3><span class="sub">calls per hour</span>
+                <button class="tbtn" type="button" data-table="tblVolume" aria-expanded="false">Table</button>
+              </div>
+              <div class="plot" id="plotVolume"></div>
+              <div class="dtable" id="tblVolume"></div>
+            </div>
+
+            <div class="panel">
+              <div class="card-head">
+                <h3>Sentiment trend</h3><span class="sub">mean score, −1 to +1</span>
+                <button class="tbtn" type="button" data-table="tblSent" aria-expanded="false">Table</button>
+              </div>
+              <div class="plot" id="plotSent"></div>
+              <div class="dtable" id="tblSent"></div>
+            </div>
+          </div>
+
+          <div class="charts-b">
+            <div class="panel">
+              <div class="card-head"><h3>Cost breakdown</h3><span class="sub">today</span></div>
+              <div class="plot">
+                <div class="donut-wrap">
+                  <div id="plotDonut"></div>
+                  <div class="dlegend" id="donutLegend"></div>
+                </div>
+              </div>
+            </div>
+
+            <div class="panel">
+              <div class="card-head"><h3>Containment</h3><span class="sub">resolved without a human</span></div>
+              <div class="plot">
+                <div class="meter">
+                  <div class="meter-v" id="cmVal">—</div>
+                  <div class="meter-track">
+                    <div class="meter-fill" id="cmFill"></div>
+                    <div class="meter-goal" id="cmGoal" title="Target 90%"></div>
+                  </div>
+                  <div class="meter-legend"><span>0%</span><span id="cmGoalLbl">Target 90%</span><span>100%</span></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- 5 · CALL HISTORY -->
+        <section class="sec">
+          <div class="sec-head">
+            <h2>Call history</h2>
+            <span class="lbl">Click a row for the recording and transcript</span>
+          </div>
+          <div class="panel tscroll">
+            <table class="hist">
+              <thead><tr>
+                <th>Time</th><th>Agent</th><th>Caller</th><th>Duration</th><th>Outcome</th><th>Status</th>
+              </tr></thead>
+              <tbody id="histBody"></tbody>
+            </table>
+          </div>
+        </section>
       </div>
     </div>
-  </section>
 
-  <!-- 2. KPI ROW -->
-  <section class="section">
-    <div class="kpi-row">
-      <div class="card kpi rv">
-        <div class="ktop"><span class="label">Calls today</span><span class="kicon">&#9742;</span></div>
-        <div class="value mono" data-count="1247" data-suffix="">0</div>
-        <span class="trend up">&#9650; 8.4% vs yesterday</span>
-      </div>
-      <div class="card kpi rv">
-        <div class="ktop"><span class="label">Containment rate</span><span class="kicon">&#10003;</span></div>
-        <div class="value mono" data-count="86.7" data-decimals="1" data-suffix="%">0</div>
-        <span class="trend up">&#9650; 2.1 pts this week</span>
-      </div>
-      <div class="card kpi rv">
-        <div class="ktop"><span class="label">Avg cost / call</span><span class="kicon">&#162;</span></div>
-        <div class="value mono" data-count="4.2" data-decimals="1" data-suffix="&#162;">0</div>
-        <span class="trend up">&#9660; 0.6&#162; vs last month</span>
-      </div>
-      <div class="card kpi rv">
-        <div class="ktop"><span class="label">Satisfaction</span><span class="kicon">&#9733;</span></div>
-        <div class="value mono" data-count="4.8" data-decimals="1" data-suffix="/5">0</div>
-        <span class="trend up">&#9650; 0.2 vs last week</span>
-      </div>
-    </div>
-  </section>
+    <!-- ── AGENT EDITOR ──────────────────────────────────────────── -->
+    <div class="view" id="v-agent" hidden>
+      <header class="bar">
+        <button class="hamb" type="button" data-hamb aria-label="Open navigation">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+        </button>
+        <a class="btn btn-ghost btn-sm" href="#/ops">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 6l-6 6 6 6"/></svg>
+          Operations
+        </a>
+        <div class="bar-right">
+          <button class="btn btn-ghost" type="button">Discard</button>
+          <button class="btn btn-primary" type="button" id="saveAgent">Save &amp; publish</button>
+        </div>
+      </header>
 
-  <!-- 3. AGENT STATUS -->
-  <section class="section">
-    <div class="sh rv"><h2>Your agents</h2><span class="note">4 agents · 3 live now</span></div>
-    <div class="agent-grid" id="agentGrid"></div>
-  </section>
+      <div class="ed-head">
+        <img id="edPhoto" src="assets/avatar-kwame.jpg" alt="" width="240" height="240">
+        <h1 id="edName">Kwame</h1>
+        <span class="ver" id="edVer">v12</span>
+        <div class="ed-tabs" role="tablist" aria-label="Agent editor">
+          <button class="tab" role="tab" aria-selected="true" data-edtab="configure">Configure</button>
+          <button class="tab" role="tab" aria-selected="false" data-edtab="simulation">Simulation</button>
+          <button class="tab" role="tab" aria-selected="false" data-edtab="test">Test</button>
+        </div>
+      </div>
 
-  <!-- 4. GLOBAL COVERAGE + LIVE QUEUE -->
-  <section class="section">
-    <div class="cov-row">
-      <div class="card cov-card rv">
-        <div class="ch"><h2>Global coverage</h2><span class="meta">edge routing &middot; live</span></div>
-        <div class="cbody" style="padding:0 22px 22px">
-          <div class="worldmap">
-            <video autoplay muted loop playsinline preload="auto" aria-label="Global coverage map">
-              <source src="assets/world.mp4" type="video/mp4">
-            </video>
-            <div class="wm-fallback" aria-hidden="true"></div>
-            <span class="node" style="left:22%;top:36%"></span>
-            <span class="node" style="left:52%;top:32%;animation-delay:.4s"></span>
-            <span class="node" style="left:82%;top:43%;animation-delay:.8s"></span>
-            <span class="node" style="left:48%;top:68%;animation-delay:1.2s"></span>
-            <span class="node" style="left:78%;top:61%;animation-delay:1.6s"></span>
-            <span class="node" style="left:34%;top:58%;animation-delay:2s"></span>
-            <div class="wm-stats">
-              <span class="wm-chip"><b>40+</b> markets</span>
-              <span class="wm-chip"><b>92</b> languages</span>
-              <span class="wm-chip">edge latency <b>&lt;180ms</b></span>
+      <!-- cost strip: the number that decides whether a config ships -->
+      <div class="cost">
+        <span class="k">Cost</span><b id="edCost">$0.04</b><span class="k">/min</span>
+        <span class="dot">·</span>
+        <span class="k">Latency</span><b>~600 ms</b><span class="k">target</span>
+        <span class="dot">·</span>
+        <span class="k">Voice</span><b id="edVoice">ElevenLabs George</b>
+      </div>
+
+      <div class="scroll" style="padding:0">
+        <div id="edPane-configure">
+          <div class="ed-cols">
+            <!-- LEFT: prompt -->
+            <div class="ed-col">
+              <h3>Prompt</h3>
+              <textarea class="prompt" id="edPrompt" spellcheck="false" aria-label="Agent prompt"></textarea>
+              <p class="hint">Markdown. Mirrors <code>cynea_africa/persona/</code> — edits here are not written back to the repo.</p>
+            </div>
+
+            <!-- MIDDLE: settings -->
+            <div class="ed-col">
+              <h3>Settings</h3>
+              <div class="acc">
+                <button class="acc-h" type="button" aria-expanded="true" aria-controls="ap1">Voice &amp; Language<span class="pm" aria-hidden="true"></span></button>
+                <div class="acc-p" id="ap1">
+                  <div class="in">
+                    <div class="frow">
+                      <label for="s-voice">Voice</label>
+                      <select id="s-voice">
+                        <option>ElevenLabs · George</option>
+                        <option>Edge TTS · en-GB-RyanNeural</option>
+                        <option>Edge TTS · en-NG-AbeoNeural</option>
+                        <option>Edge TTS · en-ZA-LukeNeural</option>
+                      </select>
+                    </div>
+                    <div class="frow">
+                      <label for="s-lang">Primary language</label>
+                      <select id="s-lang"><option>English (Ghana)</option><option>English (Kenya)</option><option>English (Nigeria)</option></select>
+                      <p class="hint">Whisper transcribes code-switched Twi and Pidgin; synthesis stays English.</p>
+                    </div>
+                  </div>
+                </div>
+
+                <button class="acc-h" type="button" aria-expanded="false" aria-controls="ap2">Knowledge Base<span class="pm" aria-hidden="true"></span></button>
+                <div class="acc-p" id="ap2" hidden>
+                  <div class="in">
+                    <div class="frow">
+                      <label for="s-kb">Attached sources</label>
+                      <select id="s-kb"><option>adinkra-hotel-rates.pdf</option><option>room-inventory.csv</option></select>
+                    </div>
+                    <p class="hint">2 sources · last indexed 4 hours ago.</p>
+                  </div>
+                </div>
+
+                <button class="acc-h" type="button" aria-expanded="false" aria-controls="ap3">Call Settings<span class="pm" aria-hidden="true"></span></button>
+                <div class="acc-p" id="ap3" hidden>
+                  <div class="in">
+                    <div class="frow">
+                      <label for="s-grace">Turn-taking grace period (ms)</label>
+                      <input id="s-grace" type="number" value="700" min="200" max="2000" step="50">
+                      <p class="hint">Real default from <code>cynea/interruption.py</code>.</p>
+                    </div>
+                    <div class="frow">
+                      <label for="s-back">Backchannel after (ms)</label>
+                      <input id="s-back" type="number" value="800" min="300" max="3000" step="50">
+                    </div>
+                    <div class="frow">
+                      <label for="s-max">Max call length (min)</label>
+                      <input id="s-max" type="number" value="12" min="1" max="60">
+                    </div>
+                  </div>
+                </div>
+
+                <button class="acc-h" type="button" aria-expanded="false" aria-controls="ap4">Webhooks<span class="pm" aria-hidden="true"></span></button>
+                <div class="acc-p" id="ap4" hidden>
+                  <div class="in">
+                    <div class="frow">
+                      <label for="s-hook">Call-ended URL</label>
+                      <input id="s-hook" type="url" placeholder="https://api.example.com/cynea/call-ended">
+                    </div>
+                    <p class="hint">POSTs the transcript, extracted fields and cost.</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- RIGHT: test panel, always visible -->
+            <div class="ed-col ed-col-test">
+              <h3>Test</h3>
+              <div class="test">
+                <h4>Run a scripted test</h4>
+                <p>Replays a saved caller script against this config and diffs the outcome.</p>
+                <button class="btn btn-primary" type="button" id="runTest">Run Test</button>
+                <div class="mic">
+                  <button class="btn btn-ghost" type="button" id="micTest" style="width:100%">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5.5 11.5a6.5 6.5 0 0 0 13 0M12 18v3"/></svg>
+                    Browser mic test
+                  </button>
+                </div>
+                <div class="test-log" id="testLog">No runs yet.</div>
+              </div>
             </div>
           </div>
         </div>
-      </div>
-      <div class="card rv">
-        <div class="ch"><h2>Live call queue</h2><span class="meta"><span class="dot" style="display:inline-block;vertical-align:middle"></span> waiting</span></div>
-        <div class="queue" id="queue"></div>
-      </div>
-    </div>
-  </section>
 
-  <!-- 5. CALL VOLUME -->
-  <section class="section">
-    <div class="card rv">
-      <div class="ch"><h2>Call volume over time</h2><span class="meta">last 24h &middot; UTC</span></div>
-      <div class="cbody">
-        <div class="bars" id="bars"></div>
-        <div class="bars-axis"><span>00:00</span><span>06:00</span><span>12:00</span><span>18:00</span><span>23:00</span></div>
-      </div>
-    </div>
-  </section>
-
-  <!-- 6. CHARTS ROW -->
-  <section class="section">
-    <div class="charts3">
-      <div class="card rv">
-        <div class="ch"><h2>Sentiment trend</h2><span class="meta">7-day</span></div>
-        <div class="cbody">
-          <svg class="sline" viewBox="0 0 300 150" preserveAspectRatio="none" aria-label="Sentiment trend line chart">
-            <defs><linearGradient id="sgrad" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stop-color="rgba(0,212,255,.25)"/><stop offset="100%" stop-color="rgba(0,212,255,0)"/>
-            </linearGradient></defs>
-            <line x1="0" y1="38" x2="300" y2="38" stroke="#E6E0D5" stroke-width="1"/>
-            <line x1="0" y1="75" x2="300" y2="75" stroke="#E6E0D5" stroke-width="1"/>
-            <line x1="0" y1="112" x2="300" y2="112" stroke="#E6E0D5" stroke-width="1"/>
-            <polygon points="0,150 0,90 50,72 100,80 150,52 200,58 250,34 300,40 300,150" fill="url(#sgrad)"/>
-            <polyline points="0,90 50,72 100,80 150,52 200,58 250,34 300,40" fill="none" stroke="#00D4FF" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
-            <circle cx="300" cy="40" r="3.5" fill="#00D4FF"/>
-          </svg>
-          <div style="display:flex;justify-content:space-between;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--faint);margin-top:6px"><span>Mon</span><span>Wed</span><span>Fri</span><span>Sun</span></div>
-          <p class="muted" style="font-size:12px;margin:10px 0 0">Positive sentiment trending up &middot; <b style="color:var(--ok)">+0.18</b> this week</p>
+        <div id="edPane-simulation" hidden>
+          <div class="empty">
+            <span class="ic" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3.5 13h4l2.5-6 3 12 2.5-6h5"/></svg></span>
+            <h2>Simulation isn't built yet</h2>
+            <p>This tab will replay a batch of recorded callers against the current prompt and report containment and escalation deltas before you publish.</p>
+          </div>
         </div>
-      </div>
-      <div class="card rv">
-        <div class="ch"><h2>Cost breakdown</h2><span class="meta">per call</span></div>
-        <div class="cbody">
-          <div class="donut-wrap">
-            <div class="donut" style="background:conic-gradient(#00D4FF 0 34%,#7C5CFC 34% 60%,#10B981 60% 82%,#F59E0B 82% 100%)">
-              <div class="donut-hole"><span class="t">4.2&#162;</span><span class="l">avg</span></div>
-            </div>
-            <ul class="legend">
-              <li><span class="ld" style="background:#00D4FF"></span><span>STT</span><span class="lv">34%</span></li>
-              <li><span class="ld" style="background:#7C5CFC"></span><span>LLM</span><span class="lv">26%</span></li>
-              <li><span class="ld" style="background:#10B981"></span><span>TTS</span><span class="lv">22%</span></li>
-              <li><span class="ld" style="background:#F59E0B"></span><span>Telephony</span><span class="lv">18%</span></li>
-            </ul>
+        <div id="edPane-test" hidden>
+          <div class="empty">
+            <span class="ic" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5.5 11.5a6.5 6.5 0 0 0 13 0M12 18v3"/></svg></span>
+            <h2>Full test console isn't built yet</h2>
+            <p>Use the Test panel on the Configure tab meanwhile — it runs the same scripted check.</p>
           </div>
         </div>
       </div>
-      <div class="card rv">
-        <div class="ch"><h2>Containment</h2><span class="meta">resolved by AI</span></div>
-        <div class="cbody">
-          <div class="cont-big mono"><span data-count="86.7" data-decimals="1" data-suffix="%">0</span></div>
-          <div class="cont-sub">of calls resolved without a human handoff</div>
-          <div class="meter"><div id="contMeter" data-w="86.7"></div></div>
-          <div class="cont-scale"><span>0%</span><span>target 80%</span><span>100%</span></div>
+    </div>
+
+    <!-- ── PLACEHOLDER ROUTES ────────────────────────────────────── -->
+    <div class="view" id="v-stub" hidden>
+      <header class="bar">
+        <button class="hamb" type="button" data-hamb aria-label="Open navigation">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+        </button>
+        <h1 id="stubTitle">—</h1>
+        <div class="bar-right"><a class="btn btn-ghost" href="#/ops">Back to Operations</a></div>
+      </header>
+      <div class="scroll">
+        <div class="empty">
+          <span class="ic" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 8v5M12 16.5v.5"/><circle cx="12" cy="12" r="9"/></svg></span>
+          <h2 id="stubHead">Not built yet</h2>
+          <p id="stubBody">This route is part of the shell but has no screen behind it. Operations Center and the agent editor are the two implemented views.</p>
         </div>
       </div>
     </div>
-  </section>
 
-  <!-- 7. FEATURE MEDIA TILES (videos) -->
-  <section class="section">
-    <div class="media2">
-      <a class="mtile rv" href="#history">
-        <video autoplay muted loop playsinline preload="metadata" aria-hidden="true"><source src="assets/Analytics.mp4" type="video/mp4"></video>
-        <div class="mt-fallback" aria-hidden="true"></div>
-        <div class="mtile-in">
-          <span class="mt-k">Realtime analytics</span>
-          <h3>Every call, measured</h3>
-          <p><span class="mt-metric">1,247</span> calls scored for sentiment, cost & containment today.</p>
-        </div>
-      </a>
-      <a class="mtile rv" href="agent_manager.html">
-        <video autoplay muted loop playsinline preload="metadata" aria-hidden="true"><source src="assets/Telephony.mp4" type="video/mp4"></video>
-        <div class="mt-fallback" aria-hidden="true"></div>
-        <div class="mtile-in">
-          <span class="mt-k">Global telephony</span>
-          <h3>Connected everywhere</h3>
-          <p>Carrier-grade routing across <span class="mt-metric">40+</span> markets, <span class="mt-metric">24/7</span>.</p>
-        </div>
-      </a>
+  </div>
+</div>
+
+<!-- ══ CALL DETAIL MODAL ═══════════════════════════════════════════ -->
+<div class="scrim" id="scrim" hidden>
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="mTitle">
+    <div class="m-head">
+      <h2 id="mTitle">Call detail</h2>
+      <span id="mBadge"></span>
+      <button class="x" type="button" id="mClose" aria-label="Close">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>
+      </button>
     </div>
-  </section>
 
-  <!-- 8. INDUSTRIES BAND -->
-  <section class="section">
-    <div class="sh rv"><h2>Live across industries</h2><span class="note">deployed & answering now</span></div>
-    <div class="ind-grid">
-      <div class="ind rv"><img src="assets/usecase-hotel.jpg" alt="Hotels" loading="lazy"><div class="ind-in"><div class="nm">Hotels</div><div class="st"><span class="d2"></span>Kwame · on call</div></div></div>
-      <div class="ind rv"><img src="assets/usecase-restaurant.jpg" alt="Restaurants" loading="lazy"><div class="ind-in"><div class="nm">Restaurants</div><div class="st"><span class="d2"></span>Kofi · on call</div></div></div>
-      <div class="ind rv"><img src="assets/usecase-clinic.jpg" alt="Clinics" loading="lazy"><div class="ind-in"><div class="nm">Clinics</div><div class="st"><span class="d2"></span>Maya · booking</div></div></div>
-      <div class="ind rv"><img src="assets/usecase-banking.jpg" alt="Banking" loading="lazy"><div class="ind-in"><div class="nm">Banking</div><div class="st"><span class="d2"></span>Amina · live</div></div></div>
-      <div class="ind rv"><img src="assets/usecase-callcenter.jpg" alt="Call centers" loading="lazy"><div class="ind-in"><div class="nm">Call centers</div><div class="st"><span class="d2"></span>Fleet · scaling</div></div></div>
-    </div>
-  </section>
-
-  <!-- 9. COST COMPARISON -->
-  <section class="section">
-    <div class="card rv">
-      <div class="ch"><h2>Cost comparison</h2><span class="meta">monthly &middot; illustrative</span></div>
-      <div class="cbody">
-        <div class="roi">
-          <div class="roi-side">
-            <span class="rl">Human team</span>
-            <span class="ra">$3,200<span style="font-size:14px;color:var(--faint)">/mo</span></span>
-            <span class="rd">Salaried agents, shifts &amp; overhead</span>
-          </div>
-          <div class="roi-vs">VS</div>
-          <div class="roi-side roi-cynea">
-            <span class="rl" style="color:var(--accent-ink)">Cynea</span>
-            <span class="ra">$490<span style="font-size:14px;color:var(--faint)">/mo</span></span>
-            <span class="rd">Usage-based &middot; scales automatically</span>
-          </div>
-        </div>
-        <div class="roi-save">
-          <span class="rsl">Estimated monthly saving</span>
-          <div class="rsn mono">$2,710</div>
-          <span class="rsp">&asymp; 85% lower cost &middot; 24/7 coverage in every market</span>
-        </div>
+    <div class="wf-wrap" id="wfWrap">
+      <div class="wf" id="wf" aria-hidden="true"></div>
+      <div class="wf-ctl">
+        <button class="rnd" type="button" id="mPlay" aria-label="Play recording">
+          <svg class="i-play" width="11" height="12" viewBox="0 0 9 10" fill="currentColor" aria-hidden="true"><path d="M0 0l9 5-9 5z"/></svg>
+          <svg class="i-pause" width="10" height="12" viewBox="0 0 8 10" fill="currentColor" aria-hidden="true"><rect width="2.6" height="10" rx="1.1"/><rect x="5.4" width="2.6" height="10" rx="1.1"/></svg>
+        </button>
+        <button class="rnd alt" type="button" id="mRestart" aria-label="Restart">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12a8 8 0 1 0 3-6.2"/><path d="M4 4.5V10h5.5"/></svg>
+        </button>
+        <span class="wf-t"><span id="mCur">0:00</span> / <span id="mDur">0:00</span></span>
+        <span class="wf-note">Sample excerpt · full call was <span id="mFull">—</span></span>
       </div>
     </div>
-  </section>
 
-  <!-- 10. REAL-TIME CALL LOG -->
-  <section class="section">
-    <div class="card rv">
-      <div class="ch"><h2>Real-time call log</h2><span class="meta"><span class="dot" style="display:inline-block;vertical-align:middle"></span> streaming</span></div>
-      <div class="feed" id="feed"></div>
+    <div class="tabs" role="tablist" aria-label="Call detail">
+      <button class="tab" role="tab" aria-selected="true" data-mtab="overview">Overview</button>
+      <button class="tab" role="tab" aria-selected="false" data-mtab="transcript">Transcript</button>
+      <button class="tab" role="tab" aria-selected="false" data-mtab="data">Data</button>
     </div>
-  </section>
 
-  <!-- 11. CALL HISTORY TABLE -->
-  <section class="section" id="history">
-    <div class="card rv">
-      <div class="ch"><h2>Call history</h2><span class="meta">click a column to sort &middot; click a row for transcript</span></div>
-      <div class="tw">
-        <table id="histTable">
-          <thead><tr>
-            <th data-key="time" data-type="string" aria-sort="none">Time <span class="arr">&#8597;</span></th>
-            <th data-key="agent" data-type="string" aria-sort="none">Agent <span class="arr">&#8597;</span></th>
-            <th data-key="caller" data-type="string" aria-sort="none">Caller <span class="arr">&#8597;</span></th>
-            <th class="r" data-key="duration" data-type="num" aria-sort="none">Duration <span class="arr">&#8597;</span></th>
-            <th class="r" data-key="turns" data-type="num" aria-sort="none">Turns <span class="arr">&#8597;</span></th>
-            <th data-key="sentiment" data-type="num" aria-sort="none">Sentiment <span class="arr">&#8597;</span></th>
-            <th class="r" data-key="cost" data-type="num" aria-sort="none">Cost <span class="arr">&#8597;</span></th>
-            <th data-key="status" data-type="string" aria-sort="none">Status <span class="arr">&#8597;</span></th>
-          </tr></thead>
-          <tbody id="histBody"></tbody>
-        </table>
+    <div class="m-body">
+      <div class="tp" id="mp-overview">
+        <p class="summary" id="mSummary"></p>
+        <div class="facts">
+          <div class="fact"><span class="lbl">Status</span><b id="fStatus">—</b></div>
+          <div class="fact"><span class="lbl">Sentiment</span><b id="fSent">—</b></div>
+          <div class="fact"><span class="lbl">Cost</span><b id="fCost">—</b></div>
+        </div>
       </div>
+      <div class="tp" id="mp-transcript" hidden><div id="mTurns"></div></div>
+      <div class="tp" id="mp-data" hidden><div class="kv" id="mFields"></div></div>
     </div>
-  </section>
+  </div>
+</div>
 
-</main>
-
-<footer class="foot"><div class="foot-in">
-  <span class="made"><span class="flag">🇰🇪</span> Cynea AI — Made in Kenya</span>
-  <span class="mono" style="color:var(--faint)">Operations dashboard · v2.4.0</span>
-  <span class="foot-links"><a href="help_center.html">Help Center</a><a href="product_tour.html">Product Tour</a><a href="agent_manager.html">Settings</a></span>
-</div></footer>
+<div class="tip" id="tip" role="status" aria-live="polite"></div>
+<audio id="au" preload="none"></audio>
 
 <script>
-(function(){
-  "use strict";
-  var reduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion:reduce)').matches;
+'use strict';
 
-  /* ---- live clock + greeting ---- */
-  function tick(){
-    var now = new Date();
-    var p = function(n){return (n<10?'0':'')+n;};
-    var c = document.getElementById('clock');
-    var d = document.getElementById('clockDate');
-    if(c) c.textContent = p(now.getHours())+':'+p(now.getMinutes())+':'+p(now.getSeconds());
-    if(d) d.textContent = now.toLocaleDateString(undefined,{weekday:'short',month:'short',day:'numeric',year:'numeric'});
-  }
-  tick(); setInterval(tick,1000);
-  (function(){
-    var h=new Date().getHours(), el=document.getElementById('dayPart');
-    if(el) el.textContent = h<12?'morning':h<18?'afternoon':'evening';
-  })();
+/* ═══════════════════════════════════════════════════════════════════
+   SAMPLE DATA
+   No backend is wired up. Everything here is illustrative and the
+   toolbar says so — the point of the shell is the structure, not the
+   figures. Real values that DO come from the repo are marked.
+   ═══════════════════════════════════════════════════════════════════ */
+var AGENTS={
+  kwame:{name:'Kwame',role:'Hotel Receptionist',place:'Ghana',photo:'avatar-kwame',
+         clip:'kwame_test_1',voice:'ElevenLabs George',ver:'v12',cost:'$0.04',
+         prompt:'# Kwame — Adinkra Hotel, Accra\n\n## Identity\nYou are Kwame, front desk at Adinkra Hotel in Accra, Ghana.\nEarly thirties. Warm, brief, comfortable with silence.\nYou are *not* an IVR and you do not sound like one.\n\n## Disclosure\nState that you are an AI assistant **once**, on the opening turn,\nin your own register. Repeat it only if the caller asks directly.\nNever use it as a recurring disclaimer — that is a robotic tell.\n\n## Style\n- One idea per turn. Under 25 words where you can.\n- Under-promise. "Let me check" beats a confident wrong answer.\n- Ghanaian English register. Do not perform an accent.\n\n## Tasks\n1. Availability and rates\n2. Bookings, changes, cancellations\n3. Restaurant hours and small talk\n\n## Escalation\nComplaints, or two failed repair attempts, hand to a human\nwith the transcript attached.'},
+  amina:{name:'Amina',role:'Bank Support',place:'Kenya',photo:'avatar-amina',
+         clip:'amina_test_1',voice:'Edge TTS · en-GB-SoniaNeural',ver:'v8',cost:'$0.03',
+         prompt:'# Amina — Bank Support, Nairobi\n\n## Identity\nYou handle payments, billing and plan questions for a Kenyan bank.\nCalm, precise, never breezy about money.\n\n## Disclosure\nOnce, on the opening turn. Kenya ODPC 2024 applies.\n\n## Hard rules\n- Never read a full account number back.\n- Never guess a balance or a fee. Check or escalate.\n- Escalate any dispute or fraud claim immediately.'},
+  kofi:{name:'Kofi',role:'Restaurant Orders',place:'Ghana',photo:'avatar-kofi',
+        clip:'kofi_test_1',voice:'Edge TTS · en-GB-RyanNeural',ver:'v5',cost:'$0.03',
+        prompt:'# Kofi — Restaurant Orders\n\n## Identity\nYou take dine-in, takeaway and delivery orders.\nFast, friendly, and you always read the order back.\n\n## Must do\n- Ask about allergies before confirming.\n- Read the full order and the total back before payment.\n- Confirm the delivery address twice.'},
+  maya:{name:'Maya',role:'Bookings & Scheduling',place:'Pan-African',photo:'avatar-maya',
+        clip:'amina_test_1',voice:'Edge TTS · en-US-AriaNeural',ver:'v3',cost:'$0.04',
+        prompt:'# Maya — Bookings & Scheduling\n\n## Identity\nYou book, reschedule and remind, across time zones.\n\n## Must do\n- Always confirm the time zone out loud.\n- Offer two concrete slots, never "when suits you?".\n- Send a confirmation before ending the call.'}
+};
 
-  /* ---- force-start muted autoplay videos (some mobile browsers) ---- */
-  document.querySelectorAll('video').forEach(function(v){
-    var p=v.play&&v.play();
-    if(p&&p.catch) p.catch(function(){});
-  });
+var KPIS=[
+  {label:'Calls today',value:'247',delta:'+12%',dir:'up',since:'vs yesterday',
+   spark:[14,18,16,22,27,31,28,34,39,36,42,47]},
+  {label:'Containment rate',value:'84%',delta:'−2 pts',dir:'down',since:'vs last week',
+   spark:[88,87,89,86,85,87,86,84,85,83,84,84]},
+  {label:'Cost per call',value:'$0.19',delta:'−6%',dir:'up',since:'vs last week',
+   spark:[24,23,23,22,22,21,21,20,20,19,19,19]},
+  {label:'Cost saved this month',value:'$1,240',delta:'+18%',dir:'up',since:'vs last month',
+   spark:[120,240,360,470,590,700,820,930,1010,1100,1180,1240]}
+];
 
-  /* ---- scroll progress ---- */
-  var prog = document.getElementById('prog');
-  function onScroll(){
-    if(!prog) return;
-    var h = document.documentElement;
-    var max = h.scrollHeight - h.clientHeight;
-    prog.style.width = (max>0 ? (h.scrollTop/max*100) : 0) + '%';
-  }
-  window.addEventListener('scroll', onScroll, {passive:true}); onScroll();
+var QUEUE=[
+  {num:'+233 24 ••• 4417',cat:'Room availability',wait:'0:12',agent:'Kwame'},
+  {num:'+254 71 ••• 9032',cat:'Card declined',    wait:'0:38',agent:'Amina'},
+  {num:'+233 20 ••• 7781',cat:'Takeaway order',   wait:'0:51',agent:'Kofi'},
+  {num:'+254 72 ••• 1164',cat:'Reschedule',       wait:'1:24',agent:'Maya'},
+  {num:'+234 80 ••• 5520',cat:'Billing dispute',  wait:'2:47',agent:'Amina',hot:true},
+  {num:'+233 27 ••• 3308',cat:'Late checkout',    wait:'3:06',agent:'Kwame',hot:true}
+];
 
-  /* ---- count-up helpers ---- */
-  function fmt(v,dec){
-    if(dec>0) return v.toFixed(dec);
-    return Math.round(v).toLocaleString('en-US');
-  }
-  function countUp(el){
-    var target = parseFloat(el.getAttribute('data-count')) || 0;
-    var dec = parseInt(el.getAttribute('data-decimals')||'0',10);
-    var suffix = el.getAttribute('data-suffix') || '';
-    if(reduced){ el.textContent = fmt(target,dec)+suffix; return; }
-    var start = performance.now(), dur = 1100;
-    function step(t){
-      var p = Math.min(1,(t-start)/dur);
-      var e = 1-Math.pow(1-p,3);
-      el.textContent = fmt(target*e,dec)+suffix;
-      if(p<1) requestAnimationFrame(step); else el.textContent = fmt(target,dec)+suffix;
-    }
-    requestAnimationFrame(step);
-  }
+var STATUS={kwame:{on:true,timer:'02:14'},amina:{on:true,timer:'00:47'},
+            kofi:{on:true,timer:'01:03'},maya:{on:false,timer:'—'}};
 
-  /* ---- reveal + count-up observer ---- */
-  var io = ('IntersectionObserver' in window) ? new IntersectionObserver(function(entries){
-    entries.forEach(function(en){
-      if(!en.isIntersecting) return;
-      var el = en.target;
-      el.classList.add('in');
-      if(el.querySelectorAll){
-        el.querySelectorAll('[data-count]').forEach(function(c){
-          if(!c.__done){ c.__done=true; countUp(c); }
-        });
-      }
-      if(el.hasAttribute && el.hasAttribute('data-count') && !el.__done){ el.__done=true; countUp(el); }
-      io.unobserve(el);
-    });
-  },{threshold:.18}) : null;
+var VOLUME=[
+  {h:'08',v:9},{h:'09',v:14},{h:'10',v:21},{h:'11',v:26},{h:'12',v:31},{h:'13',v:24},
+  {h:'14',v:28},{h:'15',v:34},{h:'16',v:29},{h:'17',v:19},{h:'18',v:8},{h:'19',v:4}
+];
+var SENT=[
+  {h:'08',v:.42},{h:'09',v:.51},{h:'10',v:.47},{h:'11',v:.58},{h:'12',v:.36},{h:'13',v:.29},
+  {h:'14',v:.44},{h:'15',v:.52},{h:'16',v:.61},{h:'17',v:.55},{h:'18',v:.63},{h:'19',v:.68}
+];
+/* four clearly-separated magnitudes — a donut is wrong for close values */
+var COST=[
+  {k:'Telephony',v:21.40},{k:'Speech-to-text',v:12.85},
+  {k:'LLM tokens',v:7.60},{k:'Text-to-speech',v:4.05}
+];
+var CONTAIN={value:84,goal:90};
 
-  document.querySelectorAll('.rv').forEach(function(el){
-    if(io) io.observe(el);
-    else { el.classList.add('in'); el.querySelectorAll('[data-count]').forEach(function(c){ if(!c.__done){c.__done=true;countUp(c);} }); }
-  });
-  document.querySelectorAll('[data-count]').forEach(function(c){
-    if(c.closest('.rv')) return;
-    if(io){ io.observe(c); } else if(!c.__done){ c.__done=true; countUp(c); }
-  });
+var CALLS=[
+  {id:'c1',t:'14:38',ag:'kwame',caller:'+233 24 ••• 4417',dur:'1:19',out:'Booking confirmed',st:'ok',
+   sent:'+0.62 positive',cost:'$0.05',
+   sum:'The customer called about availability for a double room on the 14th and 15th of August. Kwame confirmed one room at the standard rate, took the booking under the name Ama Mensah, and read the total back before ending the call. No escalation was needed.',
+   turns:[['0:00','agent','Adinkra Hotel, this is Kwame — I should mention I’m an AI assistant. How can I help?'],
+          ['0:06','caller','Hi, do you have a double room free on the fourteenth?'],
+          ['0:11','agent','Let me check. … Yes, we have one double for the fourteenth and fifteenth.'],
+          ['0:21','caller','Perfect. How much for the two nights?'],
+          ['0:25','agent','Nine hundred and sixty cedis total, breakfast included.'],
+          ['0:33','caller','Go ahead and book it. Ama Mensah.'],
+          ['0:39','agent','Booked — Ama Mensah, double room, the fourteenth and fifteenth, nine sixty total. You’ll get an SMS shortly.'],
+          ['0:58','caller','Lovely, thank you.'],
+          ['1:02','agent','Enjoy your stay. Goodbye.']],
+   fields:[['Name','Ama Mensah'],['Date','14–15 Aug 2026'],['Room type','Double'],['Price','GHS 960.00']]},
 
-  /* ---- containment meter ---- */
-  var meter = document.getElementById('contMeter');
-  if(meter){
-    var setMeter = function(){ meter.style.width = (meter.getAttribute('data-w')||'0')+'%'; };
-    if('IntersectionObserver' in window){
-      var mio = new IntersectionObserver(function(es){
-        es.forEach(function(e){ if(e.isIntersecting){ setMeter(); mio.unobserve(meter); } });
-      },{threshold:.3});
-      mio.observe(meter);
-    } else { setMeter(); }
-  }
+  {id:'c2',t:'14:31',ag:'amina',caller:'+254 71 ••• 9032',dur:'2:44',out:'Escalated to human',st:'warn',
+   sent:'−0.31 negative',cost:'$0.09',
+   sum:'The customer called about a declined card on a recurring payment. Amina verified the account holder, could not determine why the payment failed, and escalated to the payments team with the transcript attached after the second failed repair attempt.',
+   turns:[['0:00','agent','Thanks for calling — I’m Amina, an AI assistant on the support line. How can I help?'],
+          ['0:07','caller','My card keeps getting declined and I don’t know why.'],
+          ['0:13','agent','I’m sorry about that. Can you confirm the last four digits for me?'],
+          ['0:22','caller','Four four one seven.'],
+          ['0:27','agent','Thank you. I can see the attempt but not the decline reason — that sits with the payments team.'],
+          ['0:44','caller','So you can’t help me.'],
+          ['0:47','agent','Not on this one, and I’d rather not guess. I’m putting you through to someone who can see the reason.'],
+          ['1:02','caller','Fine.'],
+          ['1:04','agent','Connecting you now — they’ll have this conversation in front of them.']],
+   fields:[['Name','Not captured'],['Card (last 4)','4417'],['Reason code','Unavailable'],['Escalated to','Payments team']]},
 
-  /* ---- agent status cards (real photos) ---- */
-  var agents = [
-    {name:'Kwame', role:'Hotel reception',   img:'assets/avatar-kwame.jpg', c1:'#00D4FF', c2:'#0089A8', oncall:true,  secs:142, calls:38, cont:'91%'},
-    {name:'Amina', role:'Customer service',  img:'assets/amina%20.jpg',     c1:'#A78BFA', c2:'#7C5CFC', oncall:true,  secs:67,  calls:52, cont:'88%'},
-    {name:'Kofi',  role:'Restaurant orders', img:'assets/avatar-kofi.jpg',  c1:'#34D399', c2:'#10B981', oncall:false, secs:0,   calls:41, cont:'84%'},
-    {name:'Maya',  role:'Bookings',          img:'assets/avatar-maya.jpg',  c1:'#FBBF24', c2:'#F59E0B', oncall:true,  secs:213, calls:29, cont:'90%'}
-  ];
-  function avatarHTML(a){
-    var inner = a.img ? '<img src="'+a.img+'" alt="'+a.name+'" onerror="this.remove()">' : a.name.charAt(0);
-    return '<div class="avatar" style="--c1:'+a.c1+';--c2:'+a.c2+'">'+inner+'</div>';
-  }
-  var grid = document.getElementById('agentGrid');
-  function fmtTimer(s){ var m=Math.floor(s/60), ss=s%60; return m+':'+(ss<10?'0':'')+ss; }
-  if(grid){
-    agents.forEach(function(a){
-      var card = document.createElement('div');
-      card.className = 'card agent rv';
-      card.style.setProperty('--c1',a.c1); card.style.setProperty('--c2',a.c2);
-      card.innerHTML =
-        '<div class="agent-top">'+ avatarHTML(a) +
-          '<div><div class="agent-name">'+a.name+'</div><div class="agent-role">'+a.role+'</div></div>'+
-        '</div>'+
-        '<div class="agent-mid">'+
-          '<span class="pill '+(a.oncall?'pill-warn':'pill-ok')+'">'+(a.oncall?'On call':'<span class="dot"></span> Available')+'</span>'+
-          '<span class="agent-timer'+(a.oncall?'':' idle')+'">'+(a.oncall?fmtTimer(a.secs):'idle')+'</span>'+
-        '</div>'+
-        '<div class="agent-stats"><span>Calls today<b>'+a.calls+'</b></span><span>Containment<b>'+a.cont+'</b></span></div>';
-      grid.appendChild(card);
-      a.__timer = card.querySelector('.agent-timer');
-      if(io) io.observe(card); else card.classList.add('in');
-    });
-    if(!reduced) setInterval(function(){
-      agents.forEach(function(a){
-        if(a.oncall){ a.secs++; if(a.__timer) a.__timer.textContent=fmtTimer(a.secs); }
+  {id:'c3',t:'14:22',ag:'kofi',caller:'+233 20 ••• 7781',dur:'1:52',out:'Order placed',st:'ok',
+   sent:'+0.48 positive',cost:'$0.06',
+   sum:'The customer called about a takeaway order. Kofi took two jollof plates and one grilled tilapia, checked for allergies, read the order and total back, and confirmed the pickup time.',
+   turns:[['0:00','agent','Good evening, this is Kofi — an AI assistant taking orders. What can I get you?'],
+          ['0:08','caller','Two jollof and one tilapia, for pickup.'],
+          ['0:14','agent','Any allergies I should flag to the kitchen?'],
+          ['0:19','caller','No, none.'],
+          ['0:22','agent','That’s two jollof plates and one grilled tilapia — two hundred and ten cedis. Ready in twenty-five minutes.'],
+          ['0:38','caller','Great, see you then.']],
+   fields:[['Name','Not captured'],['Items','2× Jollof, 1× Tilapia'],['Total','GHS 210.00'],['Pickup','25 min']]},
+
+  {id:'c4',t:'14:09',ag:'maya',caller:'+254 72 ••• 1164',dur:'0:38',out:'Caller hung up',st:'bad',
+   sent:'−0.12 neutral',cost:'$0.02',
+   sum:'The caller asked to move an appointment, then hung up while Maya was confirming the time zone. No change was made and no confirmation was sent.',
+   turns:[['0:00','agent','Hello, this is Maya, an AI assistant. How can I help?'],
+          ['0:06','caller','I need to move my Thursday appointment.'],
+          ['0:10','agent','Of course. Just to be sure — is that East Africa Time?'],
+          ['0:18','caller','[call ended]']],
+   fields:[['Name','Not captured'],['Date','Not captured'],['Action','None — abandoned'],['Confirmation','Not sent']]},
+
+  {id:'c5',t:'13:54',ag:'kwame',caller:'+233 27 ••• 3308',dur:'2:07',out:'Late checkout granted',st:'ok',
+   sent:'+0.55 positive',cost:'$0.06',
+   sum:'The customer called about a late checkout for room 214. Kwame confirmed availability, granted a 2pm checkout at no charge, and logged the note against the reservation.',
+   turns:[['0:00','agent','Adinkra Hotel, Kwame speaking — and I’m an AI assistant. How can I help?'],
+          ['0:07','caller','Can I keep room two-fourteen until two?'],
+          ['0:13','agent','Let me look. … Yes, two o’clock is fine, no charge.'],
+          ['0:26','caller','Brilliant, thanks.'],
+          ['0:29','agent','I’ve noted it on your reservation. Anything else?']],
+   fields:[['Name','Room 214'],['Date','Today'],['Room type','Standard'],['Price','No charge']]},
+
+  {id:'c6',t:'13:41',ag:'amina',caller:'+234 80 ••• 5520',dur:'3:12',out:'Escalated to human',st:'warn',
+   sent:'−0.44 negative',cost:'$0.11',
+   sum:'The customer called about a duplicate charge on a billing statement. Amina confirmed two identical charges existed, declined to issue a refund herself, and escalated to billing with the transcript.',
+   turns:[['0:00','agent','Support line, Amina here — an AI assistant. How can I help?'],
+          ['0:07','caller','I’ve been charged twice for the same thing.'],
+          ['0:12','agent','I can see two identical charges on the same day. That shouldn’t happen.'],
+          ['0:31','caller','So refund one.'],
+          ['0:33','agent','A refund needs a person to approve it. I’m handing you to billing now with this in front of them.']],
+   fields:[['Name','Not captured'],['Charges','2 × NGN 8,500'],['Action','Refund requested'],['Escalated to','Billing']]}
+];
+
+/* ═══════════════════════════════════════════════════════════════════
+   HELPERS
+   ═══════════════════════════════════════════════════════════════════ */
+var $=function(s,r){return (r||document).querySelector(s);};
+var $$=function(s,r){return [].slice.call((r||document).querySelectorAll(s));};
+function esc(s){return String(s).replace(/[&<>"]/g,function(c){
+  return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});}
+function pic(name,cls,alt,size){
+  return '<picture><source srcset="assets/'+name+'.webp" type="image/webp">'+
+         '<img'+(cls?' class="'+cls+'"':'')+' src="assets/'+name+'.jpg" alt="'+esc(alt)+'"'+
+         ' width="'+size+'" height="'+size+'" loading="lazy" decoding="async"></picture>';
+}
+var BADGE={
+  ok:['b-ok','Resolved','M4 12.5l4.5 4.5L20 6'],
+  warn:['b-warn','Escalated','M12 3.5L21.5 20h-19zM12 9.5v4.5M12 16.5v.5'],
+  bad:['b-bad','Abandoned','M6 6l12 12M18 6L6 18']
+};
+/* status is never colour alone — every badge ships an icon and a word */
+function badge(st){
+  var b=BADGE[st];
+  return '<span class="badge '+b[0]+'"><svg width="11" height="11" viewBox="0 0 24 24" fill="none"'+
+         ' stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"'+
+         ' aria-hidden="true"><path d="'+b[2]+'"/></svg>'+b[1]+'</span>';
+}
+
+/* ── shared tooltip ───────────────────────────────────────────────── */
+var tip=$('#tip');
+function showTip(html,x,y){
+  tip.innerHTML=html; tip.classList.add('on');
+  var r=tip.getBoundingClientRect();
+  tip.style.left=Math.max(6,Math.min(x-r.width/2,innerWidth-r.width-6))+'px';
+  tip.style.top=Math.max(6,y-r.height-10)+'px';
+}
+function hideTip(){tip.classList.remove('on');}
+
+/* ═══════════════════════════════════════════════════════════════════
+   RENDER · KPI stat tiles
+   Proportional figures on the values (tabular only in columns — equal
+   width digits make a standalone number read gappy).
+   ═══════════════════════════════════════════════════════════════════ */
+function sparkline(vals){
+  var w=64,h=22,max=Math.max.apply(null,vals),min=Math.min.apply(null,vals),
+      span=(max-min)||1,pts=vals.map(function(v,i){
+        return [(i/(vals.length-1)*w).toFixed(1),(h-((v-min)/span)*h).toFixed(1)];
       });
-    },1000);
-  }
+  return '<svg class="spark" width="'+w+'" height="'+h+'" viewBox="0 0 '+w+' '+h+'" aria-hidden="true">'+
+    '<polyline fill="none" stroke="var(--viz-track)" stroke-width="2" stroke-linecap="round"'+
+    ' stroke-linejoin="round" points="'+pts.slice(0,-1).map(function(p){return p.join(',');}).join(' ')+'"/>'+
+    '<polyline fill="none" stroke="var(--viz-solo)" stroke-width="2" stroke-linecap="round"'+
+    ' points="'+pts.slice(-2).map(function(p){return p.join(',');}).join(' ')+'"/>'+
+    '<circle cx="'+pts[pts.length-1][0]+'" cy="'+pts[pts.length-1][1]+'" r="2.4" fill="var(--viz-solo)"/></svg>';
+}
+function renderKpis(){
+  $('#kpis').innerHTML=KPIS.map(function(k){
+    return '<div class="kpi"><span class="lbl">'+esc(k.label)+'</span>'+
+      '<div class="kpi-v">'+esc(k.value)+'</div>'+
+      '<div class="kpi-foot"><span class="delta '+k.dir+'">'+esc(k.delta)+
+      ' <small>'+esc(k.since)+'</small></span>'+sparkline(k.spark)+'</div></div>';
+  }).join('');
+}
 
-  /* ---- live call queue ---- */
-  var queue = document.getElementById('queue');
-  var depts = ['Hotel reception','Billing','Reservations','Restaurant orders','Account support','Bookings'];
-  var qgrads = ['linear-gradient(135deg,#00D4FF,#0089A8)','linear-gradient(135deg,#A78BFA,#7C5CFC)','linear-gradient(135deg,#34D399,#10B981)','linear-gradient(135deg,#FBBF24,#F59E0B)'];
-  function randNum(){
-    var cc=['+1','+44','+61','+49','+254','+971'][Math.floor(Math.random()*6)];
-    return cc+' ••• '+(1000+Math.floor(Math.random()*8999));
-  }
-  function buildQueue(){
-    if(!queue) return;
-    queue.innerHTML='';
-    var n=4+Math.floor(Math.random()*3);
-    for(var i=0;i<n;i++){
-      var dept=depts[Math.floor(Math.random()*depts.length)];
-      var wait=5+Math.floor(Math.random()*55);
-      var row=document.createElement('div'); row.className='qrow';
-      row.innerHTML='<span class="qav" style="background:'+qgrads[i%qgrads.length]+'">'+dept.charAt(0)+'</span>'+
-        '<div class="qid"><div class="qnum">'+randNum()+'</div><div class="qdept">'+dept+'</div></div>'+
-        '<div class="qwait">'+wait+'s<small>waiting</small></div>';
-      queue.appendChild(row);
-    }
-  }
-  buildQueue();
-  if(!reduced) setInterval(buildQueue, 6000);
+/* ═══════════════════════════════════════════════════════════════════
+   RENDER · live queue
+   ═══════════════════════════════════════════════════════════════════ */
+function renderQueue(){
+  $('#queue').innerHTML=QUEUE.map(function(q,i){
+    return '<button class="qrow" type="button" data-call="c'+((i%6)+1)+'">'+
+      '<span class="q-i'+(q.hot?' hot':'')+'" aria-hidden="true"></span>'+
+      '<span><span class="q-num">'+esc(q.num)+'</span><span class="q-cat" style="display:block">'+esc(q.cat)+'</span></span>'+
+      '<span class="q-agent">'+esc(q.agent)+'</span>'+
+      '<span class="q-wait'+(q.hot?' hot':'')+'">'+esc(q.wait)+'</span>'+
+      '<svg class="chev" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor"'+
+      ' stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'+
+      '<path d="M10 6l6 6-6 6"/></svg></button>';
+  }).join('');
+  $('#qMeta').textContent=QUEUE.length+' waiting · longest '+QUEUE[QUEUE.length-1].wait;
+}
 
-  /* ---- call volume bars ---- */
-  var bars = document.getElementById('bars');
-  if(bars){
-    var pattern = [12,8,5,4,3,5,14,32,55,72,80,76,68,71,84,90,78,65,58,49,40,30,22,16];
-    var peak = Math.max.apply(null, pattern);
-    pattern.forEach(function(v,i){
-      var col = document.createElement('div'); col.className='bar-col';
-      var track = document.createElement('div'); track.className='bar-track';
-      var fill = document.createElement('div'); fill.className='bar-fill';
-      fill.title = v+' calls';
-      track.appendChild(fill); col.appendChild(track); bars.appendChild(col);
-      var pct = Math.round(v/peak*100);
-      if(reduced){ fill.style.height = pct+'%'; }
-      else { fill.style.height='0%'; setTimeout(function(){ fill.style.height=pct+'%'; }, 200 + i*28); }
-    });
-  }
+/* ═══════════════════════════════════════════════════════════════════
+   RENDER · agent status cards
+   ═══════════════════════════════════════════════════════════════════ */
+function renderAgents(){
+  $('#agentCards').innerHTML=Object.keys(AGENTS).map(function(k){
+    var a=AGENTS[k],s=STATUS[k];
+    return '<button class="acard" type="button" data-agent="'+k+'">'+
+      '<span class="acard-top">'+pic(a.photo,'',a.name,240)+
+      '<span><b>'+esc(a.name)+'</b><span class="role">'+esc(a.role)+' · '+esc(a.place)+'</span></span></span>'+
+      '<span class="acard-st '+(s.on?'st-on':'st-idle')+'"><i aria-hidden="true"></i>'+
+      (s.on?'On call':'Idle')+'<span class="timer">'+esc(s.timer)+'</span></span></button>';
+  }).join('');
+}
 
-  /* ---- real-time call log ---- */
-  var feed = document.getElementById('feed');
-  var feedAgents = ['Kwame','Amina','Kofi','Maya'];
-  var feedEvents = [
-    'booked a room for +1•••• 4821','resolved a billing query','took a dinner reservation for 4',
-    'confirmed a booking change','answered an availability question','processed a takeaway order',
-    'handled a VIP guest request','completed a satisfaction survey','rescheduled an appointment',
-    'captured a callback request','verified an account for +44••• 0192','handled a refund enquiry'
-  ];
-  function nowTime(){ var n=new Date(),p=function(x){return(x<10?'0':'')+x;}; return p(n.getHours())+':'+p(n.getMinutes())+':'+p(n.getSeconds()); }
-  function addFeed(){
-    if(!feed) return;
-    var a = feedAgents[Math.floor(Math.random()*feedAgents.length)];
-    var ev = feedEvents[Math.floor(Math.random()*feedEvents.length)];
-    var row = document.createElement('div'); row.className='feed-row';
-    row.innerHTML = '<span class="ft">'+nowTime()+'</span><span class="fa">'+a+'</span><span class="fm">'+a+' '+ev+'</span>';
-    feed.insertBefore(row, feed.firstChild);
-    while(feed.children.length>40) feed.removeChild(feed.lastChild);
-  }
-  for(var i=0;i<7;i++) addFeed();
-  if(!reduced) setInterval(addFeed, 3500);
+/* ═══════════════════════════════════════════════════════════════════
+   CHART · call volume (bar)
+   Single nominal series -> one hue, no legend (the title names it).
+   Bars capped at 24px, 4px rounded top, square at the baseline, with a
+   2px surface gap between neighbours. Peak labelled; the rest read off
+   the axis or the tooltip, and the table view carries every value.
+   ═══════════════════════════════════════════════════════════════════ */
+function renderVolume(){
+  var W=560,H=190,padL=30,padB=26,padT=16,
+      plotW=W-padL-8,plotH=H-padB-padT,
+      max=40,peak=VOLUME.reduce(function(a,b){return b.v>a.v?b:a;}),
+      band=plotW/VOLUME.length,bw=Math.min(24,band-2),
+      s='<svg viewBox="0 0 '+W+' '+H+'" role="img" aria-label="Call volume by hour, peak 34 calls at 15:00">';
 
-  /* ---- call history table ---- */
-  var agentMap = {}; agents.forEach(function(a){ agentMap[a.name]=a; });
-  var rows = [
-    {time:'14:32', agent:'Kwame', caller:'+1 ••• 4821',  duration:182, turns:9,  sentiment:0.62, cost:4.4, status:'Resolved',  topic:'room booking — deluxe king, 2 nights'},
-    {time:'14:28', agent:'Amina', caller:'+44 ••• 0192', duration:96,  turns:6,  sentiment:0.31, cost:3.1, status:'Resolved',  topic:'billing query — duplicate charge reversed'},
-    {time:'14:21', agent:'Maya',  caller:'+61 ••• 7733', duration:240, turns:12, sentiment:0.78, cost:5.6, status:'Resolved',  topic:'appointment booked for Thursday 3pm'},
-    {time:'14:15', agent:'Kofi',  caller:'+1 ••• 9054',  duration:71,  turns:4,  sentiment:-0.18,cost:2.4, status:'Escalated', topic:'allergy concern — handed to human chef'},
-    {time:'14:09', agent:'Amina', caller:'+49 ••• 2210', duration:133, turns:8,  sentiment:0.45, cost:3.9, status:'Resolved',  topic:'account verified, address updated'},
-    {time:'14:02', agent:'Kwame', caller:'+1 ••• 6612',  duration:58,  turns:3,  sentiment:0.12, cost:2.0, status:'Abandoned', topic:'caller hung up before completion'}
-  ];
-  var body = document.getElementById('histBody');
-  function sentBar(v){
-    var mag = Math.min(1,Math.abs(v));
-    var color = v>=0.15?'var(--ok)':(v<=-0.05?'var(--warn)':'var(--faint)');
-    return '<span class="sbar" title="'+v.toFixed(2)+'"><div style="width:'+Math.round(mag*100)+'%;background:'+color+'"></div></span>';
-  }
-  function statusPill(s){
-    if(s==='Resolved') return '<span class="pill pill-ok"><span class="dot" style="display:inline-block;vertical-align:middle"></span>Resolved</span>';
-    if(s==='Escalated') return '<span class="pill pill-warn">Escalated</span>';
-    return '<span class="pill pill-danger">Abandoned</span>';
-  }
-  function fmtDur(s){ var m=Math.floor(s/60), ss=s%60; return m+':'+(ss<10?'0':'')+ss; }
-  function rowAvatar(name){ var a=agentMap[name]; return a?avatarHTML(a):name; }
-  function render(){
-    if(!body) return;
-    body.innerHTML = '';
-    rows.forEach(function(r,idx){
-      var tr = document.createElement('tr');
-      tr.setAttribute('data-i', idx);
-      tr.innerHTML =
-        '<td class="mono">'+r.time+'</td>'+
-        '<td><span class="tava">'+rowAvatar(r.agent)+r.agent+'</span></td>'+
-        '<td class="mono">'+r.caller+'</td>'+
-        '<td class="tnum">'+fmtDur(r.duration)+'</td>'+
-        '<td class="tnum">'+r.turns+'</td>'+
-        '<td>'+sentBar(r.sentiment)+'</td>'+
-        '<td class="tnum">'+r.cost.toFixed(1)+'¢</td>'+
-        '<td>'+statusPill(r.status)+'</td>';
-      body.appendChild(tr);
-    });
-  }
-  render();
-
-  /* expand row → transcript */
-  if(body){
-    body.addEventListener('click', function(e){
-      var tr = e.target.closest('tr'); if(!tr || tr.classList.contains('trx')) return;
-      var idx = tr.getAttribute('data-i'); if(idx===null) return;
-      var r = rows[idx];
-      var next = tr.nextElementSibling;
-      if(next && next.classList.contains('trx')){ next.remove(); tr.classList.remove('open'); return; }
-      // close others
-      body.querySelectorAll('.trx').forEach(function(x){ x.remove(); });
-      body.querySelectorAll('tr.open').forEach(function(x){ x.classList.remove('open'); });
-      tr.classList.add('open');
-      var ex = document.createElement('tr');
-      ex.className='trx';
-      ex.innerHTML = '<td colspan="8"><div class="tx">'+
-        '<span class="tline"><b>Summary:</b> '+r.topic+'</span>'+
-        '<span class="tline"><span class="tagn">Caller:</span> Hi, I\'m calling about my '+(r.topic.split(' — ')[0])+'.</span>'+
-        '<span class="tline"><span class="tagn">'+r.agent+':</span> Of course — I can help with that right away. Let me pull up your details.</span>'+
-        '<span class="tline"><span class="tagn">Caller:</span> Perfect, thank you.</span>'+
-        '<span class="tline"><span class="tagn">'+r.agent+':</span> All set. '+r.turns+' turns · '+fmtDur(r.duration)+' · '+r.cost.toFixed(1)+'¢ · sentiment '+r.sentiment.toFixed(2)+'.</span>'+
-        '</div></td>';
-      tr.parentNode.insertBefore(ex, tr.nextSibling);
-    });
-  }
-
-  /* sort */
-  var ths = document.querySelectorAll('#histTable thead th');
-  ths.forEach(function(th){
-    th.addEventListener('click', function(){
-      var key = th.getAttribute('data-key');
-      var type = th.getAttribute('data-type');
-      var asc = th.getAttribute('aria-sort')!=='ascending';
-      ths.forEach(function(o){ o.setAttribute('aria-sort','none'); });
-      th.setAttribute('aria-sort', asc?'ascending':'descending');
-      rows.sort(function(a,b){
-        var x=a[key], y=b[key];
-        if(type==='num'){ return asc ? x-y : y-x; }
-        x=(''+x).toLowerCase(); y=(''+y).toLowerCase();
-        return asc ? (x<y?-1:x>y?1:0) : (x>y?-1:x<y?1:0);
-      });
-      render();
-    });
+  [0,20,40].forEach(function(t){
+    var y=padT+plotH-(t/max)*plotH;
+    s+='<line x1="'+padL+'" y1="'+y+'" x2="'+(W-8)+'" y2="'+y+'" stroke="var(--grid)" stroke-width="1"/>'+
+       '<text x="'+(padL-7)+'" y="'+(y+4)+'" text-anchor="end" font-size="10" fill="var(--muted)">'+t+'</text>';
   });
 
+  VOLUME.forEach(function(d,i){
+    var h=(d.v/max)*plotH,x=padL+i*band+(band-bw)/2,y=padT+plotH-h;
+    /* 4px rounded data-end, square at the baseline */
+    s+='<path d="M'+x+' '+(y+4)+' a4 4 0 0 1 4 -4 h'+(bw-8)+' a4 4 0 0 1 4 4 v'+(h-4)+' h'+(-bw)+' z"'+
+       ' fill="var(--viz-solo)" data-bi="'+i+'"/>'+
+       '<rect x="'+x+'" y="'+padT+'" width="'+bw+'" height="'+plotH+'" fill="transparent" data-bi="'+i+'"/>'+
+       '<text x="'+(x+bw/2)+'" y="'+(H-padB+15)+'" text-anchor="middle" font-size="10" fill="var(--muted)">'+d.h+'</text>';
+    if(d===peak){
+      s+='<text x="'+(x+bw/2)+'" y="'+(y-6)+'" text-anchor="middle" font-size="11" font-weight="600"'+
+         ' fill="var(--ink)">'+d.v+'</text>';
+    }
+  });
+  $('#plotVolume').innerHTML=s+'</svg>';
+
+  var svg=$('#plotVolume svg');
+  svg.addEventListener('mousemove',function(e){
+    var t=e.target.getAttribute&&e.target.getAttribute('data-bi');
+    if(t===null||t===undefined){hideTip();return;}
+    var d=VOLUME[+t];
+    showTip(d.h+':00 · <b>'+d.v+'</b> calls',e.clientX,e.clientY);
+  });
+  svg.addEventListener('mouseleave',hideTip);
+
+  $('#tblVolume').innerHTML='<table><thead><tr><th>Hour</th><th>Calls</th></tr></thead><tbody>'+
+    VOLUME.map(function(d){return '<tr><td>'+d.h+':00</td><td>'+d.v+'</td></tr>';}).join('')+
+    '</tbody></table>';
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   CHART · sentiment trend (line)
+   2px line, 10% area wash, end marker >=8px with a 2px surface ring,
+   endpoint labelled only. Crosshair + tooltip on hover.
+   ═══════════════════════════════════════════════════════════════════ */
+function renderSent(){
+  var W=420,H=190,padL=32,padB=26,padT=16,
+      plotW=W-padL-14,plotH=H-padB-padT,
+      lo=-1,hi=1,
+      X=function(i){return padL+(i/(SENT.length-1))*plotW;},
+      Y=function(v){return padT+plotH-((v-lo)/(hi-lo))*plotH;},
+      s='<svg viewBox="0 0 '+W+' '+H+'" role="img" aria-label="Mean sentiment by hour, rising from 0.42 to 0.68">';
+
+  [-1,0,1].forEach(function(t){
+    var y=Y(t);
+    s+='<line x1="'+padL+'" y1="'+y+'" x2="'+(W-14)+'" y2="'+y+'" stroke="var(--grid)" stroke-width="1"/>'+
+       '<text x="'+(padL-7)+'" y="'+(y+4)+'" text-anchor="end" font-size="10" fill="var(--muted)">'+
+       (t>0?'+1':t)+'</text>';
+  });
+
+  var pts=SENT.map(function(d,i){return X(i).toFixed(1)+','+Y(d.v).toFixed(1);});
+  s+='<polygon points="'+padL+','+Y(0)+' '+pts.join(' ')+' '+X(SENT.length-1)+','+Y(0)+
+     '" fill="var(--viz-solo)" opacity=".10"/>';
+  s+='<polyline points="'+pts.join(' ')+'" fill="none" stroke="var(--viz-solo)" stroke-width="2"'+
+     ' stroke-linecap="round" stroke-linejoin="round"/>';
+
+  SENT.forEach(function(d,i){
+    if(i%3===0||i===SENT.length-1){
+      s+='<text x="'+X(i)+'" y="'+(H-padB+15)+'" text-anchor="middle" font-size="10"'+
+         ' fill="var(--muted)">'+d.h+'</text>';
+    }
+  });
+  var li=SENT.length-1;
+  s+='<circle cx="'+X(li)+'" cy="'+Y(SENT[li].v)+'" r="4.5" fill="var(--viz-solo)"'+
+     ' stroke="var(--bg)" stroke-width="2"/>'+
+     '<text x="'+(X(li)-6)+'" y="'+(Y(SENT[li].v)-10)+'" text-anchor="end" font-size="11"'+
+     ' font-weight="600" fill="var(--ink)">+'+SENT[li].v.toFixed(2)+'</text>';
+  s+='<line id="chair" x1="0" y1="'+padT+'" x2="0" y2="'+(padT+plotH)+'" stroke="var(--muted)"'+
+     ' stroke-width="1" opacity="0"/>';
+  s+='<rect x="'+padL+'" y="'+padT+'" width="'+plotW+'" height="'+plotH+'" fill="transparent" id="sHit"/>';
+  $('#plotSent').innerHTML=s+'</svg>';
+
+  var hit=$('#sHit'),chair=$('#chair');
+  hit.addEventListener('mousemove',function(e){
+    var b=hit.getBoundingClientRect(),
+        f=(e.clientX-b.left)/b.width,
+        i=Math.max(0,Math.min(SENT.length-1,Math.round(f*(SENT.length-1)))),
+        d=SENT[i];
+    chair.setAttribute('x1',X(i)); chair.setAttribute('x2',X(i)); chair.setAttribute('opacity','.35');
+    showTip(d.h+':00 · <b>'+(d.v>0?'+':'')+d.v.toFixed(2)+'</b>',e.clientX,e.clientY);
+  });
+  hit.addEventListener('mouseleave',function(){chair.setAttribute('opacity','0');hideTip();});
+
+  $('#tblSent').innerHTML='<table><thead><tr><th>Hour</th><th>Sentiment</th></tr></thead><tbody>'+
+    SENT.map(function(d){return '<tr><td>'+d.h+':00</td><td>'+(d.v>0?'+':'')+d.v.toFixed(2)+'</td></tr>';}).join('')+
+    '</tbody></table>';
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   CHART · cost breakdown (donut)
+   Four categories on the validated categorical order. 2px surface gap
+   between segments (never a stroke). Legend AND direct values, which
+   is also the contrast relief the validator asks for on slots 2 and 4.
+   ═══════════════════════════════════════════════════════════════════ */
+function renderDonut(){
+  var total=COST.reduce(function(a,b){return a+b.v;},0),
+      R=54,C=2*Math.PI*R,GAP=2,off=0,
+      hues=['var(--viz-1)','var(--viz-2)','var(--viz-3)','var(--viz-4)'],
+      s='<svg viewBox="0 0 132 132" role="img" aria-label="Cost breakdown: telephony $21.40, speech-to-text $12.85, LLM tokens $7.60, text-to-speech $4.05">'+
+        '<circle cx="66" cy="66" r="'+R+'" fill="none" stroke="var(--panel)" stroke-width="17"/>';
+
+  COST.forEach(function(d,i){
+    var len=(d.v/total)*C, seg=Math.max(0,len-GAP);
+    s+='<circle cx="66" cy="66" r="'+R+'" fill="none" stroke="'+hues[i]+'" stroke-width="17"'+
+       ' stroke-dasharray="'+seg.toFixed(2)+' '+(C-seg).toFixed(2)+'"'+
+       ' stroke-dashoffset="'+(-off).toFixed(2)+'" transform="rotate(-90 66 66)"'+
+       ' data-di="'+i+'"/>';
+    off+=len;
+  });
+  s+='<text x="66" y="62" text-anchor="middle" font-size="9" fill="var(--muted)">Total</text>'+
+     '<text x="66" y="79" text-anchor="middle" font-size="17" font-weight="600" fill="var(--ink)">$'+
+     total.toFixed(2)+'</text></svg>';
+  $('#plotDonut').innerHTML=s;
+
+  $('#donutLegend').innerHTML=COST.map(function(d,i){
+    return '<span class="dl"><i style="background:'+hues[i]+'" aria-hidden="true"></i>'+
+      '<span>'+esc(d.k)+'</span><b>$'+d.v.toFixed(2)+'</b></span>';
+  }).join('');
+
+  var svg=$('#plotDonut svg');
+  svg.addEventListener('mousemove',function(e){
+    var t=e.target.getAttribute&&e.target.getAttribute('data-di');
+    if(t===null||t===undefined){hideTip();return;}
+    var d=COST[+t];
+    showTip(esc(d.k)+' · <b>$'+d.v.toFixed(2)+'</b> ('+Math.round(d.v/total*100)+'%)',e.clientX,e.clientY);
+  });
+  svg.addEventListener('mouseleave',hideTip);
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   CHART · containment meter
+   Unfilled track is a lighter step of the same hue, so state reads
+   across the whole bar rather than fill-vs-gray.
+   ═══════════════════════════════════════════════════════════════════ */
+function renderMeter(){
+  $('#cmVal').textContent=CONTAIN.value+'%';
+  $('#cmFill').style.width=CONTAIN.value+'%';
+  $('#cmGoal').style.left=CONTAIN.goal+'%';
+  $('#cmGoalLbl').textContent='Target '+CONTAIN.goal+'%';
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   RENDER · call history
+   ═══════════════════════════════════════════════════════════════════ */
+function renderHistory(){
+  $('#histBody').innerHTML=CALLS.map(function(c){
+    var a=AGENTS[c.ag];
+    return '<tr tabindex="0" role="button" data-call="'+c.id+'" aria-label="Call at '+c.t+' with '+a.name+'">'+
+      '<td><span class="cell mono">'+c.t+'</span></td>'+
+      '<td><span class="cell"><span class="who-cell">'+pic(a.photo,'',a.name,240)+esc(a.name)+'</span></span></td>'+
+      '<td><span class="cell mono">'+esc(c.caller)+'</span></td>'+
+      '<td><span class="cell mono">'+c.dur+'</span></td>'+
+      '<td><span class="cell">'+esc(c.out)+'</span></td>'+
+      '<td><span class="cell">'+badge(c.st)+'</span></td></tr>';
+  }).join('');
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   CALL DETAIL MODAL
+   ═══════════════════════════════════════════════════════════════════ */
+var au=$('#au'),scrim=$('#scrim'),wf=$('#wf'),wfWrap=$('#wfWrap'),lastFocus=null,curCall=null;
+
+/* a fixed pseudo-random amplitude profile — stable across opens */
+(function buildWave(){
+  var n=68,h='';
+  for(var i=0;i<n;i++){
+    var a=Math.abs(Math.sin(i*0.7))*0.55+Math.abs(Math.sin(i*0.23))*0.4+0.08;
+    h+='<i style="height:'+Math.round(Math.min(1,a)*100)+'%"></i>';
+  }
+  wf.innerHTML=h;
 })();
+
+function mmss(t){t=Math.max(0,Math.floor(t||0));return Math.floor(t/60)+':'+('0'+(t%60)).slice(-2);}
+
+function paintWave(frac){
+  var bars=wf.children,cut=Math.round(frac*bars.length);
+  for(var i=0;i<bars.length;i++) bars[i].classList.toggle('past',i<cut);
+}
+
+function openCall(id){
+  var c=CALLS.filter(function(x){return x.id===id;})[0]; if(!c) return;
+  curCall=c;
+  var a=AGENTS[c.ag];
+
+  $('#mTitle').textContent=a.name+' · '+c.t;
+  $('#mBadge').innerHTML=badge(c.st);
+  $('#mSummary').textContent=c.sum;
+  $('#fStatus').textContent=BADGE[c.st][1];
+  $('#fSent').textContent=c.sent;
+  $('#fCost').textContent=c.cost;
+  $('#mFull').textContent=c.dur;
+
+  $('#mTurns').innerHTML=c.turns.map(function(t){
+    return '<div class="turn '+(t[1]==='agent'?'agent':'caller')+'">'+
+      '<span class="t">'+t[0]+'</span><div><span class="spk">'+
+      (t[1]==='agent'?a.name+' · agent':'Caller')+'</span><p>'+esc(t[2])+'</p></div></div>';
+  }).join('');
+
+  $('#mFields').innerHTML=c.fields.map(function(f){
+    return '<div><span class="lbl">'+esc(f[0])+'</span><b>'+esc(f[1])+'</b></div>';
+  }).join('');
+
+  showMTab('overview');
+  au.pause(); au.src='assets/'+a.clip+'.mp3'; au.currentTime=0;
+  au.load();   /* preload="none" means duration is unknown until we ask for it */
+  wfWrap.classList.remove('playing'); paintWave(0);
+  $('#mCur').textContent='0:00'; $('#mDur').textContent='—';
+  $('#mPlay').setAttribute('aria-label','Play recording');
+
+  lastFocus=document.activeElement;
+  scrim.hidden=false;
+  $('#mClose').focus();
+}
+function closeCall(){
+  scrim.hidden=true; au.pause();
+  wfWrap.classList.remove('playing');
+  if(lastFocus&&lastFocus.focus) lastFocus.focus();
+}
+function showMTab(name){
+  $$('[data-mtab]').forEach(function(b){
+    var on=b.getAttribute('data-mtab')===name;
+    b.setAttribute('aria-selected',on?'true':'false');
+    $('#mp-'+b.getAttribute('data-mtab')).hidden=!on;
+  });
+}
+$$('[data-mtab]').forEach(function(b){
+  b.addEventListener('click',function(){showMTab(b.getAttribute('data-mtab'));});
+});
+$('#mClose').addEventListener('click',closeCall);
+scrim.addEventListener('mousedown',function(e){if(e.target===scrim) closeCall();});
+addEventListener('keydown',function(e){
+  if(scrim.hidden) return;
+  if(e.key==='Escape'){closeCall();return;}
+  if(e.key!=='Tab') return;
+  var f=$$('button,[href],input,select,textarea,[tabindex]:not([tabindex="-1"])',scrim)
+        .filter(function(el){return el.offsetParent!==null;});
+  if(!f.length) return;
+  var first=f[0],last=f[f.length-1];
+  if(e.shiftKey&&document.activeElement===first){e.preventDefault();last.focus();}
+  else if(!e.shiftKey&&document.activeElement===last){e.preventDefault();first.focus();}
+});
+
+$('#mPlay').addEventListener('click',function(){
+  if(au.paused){
+    au.play().then(function(){
+      wfWrap.classList.add('playing');
+      $('#mPlay').setAttribute('aria-label','Pause recording');
+    }).catch(function(){ $('#mDur').textContent='n/a'; });
+  }else{
+    au.pause(); wfWrap.classList.remove('playing');
+    $('#mPlay').setAttribute('aria-label','Play recording');
+  }
+});
+$('#mRestart').addEventListener('click',function(){
+  au.currentTime=0; paintWave(0); $('#mCur').textContent='0:00';
+});
+au.addEventListener('loadedmetadata',function(){ $('#mDur').textContent=mmss(au.duration); });
+au.addEventListener('timeupdate',function(){
+  $('#mCur').textContent=mmss(au.currentTime);
+  if(au.duration) paintWave(au.currentTime/au.duration);
+});
+au.addEventListener('ended',function(){
+  wfWrap.classList.remove('playing'); paintWave(0);
+  $('#mCur').textContent='0:00';
+  $('#mPlay').setAttribute('aria-label','Play recording');
+});
+
+/* ═══════════════════════════════════════════════════════════════════
+   AGENT EDITOR
+   ═══════════════════════════════════════════════════════════════════ */
+function fillAgent(slug){
+  var a=AGENTS[slug]||AGENTS.kwame;
+  $('#edName').textContent=a.name;
+  $('#edVer').textContent=a.ver;
+  $('#edCost').textContent=a.cost;
+  $('#edVoice').textContent=a.voice;
+  $('#edPrompt').value=a.prompt;
+  $('#edPhoto').src='assets/'+a.photo+'.jpg';
+  $('#edPhoto').alt=a.name;
+  $('#testLog').textContent='No runs yet.';
+  showEdTab('configure');
+}
+function showEdTab(name){
+  $$('[data-edtab]').forEach(function(b){
+    var on=b.getAttribute('data-edtab')===name;
+    b.setAttribute('aria-selected',on?'true':'false');
+    $('#edPane-'+b.getAttribute('data-edtab')).hidden=!on;
+  });
+}
+$$('[data-edtab]').forEach(function(b){
+  b.addEventListener('click',function(){showEdTab(b.getAttribute('data-edtab'));});
+});
+
+/* settings accordion — one open at a time */
+$$('.acc-h').forEach(function(h){
+  h.addEventListener('click',function(){
+    var open=h.getAttribute('aria-expanded')==='true';
+    $$('.acc-h').forEach(function(o){
+      o.setAttribute('aria-expanded','false');
+      $('#'+o.getAttribute('aria-controls')).hidden=true;
+    });
+    if(!open){
+      h.setAttribute('aria-expanded','true');
+      $('#'+h.getAttribute('aria-controls')).hidden=false;
+    }
+  });
+});
+
+$('#runTest').addEventListener('click',function(){
+  var log=$('#testLog');
+  log.innerHTML='Running scripted test…';
+  setTimeout(function(){
+    log.innerHTML='<b>Not connected.</b> Running a test needs the engine reachable from '+
+      'the browser (a <code>/api/simulate</code> endpoint over the Python package). '+
+      'Nothing was sent.';
+  },550);
+});
+$('#micTest').addEventListener('click',function(){
+  var log=$('#testLog');
+  if(!navigator.mediaDevices||!navigator.mediaDevices.getUserMedia){
+    log.innerHTML='<b>Unavailable.</b> This browser exposes no microphone API.'; return;
+  }
+  log.innerHTML='Requesting microphone…';
+  navigator.mediaDevices.getUserMedia({audio:true}).then(function(st){
+    st.getTracks().forEach(function(t){t.stop();});
+    log.innerHTML='<b>Microphone OK.</b> Capture works; there is no live agent socket '+
+                  'to stream it to yet, so nothing was recorded or sent.';
+  }).catch(function(){
+    log.innerHTML='<b>Microphone blocked.</b> Grant access in the browser to test capture.';
+  });
+});
+$('#saveAgent').addEventListener('click',function(){
+  $('#testLog').innerHTML='<b>Not saved.</b> There is no persistence layer — edits live in '+
+    'this tab only. The prompts of record are in <code>cynea_africa/persona/</code>.';
+  showEdTab('configure');
+});
+$('#createAgent').addEventListener('click',function(){ location.hash='#/agent/kwame'; });
+
+/* ═══════════════════════════════════════════════════════════════════
+   ROUTER
+   ═══════════════════════════════════════════════════════════════════ */
+var STUBS={
+  '/agents':['Agents','Agent list isn’t built yet','The four agents are on the Operations Center under Agent status — clicking one opens the editor.'],
+  '/knowledge':['Knowledge Base','Knowledge Base isn’t built yet','Sources are attached per agent in the editor’s Settings accordion.'],
+  '/voices':['Voices','Voice library isn’t built yet','Nine voices ship today, four of them native African accents. See cynea_africa/synthesizer/edge_tts.py.'],
+  '/numbers':['Phone Numbers','Number management isn’t built yet','Numbers are provisioned through Africa’s Talking in seven countries.'],
+  '/batch':['Batch Calls','Batch calling isn’t built yet','Outbound campaigns run from the API today, not from this console.'],
+  '/integrations':['Integrations','Integrations aren’t built yet','Webhooks are configured per agent in the editor.'],
+  '/history':['Call History','Full history isn’t built yet','The six most recent calls are on the Operations Center.'],
+  '/contacts':['Contacts','Contacts aren’t built yet','No CRM is wired up.'],
+  '/transcripts':['Transcripts','Transcript search isn’t built yet','Per-call transcripts open from any call row.'],
+  '/analytics':['Analytics','Deeper analytics aren’t built yet','The four charts on the Operations Center are what exists.'],
+  '/costs':['Costs','Cost explorer isn’t built yet','Today’s breakdown is the donut on the Operations Center.']
+};
+function route(){
+  var h=(location.hash||'#/ops').replace(/^#/,'');
+  var views={ops:$('#v-ops'),agent:$('#v-agent'),stub:$('#v-stub')};
+  Object.keys(views).forEach(function(k){views[k].hidden=true;});
+
+  var m=h.match(/^\/agent\/([a-z]+)$/);
+  if(m&&AGENTS[m[1]]){ fillAgent(m[1]); views.agent.hidden=false; }
+  else if(STUBS[h]){
+    $('#stubTitle').textContent=STUBS[h][0];
+    $('#stubHead').textContent=STUBS[h][1];
+    $('#stubBody').textContent=STUBS[h][2];
+    views.stub.hidden=false;
+  }
+  else{ views.ops.hidden=false; h='/ops'; }
+
+  $$('.nav-item').forEach(function(a){
+    var href=a.getAttribute('href').replace(/^#/,'');
+    if(href===h||(h.indexOf('/agent/')===0&&href==='/agents')) a.setAttribute('aria-current','page');
+    else a.removeAttribute('aria-current');
+  });
+  closeSide();
+  $('.scroll',views.ops.hidden?(views.agent.hidden?views.stub:views.agent):views.ops).scrollTop=0;
+}
+addEventListener('hashchange',route);
+
+/* ═══════════════════════════════════════════════════════════════════
+   WIRING
+   ═══════════════════════════════════════════════════════════════════ */
+/* row / card click delegation */
+document.addEventListener('click',function(e){
+  var call=e.target.closest&&e.target.closest('[data-call]');
+  if(call){ openCall(call.getAttribute('data-call')); return; }
+  var ag=e.target.closest&&e.target.closest('[data-agent]');
+  if(ag){ location.hash='#/agent/'+ag.getAttribute('data-agent'); return; }
+});
+/* keyboard activation for the table rows */
+document.addEventListener('keydown',function(e){
+  if(e.key!=='Enter'&&e.key!==' ') return;
+  var r=e.target.closest&&e.target.closest('tr[data-call]');
+  if(!r) return;
+  e.preventDefault(); openCall(r.getAttribute('data-call'));
+});
+
+/* chart table toggles — a tooltip is never the only way to read a value */
+$$('[data-table]').forEach(function(b){
+  b.addEventListener('click',function(){
+    var t=$('#'+b.getAttribute('data-table')),on=t.classList.toggle('on');
+    b.setAttribute('aria-expanded',on?'true':'false');
+    b.textContent=on?'Chart':'Table';
+  });
+});
+
+/* date-range segmented control (presentation only — no refetch to make) */
+$$('.seg button').forEach(function(b){
+  b.addEventListener('click',function(){
+    $$('.seg button').forEach(function(o){o.setAttribute('aria-pressed','false');});
+    b.setAttribute('aria-pressed','true');
+  });
+});
+
+/* sidebar drawer */
+var side=$('#side'),ovl=$('#ovl');
+function openSide(){side.classList.add('open');ovl.classList.add('on');
+  $$('[id="hamb"],[data-hamb]').forEach(function(b){b.setAttribute('aria-expanded','true');});}
+function closeSide(){side.classList.remove('open');ovl.classList.remove('on');
+  $$('[id="hamb"],[data-hamb]').forEach(function(b){b.setAttribute('aria-expanded','false');});}
+document.addEventListener('click',function(e){
+  if(e.target.closest&&e.target.closest('#hamb,[data-hamb]')) openSide();
+});
+ovl.addEventListener('click',closeSide);
+
+/* getting-started meter (0/6 as specified) */
+(function(){
+  var done=0,total=6;
+  $('#gsCount').textContent=done+'/'+total;
+  $('#gsFill').style.width=(done/total*100)+'%';
+})();
+
+/* on-call timers tick so the shell feels live */
+(function(){
+  var t0=Date.now();
+  setInterval(function(){
+    var el=$$('.acard-st .timer');
+    Object.keys(STATUS).forEach(function(k,i){
+      if(!STATUS[k].on||!el[i]) return;
+      var parts=STATUS[k].timer.split(':'),
+          s=(+parts[0])*60+(+parts[1])+1;
+      STATUS[k].timer=('0'+Math.floor(s/60)).slice(-2)+':'+('0'+(s%60)).slice(-2);
+      el[i].textContent=STATUS[k].timer;
+    });
+  },1000);
+})();
+
+/* boot */
+renderKpis(); renderQueue(); renderAgents();
+renderVolume(); renderSent(); renderDonut(); renderMeter();
+renderHistory(); route();
 </script>
 </body>
 </html>

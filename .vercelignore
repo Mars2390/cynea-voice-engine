@@ -12,3 +12,7 @@ node_modules/
 # Kept on disk for archival but excluded from the Vercel build.
 assets/hero-bg.mp4
 assets/african-pattern.svg
+
+# Full-resolution image masters kept by optimize_images.py.
+# Archival only — the site serves the .webp/.jpg derivatives.
+assets/_originals/

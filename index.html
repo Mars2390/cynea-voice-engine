@@ -373,6 +373,7 @@ h1,h2,h3{letter-spacing:-.02em;font-weight:600;margin:0}
   background:linear-gradient(160deg,#cfe9f5,#e8dcff);box-shadow:0 12px 30px rgba(22,22,22,.08);
   transition:transform .3s cubic-bezier(.2,.8,.2,1),box-shadow .3s}
 .uc:hover{transform:translateY(-5px);box-shadow:0 26px 54px rgba(22,22,22,.18)}
+picture{display:contents}
 .uc img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:transform .55s cubic-bezier(.2,.8,.2,1)}
 .uc:hover img{transform:scale(1.08)}
 .uc-scrim{position:absolute;inset:0;background:linear-gradient(180deg,transparent 42%,rgba(10,12,16,.74) 100%)}
@@ -525,10 +526,13 @@ h1,h2,h3{letter-spacing:-.02em;font-weight:600;margin:0}
 .wm-overlay{position:absolute;inset:0;z-index:2;pointer-events:none;background:radial-gradient(ellipse 82% 78% at 50% 46%,transparent 34%,rgba(10,12,16,.55))}
 .wm-cap{z-index:3}
 
-/* mobile: drop heavy videos, keep clean gradient fallbacks */
-@media(max-width:760px){
-  .sec-vid,.sec-vid-overlay,.callprev .call-vid,video.tile-media,.wm-video{display:none!important}
-}
+/* Mobile / no-JS: never fetch the clips. Sources live in data-src and are
+   attached by JS only above 760px (see the video gate in the script block), so
+   there is no download to suppress here - this rule only hides the empty
+   elements so the gradient backgrounds already painted by .hero, .metrics,
+   .cta, .worldmap and .tile-orb show through cleanly. */
+.no-video .sec-vid,.no-video .sec-vid-overlay,.no-video .callprev .call-vid,
+.no-video video.tile-media,.no-video .wm-video{display:none!important}
 
 /* ── world map (global coverage) ──────────────────────────────────── */
 .worldmap{position:relative;overflow:hidden;border-radius:var(--r-lg);min-height:400px;border:1px solid var(--line);
@@ -540,6 +544,13 @@ h1,h2,h3{letter-spacing:-.02em;font-weight:600;margin:0}
 @keyframes wmPulse{0%{box-shadow:0 0 0 0 rgba(0,212,255,.5),0 0 12px rgba(0,212,255,.8)}70%{box-shadow:0 0 0 16px rgba(0,212,255,0),0 0 12px rgba(0,212,255,.8)}100%{box-shadow:0 0 0 0 rgba(0,212,255,0),0 0 12px rgba(0,212,255,.8)}}
 .wm-cap{position:relative;z-index:3;font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:#9FE9FF;background:rgba(0,0,0,.35);padding:8px 16px;border-radius:999px;border:1px solid rgba(159,233,255,.2)}
 </style>
+<script>
+/* Video gate, part 1 of 2 - runs before paint so mobile never flashes an
+   empty <video>. Part 2 (in the main script block) attaches the sources. */
+if(!window.matchMedia('(min-width:760px)').matches){
+  document.documentElement.className+=' no-video';
+}
+</script>
 </head>
 <body>
 <div class="bg" aria-hidden="true">
@@ -571,9 +582,8 @@ h1,h2,h3{letter-spacing:-.02em;font-weight:600;margin:0}
 
 <!-- ─── HERO ────────────────────────────────────────────────────── -->
 <header class="hero" id="top">
-  <video class="sec-vid" autoplay muted loop playsinline preload="auto" aria-hidden="true">
-    <source src="assets/Hero-bg%201.mp4" type="video/mp4">
-  </video>
+  <video class="sec-vid" autoplay muted loop playsinline preload="auto" aria-hidden="true"
+         data-src="assets/Hero-bg%201.mp4" data-eager></video>
   <div class="sec-vid-overlay light" aria-hidden="true"></div>
   <div class="hero-orb orb-a"></div>
   <div class="hero-orb orb-b"></div>
@@ -629,15 +639,15 @@ h1,h2,h3{letter-spacing:-.02em;font-weight:600;margin:0}
     <div class="switcher rv">
       <div class="switch-tiles">
         <div class="tile" data-audio="assets/kwame_test_1.mp3">
-          <div class="tile-orb a"><img class="tile-media" src="assets/Voice%20Agents.jpg" alt="" loading="lazy" onerror="this.remove()"><div class="tile-play">▶</div></div>
+          <div class="tile-orb a"><picture><source srcset="assets/voice-agents.webp" type="image/webp"><img class="tile-media" src="assets/voice-agents.jpg" alt="" width="656" height="410" loading="lazy" decoding="async" onerror="this.remove()"></picture><div class="tile-play">▶</div></div>
           <div class="tile-cap"><b>Voice Agents</b><span>Answer &amp; resolve calls</span></div>
         </div>
         <div class="tile" data-audio="assets/amina_test_1.mp3">
-          <div class="tile-orb b"><video class="tile-media" autoplay muted loop playsinline preload="metadata" aria-hidden="true"><source src="assets/Telephony.mp4" type="video/mp4"></video><div class="tile-play">▶</div></div>
+          <div class="tile-orb b"><video class="tile-media" autoplay muted loop playsinline preload="none" aria-hidden="true" data-src="assets/Telephony.mp4"></video><div class="tile-play">▶</div></div>
           <div class="tile-cap"><b>Telephony</b><span>Twilio · SIP · worldwide</span></div>
         </div>
         <div class="tile" data-audio="assets/kofi_test_1.mp3">
-          <div class="tile-orb c"><video class="tile-media" autoplay muted loop playsinline preload="metadata" aria-hidden="true"><source src="assets/Analytics.mp4" type="video/mp4"></video><div class="tile-play">▶</div></div>
+          <div class="tile-orb c"><video class="tile-media" autoplay muted loop playsinline preload="none" aria-hidden="true" data-src="assets/Analytics.mp4"></video><div class="tile-play">▶</div></div>
           <div class="tile-cap"><b>Analytics</b><span>Sentiment &amp; cost per call</span></div>
         </div>
       </div>
@@ -667,9 +677,8 @@ h1,h2,h3{letter-spacing:-.02em;font-weight:600;margin:0}
 
 <!-- ─── CINEMATIC STATS BAND ────────────────────────────────────── -->
 <section class="metrics">
-  <video class="sec-vid" autoplay muted loop playsinline preload="metadata" aria-hidden="true">
-    <source src="assets/Hero-bg%202.mp4" type="video/mp4">
-  </video>
+  <video class="sec-vid" autoplay muted loop playsinline preload="none" aria-hidden="true"
+         data-src="assets/Hero-bg%202.mp4"></video>
   <div class="sec-vid-overlay dark" aria-hidden="true"></div>
   <div class="metrics-orb a"></div>
   <div class="metrics-orb b"></div>
@@ -691,12 +700,12 @@ h1,h2,h3{letter-spacing:-.02em;font-weight:600;margin:0}
   <div class="shots">
     <figure class="shot rv">
       <div class="shot-bar"><span></span><span></span><span></span><b>Agent Manager</b></div>
-      <img src="assets/shot-agents.png" alt="Cynea Agent Manager" loading="lazy">
+      <picture><source srcset="assets/shot-agents.webp" type="image/webp"><img src="assets/shot-agents.jpg" alt="Cynea Agent Manager" width="1400" height="933" loading="lazy" decoding="async"></picture>
       <figcaption>Create and manage every agent in one place — voices, status and live demos.</figcaption>
     </figure>
     <figure class="shot rv">
       <div class="shot-bar"><span></span><span></span><span></span><b>Operations</b></div>
-      <img src="assets/shot-dashboard.png" alt="Cynea Operations dashboard" loading="lazy">
+      <picture><source srcset="assets/shot-dashboard.webp" type="image/webp"><img src="assets/shot-dashboard.jpg" alt="Cynea Operations dashboard" width="1400" height="933" loading="lazy" decoding="async"></picture>
       <figcaption>Live containment, sentiment and cost — with a global coverage view.</figcaption>
     </figure>
   </div>
@@ -714,11 +723,11 @@ h1,h2,h3{letter-spacing:-.02em;font-weight:600;margin:0}
     <p>One engine, tuned to how each business talks to its customers.</p>
   </div>
   <div class="uc-grid">
-    <article class="uc rv"><img src="assets/usecase-hotel.jpg" alt="Hotels" loading="lazy" onerror="this.closest('.uc').classList.add('uc-fallback')"><div class="uc-scrim" aria-hidden="true"></div><div class="uc-label">Hotels</div></article>
-    <article class="uc rv"><img src="assets/usecase-banking.jpg" alt="Banking" loading="lazy" onerror="this.closest('.uc').classList.add('uc-fallback')"><div class="uc-scrim" aria-hidden="true"></div><div class="uc-label">Banking</div></article>
-    <article class="uc rv"><img src="assets/usecase-restaurant.jpg" alt="Restaurants" loading="lazy" onerror="this.closest('.uc').classList.add('uc-fallback')"><div class="uc-scrim" aria-hidden="true"></div><div class="uc-label">Restaurants</div></article>
-    <article class="uc rv"><img src="assets/usecase-callcenter.jpg" alt="Call Centers" loading="lazy" onerror="this.closest('.uc').classList.add('uc-fallback')"><div class="uc-scrim" aria-hidden="true"></div><div class="uc-label">Call Centers</div></article>
-    <article class="uc rv"><img src="assets/usecase-clinic.jpg" alt="Clinics" loading="lazy" onerror="this.closest('.uc').classList.add('uc-fallback')"><div class="uc-scrim" aria-hidden="true"></div><div class="uc-label">Clinics</div></article>
+    <article class="uc rv"><picture><source srcset="assets/usecase-hotel.webp" type="image/webp"><img src="assets/usecase-hotel.jpg" alt="Hotels" width="620" height="827" loading="lazy" decoding="async" onerror="this.closest('.uc').classList.add('uc-fallback')"></picture><div class="uc-scrim" aria-hidden="true"></div><div class="uc-label">Hotels</div></article>
+    <article class="uc rv"><picture><source srcset="assets/usecase-banking.webp" type="image/webp"><img src="assets/usecase-banking.jpg" alt="Banking" width="620" height="827" loading="lazy" decoding="async" onerror="this.closest('.uc').classList.add('uc-fallback')"></picture><div class="uc-scrim" aria-hidden="true"></div><div class="uc-label">Banking</div></article>
+    <article class="uc rv"><picture><source srcset="assets/usecase-restaurant.webp" type="image/webp"><img src="assets/usecase-restaurant.jpg" alt="Restaurants" width="620" height="827" loading="lazy" decoding="async" onerror="this.closest('.uc').classList.add('uc-fallback')"></picture><div class="uc-scrim" aria-hidden="true"></div><div class="uc-label">Restaurants</div></article>
+    <article class="uc rv"><picture><source srcset="assets/usecase-callcenter.webp" type="image/webp"><img src="assets/usecase-callcenter.jpg" alt="Call Centers" width="620" height="827" loading="lazy" decoding="async" onerror="this.closest('.uc').classList.add('uc-fallback')"></picture><div class="uc-scrim" aria-hidden="true"></div><div class="uc-label">Call Centers</div></article>
+    <article class="uc rv"><picture><source srcset="assets/usecase-clinic.webp" type="image/webp"><img src="assets/usecase-clinic.jpg" alt="Clinics" width="620" height="827" loading="lazy" decoding="async" onerror="this.closest('.uc').classList.add('uc-fallback')"></picture><div class="uc-scrim" aria-hidden="true"></div><div class="uc-label">Clinics</div></article>
   </div>
 </section>
 
@@ -804,7 +813,7 @@ h1,h2,h3{letter-spacing:-.02em;font-weight:600;margin:0}
   </div>
   <div class="agents">
     <article class="agent rv">
-      <div class="agent-orb k"><img src="assets/avatar-kwame.jpg" alt="" loading="lazy" onerror="this.remove()"><b>● Ready for calls</b></div>
+      <div class="agent-orb k"><picture><source srcset="assets/avatar-kwame.webp" type="image/webp"><img src="assets/avatar-kwame.jpg" alt="" width="800" height="385" loading="lazy" decoding="async" onerror="this.remove()"></picture><b>● Ready for calls</b></div>
       <div class="agent-body">
         <h3>Kwame</h3>
         <div class="agent-role">Hotel Receptionist</div>
@@ -814,7 +823,7 @@ h1,h2,h3{letter-spacing:-.02em;font-weight:600;margin:0}
       </div>
     </article>
     <article class="agent rv">
-      <div class="agent-orb a"><img src="assets/amina%20.jpg" alt="" loading="lazy" onerror="this.remove()"><b>● Ready for calls</b></div>
+      <div class="agent-orb a"><picture><source srcset="assets/avatar-amina.webp" type="image/webp"><img src="assets/avatar-amina.jpg" alt="" width="800" height="385" loading="lazy" decoding="async" onerror="this.remove()"></picture><b>● Ready for calls</b></div>
       <div class="agent-body">
         <h3>Amina</h3>
         <div class="agent-role">Customer Service</div>
@@ -824,7 +833,7 @@ h1,h2,h3{letter-spacing:-.02em;font-weight:600;margin:0}
       </div>
     </article>
     <article class="agent rv">
-      <div class="agent-orb f"><img src="assets/avatar-kofi.jpg" alt="" loading="lazy" onerror="this.remove()"><b>● Ready for calls</b></div>
+      <div class="agent-orb f"><picture><source srcset="assets/avatar-kofi.webp" type="image/webp"><img src="assets/avatar-kofi.jpg" alt="" width="800" height="385" loading="lazy" decoding="async" onerror="this.remove()"></picture><b>● Ready for calls</b></div>
       <div class="agent-body">
         <h3>Kofi</h3>
         <div class="agent-role">Restaurant Orders</div>
@@ -834,7 +843,7 @@ h1,h2,h3{letter-spacing:-.02em;font-weight:600;margin:0}
       </div>
     </article>
     <article class="agent rv">
-      <div class="agent-orb m"><img src="assets/avatar-maya.jpg" alt="" loading="lazy" onerror="this.remove()"><b>● Ready for calls</b></div>
+      <div class="agent-orb m"><picture><source srcset="assets/avatar-maya.webp" type="image/webp"><img src="assets/avatar-maya.jpg" alt="" width="800" height="385" loading="lazy" decoding="async" onerror="this.remove()"></picture><b>● Ready for calls</b></div>
       <div class="agent-body">
         <h3>Maya</h3>
         <div class="agent-role">Bookings &amp; Scheduling</div>
@@ -876,9 +885,8 @@ h1,h2,h3{letter-spacing:-.02em;font-weight:600;margin:0}
     <p>Deploy voice agents anywhere — any language, any carrier, any time zone.</p>
   </div>
   <div class="worldmap rv">
-    <video class="wm-video" autoplay muted loop playsinline preload="auto" aria-label="Global coverage">
-      <source src="assets/world.mp4" type="video/mp4">
-    </video>
+    <video class="wm-video" autoplay muted loop playsinline preload="none" aria-label="Global coverage"
+           data-src="assets/world.mp4"></video>
     <div class="wm-grid" aria-hidden="true"></div>
     <div class="wm-overlay" aria-hidden="true"></div>
     <div class="wm-cap">Available worldwide · 40+ markets</div>
@@ -902,9 +910,8 @@ h1,h2,h3{letter-spacing:-.02em;font-weight:600;margin:0}
 <!-- ─── CTA ─────────────────────────────────────────────────────── -->
 <section class="sec">
   <div class="cta rv">
-    <video class="sec-vid" autoplay muted loop playsinline preload="metadata" aria-hidden="true">
-      <source src="assets/Hero-bg%203.mp4" type="video/mp4">
-    </video>
+    <video class="sec-vid" autoplay muted loop playsinline preload="none" aria-hidden="true"
+           data-src="assets/Hero-bg%203.mp4"></video>
     <div class="sec-vid-overlay dark" aria-hidden="true"></div>
     <h2>Put a voice agent on your line this week</h2>
     <p>Book a 30-minute demo and hear your own script in a natural, human-like voice.</p>
@@ -941,6 +948,56 @@ h1,h2,h3{letter-spacing:-.02em;font-weight:600;margin:0}
 
 <script>
 'use strict';
+
+/* ── video gate ────────────────────────────────────────────────────
+   Videos ship with no src at all - only data-src. Below 760px we never
+   attach one, so the ~2.8 MB of clips is never fetched on mobile (CSS
+   display:none would still have downloaded them). Above 760px the hero
+   clip loads immediately and the rest load as they approach the
+   viewport, which is what preload="none" buys us. */
+(function(){
+  var desktop=matchMedia('(min-width:760px)');
+  var vids=[].slice.call(document.querySelectorAll('video[data-src]'));
+  var io=null;
+
+  function attach(v){
+    if(v.getAttribute('data-loaded')) return;
+    v.setAttribute('data-loaded','1');
+    v.src=v.getAttribute('data-src');
+    v.load();
+    var p=v.play();
+    if(p&&p.catch) p.catch(function(){}); /* autoplay blocked - harmless */
+  }
+
+  function sync(){
+    if(!desktop.matches){
+      document.documentElement.classList.add('no-video');
+      return; /* already-attached clips just stay hidden; no refetch either way */
+    }
+    document.documentElement.classList.remove('no-video');
+
+    var lazy=[];
+    vids.forEach(function(v){
+      if(v.hasAttribute('data-eager')) attach(v); else lazy.push(v);
+    });
+    if(!lazy.length) return;
+
+    if(!('IntersectionObserver' in window)){ lazy.forEach(attach); return; }
+    if(!io){
+      io=new IntersectionObserver(function(entries){
+        entries.forEach(function(e){
+          if(e.isIntersecting){ attach(e.target); io.unobserve(e.target); }
+        });
+      },{rootMargin:'300px 0px'});
+    }
+    lazy.forEach(function(v){ if(!v.getAttribute('data-loaded')) io.observe(v); });
+  }
+
+  sync();
+  if(desktop.addEventListener) desktop.addEventListener('change',sync);
+  else if(desktop.addListener) desktop.addListener(sync); /* Safari < 14 */
+})();
+
 /* ── scroll progress ───────────────────────────────────────────── */
 var prog=document.getElementById('prog');
 addEventListener('scroll',function(){

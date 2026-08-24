@@ -57,30 +57,30 @@ class Spec:
 # ---------------------------------------------------------------------------
 # Display-size analysis (CSS px at the widest breakpoint each element reaches)
 #
-#   .uc          aspect-ratio 3/4, 3-col at the 1000px breakpoint -> 308x411
-#   .agent-orb   height:130px, 3-col; narrowest aspect (2.08:1) at the 900px
-#                breakpoint, widest card 370px -> crop 2.08:1, render 800px wide
-#   .tile-orb    aspect-ratio 16/10, 3-col -> 372x233 (656px wide per spec)
-#   .shot img    width:100%, height:auto -> natural 3:2, up to 812px wide
+#   .hl-photo    aspect-ratio 16/9, full wrap width -> 1152x648, 2x-ish at 1600
+#   .stmt-tile   aspect-ratio 14/9, clamps to 190px wide -> 560 covers 2x
+#   .slide-card  img max-width:1100px, natural 3:2 -> master's native 1500 is
+#                the ceiling and keeps dashboard text readable
+#   .pill-orb    38px thumbnails -> 240px square is ample at 3x
 # ---------------------------------------------------------------------------
 
 SPECS: list[Spec] = [
-    # --- use-case cards: .uc, aspect-ratio 3/4 ---------------------------
-    Spec("usecase-restaurant.jpg", "usecase-restaurant", (620, 827), 150, ".uc 3/4 card"),
-    Spec("usecase-callcenter.jpg", "usecase-callcenter", (620, 827), 150, ".uc 3/4 card"),
-    Spec("usecase-hotel.jpg", "usecase-hotel", (620, 827), 150, ".uc 3/4 card"),
-    Spec("usecase-banking.jpg", "usecase-banking", (620, 827), 150, ".uc 3/4 card"),
-    Spec("usecase-clinic.jpg", "usecase-clinic", (620, 827), 150, ".uc 3/4 card"),
-    # --- agent avatars: .agent-orb, a short wide strip --------------------
-    Spec("amina .jpg", "avatar-amina", (800, 385), 80, ".agent-orb strip (renamed)"),
-    Spec("avatar-maya.jpg", "avatar-maya", (800, 385), 60, ".agent-orb strip"),
-    Spec("avatar-kofi.jpg", "avatar-kofi", (800, 385), 60, ".agent-orb strip"),
-    Spec("avatar-kwame.jpg", "avatar-kwame", (800, 385), 60, ".agent-orb strip"),
-    # --- product switcher tile: .tile-orb, aspect-ratio 16/10 -------------
-    Spec("Voice Agents.jpg", "voice-agents", (656, 410), 80, ".tile-orb 16/10"),
-    # --- product screenshots: .shot img, natural aspect, no crop ----------
-    Spec("shot-dashboard.png", "shot-dashboard", (1400, 0), 90, ".shot screenshot", cover=False),
-    Spec("shot-agents.png", "shot-agents", (1400, 0), 90, ".shot screenshot", cover=False),
+    # --- Highlights: one full-bleed landscape banner ----------------------
+    Spec("usecase-callcenter.jpg", "hl-callcenter", (1600, 900), 170, "highlights banner 16/9"),
+    # --- Statement banner 2: small warm tile set between the words --------
+    Spec("usecase-hotel.jpg", "tile-hotel", (560, 360), 60, "statement tile 14/9"),
+    # --- Product screenshots: shown at 1100px, must stay readable ---------
+    Spec("shot-agents.png", "shot-agents", (1500, 0), 110, "carousel slide", cover=False),
+    Spec("shot-dashboard.png", "shot-dashboard", (1500, 0), 110, "carousel slide", cover=False),
+    # --- Agent avatars: small square thumbnails ---------------------------
+    Spec("avatar-kwame.jpg", "avatar-kwame", (240, 240), 22, "square thumb"),
+    Spec("avatar-kofi.jpg", "avatar-kofi", (240, 240), 22, "square thumb"),
+    Spec("amina .jpg", "avatar-amina", (240, 240), 22, "square thumb (renamed)"),
+    Spec("avatar-maya.jpg", "avatar-maya", (240, 240), 22, "square thumb"),
+    # --- Remaining industry photos: kept for FAQ / future sections --------
+    Spec("usecase-banking.jpg", "tile-banking", (560, 360), 60, "industry tile"),
+    Spec("usecase-restaurant.jpg", "tile-restaurant", (560, 360), 60, "industry tile"),
+    Spec("usecase-clinic.jpg", "tile-clinic", (560, 360), 60, "industry tile"),
 ]
 
 

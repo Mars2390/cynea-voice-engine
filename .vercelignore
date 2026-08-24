@@ -16,3 +16,10 @@ assets/african-pattern.svg
 # Full-resolution image masters kept by optimize_images.py.
 # Archival only — the site serves the .webp/.jpg derivatives.
 assets/_originals/
+
+# Videos not placed in the current design. Kept on disk, out of the build.
+assets/Adinkra Hotel.mp4
+assets/Analytics.mp4
+assets/Hero-bg 2.mp4
+assets/Telephony.mp4
+assets/world.mp4

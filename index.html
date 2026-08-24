@@ -1,945 +1,955 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Cynea — Voice agents that sound human, for every market</title>
-<meta name="description" content="Cynea deploys human-like voice agents that answer calls, handle interruptions, and speak with genuine warmth — live on your phone line in days, not months. Anywhere in the world." />
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Cynea — AI Voice Agents for African Businesses</title>
+<meta name="description" content="AI receptionist and voice agents for Kenya, Ghana and Nigeria. Answer calls 24/7 in English, Swahili and Twi for hotels, banks, restaurants and clinics.">
+<meta name="theme-color" content="#F5F1EA">
+<link rel="canonical" href="https://cynea.ai/">
+
+<meta property="og:type" content="website">
+<meta property="og:title" content="Cynea — AI Voice Agents for African Businesses">
+<meta property="og:description" content="Deploy human-like voice agents that answer calls 24/7 in English, Swahili and Twi.">
+<meta property="og:image" content="assets/hl-callcenter.jpg">
+<meta name="twitter:card" content="summary_large_image">
+
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+
 <style>
 /* ═══════════════════════════════════════════════════════════════════
-   CYNEA — rebuilt landing page
-   ElevenLabs structural language · warm light theme · Cynea content
-   Single self-contained file. Cyan #00D4FF kept as a small accent.
+   CYNEA — design tokens
+   Retell's structural discipline, Cynea's warm cream identity.
    ═══════════════════════════════════════════════════════════════════ */
 :root{
-  --cream:#F5F1EA; --cream-2:#EFEAE0;
-  --surface:#FFFFFF; --surface-2:#FBF8F2;
-  --ink:#161616; --muted:#6B6660; --faint:#9A938A;
-  --line:#E6E0D5; --line-2:#EFEAE0;
-  --black:#0A0A0A;
-  --accent:#00D4FF; --accent-ink:#0089A8;
-  --peach:#FFB489; --lav:#B9A6FF; --mint:#8FE3C2; --sky:#8FD2FF;
-  --r:18px; --r-lg:28px;
+  --bg:#F5F1EA;          /* cream page ground        */
+  --card:#FFFFFF;        /* primary card             */
+  --card-2:#F5F7FA;      /* secondary card           */
+  --line:#E1E4EA;        /* hairline                 */
+  --ink:#0E121B;         /* near-black text          */
+  --muted:#617481;       /* slate                    */
+  --accent:#00D4FF;      /* cyan — used sparingly    */
+  --navy:#00122E;        /* dark CTA                 */
+  --blue:#3E6AEF;        /* secondary CTA            */
+
+  --gutter:8px;          /* full-bleed blocks inset this far from the edge */
+  --r-block:24px;        /* big rounded blocks       */
+  --r-card:16px;
+  --r-btn:6px;
+  --pad:140px;           /* section padding          */
   --maxw:1200px;
+
+  --sans:'Inter Tight',system-ui,-apple-system,'Segoe UI',sans-serif;
+  --serif:'Instrument Serif',Georgia,'Times New Roman',serif;
 }
+
 *,*::before,*::after{box-sizing:border-box}
-html{scroll-behavior:smooth}
+html{-webkit-text-size-adjust:100%}
 body{
-  margin:0; background:var(--cream); color:var(--ink);
-  font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;
-  font-size:16px; line-height:1.55; -webkit-font-smoothing:antialiased;
+  margin:0;background:var(--bg);color:var(--ink);
+  font-family:var(--sans);font-size:16px;line-height:1.45;
+  font-weight:400;-webkit-font-smoothing:antialiased;
   overflow-x:hidden;
 }
-@media (prefers-reduced-motion:reduce){
-  *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;scroll-behavior:auto!important}
-}
+h1,h2,h3,h4,p,figure,blockquote{margin:0}
+ul{margin:0;padding:0;list-style:none}
+img,video{display:block;max-width:100%}
+picture{display:contents}          /* never let <picture> become a grid item */
 a{color:inherit;text-decoration:none}
-img{max-width:100%;display:block}
-.wrap{max-width:var(--maxw);margin:0 auto;padding:0 24px}
-.mono{font-family:'JetBrains Mono',monospace}
-.eyebrow{font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--accent-ink);font-weight:500}
-h1,h2,h3{letter-spacing:-.02em;font-weight:600;margin:0}
-.muted{color:var(--muted)}
+button,input,select{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:4px}
 
-/* ── buttons ──────────────────────────────────────────────────────── */
-.btn{display:inline-flex;align-items:center;gap:8px;font-family:inherit;font-size:15px;font-weight:500;
-  padding:11px 20px;border-radius:999px;border:1px solid var(--line);background:var(--surface);color:var(--ink);
-  cursor:pointer;transition:transform .18s cubic-bezier(.2,.8,.2,1),box-shadow .2s,background .2s,border-color .2s}
-.btn:hover{transform:translateY(-1px)}
-.btn-dark{background:var(--black);color:#fff;border-color:var(--black)}
-.btn-dark:hover{background:#262626;box-shadow:0 10px 28px rgba(0,0,0,.18)}
-.btn-ghost{background:transparent}
-.btn-ghost:hover{background:rgba(0,0,0,.04);border-color:#d8d0c2}
-.btn-sm{padding:8px 14px;font-size:13px}
+/* ── layout primitives ─────────────────────────────────────────────── */
+.wrap{max-width:var(--maxw);margin-inline:auto;padding-inline:24px}
+.bleed{margin-inline:var(--gutter);border-radius:var(--r-block);overflow:hidden;position:relative}
+.sec{padding-block:var(--pad)}
+.sec-sm{padding-block:calc(var(--pad) * .64)}
+.hair{height:1px;background:var(--line);border:0;margin:0}
 
-/* ── nav ──────────────────────────────────────────────────────────── */
-.nav{position:sticky;top:0;z-index:60;background:rgba(245,241,234,.8);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border-bottom:1px solid var(--line)}
-.nav-in{display:flex;align-items:center;gap:24px;height:64px;max-width:var(--maxw);margin:0 auto;padding:0 24px}
-.brand{display:inline-flex;align-items:baseline;gap:9px}
-.brand b{font-weight:700;font-size:20px;letter-spacing:.02em}
-.brand span{font-size:10px;letter-spacing:.28em;color:var(--faint);font-weight:600}
-.nav-links{display:flex;gap:26px;margin:0 auto}
-.nav-links a{font-size:14.5px;color:var(--muted);font-weight:500;transition:color .15s}
-.nav-links a:hover{color:var(--ink)}
-.nav-right{display:flex;align-items:center;gap:14px}
-.nav-signin{font-size:14.5px;color:var(--ink);font-weight:500}
-@media(max-width:920px){.nav-links{display:none}.nav-signin{display:none}}
+/* ── type scale ────────────────────────────────────────────────────── */
+.display{
+  font-family:var(--serif);font-weight:400;
+  line-height:.95;letter-spacing:-1.5px;
+}
+.kicker{
+  font-size:12px;text-transform:uppercase;letter-spacing:-.16px;
+  font-weight:500;color:var(--muted);
+}
+.lede{font-size:16px;line-height:1.45;color:var(--muted)}
+.h-sec{font-family:var(--serif);font-weight:400;font-size:clamp(34px,4.4vw,52px);line-height:1;letter-spacing:-1px}
 
-/* ── hero ─────────────────────────────────────────────────────────── */
-.hero{position:relative;padding:72px 0 40px;overflow:hidden}
-.hero-orb{position:absolute;border-radius:50%;filter:blur(70px);pointer-events:none;z-index:0}
-.orb-a{width:540px;height:540px;left:-12%;top:-18%;background:radial-gradient(circle,rgba(0,212,255,.28),transparent 62%);animation:drift 16s ease-in-out infinite alternate}
-.orb-b{width:480px;height:480px;right:-10%;top:8%;background:radial-gradient(circle,rgba(185,166,255,.30),transparent 62%);animation:drift 20s ease-in-out infinite alternate-reverse}
-.orb-c{width:420px;height:420px;left:30%;top:40%;background:radial-gradient(circle,rgba(255,180,137,.22),transparent 62%);animation:drift 24s ease-in-out infinite alternate}
-@keyframes drift{from{transform:translate3d(-2%,0,0) scale(1)}to{transform:translate3d(3%,-3%,0) scale(1.07)}}
-.hero-grid{position:relative;z-index:1;display:grid;grid-template-columns:1.05fr .95fr;gap:48px;align-items:center}
-@media(max-width:920px){.hero-grid{grid-template-columns:1fr;gap:36px}}
-.hero h1{font-size:clamp(40px,5.4vw,62px);line-height:1.03;margin:18px 0 20px}
-.hero h1 .grad{background:linear-gradient(110deg,#00A6CC,#7C5CFC 60%,#00A6CC);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
-.hero-sub{font-size:18px;color:var(--muted);max-width:520px;margin:0 0 28px}
-.hero-cta{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:22px}
-.hero-trust{font-size:13px;color:var(--faint);display:flex;align-items:center;gap:8px;flex-wrap:wrap}
-.hero-trust b{color:var(--muted);font-weight:600}
+/* ── buttons: 32px tall, 6px radius, 12px type, inset ring on hover ── */
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;gap:7px;
+  height:32px;padding:0 15px;border-radius:var(--r-btn);
+  font-size:12px;font-weight:500;letter-spacing:-.16px;
+  border:0;cursor:pointer;white-space:nowrap;
+  transition:box-shadow .18s ease;
+}
+.btn-navy{background:var(--navy);color:#fff}
+.btn-navy:hover{box-shadow:inset 0 0 0 1px rgba(255,255,255,.38)}
+.btn-blue{background:var(--blue);color:#fff}
+.btn-blue:hover{box-shadow:inset 0 0 0 1px rgba(255,255,255,.42)}
+.btn-line{background:transparent;color:var(--ink);box-shadow:inset 0 0 0 1px var(--line)}
+.btn-line:hover{box-shadow:inset 0 0 0 1px var(--ink)}
+.btn-light{background:#fff;color:var(--ink)}
+.btn-light:hover{box-shadow:inset 0 0 0 1px rgba(14,18,27,.34)}
 
-/* ── phone-call ring → live preview (hero centerpiece) ────────────── */
-.callcard{position:relative;background:var(--surface);border:1px solid var(--line);border-radius:var(--r-lg);
-  padding:24px;box-shadow:0 30px 70px rgba(22,22,22,.10),0 2px 8px rgba(22,22,22,.04);overflow:hidden}
-.callcard::before{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,212,255,.05),transparent 30%);pointer-events:none}
-.call-top{display:flex;align-items:center;gap:13px;position:relative;z-index:1}
-.call-av{width:52px;height:52px;border-radius:50%;flex-shrink:0;display:grid;place-items:center;color:#04323d;font-weight:700;font-size:22px;
-  background:radial-gradient(circle at 30% 30%,#7FE9FF,#00D4FF 70%);position:relative}
-.call-av.ringing::after{content:"";position:absolute;inset:-6px;border-radius:50%;border:2px solid rgba(0,212,255,.5);animation:ring 1.4s ease-out infinite}
-.call-av.ringing::before{content:"";position:absolute;inset:-6px;border-radius:50%;border:2px solid rgba(0,212,255,.5);animation:ring 1.4s ease-out infinite .7s}
-@keyframes ring{0%{transform:scale(1);opacity:.7}100%{transform:scale(1.5);opacity:0}}
-.call-id{flex:1;min-width:0}
-.call-id b{display:block;font-size:16px}
-.call-id span{font-size:13px;color:var(--muted)}
-.call-state{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--accent-ink);white-space:nowrap}
-.call-wave{display:flex;align-items:flex-end;gap:3px;height:22px;margin:18px 0 4px;position:relative;z-index:1}
-.call-wave i{flex:1;background:linear-gradient(180deg,#00D4FF,#7C5CFC);border-radius:2px;height:20%;opacity:.35;transition:opacity .2s}
-.callcard.live .call-wave i{animation:wave 1s ease-in-out infinite;opacity:.9}
-.call-wave i:nth-child(2n){animation-delay:.15s}.call-wave i:nth-child(3n){animation-delay:.3s}.call-wave i:nth-child(4n){animation-delay:.45s}
-@keyframes wave{0%,100%{height:20%}50%{height:95%}}
-.call-log{min-height:168px;display:flex;flex-direction:column;gap:9px;position:relative;z-index:1;padding-top:6px}
-.bubble{max-width:84%;font-size:14px;line-height:1.45;padding:9px 13px;border-radius:14px;animation:pop .3s ease}
-@keyframes pop{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
-.bubble.agent{align-self:flex-start;background:#F0ECE3;border:1px solid var(--line);border-bottom-left-radius:4px}
-.bubble.caller{align-self:flex-end;background:#00D4FF;color:#04323d;border-bottom-right-radius:4px;font-weight:500}
-.bubble small{display:block;font-size:10px;letter-spacing:.06em;text-transform:uppercase;opacity:.6;margin-bottom:2px}
-.call-actions{display:flex;gap:10px;margin-top:16px;position:relative;z-index:1}
-.call-accept{flex:1;justify-content:center;background:#10B981;color:#04261c;border-color:#10B981}
-.call-accept:hover{background:#0fa674;border-color:#0fa674}
-.call-decline{width:46px;justify-content:center;background:#fff;border-color:var(--line)}
-.call-replay{justify-content:center;flex:1;background:var(--surface)}
-
-/* ── product switcher panel (signature ElevenLabs block) ──────────── */
-.panel-sec{padding:36px 0 64px}
-.switcher{background:linear-gradient(160deg,#FFFFFF,#FBF6EC);border:1px solid var(--line);border-radius:var(--r-lg);
-  padding:30px;box-shadow:0 30px 70px rgba(22,22,22,.06)}
-.switch-tiles{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
-@media(max-width:760px){.switch-tiles{grid-template-columns:1fr}}
-.tile{position:relative;border-radius:var(--r);overflow:hidden;cursor:pointer;border:1px solid transparent;transition:transform .25s,box-shadow .25s}
-.tile:hover{transform:translateY(-3px);box-shadow:0 20px 40px rgba(22,22,22,.12)}
-.tile-orb{aspect-ratio:16/10;display:grid;place-items:center;position:relative}
-.tile-orb.a{background:radial-gradient(120% 120% at 30% 20%,#8FD2FF,#5B8DEF 60%,#3B5BBF)}
-.tile-orb.b{background:radial-gradient(120% 120% at 70% 30%,#FFC59E,#FF7E5F 55%,#E2495F)}
-.tile-orb.c{background:radial-gradient(120% 120% at 40% 70%,#9BF0C9,#3FB98B 60%,#1E7E63)}
-.tile-play{width:52px;height:52px;border-radius:50%;background:rgba(255,255,255,.92);display:grid;place-items:center;color:#161616;font-size:16px;box-shadow:0 6px 20px rgba(0,0,0,.2)}
-.tile-cap{display:flex;align-items:center;justify-content:space-between;padding:14px 16px;background:var(--surface)}
-.tile-cap b{font-size:15px;font-weight:600}
-.tile-cap span{font-size:12px;color:var(--muted)}
-.pills{display:flex;flex-wrap:wrap;gap:9px;justify-content:center;margin-top:24px}
-.pill{font-size:13px;color:var(--muted);background:var(--surface);border:1px solid var(--line);border-radius:999px;padding:7px 14px;transition:.15s}
-.pill:hover{color:var(--ink);border-color:#d8d0c2}
-
-/* ── built-on strip ───────────────────────────────────────────────── */
-.strip{padding:34px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
-.strip p{text-align:center;font-size:13px;color:var(--faint);margin:0 0 16px;letter-spacing:.04em}
-.strip-logos{display:flex;flex-wrap:wrap;justify-content:center;gap:14px 40px}
-.strip-logos span{font-size:17px;font-weight:600;color:#A9A296;letter-spacing:-.01em}
-
-/* ── section header ───────────────────────────────────────────────── */
-.sec{padding:84px 0}
-.sec-head{max-width:680px;margin:0 0 40px}
-.sec-head.center{margin-left:auto;margin-right:auto;text-align:center}
-.sec-head h2{font-size:clamp(28px,3.4vw,40px);line-height:1.08;margin:12px 0 14px}
-.sec-head p{font-size:17px;color:var(--muted);margin:0}
-
-/* ── deploy split ─────────────────────────────────────────────────── */
-.split{display:grid;grid-template-columns:1fr 1fr;gap:22px}
-@media(max-width:820px){.split{grid-template-columns:1fr}}
-.split-card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r-lg);padding:30px;transition:transform .25s,box-shadow .25s}
-.split-card:hover{transform:translateY(-3px);box-shadow:0 24px 50px rgba(22,22,22,.08)}
-.split-card h3{font-size:22px;margin-bottom:8px}
-.split-card p{color:var(--muted);margin:0 0 20px}
-.mock{border:1px solid var(--line);border-radius:14px;overflow:hidden;background:var(--surface-2)}
-.mock-head{display:flex;align-items:center;gap:6px;padding:10px 14px;border-bottom:1px solid var(--line);background:#fff}
-.dot{width:9px;height:9px;border-radius:50%}
-.mock-body{padding:16px}
-.bar{height:9px;border-radius:5px;background:var(--line-2);margin:9px 0}
-.bar.accent{background:linear-gradient(90deg,#00D4FF,#7C5CFC)}
-.codeblock{background:#0E1116;border-radius:14px;padding:18px;overflow:auto}
-.codeblock pre{margin:0;font-family:'JetBrains Mono',monospace;font-size:12.5px;line-height:1.7;color:#C8D3E0;white-space:pre}
-.tok-k{color:#7CC5FF}.tok-s{color:#9CE6B0}.tok-c{color:#6B7689}.tok-f{color:#E0B0FF}
-
-/* ── feature tiles ────────────────────────────────────────────────── */
-.feat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
-@media(max-width:900px){.feat-grid{grid-template-columns:repeat(2,1fr)}}
-@media(max-width:560px){.feat-grid{grid-template-columns:1fr}}
-.feat{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:24px;transition:transform .25s,box-shadow .25s,border-color .25s}
-.feat:hover{transform:translateY(-3px);box-shadow:0 18px 40px rgba(22,22,22,.07);border-color:#d8d0c2}
-.feat-ic{width:42px;height:42px;border-radius:12px;display:grid;place-items:center;margin-bottom:14px;color:#04323d;background:linear-gradient(135deg,#8FE3FF,#00D4FF)}
-.feat-ic svg{width:20px;height:20px}
-.feat h3{font-size:17px;margin-bottom:6px}
-.feat p{font-size:14.5px;color:var(--muted);margin:0}
-
-/* ── agents ───────────────────────────────────────────────────────── */
-.agents{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
-@media(max-width:900px){.agents{grid-template-columns:1fr}}
-.agent{background:var(--surface);border:1px solid var(--line);border-radius:var(--r-lg);overflow:hidden;transition:transform .25s,box-shadow .25s}
-.agent:hover{transform:translateY(-4px);box-shadow:0 26px 56px rgba(22,22,22,.10)}
-.agent-orb{height:130px;position:relative;display:grid;place-items:end start;padding:16px}
-.agent-orb.k{background:radial-gradient(120% 130% at 25% 20%,#8FD2FF,#00A6CC 70%)}
-.agent-orb.a{background:radial-gradient(120% 130% at 75% 25%,#C9B6FF,#7C5CFC 70%)}
-.agent-orb.f{background:radial-gradient(120% 130% at 40% 75%,#9BF0C9,#1E9E76 70%)}
-.agent-orb img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
-.agent-orb b{position:relative;z-index:1;color:#fff;font-size:13px;background:rgba(0,0,0,.28);backdrop-filter:blur(6px);padding:5px 11px;border-radius:999px;font-weight:500}
-.agent-body{padding:22px}
-.agent-body h3{font-size:20px;margin-bottom:2px}
-.agent-role{font-size:13px;color:var(--accent-ink);margin-bottom:12px}
-.agent-body p{font-size:14.5px;color:var(--muted);margin:0 0 16px}
-.agent-meta{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--faint);margin-bottom:16px}
-
-/* ── coverage ─────────────────────────────────────────────────────── */
-.cov-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
-@media(max-width:840px){.cov-grid{grid-template-columns:repeat(3,1fr)}}
-@media(max-width:560px){.cov-grid{grid-template-columns:repeat(2,1fr)}}
-.cov{display:flex;align-items:center;gap:11px;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:12px 14px;transition:.2s}
-.cov:hover{border-color:rgba(0,212,255,.5);transform:translateY(-2px)}
-.cov .fl{font-size:24px;line-height:1}
-.cov .nm{flex:1;font-size:14px;font-weight:500}
-.cov .st{font-size:10px;font-weight:600;padding:3px 8px;border-radius:999px}
-.cov.on .st{color:#0F9D6E;background:rgba(16,185,129,.12)}
-.cov.soon .st{color:var(--muted);background:var(--surface-2);border:1px solid var(--line)}
-.cov.on{border-left:2px solid #10B981}
-
-/* ── safety ───────────────────────────────────────────────────────── */
-.safe-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
-@media(max-width:760px){.safe-grid{grid-template-columns:1fr}}
-.safe{text-align:center;padding:8px}
-.safe svg{width:64px;height:64px;color:var(--accent-ink);margin-bottom:14px}
-.safe h3{font-size:18px;margin-bottom:8px}
-.safe p{font-size:14.5px;color:var(--muted);margin:0}
-
-/* ── CTA band ─────────────────────────────────────────────────────── */
-.cta{position:relative;overflow:hidden;background:linear-gradient(135deg,#0B0B0C,#15171C);border-radius:var(--r-lg);padding:64px 40px;text-align:center;color:#fff;margin:0 24px}
-.cta::before{content:"";position:absolute;width:600px;height:600px;border-radius:50%;left:-10%;top:-60%;background:radial-gradient(circle,rgba(0,212,255,.35),transparent 60%);filter:blur(40px)}
-.cta::after{content:"";position:absolute;width:520px;height:520px;border-radius:50%;right:-8%;bottom:-60%;background:radial-gradient(circle,rgba(124,92,252,.35),transparent 60%);filter:blur(40px)}
-.cta h2{position:relative;z-index:1;font-size:clamp(28px,3.6vw,42px);margin-bottom:14px}
-.cta p{position:relative;z-index:1;color:#B8BCC4;font-size:17px;margin:0 0 26px}
-.cta-row{position:relative;z-index:1;display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
-.cta .btn{border-color:rgba(255,255,255,.25)}
-.cta .btn-ghost{background:transparent;color:#fff}
-.cta .btn-ghost:hover{background:rgba(255,255,255,.1)}
-.cta .btn-light{background:#fff;color:#0A0A0A;border-color:#fff}
-
-/* ── footer ───────────────────────────────────────────────────────── */
-.foot{padding:64px 0 40px;border-top:1px solid var(--line);margin-top:40px}
-.foot-in{display:grid;grid-template-columns:1.6fr repeat(3,1fr);gap:32px}
-@media(max-width:760px){.foot-in{grid-template-columns:1fr 1fr}}
-.foot-brand p{font-size:13.5px;color:var(--muted);max-width:280px;margin:14px 0 0}
-.foot-col h4{font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--faint);margin:0 0 14px}
-.foot-col a,.foot-col span{display:block;font-size:14px;color:var(--muted);margin-bottom:10px;transition:color .15s}
-.foot-col a:hover{color:var(--ink)}
-.foot-base{max-width:var(--maxw);margin:40px auto 0;padding:20px 24px 0;border-top:1px solid var(--line);display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px;font-size:13px;color:var(--faint)}
-
-/* ── reveal ───────────────────────────────────────────────────────── */
-.rv{opacity:0;transform:translateY(22px);transition:opacity .7s cubic-bezier(.2,.8,.2,1),transform .7s cubic-bezier(.2,.8,.2,1)}
+/* ── one reveal animation. That is the whole motion budget. ────────── */
+.rv{opacity:0;transform:translateY(14px);transition:opacity .7s cubic-bezier(.2,.7,.2,1),transform .7s cubic-bezier(.2,.7,.2,1)}
 .rv.in{opacity:1;transform:none}
 
-/* ── scroll progress ──────────────────────────────────────────────── */
-#prog{position:fixed;top:0;left:0;height:2px;width:0;background:linear-gradient(90deg,#00D4FF,#7C5CFC);z-index:80;box-shadow:0 0 8px rgba(0,212,255,.5)}
+/* ═══ NAV ═══════════════════════════════════════════════════════════ */
+.nav{position:sticky;top:0;z-index:60;background:rgba(245,241,234,.82);backdrop-filter:blur(12px);border-bottom:1px solid transparent;transition:border-color .2s}
+.nav.stuck{border-bottom-color:var(--line)}
+.nav-in{display:flex;align-items:center;gap:28px;height:60px;max-width:var(--maxw);margin-inline:auto;padding-inline:24px}
+.logo{font-size:17px;font-weight:600;letter-spacing:-.4px}
+.logo span{font-family:var(--serif);font-weight:400}
+.nav-links{display:flex;gap:22px;margin-left:auto}
+.nav-links a{font-size:13px;color:var(--muted);transition:color .18s}
+.nav-links a:hover{color:var(--ink)}
+.nav-cta{display:flex;gap:8px;margin-left:22px}
+@media(max-width:900px){.nav-links{display:none}.nav-cta{margin-left:auto}}
 
-/* ── cinematic stats band ─────────────────────────────────────────── */
-.metrics{position:relative;overflow:hidden;background:linear-gradient(135deg,#0B0B0C,#15171C);color:#fff;padding:56px 0}
-.metrics-orb{position:absolute;border-radius:50%;filter:blur(60px);opacity:.55;pointer-events:none}
-.metrics-orb.a{width:440px;height:440px;left:-6%;top:-70%;background:radial-gradient(circle,rgba(0,212,255,.5),transparent 60%)}
-.metrics-orb.b{width:440px;height:440px;right:-6%;bottom:-70%;background:radial-gradient(circle,rgba(124,92,252,.5),transparent 60%)}
-.metrics-in{position:relative;z-index:1;display:grid;grid-template-columns:repeat(4,1fr);gap:24px;text-align:center}
-@media(max-width:640px){.metrics-in{grid-template-columns:repeat(2,1fr);gap:34px 24px}}
-.metric b{display:block;font-size:clamp(34px,5vw,54px);font-weight:600;letter-spacing:-.02em;line-height:1;
-  background:linear-gradient(180deg,#fff,#9FE9FF);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
-.metric span{display:block;margin-top:9px;font-size:13px;color:#B8BCC4}
+/* ═══ 0. HERO ═══════════════════════════════════════════════════════ */
+.hero{
+  min-height:min(860px,88vh);display:flex;flex-direction:column;
+  padding:38px 38px 34px;color:#fff;background:var(--navy);
+}
+.hero-vid{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0}
+.hero-scrim{position:absolute;inset:0;z-index:1;pointer-events:none;
+  background:linear-gradient(180deg,rgba(0,8,22,.62) 0%,rgba(0,8,22,.42) 42%,rgba(0,8,22,.78) 100%)}
+/* lift the content above the video — but never the video or scrim itself,
+   which are absolutely positioned and would drop into flow if matched */
+.hero>*:not(.hero-vid):not(.hero-scrim){position:relative;z-index:2}
+.hero-eyebrow{
+  text-align:center;font-size:16px;text-transform:uppercase;
+  letter-spacing:-.16px;font-weight:500;color:rgba(255,255,255,.92);
+}
+.hero-mid{flex:1;display:grid;place-items:center;padding-block:56px}
+.hero-display{
+  color:#fff;text-align:center;max-width:16ch;
+  font-size:clamp(38px,6.4vw,75px);
+}
+.hero-foot{display:flex;align-items:flex-end;justify-content:space-between;gap:32px}
+.hero-body{font-size:14px;line-height:1.5;max-width:44ch;color:rgba(255,255,255,.86)}
+.hero-pill{
+  display:inline-flex;align-items:center;gap:12px;flex-shrink:0;
+  background:rgba(0,18,46,.72);backdrop-filter:blur(10px);
+  border:1px solid rgba(255,255,255,.16);
+  border-radius:999px;padding:8px 18px 8px 8px;color:#fff;
+  transition:border-color .2s;
+}
+.hero-pill:hover{border-color:rgba(255,255,255,.44)}
+.hero-pill b{font-size:13px;font-weight:500;letter-spacing:-.16px}
+.hero-pill small{display:block;font-size:11px;color:rgba(255,255,255,.6)}
+.pill-orb{
+  width:38px;height:38px;border-radius:50%;flex-shrink:0;position:relative;
+  background:radial-gradient(120% 120% at 32% 26%,#7FE6FF,#00D4FF 46%,#0069A8 100%);
+}
+.pill-orb::after{
+  content:"";position:absolute;inset:-5px;border-radius:50%;
+  border:1px solid rgba(0,212,255,.5);animation:ring 2.6s ease-out infinite;
+}
+@keyframes ring{0%{transform:scale(.86);opacity:.9}100%{transform:scale(1.5);opacity:0}}
+@media(max-width:760px){
+  .hero{padding:26px 20px 24px;min-height:auto}
+  /* 16px is the desktop spec; at phone width it crowds the display line */
+  .hero-eyebrow{font-size:13px}
+  .hero-mid{padding-block:52px}
+  .hero-foot{flex-direction:column;align-items:flex-start;gap:22px}
+}
 
-/* ── how-it-works steps ───────────────────────────────────────────── */
-.steps{position:relative;display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
-@media(max-width:780px){.steps{grid-template-columns:1fr}}
-.steps-rail{position:absolute;top:56px;left:16%;right:16%;height:2px;background:linear-gradient(90deg,transparent,rgba(0,212,255,.45),rgba(124,92,252,.45),transparent)}
-@media(max-width:780px){.steps-rail{display:none}}
-.step{position:relative;background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:28px;transition:transform .25s,box-shadow .25s}
-.step:hover{transform:translateY(-3px);box-shadow:0 20px 44px rgba(22,22,22,.08)}
-.step-no{font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--accent-ink);font-weight:600}
-.step-ic{width:46px;height:46px;border-radius:12px;display:grid;place-items:center;margin:14px 0 16px;color:#fff;background:linear-gradient(135deg,#00D4FF,#7C5CFC)}
-.step-ic svg{width:22px;height:22px}
-.step h3{font-size:19px;margin-bottom:8px}
-.step p{font-size:14.5px;color:var(--muted);margin:0}
+/* ═══ 1 & 4. STATEMENT BANNERS ══════════════════════════════════════ */
+.statement{background:var(--card);min-height:600px;display:grid;place-items:center;padding:110px 24px}
+.statement-2{background:var(--bg)}
+.stmt{
+  font-family:var(--serif);font-weight:400;line-height:.92;letter-spacing:-1.5px;
+  display:flex;flex-direction:column;align-items:flex-start;gap:.04em;
+}
+.stmt-1{font-size:clamp(42px,8vw,90px)}
+.stmt-2{font-size:clamp(44px,8.6vw,100px)}
+.stmt .row{display:flex;align-items:center;gap:.3em}
+.stmt .row:nth-child(2){margin-left:1.1em}
+.stmt .row:nth-child(3){margin-left:2.4em}
+.stmt .row:nth-child(4){margin-left:.7em}
+@media(max-width:760px){
+  .statement{min-height:auto;padding:84px 20px}
+  .stmt .row:nth-child(2){margin-left:.5em}
+  .stmt .row:nth-child(3){margin-left:1em}
+  .stmt .row:nth-child(4){margin-left:.3em}
+}
+/* the one decorative motion in a statement banner: a slow dot ring */
+.dotring{width:.62em;height:.62em;position:relative;flex-shrink:0;animation:spin 14s linear infinite}
+.dotring i{position:absolute;inset:0}
+.dotring i::before{
+  content:"";position:absolute;top:0;left:50%;width:.1em;height:.1em;
+  margin-left:-.05em;border-radius:50%;background:var(--accent);
+}
+.dotring i:nth-child(2){transform:rotate(90deg)}
+.dotring i:nth-child(3){transform:rotate(180deg)}
+.dotring i:nth-child(4){transform:rotate(270deg)}
+.dotring i:nth-child(2)::before,.dotring i:nth-child(4)::before{background:var(--muted);opacity:.5}
+.dotring i:nth-child(3)::before{background:var(--ink);opacity:.35}
+@keyframes spin{to{transform:rotate(360deg)}}
+/* warm photo tile set between the words of statement 2 */
+.stmt-tile{
+  width:clamp(96px,15vw,190px);aspect-ratio:14/9;border-radius:12px;
+  overflow:hidden;flex-shrink:0;position:relative;
+  box-shadow:0 12px 40px rgba(14,18,27,.14);
+}
+.stmt-tile img{width:100%;height:100%;object-fit:cover}
+.stmt-tile::after{content:"";position:absolute;inset:0;background:linear-gradient(140deg,rgba(0,212,255,.16),rgba(255,168,92,.20))}
 
-/* ── audio showcase player ────────────────────────────────────────── */
-.player{position:relative;overflow:hidden;display:flex;align-items:center;gap:22px;flex-wrap:wrap;
-  background:linear-gradient(135deg,#0E1014,#1A1D24);border-radius:var(--r-lg);padding:28px 30px;color:#fff;box-shadow:0 30px 70px rgba(22,22,22,.16)}
-.player-orb{position:absolute;width:380px;height:380px;border-radius:50%;right:-8%;top:-120%;filter:blur(50px);background:radial-gradient(circle,rgba(0,212,255,.5),transparent 60%);pointer-events:none}
-.player-play{position:relative;z-index:1;width:64px;height:64px;border-radius:50%;flex-shrink:0;border:none;cursor:pointer;background:#00D4FF;color:#04323d;font-size:19px;display:grid;place-items:center;transition:transform .15s,box-shadow .2s;box-shadow:0 0 0 6px rgba(0,212,255,.15)}
-.player-play:hover{transform:scale(1.05);box-shadow:0 0 0 10px rgba(0,212,255,.18)}
-.player-main{position:relative;z-index:1;flex:1;min-width:240px}
-.player-meta b{display:block;font-size:16px}
-.player-meta span{font-size:13px;color:#B8BCC4}
-.player-wave{display:flex;align-items:center;gap:3px;height:40px;margin-top:12px}
-.player-wave i{flex:1;background:linear-gradient(180deg,#00D4FF,#7C5CFC);border-radius:2px;height:30%;opacity:.5}
-.player.on .player-wave i{animation:wave 1s ease-in-out infinite;opacity:.95}
-.player-wave i:nth-child(odd){animation-delay:.2s}.player-wave i:nth-child(3n){animation-delay:.4s}
-.player-clips{position:relative;z-index:1;display:flex;gap:8px;flex-wrap:wrap}
-.clip{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.16);color:#fff;border-radius:999px;padding:7px 14px;font-family:inherit;font-size:13px;cursor:pointer;transition:.15s}
-.clip:hover{background:rgba(255,255,255,.16)}
-.clip.is-on{background:#00D4FF;color:#04323d;border-color:#00D4FF;font-weight:600}
+/* ═══ 2. LIVE DEMO ══════════════════════════════════════════════════ */
+.demo-head{text-align:center;margin-bottom:64px}
+.demo-head .display{font-size:clamp(40px,6.6vw,80px)}
+.demo-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;align-items:stretch}
+@media(max-width:900px){.demo-grid{grid-template-columns:1fr}}
+.panel{border-radius:var(--r-card);border:1px solid var(--line);padding:44px 38px}
+.panel-a{background:var(--card);display:flex;flex-direction:column;align-items:center}
+.panel-b{background:var(--card-2);display:flex;flex-direction:column}
 
-/* ── media backgrounds (video sections) ──────────────────────────── */
-.hero,.metrics,.cta{isolation:isolate}
-.sec-vid{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:-2;border:0}
-.hero .sec-vid{opacity:.5}
-.sec-vid-overlay{position:absolute;inset:0;z-index:-1;pointer-events:none}
-.sec-vid-overlay.light{background:linear-gradient(180deg,rgba(245,241,234,.60) 0%,rgba(245,241,234,.74) 60%,rgba(245,241,234,.92) 100%)}
-.sec-vid-overlay.dark{background:linear-gradient(135deg,rgba(11,11,12,.72),rgba(21,23,28,.80))}
+/* the animated call orb — pulse + two ripple rings, nothing else */
+.orb{width:154px;height:154px;position:relative;display:grid;place-items:center;margin:10px 0 34px}
+.orb-core{
+  width:104px;height:104px;border-radius:50%;position:relative;z-index:2;
+  background:radial-gradient(120% 120% at 32% 26%,#8FEBFF,#00D4FF 44%,#00618F 100%);
+  box-shadow:0 14px 44px rgba(0,140,190,.34);
+  animation:beat 2.8s ease-in-out infinite;
+}
+.orb-ripple{position:absolute;inset:0;border-radius:50%;border:1px solid rgba(0,212,255,.46);animation:ripple 2.8s ease-out infinite}
+.orb-ripple.b{animation-delay:1.4s}
+@keyframes beat{0%,100%{transform:scale(1)}50%{transform:scale(1.045)}}
+@keyframes ripple{0%{transform:scale(.68);opacity:.85}100%{transform:scale(1.18);opacity:0}}
 
-/* incoming-call preview — LIVING gradient orb (pure-CSS motion) */
-.callprev{position:relative;overflow:hidden;border-radius:var(--r-lg);border:1px solid var(--line);
-  background:linear-gradient(160deg,#FCF8F1,#F2EADC);aspect-ratio:4/5;
-  box-shadow:0 30px 70px rgba(22,22,22,.12),0 2px 8px rgba(22,22,22,.04);display:flex;flex-direction:column}
-.cp-badge{position:absolute;left:16px;top:16px;z-index:5;display:inline-flex;align-items:center;gap:8px;font-size:13px;font-weight:500;color:var(--ink);background:rgba(255,255,255,.72);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);padding:8px 14px;border-radius:999px;border:1px solid var(--line)}
-.cp-dot{width:8px;height:8px;border-radius:50%;background:#10B981;animation:ringPulse 1.6s infinite}
-.callprev[data-state="ringing"] #callStatus{animation:txtPulse 1.3s ease-in-out infinite}
-@keyframes txtPulse{0%,100%{opacity:.6}50%{opacity:1}}
+.orb-play{display:inline-flex;align-items:center;gap:9px;margin-bottom:30px}
+.orb-play .btn{height:32px}
+.orb-play small{font-size:12px;color:var(--muted);letter-spacing:-.16px}
 
-.cp-stage{flex:1;position:relative;display:grid;place-items:center}
+.pills{display:flex;flex-wrap:wrap;gap:8px;justify-content:center}
+.pill input{position:absolute;opacity:0;pointer-events:none}
+.pill span{
+  display:inline-flex;align-items:center;height:32px;padding:0 15px;
+  border-radius:var(--r-btn);font-size:12px;letter-spacing:-.16px;
+  box-shadow:inset 0 0 0 1px var(--line);color:var(--muted);
+  cursor:pointer;transition:box-shadow .18s,color .18s,background .18s;
+}
+.pill:hover span{box-shadow:inset 0 0 0 1px var(--ink);color:var(--ink)}
+.pill input:checked+span{background:var(--navy);color:#fff;box-shadow:none}
+.pill input:focus-visible+span{outline:2px solid var(--accent);outline-offset:3px}
 
-/* expanding signal ripples — ringing only, a new ring every ~0.7s */
-.cp-rings{position:absolute;left:50%;top:50%;width:0;height:0}
-.cp-rings span{position:absolute;left:50%;top:50%;width:200px;height:200px;margin:-100px 0 0 -100px;border-radius:50%;border:1.5px solid rgba(0,212,255,.5);opacity:0;animation:cpRing 2.1s ease-out infinite}
-.cp-rings span:nth-child(2){animation-delay:.7s}
-.cp-rings span:nth-child(3){animation-delay:1.4s}
-@keyframes cpRing{0%{transform:scale(.65);opacity:.55}80%{opacity:.05}100%{transform:scale(1.75);opacity:0}}
-.callprev[data-state="live"] .cp-rings{display:none}
+.panel-b p{margin-bottom:38px}
+.field{position:relative;margin-bottom:6px}
+.field label{display:block;font-size:12px;text-transform:uppercase;letter-spacing:-.16px;color:var(--muted);margin-bottom:2px}
+.field input,.field select{
+  width:100%;height:48px;background:transparent;border:0;
+  border-bottom:1px solid var(--line);border-radius:0;
+  font-size:15px;padding:0;appearance:none;
+  transition:border-color .2s;
+}
+.field select{cursor:pointer}
+.field input::placeholder{color:#9AA7B1}
+.field input:focus,.field select:focus{outline:0;border-bottom-color:var(--ink)}
+.field-arrow{position:absolute;right:2px;bottom:17px;pointer-events:none;color:var(--muted)}
+.demo-submit{margin-top:30px;display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.demo-note{font-size:12px;color:var(--muted);letter-spacing:-.16px}
+.demo-msg{margin-top:16px;font-size:13px;color:var(--ink);background:#fff;border:1px solid var(--line);border-radius:10px;padding:12px 14px;display:none}
+.demo-msg.show{display:block}
 
-/* pulsing aura glow behind the orb */
-.orb-aura{position:absolute;left:50%;top:50%;width:250px;height:250px;margin:-125px 0 0 -125px;border-radius:50%;
-  background:radial-gradient(circle,rgba(0,212,255,.42),transparent 66%);filter:blur(16px);animation:auraPulse 1.4s ease-in-out infinite}
-@keyframes auraPulse{0%,100%{transform:scale(.9);opacity:.5}50%{transform:scale(1.1);opacity:.9}}
-.callprev[data-state="live"] .orb-aura{animation-duration:5s;background:radial-gradient(circle,rgba(124,92,252,.34),transparent 66%)}
+/* ═══ 3. TESTIMONIALS (placeholder) ═════════════════════════════════ */
+.tm-placeholder{
+  border:1px dashed var(--line);border-radius:var(--r-card);
+  background:var(--card);padding:64px 40px;text-align:center;margin-top:54px;
+}
+.tm-placeholder .dot{width:7px;height:7px;border-radius:50%;background:var(--accent);display:inline-block;margin-right:9px;vertical-align:middle}
+.tm-placeholder p{font-size:15px;color:var(--muted);max-width:52ch;margin-inline:auto}
 
-/* sound-wave bars circling the orb (each bar: --a angle, --d delay) */
-.orb-bars{position:absolute;left:50%;top:50%;width:0;height:0}
-.orb-bars i{position:absolute;left:50%;top:50%;width:3px;height:18px;margin:-9px 0 0 -1.5px;border-radius:2px;
-  background:linear-gradient(180deg,#00D4FF,#7C5CFC);opacity:.85;transform-origin:center;
-  transform:rotate(var(--a)) translateY(-118px) scaleY(.4);
-  animation:barEq 1.1s ease-in-out infinite;animation-delay:var(--d)}
-@keyframes barEq{0%,100%{transform:rotate(var(--a)) translateY(-118px) scaleY(.35)}50%{transform:rotate(var(--a)) translateY(-118px) scaleY(1)}}
-.callprev[data-state="ringing"] .orb-bars i{animation-duration:.85s}
-.callprev[data-state="live"] .orb-bars i{animation-duration:1.7s;opacity:.55}
+/* ═══ 5. HIGHLIGHTS ═════════════════════════════════════════════════ */
+.hl-photo{border-radius:var(--r-block);overflow:hidden;margin-top:54px;aspect-ratio:16/9;max-height:560px}
+.hl-photo img{width:100%;height:100%;object-fit:cover}
+.hl-rows{margin-top:64px;border-top:1px solid var(--line)}
+.hl-row{display:grid;grid-template-columns:.9fr 1.1fr;gap:32px;padding:34px 0;border-bottom:1px solid var(--line);align-items:baseline}
+.hl-row h3{font-size:20px;font-weight:500;letter-spacing:-.4px}
+.hl-row .val{font-size:15px;color:var(--muted)}
+.hl-row .val b{color:var(--ink);font-weight:500}
+@media(max-width:760px){.hl-row{grid-template-columns:1fr;gap:8px;padding:26px 0}}
 
-/* the orb body */
-.orb{position:relative;z-index:1;width:210px;height:210px;border-radius:50%;overflow:hidden;
-  box-shadow:0 24px 60px rgba(124,92,252,.30),0 0 0 1px rgba(255,255,255,.4) inset;animation:orbBreathe 6s ease-in-out infinite}
-.callprev[data-state="ringing"] .orb{animation:orbBeat 1.3s ease-in-out infinite;filter:saturate(1.15) brightness(1.05)}
-.callprev[data-state="live"] .orb{animation:orbBreathe 5s ease-in-out infinite;box-shadow:0 24px 72px rgba(0,212,255,.45),0 0 0 1px rgba(255,255,255,.5) inset}
-@keyframes orbBreathe{0%,100%{transform:scale(1)}50%{transform:scale(1.035)}}
-@keyframes orbBeat{0%{transform:scale(1)}12%{transform:scale(1.07)}24%{transform:scale(1)}38%{transform:scale(1.045)}52%,100%{transform:scale(1)}}
-.orb-grad{position:absolute;inset:-26%;border-radius:50%;filter:blur(2px) saturate(1.12);
-  background:radial-gradient(38% 38% at 30% 30%,#8FD2FF,transparent 60%),radial-gradient(42% 42% at 72% 34%,#C9B6FF,transparent 60%),radial-gradient(48% 48% at 62% 74%,#FFB489,transparent 62%),radial-gradient(44% 44% at 30% 72%,#5BE0B0,transparent 60%),linear-gradient(135deg,#00B4D8,#7C5CFC);
-  animation:orbSpin 18s linear infinite}
-.orb-grad2{position:absolute;inset:-30%;border-radius:50%;mix-blend-mode:screen;opacity:.55;filter:blur(7px);
-  background:radial-gradient(40% 40% at 62% 38%,#19E3FF,transparent 60%),radial-gradient(46% 46% at 34% 66%,#B79CFF,transparent 60%);
-  animation:orbSpin2 22s linear infinite}
-.orb-light{position:absolute;inset:0;border-radius:50%;background:radial-gradient(circle at 50% 15%,rgba(255,255,255,.55),transparent 34%);animation:orbSpin 9s linear infinite}
-.orb-shade{position:absolute;inset:0;border-radius:50%;
-  background:radial-gradient(circle at 34% 28%,rgba(255,255,255,.5),transparent 42%),radial-gradient(circle at 66% 80%,rgba(10,12,20,.3),transparent 56%)}
-.orb-grain{position:absolute;inset:0;border-radius:50%;opacity:.15;mix-blend-mode:overlay;background-image:radial-gradient(rgba(0,0,0,.6) .5px,transparent .7px);background-size:3px 3px}
-@keyframes orbSpin{to{transform:rotate(360deg)}}
-@keyframes orbSpin2{to{transform:rotate(-360deg)}}
+/* ═══ 6. PRODUCT SCREENSHOTS ════════════════════════════════════════ */
+.slides{margin-top:54px;position:relative}
+.slide{display:none}
+.slide.on{display:block}
+.slide-card{
+  border-radius:var(--r-block);padding:44px 44px 0;overflow:hidden;
+  background:linear-gradient(150deg,#EAF6FB 0%,#F3EEE6 52%,#FBEFE4 100%);
+  border:1px solid var(--line);
+}
+.slide-card img{
+  width:100%;max-width:1100px;margin-inline:auto;border-radius:12px 12px 0 0;
+  box-shadow:0 -2px 0 var(--line),0 26px 60px rgba(14,18,27,.16);
+}
+.slide-meta{display:flex;align-items:center;justify-content:space-between;gap:20px;margin-top:26px}
+.slide-meta h3{font-size:19px;font-weight:500;letter-spacing:-.4px}
+.slide-meta p{font-size:14px;color:var(--muted);margin-top:2px}
+.slide-nav{display:flex;align-items:center;gap:10px;flex-shrink:0}
+.slide-count{font-size:12px;color:var(--muted);letter-spacing:-.16px;font-variant-numeric:tabular-nums;min-width:44px;text-align:center}
+.sq{width:32px;height:32px;border-radius:var(--r-btn);background:transparent;box-shadow:inset 0 0 0 1px var(--line);display:grid;place-items:center;cursor:pointer;transition:box-shadow .18s}
+.sq:hover{box-shadow:inset 0 0 0 1px var(--ink)}
+.sq[disabled]{opacity:.34;cursor:default}
+.sq[disabled]:hover{box-shadow:inset 0 0 0 1px var(--line)}
+@media(max-width:760px){.slide-card{padding:22px 22px 0}}
 
-/* foot / answer controls */
-.cp-foot{position:relative;z-index:3;padding:0 22px 24px;text-align:center;color:var(--ink)}
-.cp-name{font-size:21px;font-weight:600;letter-spacing:-.01em}
-.cp-sub{font-size:13px;color:var(--muted);margin-top:3px;font-family:'JetBrains Mono',monospace}
-.cp-wave{display:flex;align-items:flex-end;justify-content:center;gap:3px;height:30px;margin:12px 0 2px}
-.cp-wave i{width:4px;flex:none;background:linear-gradient(180deg,#00D4FF,#7C5CFC);border-radius:2px;height:24%}
-.callprev[data-state="live"] .cp-wave i{animation:cpWave 1s ease-in-out infinite}
-.cp-wave i:nth-child(2n){animation-delay:.3s}.cp-wave i:nth-child(3n){animation-delay:.15s}
-@keyframes cpWave{0%,100%{height:16%}50%{height:92%}}
-.cp-actions{display:flex;justify-content:center;gap:24px;margin-top:16px}
-.cp-btn{width:58px;height:58px;border-radius:50%;border:none;cursor:pointer;font-size:23px;line-height:1;display:grid;place-items:center;color:#fff;transition:transform .15s,filter .15s}
-.cp-btn:hover{transform:translateY(-2px);filter:brightness(1.08)}.cp-btn:active{transform:translateY(0)}
-.cp-btn.accept{background:#10B981;animation:ringPulse 1.4s infinite}
-.cp-btn.decline,.cp-btn.end{background:#EF4444}
-@keyframes ringPulse{0%{box-shadow:0 0 0 0 rgba(16,185,129,.5)}70%{box-shadow:0 0 0 15px rgba(16,185,129,0)}100%{box-shadow:0 0 0 0 rgba(16,185,129,0)}}
-.callprev [hidden]{display:none!important}
+/* ═══ 7. OMNI-CHANNEL — diagonal cascade ════════════════════════════ */
+.cascade{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-top:54px;align-items:start}
+.casc{background:var(--card);border:1px solid var(--line);border-radius:var(--r-card);padding:30px 26px 34px}
+.cascade .casc:nth-child(1){margin-top:0}
+.cascade .casc:nth-child(2){margin-top:44px}
+.cascade .casc:nth-child(3){margin-top:88px}
+.cascade .casc:nth-child(4){margin-top:132px}
+.badge{width:46px;height:46px;border-radius:50%;background:#fff;box-shadow:inset 0 0 0 1px var(--line);display:grid;place-items:center;margin-bottom:22px;color:var(--ink)}
+.casc h3{font-size:17px;font-weight:500;letter-spacing:-.4px;margin-bottom:7px}
+.casc p{font-size:14px;color:var(--muted)}
+@media(max-width:900px){
+  .cascade{grid-template-columns:1fr 1fr}
+  .cascade .casc:nth-child(n){margin-top:0}
+  .cascade .casc:nth-child(2),.cascade .casc:nth-child(4){margin-top:36px}
+}
+@media(max-width:560px){
+  .cascade{grid-template-columns:1fr}
+  .cascade .casc:nth-child(n){margin-top:0}
+}
 
-/* ── built for every industry (photo cards) ──────────────────────── */
-.uc-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:14px}
-@media(max-width:1000px){.uc-grid{grid-template-columns:repeat(3,1fr)}}
-@media(max-width:620px){.uc-grid{grid-template-columns:repeat(2,1fr)}}
-.uc{position:relative;overflow:hidden;border-radius:var(--r);aspect-ratio:3/4;border:1px solid var(--line);
-  background:linear-gradient(160deg,#cfe9f5,#e8dcff);box-shadow:0 12px 30px rgba(22,22,22,.08);
-  transition:transform .3s cubic-bezier(.2,.8,.2,1),box-shadow .3s}
-.uc:hover{transform:translateY(-5px);box-shadow:0 26px 54px rgba(22,22,22,.18)}
-picture{display:contents}
-.uc img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:transform .55s cubic-bezier(.2,.8,.2,1)}
-.uc:hover img{transform:scale(1.08)}
-.uc-scrim{position:absolute;inset:0;background:linear-gradient(180deg,transparent 42%,rgba(10,12,16,.74) 100%)}
-.uc-label{position:absolute;left:0;right:0;bottom:0;z-index:1;padding:16px 18px;color:#fff;font-size:17px;font-weight:600;letter-spacing:-.01em}
-.uc-fallback img{display:none}
-.uc-fallback .uc-scrim{background:linear-gradient(160deg,rgba(0,137,168,.55),rgba(124,92,252,.45))}
+/* ═══ 8. TELEPHONY ══════════════════════════════════════════════════ */
+.tel-grid{display:grid;grid-template-columns:.85fr 1.15fr;gap:72px;align-items:center;margin-top:54px}
+@media(max-width:900px){.tel-grid{grid-template-columns:1fr;gap:48px}}
+.phone{
+  width:290px;aspect-ratio:9/19;margin-inline:auto;border-radius:42px;
+  background:linear-gradient(165deg,#10151F,#00122E 62%);
+  border:1px solid rgba(255,255,255,.1);position:relative;overflow:hidden;
+  box-shadow:0 34px 80px rgba(14,18,27,.30);
+  padding:26px 20px;display:flex;flex-direction:column;color:#fff;
+}
+.phone::before{content:"";position:absolute;top:14px;left:50%;transform:translateX(-50%);width:88px;height:22px;border-radius:999px;background:rgba(0,0,0,.55)}
+.ph-time{text-align:center;font-size:44px;font-weight:400;letter-spacing:-1.5px;margin-top:40px;font-family:var(--sans)}
+.ph-date{text-align:center;font-size:12px;color:rgba(255,255,255,.6);letter-spacing:-.16px;margin-top:2px}
+.ph-call{margin-top:auto;text-align:center}
+.ph-call .lbl{font-size:11px;text-transform:uppercase;letter-spacing:-.16px;color:rgba(255,255,255,.62)}
+.ph-call .who{font-family:var(--serif);font-size:27px;margin-top:5px;letter-spacing:-.5px}
+.ph-call .sub{font-size:11px;color:rgba(255,255,255,.5);margin-top:3px}
+.ph-btns{display:flex;justify-content:space-between;padding:0 22px;margin:30px 0 14px}
+.ph-btn{width:56px;height:56px;border-radius:50%;display:grid;place-items:center;color:#fff}
+.ph-btn.no{background:#E5484D}
+.ph-btn.yes{background:#22A565;position:relative}
+.ph-btn.yes::after{content:"";position:absolute;inset:-6px;border-radius:50%;border:1px solid rgba(34,165,101,.55);animation:ring 2.2s ease-out infinite}
 
-/* agents grid → four-up */
-.agents{grid-template-columns:repeat(4,1fr)}
-@media(max-width:1040px){.agents{grid-template-columns:repeat(2,1fr)}}
-@media(max-width:560px){.agents{grid-template-columns:1fr}}
-.agent-orb.m{background:radial-gradient(120% 130% at 70% 70%,#FFD7A6,#E0902F 72%)}
+.acc-item{border-bottom:1px solid var(--line)}
+.acc-item:first-child{border-top:1px solid var(--line)}
+.acc-btn{
+  width:100%;background:none;border:0;cursor:pointer;text-align:left;
+  padding:26px 0;display:flex;align-items:center;justify-content:space-between;gap:20px;
+  font-size:19px;font-weight:500;letter-spacing:-.4px;
+}
+.acc-ico{width:22px;height:22px;flex-shrink:0;position:relative;color:var(--muted)}
+.acc-ico::before,.acc-ico::after{content:"";position:absolute;background:currentColor;left:50%;top:50%}
+.acc-ico::before{width:11px;height:1px;transform:translate(-50%,-50%)}
+.acc-ico::after{width:1px;height:11px;transform:translate(-50%,-50%);transition:transform .26s ease}
+.acc-btn[aria-expanded="true"] .acc-ico::after{transform:translate(-50%,-50%) scaleY(0)}
+.acc-panel{overflow:hidden;height:0;transition:height .3s cubic-bezier(.2,.7,.2,1)}
+.acc-panel p{font-size:15px;color:var(--muted);padding-bottom:26px;max-width:58ch}
 
-/* ── what's new gradient cards ────────────────────────────────────── */
-.news{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
-@media(max-width:820px){.news{grid-template-columns:1fr}}
-.news-card{position:relative;overflow:hidden;border-radius:var(--r-lg);padding:26px;min-height:210px;color:#fff;
-  display:flex;flex-direction:column;justify-content:space-between;gap:26px;box-shadow:0 20px 50px rgba(22,22,22,.12);
-  transition:transform .25s,box-shadow .25s}
-.news-card:hover{transform:translateY(-5px);box-shadow:0 30px 68px rgba(22,22,22,.2)}
-.nc1{background:linear-gradient(145deg,#22C7E8,#0089A8)}
-.nc2{background:linear-gradient(145deg,#9B7CFF,#6A45D6)}
-.nc3{background:linear-gradient(145deg,#36C892,#138A63)}
-.news-glow{position:absolute;inset:0;pointer-events:none;background:radial-gradient(420px 240px at 82% -12%,rgba(255,255,255,.38),transparent 60%)}
-.news-ic{position:relative;z-index:1;width:46px;height:46px;border-radius:13px;background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.32);display:grid;place-items:center}
-.news-ic svg{width:22px;height:22px;color:#fff}
-.news-body{position:relative;z-index:1}
-.news-card h3{font-size:22px;margin:0 0 6px;color:#fff}
-.news-card p{font-size:14.5px;color:rgba(255,255,255,.92);margin:0}
+/* ═══ 9. SECURITY ═══════════════════════════════════════════════════ */
+.sec-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:54px}
+@media(max-width:860px){.sec-cards{grid-template-columns:1fr}}
+.scard{background:var(--card);border:1px solid var(--line);border-radius:var(--r-card);padding:34px 30px 38px}
+.scard h3{font-size:17px;font-weight:500;letter-spacing:-.4px;margin:20px 0 8px}
+.scard p{font-size:14px;color:var(--muted)}
 
-/* ── expanded footer ──────────────────────────────────────────────── */
-.foot-in{grid-template-columns:1.5fr repeat(4,1fr)}
-@media(max-width:900px){.foot-in{grid-template-columns:1fr 1fr}.foot-brand{grid-column:1 / -1}}
-.foot-social{display:flex;gap:10px}
-.foot-social a{width:34px;height:34px;border-radius:50%;border:1px solid var(--line);display:grid;place-items:center;color:var(--muted);transition:color .15s,border-color .15s,transform .15s}
-.foot-social a:hover{color:var(--ink);border-color:#cfc6b6;transform:translateY(-2px)}
-.foot-social svg{width:15px;height:15px}
+/* ═══ 10. FAQ ═══════════════════════════════════════════════════════ */
+.faq{max-width:880px;margin-inline:auto;margin-top:54px}
+.faq .acc-btn{font-size:17px;padding:24px 0}
+.faq .acc-panel p{font-size:15px}
 
-/* ── product screenshots showcase ────────────────────────────────── */
-.shots{display:grid;grid-template-columns:1fr 1fr;gap:22px}
-@media(max-width:860px){.shots{grid-template-columns:1fr}}
-.shot{margin:0;background:var(--surface);border:1px solid var(--line);border-radius:var(--r-lg);overflow:hidden;box-shadow:0 24px 60px rgba(22,22,22,.10);transition:transform .25s,box-shadow .25s}
-.shot:hover{transform:translateY(-4px);box-shadow:0 32px 72px rgba(22,22,22,.15)}
-.shot-bar{display:flex;align-items:center;gap:6px;padding:11px 14px;border-bottom:1px solid var(--line);background:var(--surface-2)}
-.shot-bar span{width:9px;height:9px;border-radius:50%}
-.shot-bar span:nth-child(1){background:#FF6058}.shot-bar span:nth-child(2){background:#FFBD2E}.shot-bar span:nth-child(3){background:#28C840}
-.shot-bar b{margin-left:8px;font-size:12px;font-weight:600;color:var(--muted);font-family:'JetBrains Mono',monospace}
-.shot img{display:block;width:100%;height:auto}
-.shot figcaption{padding:15px 18px;font-size:14px;color:var(--muted);border-top:1px solid var(--line)}
-.shots-cta{display:flex;gap:12px;justify-content:center;margin-top:28px;flex-wrap:wrap}
+/* ═══ 11. FINAL CTA ═════════════════════════════════════════════════ */
+.cta-block{min-height:560px;display:grid;place-items:center;padding:110px 24px;background:var(--navy)}
+.cta-block .hero-vid{z-index:0}
+.cta-scrim{position:absolute;inset:0;z-index:1;background:linear-gradient(180deg,rgba(0,8,22,.52),rgba(0,8,22,.72))}
+.cta-card{
+  position:relative;z-index:2;background:var(--card);border-radius:var(--r-block);
+  padding:58px 54px;max-width:620px;text-align:center;
+  box-shadow:0 30px 80px rgba(0,8,22,.28);
+}
+.cta-card h2{font-family:var(--serif);font-weight:400;font-size:clamp(30px,4vw,46px);line-height:1;letter-spacing:-1.2px}
+.cta-card p{margin:16px 0 30px;color:var(--muted);font-size:15px}
+.cta-row{display:flex;gap:9px;justify-content:center;flex-wrap:wrap}
+@media(max-width:760px){.cta-card{padding:40px 26px}}
 
-/* ── cinematic living background (full-page, GPU-only motion) ─────── */
-.bg{position:fixed;inset:0;z-index:-1;overflow:hidden;pointer-events:none;
-  background:radial-gradient(1200px 820px at 50% -8%, rgba(255,180,137,.14), transparent 62%),
-             radial-gradient(900px 720px at 0% 102%, rgba(0,212,255,.10), transparent 60%)}
-.bg-orb{position:absolute;border-radius:50%;filter:blur(70px);opacity:.6;will-change:transform}
-.bg-o1{width:520px;height:520px;left:-8%;top:-8%;background:radial-gradient(circle,rgba(0,212,255,.55),transparent 66%);animation:bgDrift1 26s ease-in-out infinite alternate}
-.bg-o2{width:480px;height:480px;right:-6%;top:6%;background:radial-gradient(circle,rgba(124,92,252,.52),transparent 66%);animation:bgDrift2 32s ease-in-out infinite alternate}
-.bg-o3{width:560px;height:560px;left:5%;top:44%;background:radial-gradient(circle,rgba(255,150,110,.46),transparent 66%);animation:bgDrift3 30s ease-in-out infinite alternate}
-.bg-o4{width:460px;height:460px;right:2%;top:66%;background:radial-gradient(circle,rgba(143,227,194,.44),transparent 66%);animation:bgDrift1 38s ease-in-out infinite alternate-reverse}
-@keyframes bgDrift1{from{transform:translate3d(0,0,0) scale(1)}to{transform:translate3d(7%,9%,0) scale(1.14)}}
-@keyframes bgDrift2{from{transform:translate3d(0,0,0) scale(1)}to{transform:translate3d(-8%,7%,0) scale(1.1)}}
-@keyframes bgDrift3{from{transform:translate3d(0,0,0) scale(1.06)}to{transform:translate3d(6%,-8%,0) scale(.94)}}
-.bg-dots{position:absolute;inset:-64px;background-image:radial-gradient(rgba(20,22,26,.06) 1px,transparent 1.7px);background-size:32px 32px;opacity:.6;animation:bgDots 7s linear infinite;will-change:transform}
-@keyframes bgDots{from{transform:translate3d(0,0,0)}to{transform:translate3d(0,-32px,0)}}
+/* ═══ 12. FOOTER ════════════════════════════════════════════════════ */
+.foot{
+  background:linear-gradient(168deg,#00122E 0%,#001B3F 46%,#062A4F 100%);
+  color:#fff;margin-block:var(--gutter) var(--gutter);
+  border-radius:var(--r-block);padding:88px 48px 34px;
+}
+.foot-top{display:grid;grid-template-columns:.85fr 1.15fr;gap:56px;align-items:start}
+@media(max-width:960px){.foot-top{grid-template-columns:1fr;gap:48px}}
+.news label{display:block;font-size:12px;text-transform:uppercase;letter-spacing:-.16px;color:rgba(255,255,255,.6);margin-bottom:14px}
+.news-pill{
+  display:flex;align-items:center;gap:8px;padding:6px 6px 6px 18px;
+  background:rgba(255,255,255,.09);border:1px solid rgba(255,255,255,.17);
+  border-radius:999px;backdrop-filter:blur(10px);max-width:390px;
+}
+.news-pill input{flex:1;min-width:0;background:transparent;border:0;height:32px;font-size:13px;color:#fff}
+.news-pill input::placeholder{color:rgba(255,255,255,.46)}
+.news-pill input:focus{outline:0}
+.news-msg{font-size:12px;color:rgba(255,255,255,.66);margin-top:12px;min-height:16px}
+.foot-serif{
+  font-family:var(--serif);font-weight:400;line-height:.92;letter-spacing:-1.5px;
+  font-size:clamp(38px,6.4vw,76px);color:#fff;
+}
+.foot-serif .row:nth-child(2){margin-left:.8em}
+.foot-serif .row:nth-child(3){margin-left:.3em}
+.foot-serif .row:nth-child(4){margin-left:1.5em}
+.foot-cols{display:grid;grid-template-columns:repeat(4,1fr);gap:32px;margin-top:88px;padding-top:44px;border-top:1px solid rgba(255,255,255,.14)}
+@media(max-width:760px){.foot-cols{grid-template-columns:1fr 1fr;gap:34px;margin-top:60px}}
+.foot-cols h4{font-size:12px;text-transform:uppercase;letter-spacing:-.16px;font-weight:500;color:rgba(255,255,255,.54);margin-bottom:16px}
+.foot-cols a{display:block;font-size:14px;color:rgba(255,255,255,.86);padding:5px 0;transition:color .18s}
+.foot-cols a:hover{color:#fff}
+.foot-base{display:flex;justify-content:space-between;align-items:center;gap:18px;flex-wrap:wrap;margin-top:52px;padding-top:24px;border-top:1px solid rgba(255,255,255,.14);font-size:12px;color:rgba(255,255,255,.54);letter-spacing:-.16px}
+.foot-social{display:flex;gap:8px}
+.foot-social a{width:32px;height:32px;border-radius:50%;display:grid;place-items:center;box-shadow:inset 0 0 0 1px rgba(255,255,255,.2);color:#fff;transition:box-shadow .18s}
+.foot-social a:hover{box-shadow:inset 0 0 0 1px rgba(255,255,255,.6)}
+@media(max-width:760px){.foot{padding:64px 24px 28px}}
 
-/* ════════════════════ MAGIC LAYER (GPU-only, reduced-motion safe) ════════════════════ */
-/* hero floating particles */
-.hero-particles{position:absolute;inset:0;z-index:0;overflow:hidden;pointer-events:none}
-.hero-particles span{position:absolute;bottom:-12px;border-radius:50%;opacity:0;filter:blur(.4px);animation:floatUp var(--dur,14s) linear var(--dly,0s) infinite}
-@keyframes floatUp{0%{transform:translate3d(0,0,0);opacity:0}10%{opacity:var(--o,.5)}88%{opacity:var(--o,.5)}100%{transform:translate3d(var(--dx,0),-94vh,0);opacity:0}}
+/* ── mobile / no-JS: videos are never given a src, so nothing is
+      fetched. This only hides the empty elements so the navy ground
+      and gradients underneath read cleanly. ─────────────────────────── */
+.no-video .hero-vid{display:none}
 
-/* cursor glow + click sparks (desktop, injected by JS) */
-.cursor-glow{position:fixed;left:0;top:0;width:320px;height:320px;border-radius:50%;pointer-events:none;z-index:70;opacity:0;transition:opacity .4s ease;will-change:transform;background:radial-gradient(circle,rgba(0,212,255,.16),transparent 60%);mix-blend-mode:multiply}
-.spark{position:fixed;width:7px;height:7px;margin:-3px 0 0 -3px;border-radius:50%;pointer-events:none;z-index:71;animation:spark .8s cubic-bezier(.2,.7,.3,1) forwards}
-@keyframes spark{0%{transform:translate3d(0,0,0) scale(1);opacity:1}100%{transform:translate3d(var(--tx),var(--ty),0) scale(.2);opacity:0}}
+@media(max-width:1000px){:root{--pad:96px}}
+@media(max-width:760px){:root{--pad:76px;--r-block:18px}}
 
-/* parallax of the living background */
-.bg{transform:translate3d(0,calc(var(--sy,0px) * -0.03),0)}
-
-/* headline shimmer sweep */
-#heroTitle{position:relative;overflow:hidden}
-#heroTitle::after{content:"";position:absolute;top:0;left:-60%;width:45%;height:100%;pointer-events:none;background:linear-gradient(100deg,transparent,rgba(255,255,255,.5),transparent);transform:skewX(-12deg);animation:sweep 5.5s ease-in-out 2s infinite}
-@keyframes sweep{0%{left:-60%}16%{left:130%}100%{left:130%}}
-
-/* first-visit word reveal */
-.word-in .ww{display:inline-block;opacity:0;transform:translateY(14px);animation:wordIn .55s cubic-bezier(.2,.8,.2,1) forwards}
-@keyframes wordIn{to{opacity:1;transform:none}}
-
-/* orb: Saturn ring + prismatic edge + one-time load wave */
-.orb-ring{position:absolute;left:50%;top:50%;width:300px;height:300px;margin:-150px 0 0 -150px;border-radius:50%;pointer-events:none;
-  background:conic-gradient(from 0deg,transparent 0deg,rgba(0,212,255,.7) 60deg,rgba(167,139,250,.6) 120deg,transparent 200deg,transparent 360deg);
-  -webkit-mask:radial-gradient(closest-side,transparent 76%,#000 79%,#000 84%,transparent 86%);mask:radial-gradient(closest-side,transparent 76%,#000 79%,#000 84%,transparent 86%);
-  transform:rotateX(70deg) rotate(0);animation:ringSpin 12s linear infinite;opacity:.85}
-@keyframes ringSpin{to{transform:rotateX(70deg) rotate(360deg)}}
-.callprev[data-state="ringing"] .orb-ring{animation-duration:6s}
-.callprev[data-state="live"] .orb-ring{animation-duration:22s;opacity:.4}
-.orb::after{content:"";position:absolute;inset:0;border-radius:50%;padding:2px;pointer-events:none;z-index:2;
-  background:conic-gradient(from 0deg,#ff5e8a,#ffd36e,#5effa0,#5ec8ff,#a78bfa,#ff5e8a);
-  -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);mask-composite:exclude;
-  opacity:.4;mix-blend-mode:screen;animation:orbSpin 8s linear infinite}
-.cp-stage::before{content:"";position:absolute;left:50%;top:50%;width:210px;height:210px;margin:-105px 0 0 -105px;border-radius:50%;border:2px solid rgba(0,212,255,.5);opacity:0;pointer-events:none;animation:orbLoad 1.8s ease-out .4s 1}
-@keyframes orbLoad{0%{transform:scale(.55);opacity:.7}100%{transform:scale(3.4);opacity:0}}
-
-/* product switcher: cursor spotlight + traveling border glow + media zoom */
-.tile{--mx:50%;--my:50%}
-.tile-media{transition:transform .55s cubic-bezier(.2,.8,.2,1)}
-.tile:hover .tile-media{transform:scale(1.07)}
-.tile::after{content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;z-index:2;opacity:0;transition:opacity .3s;background:radial-gradient(240px circle at var(--mx) var(--my),rgba(255,255,255,.4),transparent 60%);mix-blend-mode:overlay}
-.tile:hover::after{opacity:1}
-.tile::before{content:"";position:absolute;inset:-1px;border-radius:inherit;padding:2px;pointer-events:none;z-index:3;opacity:0;transition:opacity .3s;
-  background:conic-gradient(from 0deg,transparent 0deg,#00D4FF 45deg,#A78BFA 90deg,transparent 150deg,transparent 360deg);
-  -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);mask-composite:exclude;
-  animation:tileSpin 3s linear infinite}
-.tile:hover::before{opacity:1}
-@keyframes tileSpin{to{transform:rotate(360deg)}}
-
-/* section heading underline draws on reveal */
-.sec-head h2{position:relative;display:inline-block}
-.sec-head h2::after{content:"";position:absolute;left:0;bottom:-10px;height:2px;width:100%;border-radius:2px;background:linear-gradient(90deg,#00D4FF,#A78BFA);transform:scaleX(0);transform-origin:left;transition:transform .8s cubic-bezier(.2,.8,.2,1) .2s}
-.sec-head.in h2::after{transform:scaleX(1)}
-
-/* staggered card reveals */
-.feat-grid .rv:nth-child(2),.uc-grid .rv:nth-child(2),.agents .rv:nth-child(2),.news .rv:nth-child(2),.shots .rv:nth-child(2){transition-delay:.09s}
-.feat-grid .rv:nth-child(3),.uc-grid .rv:nth-child(3),.agents .rv:nth-child(3),.news .rv:nth-child(3){transition-delay:.18s}
-.feat-grid .rv:nth-child(4),.uc-grid .rv:nth-child(4),.agents .rv:nth-child(4){transition-delay:.27s}
-.uc-grid .rv:nth-child(5),.feat-grid .rv:nth-child(5){transition-delay:.36s}
-.feat-grid .rv:nth-child(6){transition-delay:.45s}
-
-/* industry photo shimmer on hover */
-.uc::after{content:"";position:absolute;inset:0;z-index:2;pointer-events:none;opacity:0;background:linear-gradient(105deg,transparent 35%,rgba(255,255,255,.45) 50%,transparent 65%);transform:translateX(-100%)}
-.uc:hover::after{opacity:1;animation:ucShimmer 1s ease}
-@keyframes ucShimmer{from{transform:translateX(-100%)}to{transform:translateX(100%)}}
-
-/* globe pulsing edge glow */
-.worldmap::after{content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;z-index:4;animation:globeGlow 3.6s ease-in-out infinite}
-@keyframes globeGlow{0%,100%{box-shadow:inset 0 0 50px rgba(0,212,255,.14)}50%{box-shadow:inset 0 0 95px rgba(0,212,255,.4)}}
-
-/* hero copy load fade */
-.hero-copy{animation:fadeUp .8s ease both}
-@keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
-
-/* product switcher media */
-.tile-media{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0}
-.tile-play{position:relative;z-index:1}
-
-/* world coverage video overrides */
-.wm-video{z-index:1;opacity:1}
-.wm-grid{z-index:0}
-.wm-overlay{position:absolute;inset:0;z-index:2;pointer-events:none;background:radial-gradient(ellipse 82% 78% at 50% 46%,transparent 34%,rgba(10,12,16,.55))}
-.wm-cap{z-index:3}
-
-/* Mobile / no-JS: never fetch the clips. Sources live in data-src and are
-   attached by JS only above 760px (see the video gate in the script block), so
-   there is no download to suppress here - this rule only hides the empty
-   elements so the gradient backgrounds already painted by .hero, .metrics,
-   .cta, .worldmap and .tile-orb show through cleanly. */
-.no-video .sec-vid,.no-video .sec-vid-overlay,.no-video .callprev .call-vid,
-.no-video video.tile-media,.no-video .wm-video{display:none!important}
-
-/* ── world map (global coverage) ──────────────────────────────────── */
-.worldmap{position:relative;overflow:hidden;border-radius:var(--r-lg);min-height:400px;border:1px solid var(--line);
-  background:linear-gradient(135deg,#0E1014,#1A1D24);display:flex;align-items:flex-end;justify-content:center;padding:26px}
-.worldmap>img,.wm-video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:.75}
-.wm-grid{position:absolute;inset:0;background-image:radial-gradient(rgba(159,233,255,.16) 1px,transparent 1.6px);background-size:26px 26px;
-  -webkit-mask-image:radial-gradient(ellipse 72% 70% at 50% 46%,#000 38%,transparent 80%);mask-image:radial-gradient(ellipse 72% 70% at 50% 46%,#000 38%,transparent 80%)}
-.wm-node{position:absolute;width:11px;height:11px;border-radius:50%;background:#00D4FF;box-shadow:0 0 12px rgba(0,212,255,.8);animation:wmPulse 2.4s ease-out infinite}
-@keyframes wmPulse{0%{box-shadow:0 0 0 0 rgba(0,212,255,.5),0 0 12px rgba(0,212,255,.8)}70%{box-shadow:0 0 0 16px rgba(0,212,255,0),0 0 12px rgba(0,212,255,.8)}100%{box-shadow:0 0 0 0 rgba(0,212,255,0),0 0 12px rgba(0,212,255,.8)}}
-.wm-cap{position:relative;z-index:3;font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:#9FE9FF;background:rgba(0,0,0,.35);padding:8px 16px;border-radius:999px;border:1px solid rgba(159,233,255,.2)}
+@media(prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.001ms!important;animation-iteration-count:1!important;transition-duration:.001ms!important}
+  .rv{opacity:1;transform:none}
+}
 </style>
+
 <script>
-/* Video gate, part 1 of 2 - runs before paint so mobile never flashes an
-   empty <video>. Part 2 (in the main script block) attaches the sources. */
+/* Video gate, part 1 of 2 — runs before paint so mobile never flashes an
+   empty <video>. Part 2 (bottom of page) attaches the sources. */
 if(!window.matchMedia('(min-width:760px)').matches){
   document.documentElement.className+=' no-video';
 }
 </script>
 </head>
 <body>
-<div class="bg" aria-hidden="true">
-  <span class="bg-orb bg-o1"></span>
-  <span class="bg-orb bg-o2"></span>
-  <span class="bg-orb bg-o3"></span>
-  <span class="bg-orb bg-o4"></span>
-  <span class="bg-dots"></span>
-</div>
-<div id="prog"></div>
 
-<!-- ─── NAV ─────────────────────────────────────────────────────── -->
-<nav class="nav">
+<!-- ═══ NAV ══════════════════════════════════════════════════════════ -->
+<nav class="nav" id="nav">
   <div class="nav-in">
-    <a class="brand" href="#top"><b>CYNEA</b><span>VOICE ENGINE</span></a>
+    <a class="logo" href="#top">CYNEA <span>voice</span></a>
     <div class="nav-links">
-      <a href="#agents">Agents</a>
-      <a href="#platform">Platform</a>
-      <a href="#how">How it works</a>
-      <a href="#coverage">Coverage</a>
-      <a href="help_center.html">Docs</a>
+      <a href="#try-demo">Live demo</a>
+      <a href="#highlights">Product</a>
+      <a href="#channels">Channels</a>
+      <a href="#telephony">Telephony</a>
+      <a href="#faq">FAQ</a>
     </div>
-    <div class="nav-right">
-      <a class="nav-signin" href="signin.html">Sign in</a>
-      <a class="btn btn-dark btn-sm" href="https://calendly.com/albertmomanyi07/30min" target="_blank" rel="noopener">Get started</a>
+    <div class="nav-cta">
+      <a class="btn btn-line" href="signin.html">Sign in</a>
+      <a class="btn btn-navy" href="#try-demo">Get a call</a>
     </div>
   </div>
 </nav>
 
-<!-- ─── HERO ────────────────────────────────────────────────────── -->
-<header class="hero" id="top">
-  <video class="sec-vid" autoplay muted loop playsinline preload="auto" aria-hidden="true"
-         data-src="assets/Hero-bg%201.mp4" data-eager></video>
-  <div class="sec-vid-overlay light" aria-hidden="true"></div>
-  <div class="hero-orb orb-a"></div>
-  <div class="hero-orb orb-b"></div>
-  <div class="hero-orb orb-c"></div>
-  <div class="hero-particles" id="heroParticles" aria-hidden="true"></div>
-  <div class="wrap hero-grid">
-    <div class="hero-copy">
-      <span class="eyebrow">Voice AI · For every market</span>
-      <h1 id="heroTitle">Voice agents that<br>sound <span class="grad">human</span>, everywhere</h1>
-      <p class="hero-sub">Deploy agents that answer calls, handle interruptions, and speak with genuine warmth — live on your phone line in days, not months.</p>
-      <div class="hero-cta">
-        <a class="btn btn-dark" href="https://calendly.com/albertmomanyi07/30min" target="_blank" rel="noopener">Get started →</a>
-        <button class="btn btn-ghost" id="hearBtn" type="button">▶ Hear a live call</button>
-      </div>
-      <div class="hero-trust">
-        <b>Trusted across</b> Hospitality · Banking · Telco · Government
-      </div>
+<!-- ═══ 0. HERO ══════════════════════════════════════════════════════ -->
+<header class="bleed" id="top">
+  <div class="hero">
+    <video class="hero-vid" autoplay muted loop playsinline preload="auto"
+           aria-hidden="true" data-src="assets/Hero-bg%201.mp4" data-eager></video>
+    <div class="hero-scrim" aria-hidden="true"></div>
+
+    <h1 class="hero-eyebrow">AI voice agents for African businesses</h1>
+
+    <div class="hero-mid">
+      <h2 class="display hero-display">Voice AI built for Kenya, Ghana, and Nigeria.</h2>
     </div>
 
-    <!-- incoming-call preview — rotating gradient orb + receive→hear-voice flow -->
-    <div class="callprev rv" id="callprev" data-state="ringing">
-      <div class="cp-badge"><span class="cp-dot"></span><span id="callStatus">Incoming call</span></div>
-      <div class="cp-stage">
-        <div class="cp-rings" aria-hidden="true"><span></span><span></span><span></span></div>
-        <div class="orb-aura" aria-hidden="true"></div>
-        <div class="orb-ring" aria-hidden="true"></div>
-        <div class="orb-bars" aria-hidden="true"><i style="--a:0deg;--d:0s"></i><i style="--a:15deg;--d:.05s"></i><i style="--a:30deg;--d:.1s"></i><i style="--a:45deg;--d:.15s"></i><i style="--a:60deg;--d:.2s"></i><i style="--a:75deg;--d:.25s"></i><i style="--a:90deg;--d:.3s"></i><i style="--a:105deg;--d:.35s"></i><i style="--a:120deg;--d:.4s"></i><i style="--a:135deg;--d:.45s"></i><i style="--a:150deg;--d:.5s"></i><i style="--a:165deg;--d:.55s"></i><i style="--a:180deg;--d:.6s"></i><i style="--a:195deg;--d:.65s"></i><i style="--a:210deg;--d:.7s"></i><i style="--a:225deg;--d:.75s"></i><i style="--a:240deg;--d:.8s"></i><i style="--a:255deg;--d:.85s"></i><i style="--a:270deg;--d:.9s"></i><i style="--a:285deg;--d:.95s"></i><i style="--a:300deg;--d:1s"></i><i style="--a:315deg;--d:1.05s"></i><i style="--a:330deg;--d:1.1s"></i><i style="--a:345deg;--d:1.15s"></i></div>
-        <div class="orb" id="orb">
-          <div class="orb-grad"></div>
-          <div class="orb-grad2"></div>
-          <div class="orb-light"></div>
-          <div class="orb-shade"></div>
-          <div class="orb-grain"></div>
-        </div>
-      </div>
-      <div class="cp-foot">
-        <div class="cp-name">Adinkra Hotel</div>
-        <div class="cp-sub" id="callSub">Voice agent · ringing…</div>
-        <div class="cp-wave" id="callWave" hidden></div>
-        <div class="cp-actions">
-          <button class="cp-btn decline" id="declineBtn" type="button" aria-label="Decline call">✕</button>
-          <button class="cp-btn accept" id="acceptBtn" type="button" aria-label="Accept call">📞</button>
-          <button class="cp-btn end" id="endBtn" type="button" aria-label="End call" hidden>✕</button>
-        </div>
-      </div>
+    <div class="hero-foot">
+      <p class="hero-body">
+        Deploy human-like voice agents that answer calls 24/7 in English, Swahili,
+        and Twi. For hotels, banks, restaurants, and clinics.
+      </p>
+      <a class="hero-pill" href="#try-demo">
+        <span class="pill-orb" aria-hidden="true"></span>
+        <span>
+          <b>Hear a live call</b>
+          <small>Kwame · hotel reception</small>
+        </span>
+      </a>
     </div>
   </div>
 </header>
 
-<!-- ─── PRODUCT SWITCHER PANEL ──────────────────────────────────── -->
-<section class="panel-sec" id="platform">
-  <div class="wrap">
-    <div class="switcher rv">
-      <div class="switch-tiles">
-        <div class="tile" data-audio="assets/kwame_test_1.mp3">
-          <div class="tile-orb a"><picture><source srcset="assets/voice-agents.webp" type="image/webp"><img class="tile-media" src="assets/voice-agents.jpg" alt="" width="656" height="410" loading="lazy" decoding="async" onerror="this.remove()"></picture><div class="tile-play">▶</div></div>
-          <div class="tile-cap"><b>Voice Agents</b><span>Answer &amp; resolve calls</span></div>
+<!-- ═══ 1. STATEMENT BANNER ══════════════════════════════════════════ -->
+<section class="statement">
+  <h2 class="stmt stmt-1 rv">
+    <span class="row">Built</span>
+    <span class="row">
+      <span class="dotring" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
+      in Nairobi,
+    </span>
+    <span class="row">for Africa.</span>
+  </h2>
+</section>
+
+<!-- ═══ 2. LIVE DEMO ═════════════════════════════════════════════════ -->
+<section class="sec wrap" id="try-demo">
+  <div class="demo-head rv">
+    <h2 class="display">Try Our<br>Live Demo</h2>
+  </div>
+
+  <div class="demo-grid rv">
+    <!-- LEFT: orb + use-case selection -->
+    <div class="panel panel-a">
+      <div class="orb" aria-hidden="true">
+        <span class="orb-ripple"></span>
+        <span class="orb-ripple b"></span>
+        <span class="orb-core"></span>
+      </div>
+
+      <div class="orb-play">
+        <button class="btn btn-line" id="sample" type="button" aria-label="Play a recorded sample of Kwame">
+          <svg width="9" height="10" viewBox="0 0 9 10" fill="currentColor" aria-hidden="true"><path d="M0 0l9 5-9 5z"/></svg>
+          Play sample
+        </button>
+        <small id="sample-label">Kwame · 0:12</small>
+      </div>
+
+      <fieldset class="pills" style="border:0;padding:0;margin:0">
+        <legend class="kicker" style="text-align:center;width:100%;margin-bottom:16px">Choose a use case</legend>
+        <label class="pill"><input type="radio" name="usecase" value="Hotel Reception" checked><span>Hotel Reception</span></label>
+        <label class="pill"><input type="radio" name="usecase" value="Restaurant Orders"><span>Restaurant Orders</span></label>
+        <label class="pill"><input type="radio" name="usecase" value="Bank Support"><span>Bank Support</span></label>
+        <label class="pill"><input type="radio" name="usecase" value="Clinic Booking"><span>Clinic Booking</span></label>
+        <label class="pill"><input type="radio" name="usecase" value="Debt Collection"><span>Debt Collection</span></label>
+        <label class="pill"><input type="radio" name="usecase" value="Survey"><span>Survey</span></label>
+      </fieldset>
+    </div>
+
+    <!-- RIGHT: request-a-call form -->
+    <div class="panel panel-b">
+      <p class="lede">
+        Receive a live call from Kwame and hear how our AI voice agent handles
+        real conversations.
+      </p>
+
+      <!-- TODO(integration): POST to /api/demo-call.
+           Blocked on three things, none of which exist yet:
+             1. Twilio (or Africa's Talking) outbound voice + a verified caller ID
+             2. Cloudflare Turnstile token verified server-side
+             3. Per-IP and per-number rate limiting + an E.164 allowlist
+           Until then submit() only shows an honest "not connected" message —
+           it deliberately does not collect or transmit the number. -->
+      <form id="demo-form" novalidate>
+        <div class="field">
+          <label for="f-use">Use case</label>
+          <select id="f-use" name="usecase">
+            <option>Hotel Reception</option>
+            <option>Restaurant Orders</option>
+            <option>Bank Support</option>
+            <option>Clinic Booking</option>
+            <option>Debt Collection</option>
+            <option>Survey</option>
+          </select>
+          <svg class="field-arrow" width="11" height="7" viewBox="0 0 11 7" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M1 1l4.5 4.5L10 1"/></svg>
         </div>
-        <div class="tile" data-audio="assets/amina_test_1.mp3">
-          <div class="tile-orb b"><video class="tile-media" autoplay muted loop playsinline preload="none" aria-hidden="true" data-src="assets/Telephony.mp4"></video><div class="tile-play">▶</div></div>
-          <div class="tile-cap"><b>Telephony</b><span>Twilio · SIP · worldwide</span></div>
+        <div class="field">
+          <label for="f-name">Name</label>
+          <input id="f-name" name="name" type="text" placeholder="Ama Mensah" autocomplete="name">
         </div>
-        <div class="tile" data-audio="assets/kofi_test_1.mp3">
-          <div class="tile-orb c"><video class="tile-media" autoplay muted loop playsinline preload="none" aria-hidden="true" data-src="assets/Analytics.mp4"></video><div class="tile-play">▶</div></div>
-          <div class="tile-cap"><b>Analytics</b><span>Sentiment &amp; cost per call</span></div>
+        <div class="field">
+          <label for="f-phone">Phone number</label>
+          <input id="f-phone" name="phone" type="tel" placeholder="+254 7XX XXX XXX" autocomplete="tel">
+        </div>
+
+        <div class="demo-submit">
+          <button class="btn btn-navy" type="submit">Get a call</button>
+          <span class="demo-note">Free · one call per number</span>
+        </div>
+        <p class="demo-msg" id="demo-msg" role="status"></p>
+      </form>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ 3. TESTIMONIALS (placeholder) ════════════════════════════════ -->
+<section class="sec-sm wrap">
+  <div class="rv" style="text-align:center">
+    <h2 class="display" style="font-size:clamp(34px,5vw,62px)">Proven Impact,<br>Real Conversations</h2>
+  </div>
+  <!-- PLACEHOLDER: replace with real, attributable customer quotes only. -->
+  <div class="tm-placeholder rv">
+    <p><span class="dot" aria-hidden="true"></span>Case studies coming soon — first customer onboarding in progress.</p>
+  </div>
+</section>
+
+<!-- ═══ 4. STATEMENT BANNER 2 ════════════════════════════════════════ -->
+<section class="statement statement-2">
+  <h2 class="stmt stmt-2 rv">
+    <span class="row">Sounds</span>
+    <span class="row">
+      Like
+      <span class="stmt-tile">
+        <picture>
+          <source srcset="assets/tile-hotel.webp" type="image/webp">
+          <img src="assets/tile-hotel.jpg" alt="" width="560" height="360" loading="lazy" decoding="async">
+        </picture>
+      </span>
+    </span>
+    <span class="row">Home.</span>
+  </h2>
+</section>
+
+<!-- ═══ 5. HIGHLIGHTS ════════════════════════════════════════════════ -->
+<section class="sec wrap" id="highlights">
+  <div class="rv">
+    <p class="kicker">Highlights</p>
+    <h2 class="h-sec" style="margin-top:14px;max-width:20ch">Human-standard AI voice agents, out of the box</h2>
+  </div>
+
+  <div class="hl-photo rv">
+    <picture>
+      <source srcset="assets/hl-callcenter.webp" type="image/webp">
+      <img src="assets/hl-callcenter.jpg" alt="An agent taking calls in a contact centre" width="1600" height="900" loading="lazy" decoding="async">
+    </picture>
+  </div>
+
+  <div class="hl-rows rv">
+    <div class="hl-row">
+      <h3>Lowest Latency</h3>
+      <p class="val"><b>~600&thinsp;ms</b> target response time, streamed token-by-token so the reply starts before the sentence is finished.</p>
+    </div>
+    <div class="hl-row">
+      <h3>Ultra Realistic Voices</h3>
+      <p class="val"><b>9 voices</b>, four of them native African accents — Nigerian and South African, male and female.</p>
+    </div>
+    <div class="hl-row">
+      <h3>Turn Taking</h3>
+      <p class="val">Waits a <b>700&thinsp;ms</b> grace period after you stop speaking, and backchannels at <b>800&thinsp;ms</b> — so it knows when to stop and when to listen.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ 6. PRODUCT SCREENSHOTS ═══════════════════════════════════════ -->
+<section class="sec wrap">
+  <div class="rv">
+    <p class="kicker">Highlights</p>
+    <h2 class="h-sec" style="margin-top:14px;max-width:20ch">Effortless to use, highly configurable</h2>
+  </div>
+
+  <div class="slides rv" id="slides">
+    <div class="slide on" data-slide>
+      <div class="slide-card">
+        <picture>
+          <source srcset="assets/shot-agents.webp" type="image/webp">
+          <img src="assets/shot-agents.jpg" alt="Cynea Agent Manager showing agent configuration" width="1500" height="1000" loading="lazy" decoding="async">
+        </picture>
+      </div>
+      <div class="slide-meta">
+        <div>
+          <h3>Agent Manager</h3>
+          <p>Prompt, voice, greeting variants and escalation rules per agent.</p>
+        </div>
+        <div class="slide-nav">
+         <div id="slide-controls" style="display:flex;align-items:center;gap:10px">
+          <button class="sq" id="prev" type="button" aria-label="Previous slide"><svg width="7" height="11" viewBox="0 0 7 11" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M6 1L1 5.5 6 10"/></svg></button>
+          <span class="slide-count" id="count" aria-live="polite">1 — 2</span>
+          <button class="sq" id="next" type="button" aria-label="Next slide"><svg width="7" height="11" viewBox="0 0 7 11" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M1 1l5 4.5L1 10"/></svg></button>
+         </div>
         </div>
       </div>
-      <div class="pills">
-        <span class="pill">Natural Voices</span>
-        <span class="pill">Text to Speech</span>
-        <span class="pill">Speech to Text</span>
-        <span class="pill">Interruptions</span>
-        <span class="pill">Sentiment</span>
-        <span class="pill">Live Transfer</span>
-        <span class="pill">Dashboard</span>
+    </div>
+
+    <div class="slide" data-slide>
+      <div class="slide-card">
+        <picture>
+          <source srcset="assets/shot-dashboard.webp" type="image/webp">
+          <img src="assets/shot-dashboard.jpg" alt="Cynea Operations dashboard showing call volume and outcomes" width="1500" height="1000" loading="lazy" decoding="async">
+        </picture>
+      </div>
+      <div class="slide-meta">
+        <div>
+          <h3>Operations Dashboard</h3>
+          <p>Live call volume, containment, transcripts and escalation queue.</p>
+        </div>
+        <div class="slide-nav"></div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ─── BUILT-ON STRIP (honest) ─────────────────────────────────── -->
-<section class="strip">
-  <div class="wrap">
-    <p>Built on production-grade, open infrastructure</p>
-    <div class="strip-logos">
-      <span>Whisper</span><span>Edge TTS</span><span>ElevenLabs</span>
-      <span>Twilio</span><span>Plivo</span><span>Groq</span>
+<!-- ═══ 7. OMNI-CHANNEL ══════════════════════════════════════════════ -->
+<section class="sec wrap" id="channels">
+  <div class="rv">
+    <p class="kicker">Channels</p>
+    <h2 class="h-sec" style="margin-top:14px;max-width:20ch">One agent, every way they reach you</h2>
+  </div>
+
+  <div class="cascade rv">
+    <div class="casc">
+      <span class="badge" aria-hidden="true">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6.5 3h-3v3a14.5 14.5 0 0 0 14.5 14.5h3v-3l-4-1.5-2 2A11.5 11.5 0 0 1 9 9.5l2-2z"/></svg>
+      </span>
+      <h3>Voice Calls</h3>
+      <p>Inbound and outbound over SIP or a local number.</p>
+    </div>
+    <div class="casc">
+      <span class="badge" aria-hidden="true">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.5 8.5 0 0 1-12.6 7.4L3 20.5l1.7-5.2A8.5 8.5 0 1 1 21 11.5z"/></svg>
+      </span>
+      <h3>WhatsApp</h3>
+      <p>The same agent, answering on the channel Africa actually uses.</p>
+    </div>
+    <div class="casc">
+      <span class="badge" aria-hidden="true">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6.5h18v11H8l-5 3.5z"/></svg>
+      </span>
+      <h3>SMS</h3>
+      <p>Confirmations, reminders and fallbacks when a call drops.</p>
+    </div>
+    <div class="casc">
+      <span class="badge" aria-hidden="true">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 7l-5 5 5 5M15 7l5 5-5 5"/></svg>
+      </span>
+      <h3>API</h3>
+      <p>Drive calls from your own stack — Python SDK included.</p>
     </div>
   </div>
 </section>
 
-<!-- ─── CINEMATIC STATS BAND ────────────────────────────────────── -->
-<section class="metrics">
-  <video class="sec-vid" autoplay muted loop playsinline preload="none" aria-hidden="true"
-         data-src="assets/Hero-bg%202.mp4"></video>
-  <div class="sec-vid-overlay dark" aria-hidden="true"></div>
-  <div class="metrics-orb a"></div>
-  <div class="metrics-orb b"></div>
-  <div class="wrap metrics-in">
-    <div class="metric"><b data-to="87" data-suffix="%">0</b><span>Avg containment</span></div>
-    <div class="metric"><b data-to="800" data-suffix="ms" data-prefix="&lt;">0</b><span>P95 response</span></div>
-    <div class="metric"><b data-to="14">0</b><span>Countries live</span></div>
-    <div class="metric"><b data-to="24" data-suffix="/7">0</b><span>Always on</span></div>
+<!-- ═══ 8. TELEPHONY ═════════════════════════════════════════════════ -->
+<section class="sec wrap" id="telephony">
+  <div class="rv">
+    <p class="kicker">Telephony</p>
+    <h2 class="h-sec" style="margin-top:14px;max-width:20ch">Numbers that ring where your customers are</h2>
+  </div>
+
+  <div class="tel-grid">
+    <div class="phone rv" role="img" aria-label="Phone lock screen showing an incoming call from Adinkra Hotel">
+      <div class="ph-time">9:41</div>
+      <div class="ph-date">Tuesday, 12 August</div>
+      <div class="ph-call">
+        <div class="lbl">Incoming call</div>
+        <div class="who">Adinkra Hotel</div>
+        <div class="sub">Accra, Ghana · mobile</div>
+        <div class="ph-btns">
+          <span class="ph-btn no" aria-hidden="true">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" transform="rotate(135)"><path d="M6.5 3h-3v3a14.5 14.5 0 0 0 14.5 14.5h3v-3l-4-1.5-2 2A11.5 11.5 0 0 1 9 9.5l2-2z"/></svg>
+          </span>
+          <span class="ph-btn yes" aria-hidden="true">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><path d="M6.5 3h-3v3a14.5 14.5 0 0 0 14.5 14.5h3v-3l-4-1.5-2 2A11.5 11.5 0 0 1 9 9.5l2-2z"/></svg>
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <div class="rv" data-acc>
+      <div class="acc-item">
+        <button class="acc-btn" aria-expanded="true">African Phone Numbers<span class="acc-ico" aria-hidden="true"></span></button>
+        <div class="acc-panel"><p>Provision local numbers through Africa's Talking in <b>seven countries</b> — Kenya, Nigeria, Ghana, South Africa, Uganda, Tanzania and Rwanda.</p></div>
+      </div>
+      <div class="acc-item">
+        <button class="acc-btn" aria-expanded="false">SIP Trunking<span class="acc-ico" aria-hidden="true"></span></button>
+        <div class="acc-panel"><p>Already have a PBX or a carrier you like? Point your SIP endpoint at Cynea and keep the number your customers already dial.</p></div>
+      </div>
+      <div class="acc-item">
+        <button class="acc-btn" aria-expanded="false">Batch Calling<span class="acc-ico" aria-hidden="true"></span></button>
+        <div class="acc-panel"><p>Run outbound campaigns — reminders, collections, surveys — from a CSV or the API, with per-campaign pacing and opt-out handling.</p></div>
+      </div>
+      <div class="acc-item">
+        <button class="acc-btn" aria-expanded="false">Verified Numbers<span class="acc-ico" aria-hidden="true"></span></button>
+        <div class="acc-panel"><p>Register your caller ID with the local operator so your calls show a business name instead of being flagged as spam.</p></div>
+      </div>
+    </div>
   </div>
 </section>
 
-<!-- ─── SEE IT IN ACTION (real product UI) ──────────────────────── -->
-<section class="sec wrap" id="product">
-  <div class="sec-head center rv">
-    <span class="eyebrow">The platform</span>
-    <h2>One console to launch, monitor and grow</h2>
-    <p>Build agents, attach a number, and watch every call resolve — in real time.</p>
-  </div>
-  <div class="shots">
-    <figure class="shot rv">
-      <div class="shot-bar"><span></span><span></span><span></span><b>Agent Manager</b></div>
-      <picture><source srcset="assets/shot-agents.webp" type="image/webp"><img src="assets/shot-agents.jpg" alt="Cynea Agent Manager" width="1400" height="933" loading="lazy" decoding="async"></picture>
-      <figcaption>Create and manage every agent in one place — voices, status and live demos.</figcaption>
-    </figure>
-    <figure class="shot rv">
-      <div class="shot-bar"><span></span><span></span><span></span><b>Operations</b></div>
-      <picture><source srcset="assets/shot-dashboard.webp" type="image/webp"><img src="assets/shot-dashboard.jpg" alt="Cynea Operations dashboard" width="1400" height="933" loading="lazy" decoding="async"></picture>
-      <figcaption>Live containment, sentiment and cost — with a global coverage view.</figcaption>
-    </figure>
-  </div>
-  <div class="shots-cta rv">
-    <a class="btn btn-dark" href="agent_manager.html">Open the dashboard →</a>
-    <a class="btn btn-ghost" href="product_tour.html">Take the 60-second tour</a>
-  </div>
-</section>
-
-<!-- ─── BUILT FOR EVERY INDUSTRY ────────────────────────────────── -->
-<section class="sec wrap" id="industries">
-  <div class="sec-head center rv">
-    <span class="eyebrow">Industries</span>
-    <h2>Built for every industry</h2>
-    <p>One engine, tuned to how each business talks to its customers.</p>
-  </div>
-  <div class="uc-grid">
-    <article class="uc rv"><picture><source srcset="assets/usecase-hotel.webp" type="image/webp"><img src="assets/usecase-hotel.jpg" alt="Hotels" width="620" height="827" loading="lazy" decoding="async" onerror="this.closest('.uc').classList.add('uc-fallback')"></picture><div class="uc-scrim" aria-hidden="true"></div><div class="uc-label">Hotels</div></article>
-    <article class="uc rv"><picture><source srcset="assets/usecase-banking.webp" type="image/webp"><img src="assets/usecase-banking.jpg" alt="Banking" width="620" height="827" loading="lazy" decoding="async" onerror="this.closest('.uc').classList.add('uc-fallback')"></picture><div class="uc-scrim" aria-hidden="true"></div><div class="uc-label">Banking</div></article>
-    <article class="uc rv"><picture><source srcset="assets/usecase-restaurant.webp" type="image/webp"><img src="assets/usecase-restaurant.jpg" alt="Restaurants" width="620" height="827" loading="lazy" decoding="async" onerror="this.closest('.uc').classList.add('uc-fallback')"></picture><div class="uc-scrim" aria-hidden="true"></div><div class="uc-label">Restaurants</div></article>
-    <article class="uc rv"><picture><source srcset="assets/usecase-callcenter.webp" type="image/webp"><img src="assets/usecase-callcenter.jpg" alt="Call Centers" width="620" height="827" loading="lazy" decoding="async" onerror="this.closest('.uc').classList.add('uc-fallback')"></picture><div class="uc-scrim" aria-hidden="true"></div><div class="uc-label">Call Centers</div></article>
-    <article class="uc rv"><picture><source srcset="assets/usecase-clinic.webp" type="image/webp"><img src="assets/usecase-clinic.jpg" alt="Clinics" width="620" height="827" loading="lazy" decoding="async" onerror="this.closest('.uc').classList.add('uc-fallback')"></picture><div class="uc-scrim" aria-hidden="true"></div><div class="uc-label">Clinics</div></article>
-  </div>
-</section>
-
-<!-- ─── WHAT'S NEW ──────────────────────────────────────────────── -->
+<!-- ═══ 9. SECURITY ══════════════════════════════════════════════════ -->
 <section class="sec wrap">
-  <div class="sec-head center rv">
-    <span class="eyebrow">What's new</span>
-    <h2>Shipping every week</h2>
-    <p>The platform keeps getting broader, faster and more human.</p>
+  <div class="rv">
+    <p class="kicker">Trust</p>
+    <h2 class="h-sec" style="margin-top:14px">Enterprise-grade security</h2>
   </div>
-  <div class="news">
-    <article class="news-card nc1 rv">
-      <div class="news-glow" aria-hidden="true"></div>
-      <div class="news-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"/></svg></div>
-      <div class="news-body"><h3>40+ Markets</h3><p>Deploy voice agents across Africa and beyond.</p></div>
-    </article>
-    <article class="news-card nc2 rv">
-      <div class="news-glow" aria-hidden="true"></div>
-      <div class="news-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M2 12h2M6 8v8M10 4v16M14 7v10M18 9v6M22 12h0"/></svg></div>
-      <div class="news-body"><h3>New Voices</h3><p>ElevenLabs-quality African accents, updated weekly.</p></div>
-    </article>
-    <article class="news-card nc3 rv">
-      <div class="news-glow" aria-hidden="true"></div>
-      <div class="news-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><polyline points="7 23 3 19 7 15"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/></svg></div>
-      <div class="news-body"><h3>Live Transfer</h3><p>Seamless handoff to human agents when needed.</p></div>
-    </article>
-  </div>
-</section>
-
-<!-- ─── HOW IT WORKS (no-code, 3 steps) ─────────────────────────── -->
-<section class="sec wrap" id="how">
-  <div class="sec-head center rv">
-    <span class="eyebrow">How it works</span>
-    <h2>From your script to a live line in 3 steps</h2>
-    <p>No code. Pick a voice, point it at a number, and your agent starts taking calls.</p>
-  </div>
-  <div class="steps">
-    <div class="steps-rail" aria-hidden="true"></div>
-    <article class="step rv">
-      <div class="step-no">01</div>
-      <div class="step-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg></div>
-      <h3>Upload</h3>
-      <p>Point Cynea at your scripts, FAQs or website. The agent learns your business.</p>
-    </article>
-    <article class="step rv">
-      <div class="step-no">02</div>
-      <div class="step-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><line x1="4" y1="21" x2="4" y2="14"/><line x1="4" y1="10" x2="4" y2="3"/><line x1="12" y1="21" x2="12" y2="12"/><line x1="12" y1="8" x2="12" y2="3"/><line x1="20" y1="21" x2="20" y2="16"/><line x1="20" y1="12" x2="20" y2="3"/><line x1="1" y1="14" x2="7" y2="14"/><line x1="9" y1="8" x2="15" y2="8"/><line x1="17" y1="16" x2="23" y2="16"/></svg></div>
-      <h3>Configure</h3>
-      <p>Choose a persona, voice, language and escalation rules. Preview before going live.</p>
-    </article>
-    <article class="step rv">
-      <div class="step-no">03</div>
-      <div class="step-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M22 16.9V21a1 1 0 0 1-1.1 1A19.9 19.9 0 0 1 3 4.1 1 1 0 0 1 4 3h4a1 1 0 0 1 1 .8c.1 1 .4 1.8.6 2.6a1 1 0 0 1-.2 1L8 8.9a16 16 0 0 0 6 6l1.5-1.5a1 1 0 0 1 1-.2c.8.3 1.7.5 2.6.6a1 1 0 0 1 .9 1z"/></svg></div>
-      <h3>Deploy</h3>
-      <p>Attach a Twilio or SIP number in any country. Your agent answers in minutes.</p>
-    </article>
-  </div>
-</section>
-
-<!-- ─── FEATURE TILES ───────────────────────────────────────────── -->
-<section class="sec wrap">
-  <div class="sec-head rv">
-    <span class="eyebrow">Why Cynea</span>
-    <h2>Built for how the world actually calls</h2>
-    <p>Real conversations, low latency and natural turn-taking — in every market.</p>
-  </div>
-  <div class="feat-grid">
-    <div class="feat rv"><div class="feat-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15 15 0 0 1 0 20M12 2a15 15 0 0 0 0 20"/></svg></div><h3>Natural voices</h3><p>Warm, native-sounding accents across 30+ languages and dialects worldwide.</p></div>
-    <div class="feat rv"><div class="feat-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M21 11.5a8.5 8.5 0 0 1-8.5 8.5 8.4 8.4 0 0 1-3.8-.9L3 21l1.9-5.7A8.5 8.5 0 1 1 21 11.5z"/></svg></div><h3>Human-like turns</h3><p>Sequence-id barge-in, grace periods and backchannels. No robotic IVR feel.</p></div>
-    <div class="feat rv"><div class="feat-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg></div><h3>Free STT / TTS</h3><p>Local Whisper and free Edge TTS by default. You pay only LLM tokens and telephony.</p></div>
-    <div class="feat rv"><div class="feat-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><line x1="3" y1="20" x2="21" y2="20"/><rect x="6" y="10" width="3" height="10"/><rect x="11" y="6" width="3" height="14"/><rect x="16" y="13" width="3" height="7"/></svg></div><h3>Analytics included</h3><p>Per-call sentiment, containment and cost. Export PDF and CSV in a click.</p></div>
-    <div class="feat rv"><div class="feat-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M22 16.9V21a1 1 0 0 1-1.1 1A19.9 19.9 0 0 1 3 4.1 1 1 0 0 1 4 3h4a1 1 0 0 1 1 .8c.1 1 .4 1.8.6 2.6a1 1 0 0 1-.2 1L8 8.9a16 16 0 0 0 6 6l1.5-1.5a1 1 0 0 1 1-.2c.8.3 1.7.5 2.6.6a1 1 0 0 1 .9 1z"/></svg></div><h3>Any telephony</h3><p>Production integrations with Twilio, Plivo, SIP and major carriers worldwide.</p></div>
-    <div class="feat rv"><div class="feat-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div><h3>24/7 operation</h3><p>Handles concurrent calls with a full audit trail, day and night.</p></div>
-  </div>
-</section>
-
-<!-- ─── AGENTS ──────────────────────────────────────────────────── -->
-<section class="sec wrap" id="agents">
-  <div class="sec-head rv">
-    <span class="eyebrow">Agents</span>
-    <h2>Four agents shipping today</h2>
-    <p>All run on the same engine. Add another by writing one Python file and a JSON config.</p>
-  </div>
-  <div class="agents">
-    <article class="agent rv">
-      <div class="agent-orb k"><picture><source srcset="assets/avatar-kwame.webp" type="image/webp"><img src="assets/avatar-kwame.jpg" alt="" width="800" height="385" loading="lazy" decoding="async" onerror="this.remove()"></picture><b>● Ready for calls</b></div>
-      <div class="agent-body">
-        <h3>Kwame</h3>
-        <div class="agent-role">Hotel Receptionist</div>
-        <p>Handles bookings, availability, restaurant hours and small talk for hospitality.</p>
-        <div class="agent-meta">en-GB-RyanNeural</div>
-        <button class="btn btn-sm" data-audio="assets/kwame_test_1.mp3" data-audio2="assets/kwame_test_2.mp3">▶ Hear demo</button>
-      </div>
-    </article>
-    <article class="agent rv">
-      <div class="agent-orb a"><picture><source srcset="assets/avatar-amina.webp" type="image/webp"><img src="assets/avatar-amina.jpg" alt="" width="800" height="385" loading="lazy" decoding="async" onerror="this.remove()"></picture><b>● Ready for calls</b></div>
-      <div class="agent-body">
-        <h3>Amina</h3>
-        <div class="agent-role">Customer Service</div>
-        <p>Banking, telco and e-commerce — payments, billing and plans. Escalates complaints fast.</p>
-        <div class="agent-meta">en-GB-SoniaNeural</div>
-        <button class="btn btn-sm" data-audio="assets/amina_test_1.mp3">▶ Hear demo</button>
-      </div>
-    </article>
-    <article class="agent rv">
-      <div class="agent-orb f"><picture><source srcset="assets/avatar-kofi.webp" type="image/webp"><img src="assets/avatar-kofi.jpg" alt="" width="800" height="385" loading="lazy" decoding="async" onerror="this.remove()"></picture><b>● Ready for calls</b></div>
-      <div class="agent-body">
-        <h3>Kofi</h3>
-        <div class="agent-role">Restaurant Orders</div>
-        <p>Takes dine-in, takeaway and delivery orders with allergy checks and card payment.</p>
-        <div class="agent-meta">en-GB-RyanNeural</div>
-        <button class="btn btn-sm" data-audio="assets/kofi_test_1.mp3">▶ Hear demo</button>
-      </div>
-    </article>
-    <article class="agent rv">
-      <div class="agent-orb m"><picture><source srcset="assets/avatar-maya.webp" type="image/webp"><img src="assets/avatar-maya.jpg" alt="" width="800" height="385" loading="lazy" decoding="async" onerror="this.remove()"></picture><b>● Ready for calls</b></div>
-      <div class="agent-body">
-        <h3>Maya</h3>
-        <div class="agent-role">Bookings &amp; Scheduling</div>
-        <p>Books appointments, reschedules and sends reminders — across time zones, around the clock.</p>
-        <div class="agent-meta">en-US-AriaNeural</div>
-        <button class="btn btn-sm" data-audio="assets/amina_test_1.mp3">▶ Hear demo</button>
-      </div>
-    </article>
-  </div>
-</section>
-
-<!-- ─── WHAT YOUR CUSTOMER HEARS (audio showcase) ───────────────── -->
-<section class="sec wrap" id="listen">
-  <div class="sec-head center rv">
-    <span class="eyebrow">Listen</span>
-    <h2>This is what your customer hears</h2>
-    <p>Real audio from the same engine that powers production. Press play.</p>
-  </div>
-  <div class="player rv" id="showcase">
-    <div class="player-orb" aria-hidden="true"></div>
-    <button class="player-play" id="scPlay" type="button" aria-label="Play clip">▶</button>
-    <div class="player-main">
-      <div class="player-meta"><b id="scTitle">Kwame · Hotel booking</b><span id="scSub">Hotel reception demo</span></div>
-      <div class="player-wave" id="scWave"></div>
+  <div class="sec-cards rv">
+    <div class="scard">
+      <span class="badge" aria-hidden="true">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l8 3.5v5c0 5.2-3.4 8.4-8 9.5-4.6-1.1-8-4.3-8-9.5v-5z"/><path d="M9 12l2.2 2.2L15.5 10"/></svg>
+      </span>
+      <h3>Data Privacy</h3>
+      <p>Run local Whisper and Edge TTS so call audio never has to leave your own infrastructure.</p>
     </div>
-    <div class="player-clips">
-      <button class="clip is-on" data-audio="assets/kwame_test_1.mp3" data-title="Kwame · Hotel booking" data-sub="Hotel reception demo">Kwame</button>
-      <button class="clip" data-audio="assets/amina_test_1.mp3" data-title="Amina · Customer service" data-sub="Telco support demo">Amina</button>
-      <button class="clip" data-audio="assets/kofi_test_1.mp3" data-title="Kofi · Restaurant order" data-sub="Restaurant order demo">Kofi</button>
+    <div class="scard">
+      <span class="badge" aria-hidden="true">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8.5"/><circle cx="12" cy="12" r="3"/></svg>
+      </span>
+      <h3>Call Recording</h3>
+      <p>Agents announce recording on the opening turn and honour opt-outs, per Kenya ODPC 2024 and EU AI Act Article 50.</p>
+    </div>
+    <div class="scard">
+      <span class="badge" aria-hidden="true">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="10" cy="8.5" r="3.5"/><path d="M3.5 20c0-3.6 2.9-6.5 6.5-6.5s6.5 2.9 6.5 6.5"/><path d="M17 8l2 2 3.5-3.5"/></svg>
+      </span>
+      <h3>Human Escalation</h3>
+      <p>Detects complaints and repeated repair attempts, then hands off to a person with the full transcript attached.</p>
     </div>
   </div>
 </section>
 
-<!-- ─── COVERAGE ────────────────────────────────────────────────── -->
-<section class="sec wrap" id="coverage">
-  <div class="sec-head center rv">
-    <span class="eyebrow">Coverage</span>
-    <h2>Live in every market</h2>
-    <p>Deploy voice agents anywhere — any language, any carrier, any time zone.</p>
+<!-- ═══ 10. FAQ ══════════════════════════════════════════════════════ -->
+<section class="sec wrap" id="faq">
+  <div class="rv" style="text-align:center">
+    <p class="kicker">FAQ</p>
+    <h2 class="h-sec" style="margin-top:14px">Questions, answered</h2>
   </div>
-  <div class="worldmap rv">
-    <video class="wm-video" autoplay muted loop playsinline preload="none" aria-label="Global coverage"
-           data-src="assets/world.mp4"></video>
-    <div class="wm-grid" aria-hidden="true"></div>
-    <div class="wm-overlay" aria-hidden="true"></div>
-    <div class="wm-cap">Available worldwide · 40+ markets</div>
-  </div>
-</section>
 
-<!-- ─── SAFETY ──────────────────────────────────────────────────── -->
-<section class="sec wrap">
-  <div class="sec-head center rv">
-    <span class="eyebrow">Trust</span>
-    <h2>Safety, built in</h2>
-    <p>Honest defaults that respect callers and the businesses they reach.</p>
-  </div>
-  <div class="safe-grid">
-    <div class="safe rv"><svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2"><path d="M32 6 8 16v14c0 16 11 24 24 28 13-4 24-12 24-28V16L32 6z"/><path d="M22 32l7 7 14-14"/></svg><h3>Consent &amp; recording</h3><p>Calls announce recording and honour opt-outs, per local norms.</p></div>
-    <div class="safe rv"><svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2"><ellipse cx="32" cy="16" rx="20" ry="8"/><path d="M12 16v32c0 4 9 8 20 8s20-4 20-8V16"/><path d="M12 32c0 4 9 8 20 8s20-4 20-8"/></svg><h3>Data residency</h3><p>Run local Whisper and Edge TTS so audio need never leave your stack.</p></div>
-    <div class="safe rv"><svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2"><circle cx="24" cy="22" r="8"/><path d="M10 52c0-8 6-14 14-14s14 6 14 14"/><path d="M44 26l6 6 10-10"/></svg><h3>Human handoff</h3><p>Detects complaints and escalates to a person with full context.</p></div>
-  </div>
-</section>
-
-<!-- ─── CTA ─────────────────────────────────────────────────────── -->
-<section class="sec">
-  <div class="cta rv">
-    <video class="sec-vid" autoplay muted loop playsinline preload="none" aria-hidden="true"
-           data-src="assets/Hero-bg%203.mp4"></video>
-    <div class="sec-vid-overlay dark" aria-hidden="true"></div>
-    <h2>Put a voice agent on your line this week</h2>
-    <p>Book a 30-minute demo and hear your own script in a natural, human-like voice.</p>
-    <div class="cta-row">
-      <a class="btn btn-light" href="https://calendly.com/albertmomanyi07/30min" target="_blank" rel="noopener">Book a demo</a>
-      <a class="btn btn-ghost" href="https://github.com/Mars2390/cynea-voice-engine" target="_blank" rel="noopener">View on GitHub</a>
+  <div class="faq rv" data-acc>
+    <div class="acc-item">
+      <button class="acc-btn" aria-expanded="true">What is an AI receptionist, and how does one work in Kenya?<span class="acc-ico" aria-hidden="true"></span></button>
+      <div class="acc-panel"><p>An AI receptionist answers your business line the way a trained front-desk person would — it greets the caller, understands what they want in natural speech, and either resolves it or routes it. In Kenya it runs on a local number provisioned through Africa's Talking, so callers dial an ordinary Kenyan number and pay ordinary local rates.</p></div>
+    </div>
+    <div class="acc-item">
+      <button class="acc-btn" aria-expanded="false">Can the voice agent speak Swahili?<span class="acc-ico" aria-hidden="true"></span></button>
+      <div class="acc-panel"><p>Transcription handles Swahili through Whisper. On the speech side we ship nine voices today, four of them native African accents (Nigerian and South African). A dedicated Swahili TTS voice is on the roadmap rather than in the product — we would rather say that plainly than let you discover it on a live call.</p></div>
+    </div>
+    <div class="acc-item">
+      <button class="acc-btn" aria-expanded="false">Which African countries can Cynea place and receive calls in?<span class="acc-ico" aria-hidden="true"></span></button>
+      <div class="acc-panel"><p>Seven, via Africa's Talking: Kenya, Nigeria, Ghana, South Africa, Uganda, Tanzania and Rwanda. Anywhere else, bring your own carrier over SIP.</p></div>
+    </div>
+    <div class="acc-item">
+      <button class="acc-btn" aria-expanded="false">How do I set up automated call answering in Nairobi?<span class="acc-ico" aria-hidden="true"></span></button>
+      <div class="acc-panel"><p>Three steps: provision a Nairobi number (or forward your existing one), pick a persona and edit its prompt, then point the SIP endpoint at Cynea. The agent configuration is a single Python module per persona, so a developer can have a first version answering within a day.</p></div>
+    </div>
+    <div class="acc-item">
+      <button class="acc-btn" aria-expanded="false">What does an AI call center in Africa cost?<span class="acc-ico" aria-hidden="true"></span></button>
+      <div class="acc-panel"><p>Pricing is not published yet — we are still onboarding our first customers and would rather quote you honestly than post a number we will have to change. Book a call and we will walk through your volumes. <em>(Placeholder: replace with real pricing once it is set.)</em></p></div>
+    </div>
+    <div class="acc-item">
+      <button class="acc-btn" aria-expanded="false">Do I have to change my current phone number?<span class="acc-ico" aria-hidden="true"></span></button>
+      <div class="acc-panel"><p>No. Either forward your existing line to a Cynea number, or keep your carrier entirely and connect over SIP trunking. Callers keep dialling what they already know.</p></div>
+    </div>
+    <div class="acc-item">
+      <button class="acc-btn" aria-expanded="false">How fast does the agent respond?<span class="acc-ico" aria-hidden="true"></span></button>
+      <div class="acc-panel"><p>The design target is roughly 600&thinsp;ms to first audio, achieved by streaming LLM tokens straight into the synthesiser rather than waiting for a finished sentence. Turn-taking deliberately adds a 700&thinsp;ms grace period after you stop speaking so the agent does not talk over you.</p></div>
+    </div>
+    <div class="acc-item">
+      <button class="acc-btn" aria-expanded="false">Does the agent tell callers it is an AI?<span class="acc-ico" aria-hidden="true"></span></button>
+      <div class="acc-panel"><p>Yes — once, on the opening turn, in its own register, and again any time a caller asks directly. It does not repeat a robotic disclaimer, because that is itself a tell. This is the disclosed-but-natural default and it ships that way for California SB 1001, EU AI Act Article 50 and Kenya ODPC 2024.</p></div>
+    </div>
+    <div class="acc-item">
+      <button class="acc-btn" aria-expanded="false">Can it handle Twi, Nigerian Pidgin or Sheng?<span class="acc-ico" aria-hidden="true"></span></button>
+      <div class="acc-panel"><p>Whisper transcribes code-switched speech well, and the personas are written to expect it — Kwame is a Ghanaian hotelier, not a generic assistant. Full Twi and Pidgin synthesis is roadmap, not shipped.</p></div>
+    </div>
+    <div class="acc-item">
+      <button class="acc-btn" aria-expanded="false">What happens when the AI cannot help?<span class="acc-ico" aria-hidden="true"></span></button>
+      <div class="acc-panel"><p>It escalates. The engine watches for complaints and repeated repair attempts, then hands the call to a person with the full transcript, so the caller never has to start over.</p></div>
+    </div>
+    <div class="acc-item">
+      <button class="acc-btn" aria-expanded="false">Is call data stored outside Africa?<span class="acc-ico" aria-hidden="true"></span></button>
+      <div class="acc-panel"><p>It does not have to be. Whisper and Edge TTS can both run locally, which means audio never leaves your stack. If you choose a hosted provider instead, that provider's residency terms apply and we will tell you which.</p></div>
+    </div>
+    <div class="acc-item">
+      <button class="acc-btn" aria-expanded="false">Can it run outbound campaigns?<span class="acc-ico" aria-hidden="true"></span></button>
+      <div class="acc-panel"><p>Yes — reminders, collections and surveys, driven from a CSV or the API, with per-campaign pacing and opt-out handling built in.</p></div>
+    </div>
+    <div class="acc-item">
+      <button class="acc-btn" aria-expanded="false">What does it integrate with?<span class="acc-ico" aria-hidden="true"></span></button>
+      <div class="acc-panel"><p>Africa's Talking for telephony, Whisper for transcription, Edge TTS and ElevenLabs for speech. Everything else is a Python SDK call, so your booking system or CRM is a function away.</p></div>
+    </div>
+    <div class="acc-item">
+      <button class="acc-btn" aria-expanded="false">How long does it take to go live?<span class="acc-ico" aria-hidden="true"></span></button>
+      <div class="acc-panel"><p>A working agent on a test number takes about a day. Going live also needs caller-ID verification with your operator, which is the part outside our control — budget a week end to end.</p></div>
     </div>
   </div>
 </section>
 
-<!-- ─── FOOTER ──────────────────────────────────────────────────── -->
+<!-- ═══ 11. FINAL CTA ════════════════════════════════════════════════ -->
+<section class="bleed">
+  <div class="cta-block">
+    <video class="hero-vid" autoplay muted loop playsinline preload="none"
+           aria-hidden="true" data-src="assets/Hero-bg%203.mp4"></video>
+    <div class="cta-scrim" aria-hidden="true"></div>
+    <div class="cta-card rv">
+      <h2>Revolutionize your call operation with Cynea</h2>
+      <p>Start building smarter conversations today.</p>
+      <div class="cta-row">
+        <a class="btn btn-navy" href="#try-demo">Try For Free</a>
+        <a class="btn btn-blue" href="https://calendly.com/albertmomanyi07/30min" target="_blank" rel="noopener">Contact Sales</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ 12. FOOTER ═══════════════════════════════════════════════════ -->
 <footer class="foot">
-  <div class="wrap foot-in">
-    <div class="foot-brand">
-      <a class="brand" href="#top"><b>CYNEA</b><span>VOICE ENGINE</span></a>
-      <p>Human-like AI voice agents for businesses worldwide. Built to answer, resolve, and sound human.</p>
+  <div class="foot-top">
+    <div class="news">
+      <label for="news-email">Newsletter</label>
+      <form class="news-pill" id="news-form">
+        <input id="news-email" type="email" placeholder="you@company.com" autocomplete="email" aria-label="Email address">
+        <button class="btn btn-light" type="submit">Subscribe</button>
+      </form>
+      <!-- TODO(integration): no mailing-list provider is wired up yet. -->
+      <p class="news-msg" id="news-msg" role="status"></p>
     </div>
-    <div class="foot-col"><h4>Product</h4><a href="#platform">Voice Agents</a><a href="#platform">Telephony</a><a href="#listen">Analytics</a><a href="#">Pricing</a></div>
-    <div class="foot-col"><h4>Solutions</h4><a href="#">Hotels</a><a href="#">Banking</a><a href="#">Restaurants</a><a href="#">Call Centers</a></div>
-    <div class="foot-col"><h4>Resources</h4><a href="help_center.html">Help Center</a><a href="help_center.html">API Docs</a><a href="product_tour.html">Product Tour</a><a href="demo_call_flow.html">Demo</a></div>
-    <div class="foot-col"><h4>Company</h4><a href="#">About</a><a href="#">Blog</a><a href="#">Careers</a><a href="https://calendly.com/albertmomanyi07/30min" target="_blank" rel="noopener">Contact</a></div>
+
+    <div class="foot-serif" aria-label="Built in Nairobi, human by design">
+      <div class="row">Built</div>
+      <div class="row">in Nairobi,</div>
+      <div class="row">human by</div>
+      <div class="row">design</div>
+    </div>
   </div>
+
+  <div class="foot-cols">
+    <div>
+      <h4>Products</h4>
+      <a href="#try-demo">Live demo</a>
+      <a href="#highlights">Voice agents</a>
+      <a href="#telephony">Telephony</a>
+      <a href="#channels">Channels</a>
+    </div>
+    <div>
+      <h4>Solutions</h4>
+      <a href="#try-demo">Hotels</a>
+      <a href="#try-demo">Banking</a>
+      <a href="#try-demo">Restaurants</a>
+      <a href="#try-demo">Clinics</a>
+    </div>
+    <div>
+      <h4>Resources</h4>
+      <a href="help_center.html">Help center</a>
+      <a href="product_tour.html">Product tour</a>
+      <a href="demo_call_flow.html">Call flow</a>
+      <a href="#faq">FAQ</a>
+    </div>
+    <div>
+      <h4>Company</h4>
+      <a href="#top">About</a>
+      <a href="https://calendly.com/albertmomanyi07/30min" target="_blank" rel="noopener">Contact sales</a>
+      <a href="signin.html">Sign in</a>
+      <a href="dashboard.html">Dashboard</a>
+    </div>
+  </div>
+
   <div class="foot-base">
-    <span>© 2026 Cynea AI · Made in Kenya 🇰🇪</span>
+    <span>© 2026 Cynea AI · Built in Nairobi 🇰🇪</span>
+    <!-- PLACEHOLDER: social handles do not exist yet — these are inert. -->
     <div class="foot-social">
-      <a href="#" aria-label="Cynea on Twitter / X"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24h-6.66l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231 5.451-6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg></a>
-      <a href="#" aria-label="Cynea on LinkedIn"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.45 20.45h-3.56v-5.57c0-1.33-.02-3.04-1.85-3.04-1.85 0-2.13 1.45-2.13 2.94v5.67H9.35V9h3.42v1.56h.05c.47-.9 1.64-1.85 3.37-1.85 3.6 0 4.27 2.37 4.27 5.45v6.29zM5.34 7.43a2.06 2.06 0 1 1 0-4.13 2.06 2.06 0 0 1 0 4.13zM7.12 20.45H3.56V9h3.56v11.45zM22.22 0H1.77C.79 0 0 .77 0 1.73v20.54C0 23.23.79 24 1.77 24h20.45c.98 0 1.78-.77 1.78-1.73V1.73C24 .77 23.2 0 22.22 0z"/></svg></a>
-      <a href="https://github.com/Mars2390/cynea-voice-engine" target="_blank" rel="noopener" aria-label="Cynea on GitHub"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 .5C5.73.5.5 5.73.5 12c0 5.08 3.29 9.39 7.86 10.91.58.11.79-.25.79-.56v-2c-3.2.7-3.88-1.54-3.88-1.54-.53-1.34-1.3-1.7-1.3-1.7-1.06-.72.08-.71.08-.71 1.17.08 1.78 1.2 1.78 1.2 1.04 1.79 2.73 1.27 3.4.97.1-.76.41-1.27.74-1.56-2.55-.29-5.23-1.28-5.23-5.69 0-1.26.45-2.29 1.19-3.1-.12-.29-.52-1.46.11-3.05 0 0 .97-.31 3.18 1.18a11 11 0 0 1 5.79 0c2.21-1.49 3.18-1.18 3.18-1.18.63 1.59.23 2.76.11 3.05.74.81 1.19 1.84 1.19 3.1 0 4.42-2.69 5.39-5.25 5.68.42.36.79 1.07.79 2.16v3.2c0 .31.21.68.8.56A11.51 11.51 0 0 0 23.5 12C23.5 5.73 18.27.5 12 .5z"/></svg></a>
+      <a href="#" aria-label="X (placeholder — no account yet)"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M18.2 2h3.4l-7.4 8.5L23 22h-6.8l-5.3-7-6.1 7H1.4l7.9-9.1L1 2h7l4.8 6.4zm-1.2 18h1.9L7.1 4H5z"/></svg></a>
+      <a href="#" aria-label="LinkedIn (placeholder — no account yet)"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M4.98 3.5A2.5 2.5 0 1 1 0 3.5a2.5 2.5 0 0 1 4.98 0zM.4 8.2h4.2V24H.4zM8.5 8.2h4v2.2h.06c.56-1.06 1.94-2.2 4-2.2 4.3 0 5.1 2.8 5.1 6.5V24h-4.2v-6.9c0-1.65-.03-3.8-2.3-3.8-2.3 0-2.66 1.8-2.66 3.66V24H8.5z"/></svg></a>
+      <a href="#" aria-label="GitHub (placeholder — no account yet)"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 .5a12 12 0 0 0-3.8 23.4c.6.1.8-.26.8-.57v-2c-3.3.7-4-1.6-4-1.6-.55-1.4-1.34-1.77-1.34-1.77-1.1-.74.08-.73.08-.73 1.2.09 1.84 1.24 1.84 1.24 1.07 1.84 2.8 1.3 3.5 1 .1-.78.42-1.3.76-1.6-2.66-.3-5.46-1.33-5.46-5.93 0-1.3.47-2.38 1.24-3.22-.13-.3-.54-1.52.12-3.18 0 0 1-.32 3.3 1.23a11.5 11.5 0 0 1 6 0C17.99 4.7 19 5.02 19 5.02c.66 1.66.25 2.88.12 3.18a4.65 4.65 0 0 1 1.24 3.22c0 4.61-2.8 5.63-5.48 5.92.43.37.81 1.1.81 2.22v3.3c0 .31.2.68.8.56A12 12 0 0 0 12 .5z"/></svg></a>
     </div>
   </div>
 </footer>
@@ -949,12 +959,11 @@ if(!window.matchMedia('(min-width:760px)').matches){
 <script>
 'use strict';
 
-/* ── video gate ────────────────────────────────────────────────────
-   Videos ship with no src at all - only data-src. Below 760px we never
-   attach one, so the ~2.8 MB of clips is never fetched on mobile (CSS
-   display:none would still have downloaded them). Above 760px the hero
-   clip loads immediately and the rest load as they approach the
-   viewport, which is what preload="none" buys us. */
+/* ── video gate, part 2 ─────────────────────────────────────────────
+   Videos ship with no src at all — only data-src. Below 760px we never
+   attach one, so the clips are never fetched on mobile (CSS display:none
+   would still have downloaded them). Above 760px the hero clip loads
+   immediately and the rest load as they approach the viewport. */
 (function(){
   var desktop=matchMedia('(min-width:760px)');
   var vids=[].slice.call(document.querySelectorAll('video[data-src]'));
@@ -966,28 +975,21 @@ if(!window.matchMedia('(min-width:760px)').matches){
     v.src=v.getAttribute('data-src');
     v.load();
     var p=v.play();
-    if(p&&p.catch) p.catch(function(){}); /* autoplay blocked - harmless */
+    if(p&&p.catch) p.catch(function(){});   /* autoplay blocked — harmless */
   }
 
   function sync(){
-    if(!desktop.matches){
-      document.documentElement.classList.add('no-video');
-      return; /* already-attached clips just stay hidden; no refetch either way */
-    }
+    if(!desktop.matches){ document.documentElement.classList.add('no-video'); return; }
     document.documentElement.classList.remove('no-video');
 
     var lazy=[];
-    vids.forEach(function(v){
-      if(v.hasAttribute('data-eager')) attach(v); else lazy.push(v);
-    });
+    vids.forEach(function(v){ v.hasAttribute('data-eager') ? attach(v) : lazy.push(v); });
     if(!lazy.length) return;
 
     if(!('IntersectionObserver' in window)){ lazy.forEach(attach); return; }
     if(!io){
-      io=new IntersectionObserver(function(entries){
-        entries.forEach(function(e){
-          if(e.isIntersecting){ attach(e.target); io.unobserve(e.target); }
-        });
+      io=new IntersectionObserver(function(es){
+        es.forEach(function(e){ if(e.isIntersecting){ attach(e.target); io.unobserve(e.target); } });
       },{rootMargin:'300px 0px'});
     }
     lazy.forEach(function(v){ if(!v.getAttribute('data-loaded')) io.observe(v); });
@@ -995,186 +997,167 @@ if(!window.matchMedia('(min-width:760px)').matches){
 
   sync();
   if(desktop.addEventListener) desktop.addEventListener('change',sync);
-  else if(desktop.addListener) desktop.addListener(sync); /* Safari < 14 */
+  else if(desktop.addListener) desktop.addListener(sync);
 })();
 
-/* ── scroll progress ───────────────────────────────────────────── */
-var prog=document.getElementById('prog');
-addEventListener('scroll',function(){
-  var h=document.documentElement;
-  var p=h.scrollTop/(h.scrollHeight-h.clientHeight||1);
-  prog.style.width=(p*100)+'%';
-},{passive:true});
-
-/* ── reveal on scroll ──────────────────────────────────────────── */
-var io=new IntersectionObserver(function(es){
-  es.forEach(function(e){ if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target);} });
-},{threshold:.12});
-document.querySelectorAll('.rv').forEach(function(el){io.observe(el);});
-
-/* ── audio player (shared) ─────────────────────────────────────── */
-var player=document.getElementById('player');
-function play(src,fallback){
-  if(!src) return;
-  try{
-    player.src=src; player.currentTime=0;
-    player.play().catch(function(){ if(fallback){player.src=fallback;player.play().catch(function(){});} });
-  }catch(e){}
-}
-document.querySelectorAll('[data-audio]:not(.clip)').forEach(function(el){
-  el.addEventListener('click',function(){ play(el.getAttribute('data-audio'),el.getAttribute('data-audio2')); });
-});
-
-/* ── interactive incoming call: receive → hear the voice ───────── */
+/* ── scroll reveal — the entire motion budget ─────────────────────── */
 (function(){
-  var cp=document.getElementById('callprev'); if(!cp) return;
-  var statusEl=document.getElementById('callStatus'), subEl=document.getElementById('callSub'),
-      wave=document.getElementById('callWave'), acc=document.getElementById('acceptBtn'),
-      dec=document.getElementById('declineBtn'), end=document.getElementById('endBtn');
-  for(var i=0;i<32;i++) wave.appendChild(document.createElement('i'));
-  var t=null, secs=0;
-  function fmt(s){var m=Math.floor(s/60);s%=60;return (m<10?'0':'')+m+':'+(s<10?'0':'')+s;}
-  function answer(){
-    if(cp.getAttribute('data-state')==='live') return;
-    cp.setAttribute('data-state','live');
-    statusEl.textContent='Connected'; acc.hidden=true; dec.hidden=true; end.hidden=false; wave.hidden=false;
-    secs=0; subEl.textContent='00:00';
-    t=setInterval(function(){secs++; subEl.textContent=fmt(secs);},1000);
-    play('assets/demo_kwame_02.mp3','assets/kwame_test_1.mp3');
+  var els=[].slice.call(document.querySelectorAll('.rv'));
+  if(!('IntersectionObserver' in window)||matchMedia('(prefers-reduced-motion:reduce)').matches){
+    els.forEach(function(e){ e.classList.add('in'); });
+    return;
   }
-  function hangup(){
-    cp.setAttribute('data-state','ringing');
-    statusEl.textContent='Incoming call'; subEl.textContent='Voice agent · ringing…';
-    acc.hidden=false; dec.hidden=false; end.hidden=true; wave.hidden=true;
-    if(t){clearInterval(t);t=null;} try{player.pause();}catch(e){}
-  }
-  acc.addEventListener('click',answer);
-  dec.addEventListener('click',hangup);
-  end.addEventListener('click',hangup);
-  player.addEventListener('ended',function(){ if(cp.getAttribute('data-state')==='live') hangup(); });
-  var hb=document.getElementById('hearBtn');
-  if(hb) hb.addEventListener('click',function(){ document.getElementById('top').scrollIntoView({behavior:'smooth'}); answer(); });
+  var io=new IntersectionObserver(function(es){
+    es.forEach(function(e){ if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); } });
+  },{rootMargin:'0px 0px -8% 0px',threshold:.08});
+  els.forEach(function(e){ io.observe(e); });
 })();
 
-/* ── count-up stats band ───────────────────────────────────────── */
-function countUp(el){
-  var to=+el.getAttribute('data-to'),suf=el.getAttribute('data-suffix')||'',pre=el.getAttribute('data-prefix')||'';
-  var start=null,dur=1300;
-  function step(ts){ if(!start)start=ts; var p=Math.min((ts-start)/dur,1); var e=1-Math.pow(1-p,3);
-    el.textContent=pre+Math.round(to*e)+suf; if(p<1)requestAnimationFrame(step); else el.textContent=pre+to+suf; }
-  requestAnimationFrame(step);
-}
-var mio=new IntersectionObserver(function(es){es.forEach(function(e){ if(e.isIntersecting){ e.target.querySelectorAll('[data-to]').forEach(countUp); mio.unobserve(e.target); } });},{threshold:.3});
-var mband=document.querySelector('.metrics'); if(mband) mio.observe(mband);
-
-/* ── audio showcase player ─────────────────────────────────────── */
+/* ── nav hairline on scroll ───────────────────────────────────────── */
 (function(){
-  var sc=document.getElementById('showcase'); if(!sc) return;
-  var wave=document.getElementById('scWave'); for(var i=0;i<48;i++) wave.appendChild(document.createElement('i'));
-  var playBtn=document.getElementById('scPlay'),title=document.getElementById('scTitle'),sub=document.getElementById('scSub');
-  var cur='assets/kwame_test_1.mp3';
-  function go(){ play(cur); sc.classList.add('on'); playBtn.textContent='❚❚'; }
-  function stop(){ try{player.pause();}catch(e){} sc.classList.remove('on'); playBtn.textContent='▶'; }
-  sc.querySelectorAll('.clip').forEach(function(c){ c.addEventListener('click',function(){
-    sc.querySelectorAll('.clip').forEach(function(x){x.classList.remove('is-on');}); c.classList.add('is-on');
-    cur=c.getAttribute('data-audio'); title.textContent=c.getAttribute('data-title'); sub.textContent=c.getAttribute('data-sub'); go();
-  });});
-  playBtn.addEventListener('click',function(){ if(sc.classList.contains('on')&&!player.paused) stop(); else go(); });
-  player.addEventListener('ended',function(){ sc.classList.remove('on'); playBtn.textContent='▶'; });
+  var nav=document.getElementById('nav');
+  function s(){ nav.classList.toggle('stuck',scrollY>8); }
+  addEventListener('scroll',s,{passive:true}); s();
 })();
 
-/* ── ensure muted autoplay videos start (some mobile browsers) ─── */
-document.querySelectorAll('video').forEach(function(v){
-  v.muted=true; var p=v.play&&v.play(); if(p&&p.catch)p.catch(function(){});
-});
-
-/* ════ magic layer — particles, cursor glow, sparks, parallax (GPU-only) ════ */
+/* ── accordions (telephony + FAQ) ─────────────────────────────────── */
 (function(){
-  var reduce=matchMedia('(prefers-reduced-motion:reduce)').matches;
-  var fine=matchMedia('(hover:hover) and (pointer:fine)').matches;
-  var C=['#00D4FF','#A78BFA','#FFB5A7'];
+  function height(panel){ return panel.firstElementChild.getBoundingClientRect().height; }
 
-  // hero floating particles
-  var hp=document.getElementById('heroParticles');
-  if(hp&&!reduce){
-    var n=innerWidth<700?42:84, fr=document.createDocumentFragment();
-    for(var i=0;i<n;i++){
-      var s=document.createElement('span'), z=(Math.random()*2.5+1.5).toFixed(1);
-      s.style.cssText='left:'+(Math.random()*100).toFixed(2)+'%;width:'+z+'px;height:'+z+'px;background:'+C[i%3]+
-        ';--dx:'+((Math.random()*60-30)|0)+'px;--dur:'+(Math.random()*12+11).toFixed(1)+'s;--dly:'+(-Math.random()*22).toFixed(1)+'s;--o:'+(Math.random()*.45+.3).toFixed(2);
-      fr.appendChild(s);
-    }
-    hp.appendChild(fr);
-  }
+  [].slice.call(document.querySelectorAll('[data-acc]')).forEach(function(group){
+    var items=[].slice.call(group.querySelectorAll('.acc-btn'));
 
-  // cursor glow (desktop)
-  if(fine&&!reduce){
-    var g=document.createElement('div'); g.className='cursor-glow'; document.body.appendChild(g); var idle;
-    addEventListener('pointermove',function(e){
-      g.style.transform='translate3d('+(e.clientX-160)+'px,'+(e.clientY-160)+'px,0)';
-      g.style.opacity='1'; clearTimeout(idle); idle=setTimeout(function(){g.style.opacity='0';},800);
-    },{passive:true});
-  }
+    items.forEach(function(btn){
+      var panel=btn.nextElementSibling;
+      if(btn.getAttribute('aria-expanded')==='true') panel.style.height=height(panel)+'px';
 
-  // click spark burst on hero (desktop)
-  var hero=document.getElementById('top');
-  if(hero&&fine&&!reduce){
-    hero.addEventListener('pointerdown',function(e){
-      if(e.target.closest('a,button,input')) return;
-      for(var i=0;i<13;i++){
-        var p=document.createElement('span'); p.className='spark';
-        var a=Math.random()*6.283, d=Math.random()*70+34;
-        p.style.cssText='left:'+e.clientX+'px;top:'+e.clientY+'px;background:'+C[i%3]+
-          ';--tx:'+(Math.cos(a)*d|0)+'px;--ty:'+(Math.sin(a)*d|0)+'px';
-        document.body.appendChild(p); setTimeout(p.remove.bind(p),820);
-      }
-    });
-  }
-
-  // parallax of living background on scroll
-  if(!reduce){
-    var t=false;
-    addEventListener('scroll',function(){
-      if(t)return; t=true;
-      requestAnimationFrame(function(){document.documentElement.style.setProperty('--sy',scrollY+'px'); t=false;});
-    },{passive:true});
-  }
-
-  // switcher cursor spotlight
-  if(fine){
-    document.querySelectorAll('.tile').forEach(function(c){
-      c.addEventListener('pointermove',function(e){
-        var r=c.getBoundingClientRect();
-        c.style.setProperty('--mx',(e.clientX-r.left)+'px');
-        c.style.setProperty('--my',(e.clientY-r.top)+'px');
-      },{passive:true});
-    });
-  }
-
-  // first-visit word-by-word headline
-  try{
-    var h=document.getElementById('heroTitle');
-    if(h&&!reduce&&!localStorage.getItem('cynea_seen')){
-      h.classList.add('word-in'); var k=0;
-      (function w(node){
-        [].slice.call(node.childNodes).forEach(function(c){
-          if(c.nodeType===3){
-            var f=document.createDocumentFragment();
-            c.textContent.split(/(\s+)/).forEach(function(tx){
-              if(tx.trim()===''){f.appendChild(document.createTextNode(tx));return;}
-              var sp=document.createElement('span'); sp.className='ww'; sp.textContent=tx; sp.style.animationDelay=(k++*0.07)+'s'; f.appendChild(sp);
-            });
-            node.replaceChild(f,c);
-          }else if(c.nodeType===1){
-            if(c.classList&&c.classList.contains('grad')){c.classList.add('ww'); c.style.animationDelay=(k++*0.07)+'s';}
-            else w(c);
-          }
+      btn.addEventListener('click',function(){
+        var open=btn.getAttribute('aria-expanded')==='true';
+        /* one open at a time, per group */
+        items.forEach(function(other){
+          if(other===btn) return;
+          other.setAttribute('aria-expanded','false');
+          other.nextElementSibling.style.height='0px';
         });
-      })(h);
-      localStorage.setItem('cynea_seen','1');
-    }
-  }catch(e){}
+        btn.setAttribute('aria-expanded',open?'false':'true');
+        panel.style.height=open?'0px':height(panel)+'px';
+      });
+    });
+
+    /* keep the open panel correct when the text reflows */
+    addEventListener('resize',function(){
+      items.forEach(function(btn){
+        if(btn.getAttribute('aria-expanded')==='true'){
+          btn.nextElementSibling.style.height=height(btn.nextElementSibling)+'px';
+        }
+      });
+    });
+  });
 })();
+
+/* ── product screenshot carousel ──────────────────────────────────── */
+(function(){
+  var root=document.getElementById('slides');
+  if(!root) return;
+  var slides=[].slice.call(root.querySelectorAll('[data-slide]'));
+  var prev=document.getElementById('prev'),next=document.getElementById('next'),
+      count=document.getElementById('count'),
+      controls=document.getElementById('slide-controls'),i=0;
+
+  function show(n){
+    i=Math.max(0,Math.min(slides.length-1,n));
+    slides.forEach(function(s,k){ s.classList.toggle('on',k===i); });
+    /* one set of controls, re-parented into whichever slide is showing */
+    slides[i].querySelector('.slide-nav').appendChild(controls);
+    count.textContent=(i+1)+' — '+slides.length;
+    prev.disabled=i===0; next.disabled=i===slides.length-1;
+  }
+  prev.addEventListener('click',function(){ show(i-1); });
+  next.addEventListener('click',function(){ show(i+1); });
+  show(0);
+})();
+
+/* ── sample audio (recorded clip, not a live call) ────────────────── */
+(function(){
+  var btn=document.getElementById('sample'),
+      label=document.getElementById('sample-label'),
+      player=document.getElementById('player');
+  if(!btn) return;
+
+  btn.addEventListener('click',function(){
+    if(!player.paused){ player.pause(); label.textContent='Kwame · paused'; return; }
+    player.src='assets/kwame_test_1.mp3';
+    player.play().then(function(){ label.textContent='Kwame · playing'; })
+                 .catch(function(){ label.textContent='Kwame · sample unavailable'; });
+  });
+  player.addEventListener('ended',function(){ label.textContent='Kwame · 0:12'; });
+})();
+
+/* ── demo request form ─────────────────────────────────────────────
+   Deliberately inert. Wiring this up needs outbound voice (Twilio or
+   Africa's Talking), a Cloudflare Turnstile token verified server-side,
+   and per-IP / per-number rate limiting. Until all three exist this
+   neither collects nor transmits the caller's number. */
+(function(){
+  var form=document.getElementById('demo-form'),
+      msg=document.getElementById('demo-msg'),
+      sel=document.getElementById('f-use');
+  if(!form) return;
+
+  /* keep the use-case pills and the dropdown in step */
+  [].slice.call(document.querySelectorAll('input[name="usecase"]')).forEach(function(r){
+    r.addEventListener('change',function(){ if(r.checked) sel.value=r.value; });
+  });
+  sel.addEventListener('change',function(){
+    var m=document.querySelector('input[name="usecase"][value="'+sel.value+'"]');
+    if(m) m.checked=true;
+  });
+
+  form.addEventListener('submit',function(e){
+    e.preventDefault();
+    msg.textContent='Live demo calls aren’t connected yet. Book a slot and we’ll call you ourselves — calendly.com/albertmomanyi07/30min';
+    msg.classList.add('show');
+  });
+})();
+
+/* ── newsletter (no provider wired up yet) ────────────────────────── */
+(function(){
+  var f=document.getElementById('news-form'),m=document.getElementById('news-msg');
+  if(!f) return;
+  f.addEventListener('submit',function(e){
+    e.preventDefault();
+    m.textContent='Newsletter isn’t live yet — nothing was sent.';
+  });
+})();
+</script>
+
+<!-- SEO: FAQ + Organization structured data -->
+<script type="application/ld+json">
+{
+  "@context":"https://schema.org",
+  "@graph":[
+    {
+      "@type":"Organization",
+      "name":"Cynea",
+      "url":"https://cynea.ai/",
+      "description":"AI voice agents for African businesses.",
+      "areaServed":["Kenya","Nigeria","Ghana","South Africa","Uganda","Tanzania","Rwanda"]
+    },
+    {
+      "@type":"FAQPage",
+      "mainEntity":[
+        {"@type":"Question","name":"What is an AI receptionist, and how does one work in Kenya?","acceptedAnswer":{"@type":"Answer","text":"An AI receptionist answers your business line the way a trained front-desk person would. In Kenya it runs on a local number provisioned through Africa's Talking, so callers dial an ordinary Kenyan number at ordinary local rates."}},
+        {"@type":"Question","name":"Can the voice agent speak Swahili?","acceptedAnswer":{"@type":"Answer","text":"Transcription handles Swahili through Whisper. Nine voices ship today, four of them native African accents. A dedicated Swahili TTS voice is on the roadmap rather than in the product."}},
+        {"@type":"Question","name":"Which African countries can Cynea place and receive calls in?","acceptedAnswer":{"@type":"Answer","text":"Seven, via Africa's Talking: Kenya, Nigeria, Ghana, South Africa, Uganda, Tanzania and Rwanda. Anywhere else, bring your own carrier over SIP."}},
+        {"@type":"Question","name":"How do I set up automated call answering in Nairobi?","acceptedAnswer":{"@type":"Answer","text":"Provision a Nairobi number or forward your existing one, pick a persona and edit its prompt, then point the SIP endpoint at Cynea."}},
+        {"@type":"Question","name":"How fast does the agent respond?","acceptedAnswer":{"@type":"Answer","text":"The design target is roughly 600ms to first audio, streaming LLM tokens straight into the synthesiser. Turn-taking adds a 700ms grace period after you stop speaking."}},
+        {"@type":"Question","name":"Does the agent tell callers it is an AI?","acceptedAnswer":{"@type":"Answer","text":"Yes, once on the opening turn and again whenever a caller asks directly, for California SB 1001, EU AI Act Article 50 and Kenya ODPC 2024."}},
+        {"@type":"Question","name":"What happens when the AI cannot help?","acceptedAnswer":{"@type":"Answer","text":"It escalates, handing the call to a person with the full transcript attached so the caller never has to start over."}},
+        {"@type":"Question","name":"Is call data stored outside Africa?","acceptedAnswer":{"@type":"Answer","text":"It does not have to be. Whisper and Edge TTS can both run locally, so audio never leaves your stack."}}
+      ]
+    }
+  ]
+}
 </script>
 </body>
 </html>

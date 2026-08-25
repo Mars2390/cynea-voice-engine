@@ -71,7 +71,12 @@ def get_tts_provider(name: str):
 # ----------------------------------------------------------------------
 
 class MockLLM:
-    """Deterministic LLM for tests and demos.
+    """Deterministic LLM for TESTS ONLY.
+
+    Registered so the suite and offline examples can run without an API
+    key. It is never the default -- AgentConfig.llm_provider is "groq" --
+    and selecting it logs a warning, because an agent wired to this in
+    production answers every caller with a canned line.
 
     Replies with the next entry in `scripted_replies` (cycles when exhausted)
     or, if none provided, with a fixed acknowledgement. Tracks call count
@@ -88,6 +93,14 @@ class MockLLM:
         cls._scripted = list(replies)
         cls._index = 0
         cls.call_count = 0
+
+    def __init__(self):
+        import logging
+        logging.getLogger("cynea.providers").warning(
+            "llm_provider='mock' selected. This is the test double: it "
+            "returns canned text and never contacts a model. Use 'groq' "
+            "for anything a real caller will hear."
+        )
 
     async def generate(self, messages: list, system: str = "") -> str:
         type(self).last_messages = messages

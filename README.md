@@ -19,7 +19,7 @@ Honest summary, because the gap between "written" and "wired up" matters:
 | Database layer | **Working** (Neon Postgres / SQLite) |
 | HTTP API server | **Working** — auth, agents, calls, dashboard |
 | Auth (bcrypt + sessions) | **Working** |
-| Console reading live data | **Working**, with sample-data fallback |
+| Console reading live data | **Working** — real login, empty states, no sample data |
 | Telephony (Africa's Talking) | **Interface only** — no audio transport |
 | Billing, multi-tenancy beyond per-user scoping | **Not built** |
 
@@ -45,12 +45,17 @@ pytest tests/ -q            # 152 tests, ~24s, no API key or Postgres needed
 Run the whole stack:
 
 ```bash
-python -m cynea.migrate          # create tables
-python -m cynea.seed --calls 40  # demo user + 4 agents + sample history
+python -m cynea.migrate                       # create tables
+python -m cynea.seed --email you@cynea.ai     # provision the 4 agents
 uvicorn cynea.api:app --port 8000
 
-# then open dashboard.html - it signs in as demo@cynea.ai automatically
+# then open signin.html and sign in with that account
 ```
+
+The seed provisions the four personas as agents against an account you name,
+and nothing else — no demo login, no sample calls, no invented metrics. Every
+figure the console shows afterwards is one the system actually produced; with
+an empty database it shows empty states, not placeholder numbers.
 
 Talk to an agent:
 
@@ -221,7 +226,8 @@ the authenticated user — ownership is re-checked on each lookup, so another
 workspace's rows 404 even with a valid id. Interactive docs at `/docs`.
 
 ```bash
-curl -s localhost:8000/auth/login -H 'Content-Type: application/json'   -d '{"email":"demo@cynea.ai","password":"demo1234"}'
+curl -s localhost:8000/auth/login -H 'Content-Type: application/json' \
+  -d '{"email":"you@cynea.ai","password":"..."}'
 ```
 
 ### Persisting calls

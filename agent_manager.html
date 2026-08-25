@@ -199,7 +199,7 @@ table.tbl .act .btn{padding:6px 11px;font-size:12px;margin-left:6px}
         <div>
           <span class="eyebrow">Agent Manager</span>
           <h1 id="greeting">Good morning</h1>
-          <p class="sub">You have <strong>3 active agents</strong> handling calls across every market.</p>
+          <p class="sub" id="heroSub">Loading your agents…</p>
         </div>
         <button class="btn btn-dark" id="createBtn" type="button">+ Create New Agent</button>
       </div>
@@ -209,11 +209,10 @@ table.tbl .act .btn{padding:6px 11px;font-size:12px;margin-left:6px}
   <!-- 2 · KPI STRIP -->
   <section class="section">
     <div class="card kpi rv">
-      <div class="item"><span class="lbl">Total agents</span><span class="val">4</span><span class="sub">across 4 markets</span></div>
-      <div class="item"><span class="lbl"><span class="dot"></span> Active now</span><span class="val accent">3</span><span class="sub">1 ready</span></div>
-      <div class="item"><span class="lbl">Calls today</span><span class="val" id="callsKpi">247</span><span class="sub" style="color:#0F9D6E">▲ 8.4% vs yesterday</span></div>
-      <div class="item"><span class="lbl">Avg containment</span><span class="val">89%</span><span class="sub">target 80%</span></div>
-      <div class="item"><span class="lbl">Cost today</span><span class="val">$9.88</span><span class="sub">≈ 4.2¢ / call</span></div>
+      <div class="item"><span class="lbl">Total agents</span><span class="val" id="kAgents">—</span><span class="sub" id="kAgentsSub">&nbsp;</span></div>
+      <div class="item"><span class="lbl">Calls today</span><span class="val" id="kCalls">—</span><span class="sub" id="kCallsSub">&nbsp;</span></div>
+      <div class="item"><span class="lbl">Containment</span><span class="val" id="kCont">—</span><span class="sub" id="kContSub">&nbsp;</span></div>
+      <div class="item"><span class="lbl">Cost today</span><span class="val" id="kCost">—</span><span class="sub" id="kCostSub">&nbsp;</span></div>
     </div>
   </section>
 
@@ -223,7 +222,7 @@ table.tbl .act .btn{padding:6px 11px;font-size:12px;margin-left:6px}
       <div>
         <div class="sec-head rv" style="margin-bottom:18px">
           <h2>Your agents</h2>
-          <span class="note">4 agents · 3 live now</span>
+          <span class="note" id="agentsNote">&nbsp;</span>
         </div>
         <div class="agrid" id="agentGrid"></div>
       </div>
@@ -353,25 +352,35 @@ document.querySelectorAll('video').forEach(function(v){
   var p=v.play&&v.play(); if(p&&p.catch) p.catch(function(){});
 });
 
-/* ── data ── */
-var AGENTS = [
-  { name:'Kwame', role:'Hotel Receptionist', voice:'George', status:'oncall',
-    callsToday:47, containment:94, created:'Apr 12, 2026',
-    img:'assets/avatar-kwame.jpg', initial:'K', c1:'#00D4FF', c2:'#0089A8',
-    audio:'assets/kwame_test_1.mp3' },
-  { name:'Amina', role:'Customer Service', voice:'Bella', status:'oncall',
-    callsToday:38, containment:88, created:'Apr 15, 2026',
-    img:'assets/amina%20.jpg', initial:'A', c1:'#A78BFA', c2:'#7C5CFC',
-    audio:'assets/amina_test_1.mp3' },
-  { name:'Kofi', role:'Restaurant Orders', voice:'Eric', status:'oncall',
-    callsToday:33, containment:85, created:'Apr 20, 2026',
-    img:'assets/avatar-kofi.jpg', initial:'K', c1:'#34D399', c2:'#10B981',
-    audio:'assets/kofi_test_1.mp3' },
-  { name:'Maya', role:'Bookings', voice:'Aria', status:'ready',
-    callsToday:0, containment:0, created:'Apr 25, 2026',
-    img:'assets/avatar-maya.jpg', initial:'M', c1:'#FBBF24', c2:'#F59E0B',
-    audio:'assets/kofi_test_1.mp3' }
-];
+/* ── state ──────────────────────────────────────────────────────────
+   Populated from the API. There is no built-in agent list: this page
+   used to ship four hardcoded agents with invented call counts and a
+   timer that incremented them, which read as live traffic on a system
+   that had never taken a call. */
+var AGENTS = [];
+
+var API = {
+  base: (localStorage.getItem('cynea_api') || 'http://127.0.0.1:8000').replace(/\/$/, ''),
+  token: localStorage.getItem('cynea_token') || '',
+  get: function(path){
+    return fetch(this.base + path, {
+      headers: {Authorization: 'Bearer ' + this.token}
+    }).then(function(r){
+      if(r.status === 401) throw new Error('unauthorised');
+      if(!r.ok) throw new Error(path + ' -> ' + r.status);
+      return r.json();
+    });
+  }
+};
+
+/* Persona presentation details. The database stores which persona an
+   agent uses; these are the colours and clips the cards render with. */
+var PERSONA_UI = {
+  kwame: {c1:'#00D4FF', c2:'#0089A8', img:'assets/avatar-kwame.jpg', audio:'assets/kwame_test_1.mp3'},
+  amina: {c1:'#A78BFA', c2:'#7C5CFC', img:'assets/avatar-amina.jpg', audio:'assets/amina_test_1.mp3'},
+  kofi:  {c1:'#34D399', c2:'#10B981', img:'assets/avatar-kofi.jpg',  audio:'assets/kofi_test_1.mp3'},
+  maya:  {c1:'#FBBF24', c2:'#F59E0B', img:'assets/avatar-maya.jpg',  audio:'assets/amina_test_1.mp3'}
+};
 
 function avatarHTML(a){
   if(a.img){
@@ -395,11 +404,27 @@ function statusPill(s){
 })();
 
 /* ── render agent cards ── */
-(function renderCards(){
+function renderCards(){
   var grid=document.getElementById('agentGrid'); if(!grid) return;
+
+  if(!AGENTS.length){
+    grid.innerHTML =
+      '<article class="card" style="grid-column:1/-1;text-align:center;padding:56px 28px">'
+      + '<h3 style="margin:0 0 8px;font-size:19px">No agents yet</h3>'
+      + '<p style="margin:0 0 20px;color:var(--muted);font-size:14.5px">'
+      + 'Create your first voice agent to start taking calls.</p>'
+      + '<button class="btn btn-dark" type="button" id="emptyCreate">'
+      + '+ Create your first agent</button></article>';
+    var ec=document.getElementById('emptyCreate');
+    if(ec) ec.addEventListener('click',function(){
+      document.getElementById('createBtn').click();
+    });
+    return;
+  }
+
   var html='';
   AGENTS.forEach(function(a,i){
-    var cont = a.containment ? a.containment+'%' : '—';
+    var cont = (a.containment === null || a.containment === undefined) ? '—' : a.containment+'%';
     var toggleLabel = a.status==='paused' ? 'Resume' : 'Pause';
     html +=
       '<article class="card acard" data-i="'+i+'" style="--c1:'+a.c1+';--c2:'+a.c2+'">'
@@ -420,10 +445,10 @@ function statusPill(s){
       + '</article>';
   });
   grid.innerHTML=html;
-})();
+}
 
 /* ── render table ── */
-(function renderTable(){
+function renderTable(){
   var body=document.getElementById('tableBody'); if(!body) return;
   var html='';
   AGENTS.forEach(function(a,i){
@@ -442,7 +467,7 @@ function statusPill(s){
       + '</tr>';
   });
   body.innerHTML=html;
-})();
+}
 
 /* ── audio playback (shared player) ── */
 (function(){
@@ -557,17 +582,82 @@ function showToast(msg){
   upd();
 })();
 
-/* ── gentle live "calls today" ticker (cosmetic) ── */
-(function(){
-  var el=document.getElementById('callsKpi'); if(!el) return;
-  if(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-  var n=247;
-  setInterval(function(){
-    n+=1; el.textContent=n.toLocaleString();
-    el.style.transition='color .3s'; el.style.color='#0F9D6E';
-    setTimeout(function(){ el.style.color=''; },600);
-  }, 9000);
-})();
+/* ── load real data ─────────────────────────────────────────────────
+   The KPI strip used to tick "calls today" upward every nine seconds on
+   a system that had never taken a call. Now every figure is fetched, and
+   an em-dash means no data rather than a number standing in for one. */
+function setText(id, value){
+  var el = document.getElementById(id);
+  if(el) el.textContent = value;
+}
+
+function applyStats(stats, agents){
+  var k = stats.kpis;
+  setText('kAgents', agents.length);
+  setText('kAgentsSub', agents.length === 1 ? '1 configured' : agents.length + ' configured');
+  setText('kCalls', k.calls_today);
+  setText('kCallsSub', k.calls_today ? 'today' : 'no calls yet');
+  setText('kCont', k.calls_today ? k.containment_pct + '%' : '—');
+  setText('kContSub', k.calls_today ? 'resolved without a human' : 'awaiting first call');
+  setText('kCost', k.calls_today ? '$' + (k.cost_today_cents / 100).toFixed(2) : '—');
+  setText('kCostSub', k.calls_today ? '$' + k.cost_per_call.toFixed(2) + ' / call' : 'no spend yet');
+
+  setText('heroSub', agents.length
+    ? 'You have ' + agents.length + (agents.length === 1 ? ' agent' : ' agents') + ' configured.'
+    : 'No agents yet — create your first to start taking calls.');
+  setText('agentsNote', agents.length
+    ? agents.length + (agents.length === 1 ? ' agent' : ' agents')
+    : '');
+}
+
+function boot(){
+  if(!API.token){
+    location.replace('signin.html?next=agent_manager.html');
+    return;
+  }
+  renderCards();      /* empty state while the request is in flight */
+
+  Promise.all([API.get('/agents'), API.get('/dashboard/stats')])
+    .then(function(res){
+      var agents = res[0], stats = res[1];
+      var perAgent = {};
+      (stats.agents || []).forEach(function(a){ perAgent[a.persona] = a; });
+
+      AGENTS = agents.map(function(a){
+        var ui = PERSONA_UI[a.persona] || {};
+        var live = perAgent[a.persona] || {};
+        return {
+          id: a.id,
+          name: a.persona.charAt(0).toUpperCase() + a.persona.slice(1),
+          role: a.role || a.name,
+          voice: (a.voice_config || {}).voice || '',
+          status: 'ready',
+          callsToday: live.calls_today || 0,
+          containment: null,          /* per-agent containment is not computed yet */
+          created: a.created_at ? a.created_at.slice(0, 10) : '',
+          img: ui.img, audio: ui.audio,
+          initial: a.persona.charAt(0).toUpperCase(),
+          c1: ui.c1 || '#00D4FF', c2: ui.c2 || '#0089A8'
+        };
+      });
+
+      applyStats(stats, AGENTS);
+      renderCards();
+      if(typeof renderTable === 'function') renderTable();
+    })
+    .catch(function(err){
+      if(String(err.message) === 'unauthorised'){
+        localStorage.removeItem('cynea_token');
+        location.replace('signin.html?next=agent_manager.html');
+        return;
+      }
+      setText('heroSub', 'Cannot reach the API at ' + API.base +
+                         ' — start it with: uvicorn cynea.api:app --port 8000');
+      console.warn('cynea:', err);
+    });
+}
+
+boot();
 </script>
 </body>
 </html>

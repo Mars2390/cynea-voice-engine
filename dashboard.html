@@ -427,7 +427,7 @@ table.hist tbody tr:hover{background:var(--panel);cursor:pointer}
         <span>Build</span>
         <a class="nav-item" href="#/agents">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4.5 21c0-4.1 3.4-7.5 7.5-7.5s7.5 3.4 7.5 7.5"/></svg>
-          Agents <span class="cnt tnum">4</span>
+          Agents <span class="cnt tnum" id="navAgents"></span>
         </a>
         <a class="nav-item" href="#/knowledge">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 5.5A1.5 1.5 0 0 1 5.5 4H11v16H5.5A1.5 1.5 0 0 1 4 18.5z"/><path d="M20 5.5A1.5 1.5 0 0 0 18.5 4H13v16h5.5a1.5 1.5 0 0 0 1.5-1.5z"/></svg>
@@ -493,8 +493,11 @@ table.hist tbody tr:hover{background:var(--panel);cursor:pointer}
         <span class="gs-row"><b>Getting started</b><span id="gsCount">0/6</span></span>
         <span class="gs-track"><span class="gs-fill" id="gsFill"></span></span>
       </button>
-      <p class="trial"><i aria-hidden="true"></i>Free trial · 14 days left</p>
-      <p class="who">cyneahub@gmail.com</p>
+      <p class="trial"><i aria-hidden="true"></i>Free trial</p>
+      <p class="who" id="whoEmail"></p>
+      <button class="gs" id="signOut" type="button" style="margin-top:8px;padding:7px 10px">
+        <span style="font-size:12px;font-weight:500">Sign out</span>
+      </button>
     </div>
   </aside>
 
@@ -773,7 +776,7 @@ table.hist tbody tr:hover{background:var(--panel);cursor:pointer}
       </div>
     </div>
 
-    <!-- ── PLACEHOLDER ROUTES ────────────────────────────────────── -->
+    <!-- ── ROUTES WITHOUT A SCREEN YET ────────────────────────────── -->
     <div class="view" id="v-stub" hidden>
       <header class="bar">
         <button class="hamb" type="button" data-hamb aria-label="Open navigation">
@@ -853,128 +856,22 @@ table.hist tbody tr:hover{background:var(--panel);cursor:pointer}
    toolbar says so — the point of the shell is the structure, not the
    figures. Real values that DO come from the repo are marked.
    ═══════════════════════════════════════════════════════════════════ */
-var AGENTS={
-  kwame:{name:'Kwame',role:'Hotel Receptionist',place:'Ghana',photo:'avatar-kwame',
-         clip:'kwame_test_1',voice:'ElevenLabs George',ver:'v12',cost:'$0.04',
-         prompt:'# Kwame — Adinkra Hotel, Accra\n\n## Identity\nYou are Kwame, front desk at Adinkra Hotel in Accra, Ghana.\nEarly thirties. Warm, brief, comfortable with silence.\nYou are *not* an IVR and you do not sound like one.\n\n## Disclosure\nState that you are an AI assistant **once**, on the opening turn,\nin your own register. Repeat it only if the caller asks directly.\nNever use it as a recurring disclaimer — that is a robotic tell.\n\n## Style\n- One idea per turn. Under 25 words where you can.\n- Under-promise. "Let me check" beats a confident wrong answer.\n- Ghanaian English register. Do not perform an accent.\n\n## Tasks\n1. Availability and rates\n2. Bookings, changes, cancellations\n3. Restaurant hours and small talk\n\n## Escalation\nComplaints, or two failed repair attempts, hand to a human\nwith the transcript attached.'},
-  amina:{name:'Amina',role:'Bank Support',place:'Kenya',photo:'avatar-amina',
-         clip:'amina_test_1',voice:'Edge TTS · en-GB-SoniaNeural',ver:'v8',cost:'$0.03',
-         prompt:'# Amina — Bank Support, Nairobi\n\n## Identity\nYou handle payments, billing and plan questions for a Kenyan bank.\nCalm, precise, never breezy about money.\n\n## Disclosure\nOnce, on the opening turn. Kenya ODPC 2024 applies.\n\n## Hard rules\n- Never read a full account number back.\n- Never guess a balance or a fee. Check or escalate.\n- Escalate any dispute or fraud claim immediately.'},
-  kofi:{name:'Kofi',role:'Restaurant Orders',place:'Ghana',photo:'avatar-kofi',
-        clip:'kofi_test_1',voice:'Edge TTS · en-GB-RyanNeural',ver:'v5',cost:'$0.03',
-        prompt:'# Kofi — Restaurant Orders\n\n## Identity\nYou take dine-in, takeaway and delivery orders.\nFast, friendly, and you always read the order back.\n\n## Must do\n- Ask about allergies before confirming.\n- Read the full order and the total back before payment.\n- Confirm the delivery address twice.'},
-  maya:{name:'Maya',role:'Bookings & Scheduling',place:'Pan-African',photo:'avatar-maya',
-        clip:'amina_test_1',voice:'Edge TTS · en-US-AriaNeural',ver:'v3',cost:'$0.04',
-        prompt:'# Maya — Bookings & Scheduling\n\n## Identity\nYou book, reschedule and remind, across time zones.\n\n## Must do\n- Always confirm the time zone out loud.\n- Offer two concrete slots, never "when suits you?".\n- Send a confirmation before ending the call.'}
-};
-
-var KPIS=[
-  {label:'Calls today',value:'247',delta:'+12%',dir:'up',since:'vs yesterday',
-   spark:[14,18,16,22,27,31,28,34,39,36,42,47]},
-  {label:'Containment rate',value:'84%',delta:'−2 pts',dir:'down',since:'vs last week',
-   spark:[88,87,89,86,85,87,86,84,85,83,84,84]},
-  {label:'Cost per call',value:'$0.19',delta:'−6%',dir:'up',since:'vs last week',
-   spark:[24,23,23,22,22,21,21,20,20,19,19,19]},
-  {label:'Cost saved this month',value:'$1,240',delta:'+18%',dir:'up',since:'vs last month',
-   spark:[120,240,360,470,590,700,820,930,1010,1100,1180,1240]}
-];
-
-var QUEUE=[
-  {num:'+233 24 ••• 4417',cat:'Room availability',wait:'0:12',agent:'Kwame'},
-  {num:'+254 71 ••• 9032',cat:'Card declined',    wait:'0:38',agent:'Amina'},
-  {num:'+233 20 ••• 7781',cat:'Takeaway order',   wait:'0:51',agent:'Kofi'},
-  {num:'+254 72 ••• 1164',cat:'Reschedule',       wait:'1:24',agent:'Maya'},
-  {num:'+234 80 ••• 5520',cat:'Billing dispute',  wait:'2:47',agent:'Amina',hot:true},
-  {num:'+233 27 ••• 3308',cat:'Late checkout',    wait:'3:06',agent:'Kwame',hot:true}
-];
-
-var STATUS={kwame:{on:true,timer:'02:14'},amina:{on:true,timer:'00:47'},
-            kofi:{on:true,timer:'01:03'},maya:{on:false,timer:'—'}};
-
-var VOLUME=[
-  {h:'08',v:9},{h:'09',v:14},{h:'10',v:21},{h:'11',v:26},{h:'12',v:31},{h:'13',v:24},
-  {h:'14',v:28},{h:'15',v:34},{h:'16',v:29},{h:'17',v:19},{h:'18',v:8},{h:'19',v:4}
-];
-var SENT=[
-  {h:'08',v:.42},{h:'09',v:.51},{h:'10',v:.47},{h:'11',v:.58},{h:'12',v:.36},{h:'13',v:.29},
-  {h:'14',v:.44},{h:'15',v:.52},{h:'16',v:.61},{h:'17',v:.55},{h:'18',v:.63},{h:'19',v:.68}
-];
-/* four clearly-separated magnitudes — a donut is wrong for close values */
-var COST=[
-  {k:'Telephony',v:21.40},{k:'Speech-to-text',v:12.85},
-  {k:'LLM tokens',v:7.60},{k:'Text-to-speech',v:4.05}
-];
-var CONTAIN={value:84,goal:90};
-
-var CALLS=[
-  {id:'c1',t:'14:38',ag:'kwame',caller:'+233 24 ••• 4417',dur:'1:19',out:'Booking confirmed',st:'ok',
-   sent:'+0.62 positive',cost:'$0.05',
-   sum:'The customer called about availability for a double room on the 14th and 15th of August. Kwame confirmed one room at the standard rate, took the booking under the name Ama Mensah, and read the total back before ending the call. No escalation was needed.',
-   turns:[['0:00','agent','Adinkra Hotel, this is Kwame — I should mention I’m an AI assistant. How can I help?'],
-          ['0:06','caller','Hi, do you have a double room free on the fourteenth?'],
-          ['0:11','agent','Let me check. … Yes, we have one double for the fourteenth and fifteenth.'],
-          ['0:21','caller','Perfect. How much for the two nights?'],
-          ['0:25','agent','Nine hundred and sixty cedis total, breakfast included.'],
-          ['0:33','caller','Go ahead and book it. Ama Mensah.'],
-          ['0:39','agent','Booked — Ama Mensah, double room, the fourteenth and fifteenth, nine sixty total. You’ll get an SMS shortly.'],
-          ['0:58','caller','Lovely, thank you.'],
-          ['1:02','agent','Enjoy your stay. Goodbye.']],
-   fields:[['Name','Ama Mensah'],['Date','14–15 Aug 2026'],['Room type','Double'],['Price','GHS 960.00']]},
-
-  {id:'c2',t:'14:31',ag:'amina',caller:'+254 71 ••• 9032',dur:'2:44',out:'Escalated to human',st:'warn',
-   sent:'−0.31 negative',cost:'$0.09',
-   sum:'The customer called about a declined card on a recurring payment. Amina verified the account holder, could not determine why the payment failed, and escalated to the payments team with the transcript attached after the second failed repair attempt.',
-   turns:[['0:00','agent','Thanks for calling — I’m Amina, an AI assistant on the support line. How can I help?'],
-          ['0:07','caller','My card keeps getting declined and I don’t know why.'],
-          ['0:13','agent','I’m sorry about that. Can you confirm the last four digits for me?'],
-          ['0:22','caller','Four four one seven.'],
-          ['0:27','agent','Thank you. I can see the attempt but not the decline reason — that sits with the payments team.'],
-          ['0:44','caller','So you can’t help me.'],
-          ['0:47','agent','Not on this one, and I’d rather not guess. I’m putting you through to someone who can see the reason.'],
-          ['1:02','caller','Fine.'],
-          ['1:04','agent','Connecting you now — they’ll have this conversation in front of them.']],
-   fields:[['Name','Not captured'],['Card (last 4)','4417'],['Reason code','Unavailable'],['Escalated to','Payments team']]},
-
-  {id:'c3',t:'14:22',ag:'kofi',caller:'+233 20 ••• 7781',dur:'1:52',out:'Order placed',st:'ok',
-   sent:'+0.48 positive',cost:'$0.06',
-   sum:'The customer called about a takeaway order. Kofi took two jollof plates and one grilled tilapia, checked for allergies, read the order and total back, and confirmed the pickup time.',
-   turns:[['0:00','agent','Good evening, this is Kofi — an AI assistant taking orders. What can I get you?'],
-          ['0:08','caller','Two jollof and one tilapia, for pickup.'],
-          ['0:14','agent','Any allergies I should flag to the kitchen?'],
-          ['0:19','caller','No, none.'],
-          ['0:22','agent','That’s two jollof plates and one grilled tilapia — two hundred and ten cedis. Ready in twenty-five minutes.'],
-          ['0:38','caller','Great, see you then.']],
-   fields:[['Name','Not captured'],['Items','2× Jollof, 1× Tilapia'],['Total','GHS 210.00'],['Pickup','25 min']]},
-
-  {id:'c4',t:'14:09',ag:'maya',caller:'+254 72 ••• 1164',dur:'0:38',out:'Caller hung up',st:'bad',
-   sent:'−0.12 neutral',cost:'$0.02',
-   sum:'The caller asked to move an appointment, then hung up while Maya was confirming the time zone. No change was made and no confirmation was sent.',
-   turns:[['0:00','agent','Hello, this is Maya, an AI assistant. How can I help?'],
-          ['0:06','caller','I need to move my Thursday appointment.'],
-          ['0:10','agent','Of course. Just to be sure — is that East Africa Time?'],
-          ['0:18','caller','[call ended]']],
-   fields:[['Name','Not captured'],['Date','Not captured'],['Action','None — abandoned'],['Confirmation','Not sent']]},
-
-  {id:'c5',t:'13:54',ag:'kwame',caller:'+233 27 ••• 3308',dur:'2:07',out:'Late checkout granted',st:'ok',
-   sent:'+0.55 positive',cost:'$0.06',
-   sum:'The customer called about a late checkout for room 214. Kwame confirmed availability, granted a 2pm checkout at no charge, and logged the note against the reservation.',
-   turns:[['0:00','agent','Adinkra Hotel, Kwame speaking — and I’m an AI assistant. How can I help?'],
-          ['0:07','caller','Can I keep room two-fourteen until two?'],
-          ['0:13','agent','Let me look. … Yes, two o’clock is fine, no charge.'],
-          ['0:26','caller','Brilliant, thanks.'],
-          ['0:29','agent','I’ve noted it on your reservation. Anything else?']],
-   fields:[['Name','Room 214'],['Date','Today'],['Room type','Standard'],['Price','No charge']]},
-
-  {id:'c6',t:'13:41',ag:'amina',caller:'+234 80 ••• 5520',dur:'3:12',out:'Escalated to human',st:'warn',
-   sent:'−0.44 negative',cost:'$0.11',
-   sum:'The customer called about a duplicate charge on a billing statement. Amina confirmed two identical charges existed, declined to issue a refund herself, and escalated to billing with the transcript.',
-   turns:[['0:00','agent','Support line, Amina here — an AI assistant. How can I help?'],
-          ['0:07','caller','I’ve been charged twice for the same thing.'],
-          ['0:12','agent','I can see two identical charges on the same day. That shouldn’t happen.'],
-          ['0:31','caller','So refund one.'],
-          ['0:33','agent','A refund needs a person to approve it. I’m handing you to billing now with this in front of them.']],
-   fields:[['Name','Not captured'],['Charges','2 × NGN 8,500'],['Action','Refund requested'],['Escalated to','Billing']]}
-];
+/* ═══════════════════════════════════════════════════════════════════
+   STATE
+   Empty until the API answers. There is no built-in sample data: a
+   console that invents numbers when it cannot reach the database is
+   worse than one that says so, because the reader cannot tell which
+   figures are real.
+   ═══════════════════════════════════════════════════════════════════ */
+var AGENTS = {};      /* persona -> {name, role, place, photo, id, ...}  */
+var STATUS = {};      /* persona -> {on, timer}                          */
+var KPIS   = [];
+var QUEUE  = [];
+var VOLUME = [];
+var SENT   = [];
+var COST   = [];
+var CONTAIN = {value: 0, goal: 90};
+var CALLS  = [];
 
 /* ═══════════════════════════════════════════════════════════════════
    HELPERS
@@ -1029,6 +926,16 @@ function sparkline(vals){
     '<circle cx="'+pts[pts.length-1][0]+'" cy="'+pts[pts.length-1][1]+'" r="2.4" fill="var(--viz-solo)"/></svg>';
 }
 function renderKpis(){
+  if(!KPIS.length){
+    $('#kpis').innerHTML=['Calls today','Containment rate','Cost per call','Cost this week']
+      .map(function(label){
+        return '<div class="kpi"><span class="lbl">'+label+'</span>'+
+               '<div class="kpi-v" style="color:var(--line-2)">—</div>'+
+               '<div class="kpi-foot"><span class="delta" style="color:var(--muted)">'+
+               'No calls yet</span></div></div>';
+      }).join('');
+    return;
+  }
   $('#kpis').innerHTML=KPIS.map(function(k){
     return '<div class="kpi"><span class="lbl">'+esc(k.label)+'</span>'+
       '<div class="kpi-v">'+esc(k.value)+'</div>'+
@@ -1072,7 +979,21 @@ function renderQueue(){
    RENDER · agent status cards
    ═══════════════════════════════════════════════════════════════════ */
 function renderAgents(){
-  $('#agentCards').innerHTML=Object.keys(AGENTS).map(function(k){
+  var keys=Object.keys(AGENTS);
+  var navA=$('#navAgents'); if(navA) navA.textContent=keys.length||'';
+  if(!keys.length){
+    $('#agentCards').innerHTML=
+      '<div style="grid-column:1/-1;border:1px dashed var(--line);border-radius:var(--r);'+
+      'padding:44px 24px;text-align:center;background:var(--bg)">'+
+      '<div style="font-size:15px;font-weight:600">No agents yet</div>'+
+      '<p style="font-size:13px;color:var(--muted);margin:6px 0 16px">'+
+      'Create your first voice agent to start taking calls.</p>'+
+      '<button class="btn btn-primary" type="button" id="emptyCreate">Create Agent</button></div>';
+    var ec=$('#emptyCreate');
+    if(ec) ec.addEventListener('click',function(){ $('#createAgent').click(); });
+    return;
+  }
+  $('#agentCards').innerHTML=keys.map(function(k){
     var a=AGENTS[k],s=STATUS[k];
     return '<button class="acard" type="button" data-agent="'+k+'">'+
       '<span class="acard-top">'+pic(a.photo,'',a.name,240)+
@@ -1089,7 +1010,15 @@ function renderAgents(){
    2px surface gap between neighbours. Peak labelled; the rest read off
    the axis or the tooltip, and the table view carries every value.
    ═══════════════════════════════════════════════════════════════════ */
+function emptyPlot(el,label){
+  el.innerHTML='<div style="height:190px;display:grid;place-items:center;'+
+    'font-size:13px;color:var(--muted);border:1px dashed var(--line);'+
+    'border-radius:8px">'+label+'</div>';
+}
+
 function renderVolume(){
+  if(VOLUME.length<2){ emptyPlot($('#plotVolume'),'No calls yet today'); 
+    $('#tblVolume').innerHTML=''; return; }
   var W=560,H=190,padL=30,padB=26,padT=16,
       plotW=W-padL-8,plotH=H-padB-padT,
       max=40,peak=VOLUME.reduce(function(a,b){return b.v>a.v?b:a;}),
@@ -1136,6 +1065,8 @@ function renderVolume(){
    endpoint labelled only. Crosshair + tooltip on hover.
    ═══════════════════════════════════════════════════════════════════ */
 function renderSent(){
+  if(SENT.length<2){ emptyPlot($('#plotSent'),'No sentiment data yet');
+    $('#tblSent').innerHTML=''; return; }
   var W=420,H=190,padL=32,padB=26,padT=16,
       plotW=W-padL-14,plotH=H-padB-padT,
       lo=-1,hi=1,
@@ -1195,6 +1126,11 @@ function renderSent(){
    is also the contrast relief the validator asks for on slots 2 and 4.
    ═══════════════════════════════════════════════════════════════════ */
 function renderDonut(){
+  if(!COST.length){
+    emptyPlot($('#plotDonut'),'No spend yet');
+    $('#donutLegend').innerHTML='';
+    return;
+  }
   var total=COST.reduce(function(a,b){return a+b.v;},0),
       R=54,C=2*Math.PI*R,GAP=2,off=0,
       hues=['var(--viz-1)','var(--viz-2)','var(--viz-3)','var(--viz-4)'],
@@ -1235,6 +1171,13 @@ function renderDonut(){
    across the whole bar rather than fill-vs-gray.
    ═══════════════════════════════════════════════════════════════════ */
 function renderMeter(){
+  if(!CALLS.length && !CONTAIN.value){
+    $('#cmVal').innerHTML='<span style="color:var(--line-2)">—</span>';
+    $('#cmFill').style.width='0%';
+    $('#cmGoal').style.left=CONTAIN.goal+'%';
+    $('#cmGoalLbl').textContent='Target '+CONTAIN.goal+'%';
+    return;
+  }
   $('#cmVal').textContent=CONTAIN.value+'%';
   $('#cmFill').style.width=CONTAIN.value+'%';
   $('#cmGoal').style.left=CONTAIN.goal+'%';
@@ -1245,6 +1188,14 @@ function renderMeter(){
    RENDER · call history
    ═══════════════════════════════════════════════════════════════════ */
 function renderHistory(){
+  if(!CALLS.length){
+    $('#histBody').innerHTML=
+      '<tr><td colspan="6"><div style="padding:40px 16px;text-align:center">'+
+      '<div style="font-size:14px;font-weight:500">No calls yet</div>'+
+      '<p style="font-size:13px;color:var(--muted);margin-top:5px">'+
+      'Calls appear here as soon as an agent answers one.</p></div></td></tr>';
+    return;
+  }
   $('#histBody').innerHTML=CALLS.map(function(c){
     var a=AGENTS[c.ag];
     return '<tr tabindex="0" role="button" data-call="'+c.id+'" aria-label="Call at '+c.t+' with '+a.name+'">'+
@@ -1525,6 +1476,11 @@ document.addEventListener('click',function(e){
 });
 ovl.addEventListener('click',closeSide);
 
+(function(){
+  var b=document.getElementById('signOut');
+  if(b) b.addEventListener('click', signOut);
+})();
+
 /* getting-started meter (0/6 as specified) */
 (function(){
   var done=0,total=6;
@@ -1549,11 +1505,11 @@ ovl.addEventListener('click',closeSide);
 
 /* ═══════════════════════════════════════════════════════════════════
    API LAYER
-   The constants above are the fallback, not the source of truth. On load
-   we try the API; if it answers we overwrite them with real rows and
-   re-render. If it does not — no server running, no token, Neon asleep —
-   the console still works on sample data and says so in the toolbar.
-   Never a blank screen because a fetch failed.
+   The database is the only source of figures. On load we fetch; if the
+   API answers, the state above is filled in and the view re-renders. If
+   it does not — server down, session expired, Neon asleep — the console
+   keeps its empty states and the toolbar says Disconnected. It never
+   substitutes numbers for the ones it could not fetch.
    ═══════════════════════════════════════════════════════════════════ */
 var API = {
   base: (localStorage.getItem('cynea_api') || 'http://127.0.0.1:8000').replace(/\/$/, ''),
@@ -1594,7 +1550,10 @@ function setBadge(live, detail){
       text  = document.getElementById('dataBadgeText');
   if(!badge) return;
   badge.classList.toggle('live', !!live);
-  text.textContent = live ? 'Live data' : 'Sample data';
+  /* Two honest states only: connected to the database, or not. There is
+     no third "sample data" mode any more, because there is no sample
+     data to fall back to. */
+  text.textContent = live ? 'Connected' : 'Disconnected';
   badge.title = detail;
 }
 
@@ -1621,10 +1580,14 @@ function applyStats(stats){
   /* A chart needs at least two points to draw a line. With one hour of
      data so far today, pad rather than render a degenerate axis. */
   VOLUME = stats.volume.length >= 2 ? stats.volume
-         : stats.volume.concat([{h:'--', v:0}]);
+         : (stats.volume.length ? stats.volume.concat([{h:'--', v:0}]) : []);
+  /* One real point is padded so the line has somewhere to go. Zero real
+     points stays empty: a flat line at 0 would read as "we measured, and
+     it was neutral". */
   SENT   = stats.sentiment.length >= 2 ? stats.sentiment
-         : (stats.sentiment.length ? stats.sentiment.concat([{h:'--', v:stats.sentiment[0].v}])
-                                   : [{h:'--',v:0},{h:'--',v:0}]);
+         : (stats.sentiment.length
+              ? stats.sentiment.concat([{h:'--', v:stats.sentiment[0].v}])
+              : []);
 
   if(stats.cost_breakdown && stats.cost_breakdown.length){
     COST = stats.cost_breakdown;
@@ -1756,9 +1719,25 @@ function loadLive(){
   });
 }
 
+function signOut(){
+  localStorage.removeItem('cynea_token');
+  localStorage.removeItem('cynea_email');
+  location.replace('signin.html?next=dashboard.html');
+}
+
 function boot(){
-  renderAll();
+  renderAll();          /* paints empty states while the fetch is in flight */
   route();
+
+  var whoEl = document.querySelector('.who');
+  if(whoEl) whoEl.textContent = localStorage.getItem('cynea_email') || '';
+
+  /* No session, no console. This used to sign itself in as a seeded demo
+     account, which meant anyone opening the file saw somebody's data. */
+  if(!API.token){
+    location.replace('signin.html?next=dashboard.html');
+    return;
+  }
 
   /* Health first: it is cheap, and it separates "server is down" from
      "your session expired", which need different fixes. */
@@ -1767,20 +1746,21 @@ function boot(){
     return r.json();
   }).then(function(h){
     if(!h.database) throw new Error('database unreachable');
-    if(API.token) return loadLive();
-
-    /* No token. The demo workspace is seeded, so sign in with it rather
-       than leaving the console empty. Replace with a real login screen
-       when signin.html is wired up (gap BE-3). */
-    return API.login('demo@cynea.ai', 'demo1234').then(loadLive);
+    return loadLive();
   }).catch(function(err){
     API.live = false;
     var why = String(err.message || err);
-    if(/Failed to fetch|NetworkError|health/.test(why)){
-      why = 'API not reachable at ' + API.base + ' - start it with: uvicorn cynea.api:app --port 8000';
+
+    if(/ -> 401/.test(why)){
+      signOut();                        /* expired or revoked session */
+      return;
     }
-    setBadge(false, 'Showing sample data. ' + why);
-    console.warn('cynea: falling back to sample data -', why);
+    if(/Failed to fetch|NetworkError|health/.test(why)){
+      why = 'API not reachable at ' + API.base +
+            ' - start it with: uvicorn cynea.api:app --port 8000';
+    }
+    setBadge(false, why);
+    console.warn('cynea:', why);
   });
 }
 

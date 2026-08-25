@@ -113,7 +113,7 @@ class CyneaEngine:
         *,
         synthesize: bool = True,
         agent_id: Optional[str] = None,
-        caller_number: str = "test",
+        caller_number: str = "unknown",
         persist: bool = True,
     ):
         """
@@ -128,7 +128,10 @@ class CyneaEngine:
                 transports, transcript replays) without paying for TTS.
             agent_id: the database row this call belongs to. Without it
                 nothing is persisted — there is nowhere to attach the call.
-            caller_number: the number on the other end, from telephony.
+            caller_number: the number on the other end, supplied by the
+                telephony layer. Defaults to "unknown" rather than a
+                stand-in like "test", so a call recorded without one is
+                visibly missing it instead of looking like a real number.
             persist: set False to keep a call entirely out of the database
                 (previews, evaluation runs, tests).
         """

@@ -75,7 +75,8 @@ class AgentUpdate(BaseModel):
 
 class CallIn(BaseModel):
     agent_id: str
-    caller_number: str = "test"
+    caller_number: str = Field(..., min_length=1,
+                               description="Caller's number from the telephony layer")
     duration_s: int = 0
     transcript: str = ""
     sentiment_score: Optional[float] = Field(None, ge=-1.0, le=1.0)

@@ -55,6 +55,9 @@ h1,h2,h3{letter-spacing:-.02em;font-weight:600;margin:0}.muted{color:var(--muted
 .divider{display:flex;align-items:center;gap:12px;margin:24px 0}
 .divider::before,.divider::after{content:"";flex:1;height:1px;background:var(--line)}
 .divider span{font-family:'JetBrains Mono',monospace;font-size:11px;text-transform:uppercase;letter-spacing:.12em;color:var(--faint)}
+.msg{min-height:20px;margin:14px 0 0;font-size:13.5px;color:var(--muted);text-align:center}
+.msg.err{color:#B42318}
+.msg.ok{color:#067647}
 
 /* ── google btn ──────────────────────────────────────────────── */
 .btn-google{width:100%;gap:10px;font-weight:500;padding:12px 18px}
@@ -94,24 +97,14 @@ h1,h2,h3{letter-spacing:-.02em;font-weight:600;margin:0}.muted{color:var(--muted
         <label class="label" for="password">Password</label>
         <input class="input" id="password" type="password" name="password" placeholder="••••••••" autocomplete="current-password" required>
       </div>
-      <button class="btn btn-dark btn-submit" type="submit">Sign in</button>
+      <button class="btn btn-dark btn-submit" id="submitBtn" type="submit">Sign in</button>
     </form>
 
-    <div class="divider"><span>or continue with</span></div>
-
-    <button id="googleBtn" class="btn btn-google" type="button">
-      <svg viewBox="0 0 18 18" aria-hidden="true">
-        <path fill="#4285F4" d="M17.64 9.2c0-.64-.06-1.25-.16-1.84H9v3.49h4.84a4.14 4.14 0 0 1-1.79 2.71v2.26h2.9c1.7-1.56 2.69-3.86 2.69-6.62z"/>
-        <path fill="#34A853" d="M9 18c2.43 0 4.47-.8 5.96-2.18l-2.9-2.26c-.8.54-1.83.86-3.06.86-2.35 0-4.34-1.59-5.05-3.72H.96v2.34A9 9 0 0 0 9 18z"/>
-        <path fill="#FBBC05" d="M3.95 10.7a5.41 5.41 0 0 1 0-3.4V4.96H.96a9 9 0 0 0 0 8.08l2.99-2.34z"/>
-        <path fill="#EA4335" d="M9 3.58c1.32 0 2.5.45 3.44 1.35l2.58-2.58A9 9 0 0 0 .96 4.96L3.95 7.3C4.66 5.17 6.65 3.58 9 3.58z"/>
-      </svg>
-      Sign in with Google
-    </button>
+    <p class="msg" id="msg" role="status" aria-live="polite"></p>
 
     <p class="aside">
       Don't have an account?
-      <a href="index.html#agents">Request access</a>
+      <a href="index.html#try-demo">Request access</a>
     </p>
   </article>
 
@@ -120,20 +113,75 @@ h1,h2,h3{letter-spacing:-.02em;font-weight:600;margin:0}.muted{color:var(--muted
 
 <script>
 'use strict';
-// Demo wiring — both the form submit and the Google button take the user
-// straight to the agent manager. No real authentication happens here; a
-// production deployment would replace these with a real OAuth + session flow.
-function go(){ window.location.href = 'agent_manager.html'; }
 
-var form = document.getElementById('signin-form');
-if (form) {
-  form.addEventListener('submit', function(e){
-    e.preventDefault();
-    go();
-  });
+/* Real authentication against POST /auth/login. This page used to call a
+   go() helper that redirected to the agent manager without checking
+   anything, which meant the URL alone was the credential. */
+
+var API_BASE = (localStorage.getItem('cynea_api') || 'http://127.0.0.1:8000')
+                 .replace(/\/$/, '');
+
+var form   = document.getElementById('signin-form');
+var btn    = document.getElementById('submitBtn');
+var msg    = document.getElementById('msg');
+var NEXT   = new URLSearchParams(location.search).get('next') || 'dashboard.html';
+
+function say(text, kind){
+  msg.textContent = text;
+  msg.className = 'msg' + (kind ? ' ' + kind : '');
 }
-var googleBtn = document.getElementById('googleBtn');
-if (googleBtn) googleBtn.addEventListener('click', go);
+
+/* Already signed in? Don't make them type it again. */
+(function(){
+  var token = localStorage.getItem('cynea_token');
+  if (!token) return;
+  fetch(API_BASE + '/auth/me', {headers:{Authorization:'Bearer ' + token}})
+    .then(function(r){ if (r.ok) location.replace(NEXT); })
+    .catch(function(){ /* API down; let them sign in normally */ });
+})();
+
+form.addEventListener('submit', function(e){
+  e.preventDefault();
+  var email    = document.getElementById('email').value.trim();
+  var password = document.getElementById('password').value;
+
+  if (!email || !password){
+    say('Enter your email and password.', 'err');
+    return;
+  }
+
+  btn.disabled = true;
+  say('Signing in…');
+
+  fetch(API_BASE + '/auth/login', {
+    method: 'POST',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify({email: email, password: password})
+  })
+  .then(function(r){
+    return r.json().then(function(body){ return {ok: r.ok, status: r.status, body: body}; });
+  })
+  .then(function(res){
+    if (res.ok){
+      localStorage.setItem('cynea_token', res.body.token);
+      localStorage.setItem('cynea_email', res.body.email);
+      say('Signed in. Taking you through…', 'ok');
+      location.replace(NEXT);
+      return;
+    }
+    btn.disabled = false;
+    /* The API returns the same message for an unknown email and a wrong
+       password on purpose, so this page must not guess which it was. */
+    say(res.status === 401
+          ? 'Incorrect email or password.'
+          : (res.body.detail || 'Sign-in failed.'), 'err');
+  })
+  .catch(function(){
+    btn.disabled = false;
+    say('Cannot reach the API at ' + API_BASE +
+        '. Start it with: uvicorn cynea.api:app --port 8000', 'err');
+  });
+});
 </script>
 </body>
 </html>

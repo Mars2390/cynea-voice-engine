@@ -516,10 +516,10 @@ if(!window.matchMedia('(min-width:760px)').matches){
        - not covered by the GDPR/Kenya-DPA consent rules GA4 triggers
        - ~1 KB, versus ~45 KB for gtag.js on a page budgeted to 1.5 MB
 
-     TODO(setup): this is inert until the domain is registered at
-     plausible.io/register — the script 404s and no data is collected,
-     which is the correct failure mode. If you would rather use GA4,
-     swap the block below for gtag.js and add a consent banner first.
+     Collects nothing until the domain is registered at plausible.io;
+     until then the script 404s and no data is gathered, which is the
+     correct failure mode. To use GA4 instead, swap this block for
+     gtag.js and add a consent banner first.
      ═══════════════════════════════════════════════════════════════════ -->
 <script defer data-domain="cynea.ai" src="https://plausible.io/js/script.outbound-links.js"></script>
 <script>
@@ -649,13 +649,12 @@ addEventListener('DOMContentLoaded', function(){
         real conversations.
       </p>
 
-      <!-- TODO(integration): POST to /api/demo-call.
-           Blocked on three things, none of which exist yet:
-             1. Twilio (or Africa's Talking) outbound voice + a verified caller ID
-             2. Cloudflare Turnstile token verified server-side
-             3. Per-IP and per-number rate limiting + an E.164 allowlist
-           Until then submit() only shows an honest "not connected" message —
-           it deliberately does not collect or transmit the number. -->
+      <!-- Submitting shows a message and sends nothing. Outbound demo
+           calls need three pieces that do not exist yet: outbound voice
+           with a verified caller ID, a Turnstile token verified
+           server-side, and per-IP / per-number rate limiting against an
+           E.164 allowlist. The form deliberately does not collect or
+           transmit the number until all three are in place. -->
       <form id="demo-form" novalidate>
         <div class="field">
           <label for="f-use">Use case</label>
@@ -693,7 +692,7 @@ addEventListener('DOMContentLoaded', function(){
   <div class="rv" style="text-align:center">
     <h2 class="display" style="font-size:clamp(34px,5vw,62px)">Proven Impact,<br>Real Conversations</h2>
   </div>
-  <!-- PLACEHOLDER: replace with real, attributable customer quotes only. -->
+  <!-- Replace with real, attributable customer quotes only. -->
   <div class="tm-placeholder rv">
     <p><span class="dot" aria-hidden="true"></span>Case studies coming soon — first customer onboarding in progress.</p>
   </div>
@@ -1129,7 +1128,7 @@ addEventListener('DOMContentLoaded', function(){
         <input id="news-email" type="email" placeholder="you@company.com" autocomplete="email" aria-label="Email address">
         <button class="btn btn-light" type="submit">Subscribe</button>
       </form>
-      <!-- TODO(integration): no mailing-list provider is wired up yet. -->
+      <!-- No mailing-list provider is connected; submitting sends nothing. -->
       <p class="news-msg" id="news-msg" role="status"></p>
     </div>
 
@@ -1174,7 +1173,7 @@ addEventListener('DOMContentLoaded', function(){
 
   <div class="foot-base">
     <span>© 2026 Cynea AI · Built in Nairobi 🇰🇪</span>
-    <!-- PLACEHOLDER: social handles do not exist yet — these are inert. -->
+    <!-- These accounts do not exist yet, so the links are inert. -->
     <div class="foot-social">
       <a href="#" aria-label="X (placeholder — no account yet)"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M18.2 2h3.4l-7.4 8.5L23 22h-6.8l-5.3-7-6.1 7H1.4l7.9-9.1L1 2h7l4.8 6.4zm-1.2 18h1.9L7.1 4H5z"/></svg></a>
       <a href="#" aria-label="LinkedIn (placeholder — no account yet)"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M4.98 3.5A2.5 2.5 0 1 1 0 3.5a2.5 2.5 0 0 1 4.98 0zM.4 8.2h4.2V24H.4zM8.5 8.2h4v2.2h.06c.56-1.06 1.94-2.2 4-2.2 4.3 0 5.1 2.8 5.1 6.5V24h-4.2v-6.9c0-1.65-.03-3.8-2.3-3.8-2.3 0-2.66 1.8-2.66 3.66V24H8.5z"/></svg></a>

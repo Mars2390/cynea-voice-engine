@@ -58,6 +58,15 @@ class GroqLLMError(RuntimeError):
     """Raised when Groq cannot be reached or returns an unusable response."""
 
 
+class _ReasoningBudgetExhausted(GroqLLMError):
+    """Internal: the model thought until it ran out of tokens.
+
+    Distinct from a plain empty reply because it is retryable with a
+    larger budget, whereas an empty reply with finish_reason='stop' is
+    the model genuinely choosing to say nothing.
+    """
+
+
 class GroqLLM:
     """Chat-completions adapter for Groq.
 
@@ -75,7 +84,7 @@ class GroqLLM:
         model: Optional[str] = None,
         base_url: Optional[str] = None,
         temperature: float = 0.7,
-        max_tokens: int = 512,
+        max_tokens: int = 1024,
         *,
         _alias: Optional[str] = None,
     ):
@@ -140,10 +149,37 @@ class GroqLLM:
     # ------------------------------------------------------------------
 
     async def generate(self, messages: List[dict], system: str = "") -> str:
-        """Return the assistant's full reply. Raises GroqLLMError on failure."""
+        """Return the assistant's full reply. Raises GroqLLMError on failure.
+
+        Retries once with double the token budget if a reasoning model
+        spends its whole allowance thinking. With a long persona prompt
+        (Kwame's is 8,375 chars) that happens intermittently, and an
+        intermittently silent agent is worse on a phone line than a
+        consistently slow one.
+        """
+        try:
+            return await self._generate_once(messages, system, self.max_tokens)
+        except _ReasoningBudgetExhausted as first:
+            widened = self.max_tokens * 2
+            log.warning(
+                "%s exhausted %d tokens on reasoning; retrying at %d",
+                self.model, self.max_tokens, widened,
+            )
+            try:
+                return await self._generate_once(messages, system, widened)
+            except _ReasoningBudgetExhausted:
+                raise GroqLLMError(
+                    f"{self.model} produced no reply even at {widened} tokens. "
+                    f"Shorten the system prompt, raise max_tokens, or set "
+                    f"GROQ_MODEL to a non-reasoning model."
+                ) from first
+
+    async def _generate_once(self, messages: List[dict], system: str,
+                             max_tokens: int) -> str:
         import httpx
 
         payload = self._payload(messages, system, stream=False)
+        payload["max_tokens"] = max_tokens
         try:
             async with httpx.AsyncClient(timeout=_TIMEOUT_S) as client:
                 r = await client.post(
@@ -197,10 +233,9 @@ class GroqLLM:
 
         finish = choice.get("finish_reason")
         if msg.get("reasoning") and finish == "length":
-            raise GroqLLMError(
-                f"{self.model} used its entire {self.max_tokens}-token budget on "
-                f"reasoning and produced no reply. Raise max_tokens (or set "
-                f"GROQ_MODEL to a non-reasoning model)."
+            raise _ReasoningBudgetExhausted(
+                f"{self.model} used its entire token budget on reasoning "
+                f"and produced no reply."
             )
         raise GroqLLMError(
             f"{self.model} returned an empty reply (finish_reason={finish!r})."

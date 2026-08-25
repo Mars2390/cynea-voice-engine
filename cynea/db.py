@@ -31,6 +31,7 @@ Design notes
 
 from __future__ import annotations
 
+import logging
 import os
 import uuid
 from contextlib import contextmanager
@@ -52,6 +53,8 @@ except ImportError as exc:  # pragma: no cover
         f"(original error: {exc})"
     ) from exc
 
+
+log = logging.getLogger("cynea.db")
 
 Base = declarative_base()
 
@@ -255,15 +258,33 @@ def init_db(url: Optional[str] = None) -> None:
         ) from exc
 
 
-def healthcheck() -> bool:
-    """True when the database answers. Wire this into /health."""
+def healthcheck(retries: int = 3, backoff_s: float = 2.0) -> bool:
+    """True when the database answers. Wire this into /health.
+
+    Retries by default because Neon suspends idle compute: the first
+    connection after a quiet period takes several seconds to wake the
+    instance and a single-shot check reports a healthy database as down.
+    Measured cold start on the free tier: ~3.7s.
+    """
+    import time as _time
+
     from sqlalchemy import text
-    try:
-        with session_scope() as s:
-            s.execute(text("SELECT 1"))
-        return True
-    except Exception:
-        return False
+
+    for attempt in range(1, retries + 1):
+        try:
+            with session_scope() as s:
+                s.execute(text("SELECT 1"))
+            if attempt > 1:
+                log.info("database answered on attempt %d (cold start)", attempt)
+            return True
+        except Exception as exc:
+            if attempt == retries:
+                log.warning("database unreachable after %d attempts: %s", retries, exc)
+                return False
+            # A stale pooled socket cannot be reused across a suspend.
+            reset_connection()
+            _time.sleep(backoff_s)
+    return False
 
 
 # ----------------------------------------------------------------------

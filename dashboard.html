@@ -140,7 +140,9 @@ picture{display:contents}
   background-image:url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' fill='none' stroke='%23617481' stroke-width='1.5'%3E%3Cpath d='M1 1l4 4 4-4'/%3E%3C/svg%3E");
   background-repeat:no-repeat;background-position:right 9px center}
 .samp{display:inline-flex;align-items:center;gap:6px;height:24px;padding:0 9px;border-radius:999px;
-  background:var(--warn-bg);color:var(--warn);font-size:11px;font-weight:500}
+  background:var(--warn-bg);color:var(--warn);font-size:11px;font-weight:500;transition:.2s}
+.samp.live{background:var(--ok-bg);color:var(--ok)}
+.samp.live svg{animation:blink 2.4s ease-in-out infinite}
 
 .scroll{flex:1;overflow-y:auto;padding:22px;min-height:0}
 .view[hidden]{display:none}
@@ -473,7 +475,7 @@ table.hist tbody tr:hover{background:var(--panel);cursor:pointer}
         <span>Monitor</span>
         <a class="nav-item" href="#/ops" aria-current="page">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3.5 13h4l2.5-6 3 12 2.5-6h5"/></svg>
-          Live Calls <span class="live"><i aria-hidden="true"></i>6</span>
+          Live Calls <span class="live" id="navLive"><i aria-hidden="true"></i><span id="navLiveN">0</span></span>
         </a>
         <a class="nav-item" href="#/analytics">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg>
@@ -506,9 +508,9 @@ table.hist tbody tr:hover{background:var(--panel);cursor:pointer}
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
         </button>
         <h1>Operations Center</h1>
-        <span class="samp" title="No backend is connected — every figure below is illustrative.">
+        <span class="samp" id="dataBadge" title="Checking for the API…">
           <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M12 8v5M12 16.5v.5"/><circle cx="12" cy="12" r="9"/></svg>
-          Sample data
+          <span id="dataBadgeText">Connecting…</span>
         </span>
         <div class="bar-right">
           <div class="seg" role="group" aria-label="Date range">
@@ -1039,6 +1041,15 @@ function renderKpis(){
    RENDER · live queue
    ═══════════════════════════════════════════════════════════════════ */
 function renderQueue(){
+  if(!QUEUE.length){
+    $('#queue').innerHTML='<div style="padding:26px 16px;text-align:center;'+
+      'font-size:13px;color:var(--muted)">No calls in progress. '+
+      'Live calls appear here once telephony is connected.</div>';
+    $('#qMeta').textContent='No calls in progress';
+    var n0=$('#navLiveN'); if(n0) n0.textContent='0';
+    var b0=$('#navLive'); if(b0) b0.style.display='none';
+    return;
+  }
   $('#queue').innerHTML=QUEUE.map(function(q,i){
     return '<button class="qrow" type="button" data-call="c'+((i%6)+1)+'">'+
       '<span class="q-i'+(q.hot?' hot':'')+'" aria-hidden="true"></span>'+
@@ -1049,7 +1060,12 @@ function renderQueue(){
       ' stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'+
       '<path d="M10 6l6 6-6 6"/></svg></button>';
   }).join('');
-  $('#qMeta').textContent=QUEUE.length+' waiting · longest '+QUEUE[QUEUE.length-1].wait;
+  $('#qMeta').textContent=QUEUE.length
+    ? QUEUE.length+' waiting · longest '+QUEUE[QUEUE.length-1].wait
+    : 'No calls in progress';
+  /* keep the sidebar count honest -- it used to be a hardcoded 6 */
+  var navN=$('#navLiveN'); if(navN) navN.textContent=QUEUE.length;
+  var navBadge=$('#navLive'); if(navBadge) navBadge.style.display=QUEUE.length?'':'none';
 }
 
 /* ═══════════════════════════════════════════════════════════════════
@@ -1531,10 +1547,244 @@ ovl.addEventListener('click',closeSide);
   },1000);
 })();
 
-/* boot */
-renderKpis(); renderQueue(); renderAgents();
-renderVolume(); renderSent(); renderDonut(); renderMeter();
-renderHistory(); route();
+/* ═══════════════════════════════════════════════════════════════════
+   API LAYER
+   The constants above are the fallback, not the source of truth. On load
+   we try the API; if it answers we overwrite them with real rows and
+   re-render. If it does not — no server running, no token, Neon asleep —
+   the console still works on sample data and says so in the toolbar.
+   Never a blank screen because a fetch failed.
+   ═══════════════════════════════════════════════════════════════════ */
+var API = {
+  base: (localStorage.getItem('cynea_api') || 'http://127.0.0.1:8000').replace(/\/$/, ''),
+  token: localStorage.getItem('cynea_token') || '',
+  live: false,
+
+  headers: function(){
+    var h = {'Content-Type':'application/json'};
+    if(this.token) h['Authorization'] = 'Bearer ' + this.token;
+    return h;
+  },
+
+  get: function(path){
+    return fetch(this.base + path, {headers:this.headers()}).then(function(r){
+      if(!r.ok) throw new Error(path + ' -> ' + r.status);
+      return r.json();
+    });
+  },
+
+  login: function(email, password){
+    var self = this;
+    return fetch(this.base + '/auth/login', {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({email:email, password:password})
+    }).then(function(r){
+      if(!r.ok) throw new Error('login failed: ' + r.status);
+      return r.json();
+    }).then(function(d){
+      self.token = d.token;
+      localStorage.setItem('cynea_token', d.token);
+      return d;
+    });
+  }
+};
+
+function setBadge(live, detail){
+  var badge = document.getElementById('dataBadge'),
+      text  = document.getElementById('dataBadgeText');
+  if(!badge) return;
+  badge.classList.toggle('live', !!live);
+  text.textContent = live ? 'Live data' : 'Sample data';
+  badge.title = detail;
+}
+
+/* ── map API shapes onto what the renderers already expect ─────────── */
+function applyStats(stats){
+  var k = stats.kpis;
+
+  KPIS = [
+    {label:'Calls today', value:String(k.calls_today),
+     delta:'', dir:'up', since:'from the database',
+     spark:(stats.volume.length ? stats.volume.map(function(p){return p.v;}) : [0,0])},
+    {label:'Containment rate', value:k.containment_pct + '%',
+     delta:(k.containment_delta_pts >= 0 ? '+' : '') + k.containment_delta_pts + ' pts',
+     dir:(k.containment_delta_pts >= 0 ? 'up' : 'down'), since:'vs last 7 days',
+     spark:[k.containment_pct, k.containment_pct]},
+    {label:'Cost per call', value:'$' + k.cost_per_call.toFixed(2),
+     delta:'', dir:'up', since:'today',
+     spark:(stats.volume.length ? stats.volume.map(function(p){return p.v;}) : [0,0])},
+    {label:'Cost this week', value:'$' + (k.cost_week_cents/100).toFixed(2),
+     delta:'', dir:'up', since:'last 7 days',
+     spark:[0, k.cost_week_cents]}
+  ];
+
+  /* A chart needs at least two points to draw a line. With one hour of
+     data so far today, pad rather than render a degenerate axis. */
+  VOLUME = stats.volume.length >= 2 ? stats.volume
+         : stats.volume.concat([{h:'--', v:0}]);
+  SENT   = stats.sentiment.length >= 2 ? stats.sentiment
+         : (stats.sentiment.length ? stats.sentiment.concat([{h:'--', v:stats.sentiment[0].v}])
+                                   : [{h:'--',v:0},{h:'--',v:0}]);
+
+  if(stats.cost_breakdown && stats.cost_breakdown.length){
+    COST = stats.cost_breakdown;
+  }
+  CONTAIN = {value:k.containment_pct, goal:90};
+
+  if(stats.agents && stats.agents.length){
+    AGENTS = {}; STATUS = {};
+    stats.agents.forEach(function(a){
+      AGENTS[a.persona] = {
+        name:a.name, role:a.role || '', place:a.place || '',
+        photo:a.photo, clip:'kwame_test_1',
+        voice:a.voice || '', ver:'v1', cost:'$0.04',
+        prompt:'', id:a.id
+      };
+      /* No telephony layer yet, so nobody is genuinely "on call".
+         Show calls handled today instead of inventing a live timer. */
+      STATUS[a.persona] = {on:false, timer:a.calls_today + ' today'};
+    });
+  }
+}
+
+function applyCalls(rows){
+  if(!rows || !rows.length) return;
+  CALLS = rows.map(function(r){
+    return {
+      id:r.id, t:r.time, ag:r.persona, caller:r.caller,
+      dur:r.duration, out:r.outcome, st:r.status,
+      sent:r.sentiment, cost:r.cost,
+      sum:'', turns:[], fields:[],      /* fetched on open */
+      _remote:true
+    };
+  });
+}
+
+function applyQueue(rows){
+  QUEUE = (rows || []).map(function(r){
+    return {num:r.num, cat:r.cat, wait:r.wait, agent:r.agent, hot:r.hot, id:r.id};
+  });
+}
+
+/* ── the modal fetches full detail on demand when live ─────────────── */
+var _openCallLocal = openCall;
+openCall = function(id){
+  var row = CALLS.filter(function(c){ return c.id === id; })[0];
+  if(!API.live || !row || !row._remote){ return _openCallLocal(id); }
+
+  API.get('/calls/' + id).then(function(d){
+    row.sum    = d.summary;
+    row.sent   = d.sentiment;
+    row.cost   = d.cost;
+    row.turns  = d.turns.map(function(t){ return [ '', t.speaker, t.text ]; });
+    row.fields = [
+      ['Status', d.status_label], ['Duration', d.duration],
+      ['Caller', d.caller], ['Date', d.date || '--']
+    ];
+    row._remote = false;          /* hydrated; no need to refetch */
+    _openCallLocal(id);
+  }).catch(function(err){
+    console.warn('call detail unavailable, showing what we have:', err);
+    _openCallLocal(id);
+  });
+};
+
+/* ── the editor pulls the real stored prompt when live ─────────────── */
+var _fillAgentLocal = fillAgent;
+fillAgent = function(slug){
+  _fillAgentLocal(slug);
+  var a = AGENTS[slug];
+  if(!API.live || !a || !a.id) return;
+
+  var box = document.getElementById('edPrompt');
+  box.value = 'Loading prompt from the database…';
+  API.get('/agents/' + a.id).then(function(d){
+    a.prompt = d.prompt || '';
+    a.ver = 'v' + (d.prompt_version || 0);
+    box.value = a.prompt;
+    document.getElementById('edVer').textContent = a.ver;
+  }).catch(function(err){
+    box.value = '';
+    console.warn('prompt unavailable:', err);
+  });
+};
+
+/* Save & publish writes a new prompt version instead of claiming nothing. */
+(function(){
+  var btn = document.getElementById('saveAgent');
+  if(!btn) return;
+  btn.addEventListener('click', function(){
+    var slug = (location.hash.match(/^#\/agent\/([a-z]+)$/) || [])[1];
+    var a = slug && AGENTS[slug];
+    var log = document.getElementById('testLog');
+    if(!API.live || !a || !a.id) return;          /* local notice already shown */
+
+    var content = document.getElementById('edPrompt').value;
+    log.innerHTML = 'Saving…';
+    fetch(API.base + '/agents/' + a.id + '/prompt', {
+      method:'POST', headers:API.headers(), body:JSON.stringify({content:content})
+    }).then(function(r){
+      if(!r.ok) throw new Error('save failed: ' + r.status);
+      return r.json();
+    }).then(function(d){
+      a.prompt = content;
+      a.ver = 'v' + d.version;
+      document.getElementById('edVer').textContent = a.ver;
+      log.innerHTML = '<b>Saved.</b> Stored as version ' + d.version + '.';
+    }).catch(function(err){
+      log.innerHTML = '<b>Not saved.</b> ' + err.message;
+    });
+  }, true);
+})();
+
+function renderAll(){
+  renderKpis(); renderQueue(); renderAgents();
+  renderVolume(); renderSent(); renderDonut(); renderMeter();
+  renderHistory();
+}
+
+function loadLive(){
+  return API.get('/dashboard/bootstrap').then(function(d){
+    applyStats(d.stats);
+    applyQueue(d.queue);
+    applyCalls(d.calls);
+    API.live = true;
+    setBadge(true, 'Reading from the API at ' + API.base);
+    renderAll();
+    console.info('cynea: live data loaded', d.stats.kpis);
+    return true;
+  });
+}
+
+function boot(){
+  renderAll();
+  route();
+
+  /* Health first: it is cheap, and it separates "server is down" from
+     "your session expired", which need different fixes. */
+  fetch(API.base + '/health').then(function(r){
+    if(!r.ok) throw new Error('health ' + r.status);
+    return r.json();
+  }).then(function(h){
+    if(!h.database) throw new Error('database unreachable');
+    if(API.token) return loadLive();
+
+    /* No token. The demo workspace is seeded, so sign in with it rather
+       than leaving the console empty. Replace with a real login screen
+       when signin.html is wired up (gap BE-3). */
+    return API.login('demo@cynea.ai', 'demo1234').then(loadLive);
+  }).catch(function(err){
+    API.live = false;
+    var why = String(err.message || err);
+    if(/Failed to fetch|NetworkError|health/.test(why)){
+      why = 'API not reachable at ' + API.base + ' - start it with: uvicorn cynea.api:app --port 8000';
+    }
+    setBadge(false, 'Showing sample data. ' + why);
+    console.warn('cynea: falling back to sample data -', why);
+  });
+}
+
+boot();
 </script>
 </body>
 </html>

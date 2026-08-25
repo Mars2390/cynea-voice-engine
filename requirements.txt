@@ -18,6 +18,9 @@ uvicorn==0.34.0
 websockets==16.0           # carrier media streaming (Africa's Talking / SIP)
 aiohttp==3.13.5
 
+# --- auth -------------------------------------------------------------
+bcrypt==4.0.1              # password hashing; sessions are HMAC, no extra dep
+
 # --- database ---------------------------------------------------------
 SQLAlchemy==2.0.36
 psycopg2-binary==2.9.10    # Neon Postgres driver

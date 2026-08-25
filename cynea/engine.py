@@ -35,6 +35,7 @@ propagates.
 from __future__ import annotations
 
 import logging
+import uuid
 from dataclasses import dataclass, field
 from typing import Callable, Optional
 
@@ -89,6 +90,7 @@ class TurnResult:
     audio_format: str = "mp3"
     sequence_id: int = 0
     user_text: str = ""
+    call_id: Optional[str] = None      # database row, when persistence is on
 
     def __bool__(self) -> bool:
         return bool(self.text)
@@ -110,6 +112,9 @@ class CyneaEngine:
         on_error: Optional[Callable[[str, Exception], None]] = None,
         *,
         synthesize: bool = True,
+        agent_id: Optional[str] = None,
+        caller_number: str = "test",
+        persist: bool = True,
     ):
         """
         Args:
@@ -121,6 +126,11 @@ class CyneaEngine:
                 fault.
             synthesize: set False to run the loop text-only (tests, chat
                 transports, transcript replays) without paying for TTS.
+            agent_id: the database row this call belongs to. Without it
+                nothing is persisted — there is nowhere to attach the call.
+            caller_number: the number on the other end, from telephony.
+            persist: set False to keep a call entirely out of the database
+                (previews, evaluation runs, tests).
         """
         self.config = config
         self.history = ConversationHistory()
@@ -128,6 +138,29 @@ class CyneaEngine:
         self.state = ConversationState.IDLE
         self.on_error = on_error
         self.synthesize = synthesize
+
+        # --- persistence -------------------------------------------------
+        self.agent_id = agent_id
+        self.caller_number = caller_number
+        self.persist = persist and bool(agent_id)
+        self.call_id: Optional[str] = None      # set on the first saved turn
+        self._closed = False
+
+        # metrics.CallRecord already computes running sentiment and a full
+        # cost breakdown from a RateCard, so the engine records into it
+        # rather than growing its own arithmetic.
+        self._metrics = None
+        if self.persist:
+            try:
+                from cynea_africa.dashboard.metrics import CallRecord, RateCard
+                self._metrics = CallRecord(
+                    call_id=str(uuid.uuid4()),
+                    agent=config.persona or config.name,
+                )
+                self._rate_card = RateCard.default_africa()
+            except Exception as exc:      # metrics must never break a call
+                log.warning("metrics unavailable, cost/sentiment will be 0: %s", exc)
+                self.persist = False
 
         if config.system_prompt:
             self.history.set_system_prompt(config.system_prompt)
@@ -218,13 +251,163 @@ class CyneaEngine:
 
         self.interruption.on_agent_speech_started()
         self.state = ConversationState.SPEAKING
+
+        # --- 5. persist ------------------------------------------------
+        # One row per CALL, updated in place — not one row per turn. The
+        # calls table is call-shaped (duration, status, full transcript),
+        # so a row per exchange would break every aggregate the dashboard
+        # computes. save_call() inserts on the first turn and updates the
+        # same row afterwards, which also lets the console show a call
+        # while it is still running.
+        if self.persist:
+            self._record_turn(user_text=text, reply=response_text)
+            self.save_call()
+
         return TurnResult(
             text=response_text,
             audio=audio_bytes,
             audio_format=getattr(self.config, "audio_format", "mp3"),
             sequence_id=sequence_id,
             user_text=text,
+            call_id=self.call_id,
         )
+
+    # ------------------------------------------------------------------
+    # Persistence
+    # ------------------------------------------------------------------
+
+    def _record_turn(self, user_text: str, reply: str) -> None:
+        """Feed one exchange into the metrics record."""
+        if not self._metrics:
+            return
+        try:
+            self._metrics.record_user_turn(user_text)
+            # Token counts are approximated at 4 chars/token until the
+            # adapter surfaces real usage from the provider response.
+            self._metrics.record_assistant_turn(
+                text=reply,
+                llm_input_tokens=sum(len(m.get("content") or "")
+                                     for m in self.history.for_llm()) // 4,
+                llm_output_tokens=len(reply) // 4,
+            )
+            if self.interruption.stats()["interruption_count"]:
+                self._metrics.interruptions = self.interruption.stats()["interruption_count"]
+        except Exception as exc:
+            log.warning("could not record metrics for this turn: %s", exc)
+
+    def _infer_status(self) -> str:
+        """Map conversation state onto the three stored outcomes.
+
+        Deliberately conservative: a call is only 'resolved' once it has
+        been closed with end_call(). While it is still running it stays
+        'abandoned', so a crash or a dropped line is never silently
+        recorded as a success.
+        """
+        if not self._closed:
+            return "abandoned"
+        if self._metrics and self._metrics.containment is False:
+            return "escalated"
+        return "resolved"
+
+    def save_call(self) -> Optional[str]:
+        """Write this call to the database. Returns the call id.
+
+        Inserts on first use, updates the same row after. Never raises:
+        a storage outage must not drop a live phone call, so failures are
+        logged and reported through on_error instead.
+        """
+        if not self.persist:
+            return None
+
+        try:
+            from cynea import db
+
+            if self._metrics:
+                self._metrics.finalize(self._rate_card)
+                duration = int(self._metrics.duration_s or 0)
+                sentiment = round(float(self._metrics.sentiment_score), 3)
+                cost = int(round(self._metrics.cost_total_cents))
+            else:
+                duration, sentiment, cost = 0, None, 0
+
+            transcript = self.transcript_text()
+            status = self._infer_status()
+
+            if self.call_id is None:
+                call = db.log_call(
+                    agent_id=self.agent_id,
+                    caller_number=self.caller_number,
+                    duration=duration,
+                    transcript=transcript,
+                    sentiment=sentiment,
+                    cost=cost,
+                    status=status,
+                )
+                self.call_id = call.id
+                log.info("call %s opened for agent %s", self.call_id, self.agent_id)
+            else:
+                with db.session_scope() as s:
+                    row = s.get(db.Call, self.call_id)
+                    if row is not None:
+                        row.duration_s = duration
+                        row.transcript = transcript
+                        row.sentiment_score = sentiment
+                        row.cost_cents = cost
+                        row.status = status
+            return self.call_id
+
+        except Exception as exc:
+            log.error("could not save call for agent %s: %s",
+                      self.agent_id, exc, exc_info=True)
+            if self.on_error:
+                try:
+                    self.on_error("db", exc)
+                except Exception:
+                    log.exception("on_error callback raised while reporting a db fault")
+            return self.call_id
+
+    # Stored transcripts are "<outcome summary>\n\n<dialogue>". The console's
+    # history table reads line one as the outcome, so the engine and the
+    # seed script must agree on that shape or engine-written calls show a
+    # greeting where an outcome belongs.
+    _OUTCOME_LABELS = {
+        "resolved": "Handled by agent",
+        "escalated": "Escalated to human",
+        "abandoned": "Call ended early",
+    }
+
+    def dialogue_text(self) -> str:
+        """The conversation as speaker-labelled plain text, no header."""
+        lines = []
+        for message in self.history.messages:
+            role = message.get("role")
+            if role not in ("user", "assistant"):
+                continue
+            who = "Caller" if role == "user" else (self.config.persona or "Agent").title()
+            lines.append(f"{who}: {(message.get('content') or '').strip()}")
+        return "\n".join(lines)
+
+    def transcript_text(self) -> str:
+        """Outcome summary followed by the dialogue."""
+        outcome = self._OUTCOME_LABELS.get(self._infer_status(), "Call recorded")
+        return f"{outcome}\n\n{self.dialogue_text()}"
+
+    def end_call(self, *, escalated: bool = False, notes: str = "") -> Optional[str]:
+        """Close the call and write the final row.
+
+        Call this when the line drops. Until it runs the call stays
+        'abandoned', which is the honest default for a call still in
+        progress or one that died unexpectedly.
+        """
+        self._closed = True
+        if self._metrics:
+            self._metrics.set_outcome(
+                containment=not escalated,
+                resolution=not escalated,
+                notes=notes or None,
+            )
+        self.state = ConversationState.IDLE
+        return self.save_call()
 
     # ------------------------------------------------------------------
     # Provider hops — kept private so callers don't depend on registry shape

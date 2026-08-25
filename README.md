@@ -13,13 +13,15 @@ Honest summary, because the gap between "written" and "wired up" matters:
 
 | Area | State |
 |---|---|
-| Conversation core (barge-in, history, turn-taking) | **Working**, 94 tests |
+| Conversation core (barge-in, history, turn-taking) | **Working**, 152 tests |
 | LLM → speech pipeline | **Working** end to end |
 | Personas (Kwame, Amina, Kofi, Maya) | **Working** |
 | Database layer | **Working** (Neon Postgres / SQLite) |
-| HTTP API server | **Not built** — no routes exist yet |
+| HTTP API server | **Working** — auth, agents, calls, dashboard |
+| Auth (bcrypt + sessions) | **Working** |
+| Console reading live data | **Working**, with sample-data fallback |
 | Telephony (Africa's Talking) | **Interface only** — no audio transport |
-| Billing, auth, multi-tenancy | **Not built** |
+| Billing, multi-tenancy beyond per-user scoping | **Not built** |
 
 A full audit with a 92-item register and a four-phase roadmap is in
 [GAP_ANALYSIS.md](GAP_ANALYSIS.md).
@@ -37,7 +39,17 @@ pip install -r requirements.txt
 
 cp .env.example .env        # add GROQ_API_KEY (free: console.groq.com/keys)
 
-pytest tests/ -q            # 94 tests, ~4s, no API key needed
+pytest tests/ -q            # 152 tests, ~24s, no API key or Postgres needed
+```
+
+Run the whole stack:
+
+```bash
+python -m cynea.migrate          # create tables
+python -m cynea.seed --calls 40  # demo user + 4 agents + sample history
+uvicorn cynea.api:app --port 8000
+
+# then open dashboard.html - it signs in as demo@cynea.ai automatically
 ```
 
 Talk to an agent:
@@ -189,6 +201,44 @@ providers.register_llm("name", MyLLM)      # add your own
 Any class with the right `async` method works — `transcribe(audio)`,
 `generate(messages, system)`, or `synthesize(request)`.
 
+### HTTP API
+
+```
+POST   /auth/register              GET    /agents/{id}
+POST   /auth/login                 PUT    /agents/{id}
+GET    /auth/me                    DELETE /agents/{id}
+POST   /agents                     POST   /agents/{id}/prompt
+GET    /agents                     GET    /agents/{id}/prompts
+
+POST   /calls                      GET    /dashboard/stats
+GET    /calls?agent_id=            GET    /dashboard/queue
+GET    /calls/{id}                 GET    /dashboard/bootstrap
+GET    /health
+```
+
+Bearer tokens from `/auth/login`. Every agent and call route is scoped to
+the authenticated user — ownership is re-checked on each lookup, so another
+workspace's rows 404 even with a valid id. Interactive docs at `/docs`.
+
+```bash
+curl -s localhost:8000/auth/login -H 'Content-Type: application/json'   -d '{"email":"demo@cynea.ai","password":"demo1234"}'
+```
+
+### Persisting calls
+
+```python
+engine = CyneaEngine(config, agent_id=agent.id, caller_number="+233240004417")
+await engine.start()
+await engine.process_audio(chunk)     # row created, then updated per turn
+engine.end_call()                     # marks resolved and writes the final row
+```
+
+One row per **call**, not per turn — the row is created on the first turn and
+updated in place, so the console can show a call while it is still running.
+Sentiment and cost come from `metrics.CallRecord`, which already computes
+both. A call stays `abandoned` until `end_call()`, so a dropped line is never
+silently recorded as a success.
+
 ### Database
 
 ```python
@@ -280,6 +330,10 @@ cynea/                    engine, providers, persistence
   llms/groq_llm.py        LLM adapter (streaming + non-streaming)
   db.py                   SQLAlchemy models and CRUD
   migrate.py              schema creation
+  seed.py                 demo workspace (user, 4 agents, sample calls)
+  auth.py                 bcrypt hashing + signed session tokens
+  api.py                  FastAPI routes
+  dashboard_data.py       read models for the console
   agent_loader.py         persona registry, JSON config loading
 
 cynea_africa/             Africa-specific modules
@@ -289,7 +343,7 @@ cynea_africa/             Africa-specific modules
   telephony/              Africa's Talking  ⚠ interface only
   dashboard/              metrics + legacy HTML generator
 
-tests/                    94 tests
+tests/                    152 tests
 *.html                    marketing site and operations console
 ```
 

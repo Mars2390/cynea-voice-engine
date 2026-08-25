@@ -98,7 +98,7 @@ class AgentConfig:
     name: str = "cynea_agent"
     system_prompt: str = ""
     stt_provider: str = "whisper"
-    llm_provider: str = "anthropic"
+    llm_provider: str = "groq"
     tts_provider: str = "edge_tts"
     voice: str = "en-GB-RyanNeural"
     speed: float = 0.95

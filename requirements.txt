@@ -1,30 +1,46 @@
-# Cynea Voice Engine � Dependencies
-# Core
-fastapi>=0.108
-uvicorn>=0.22
-aiohttp
-httpx[http2]
-websockets>=15
-numpy>=1.26
+# Cynea Voice Engine - dependencies
+#
+# Pinned to exact versions. These were `>=` ranges, which meant an upstream
+# release could break production without a single commit landing here, and
+# two machines installing on different days got different stacks. Bump
+# deliberately: change a pin, run the suite, commit the change.
+#
+# Verified working set: Python 3.11-3.13, captured 2026-08-25.
 
-# STT (choose one or more)
-openai-whisper>=20231117
+# --- core -------------------------------------------------------------
+httpx==0.28.1              # LLM + hosted-STT transport (Groq, ElevenLabs)
+python-dotenv==1.0.1       # loaded by cynea/__init__.py so .env is visible
+numpy==2.3.3
 
-# TTS (choose one or more)
-edge-tts>=6.1
-elevenlabs>=2.0
-python-dotenv>=1.0
+# --- API server -------------------------------------------------------
+fastapi==0.115.6
+uvicorn==0.34.0
+websockets==16.0           # carrier media streaming (Africa's Talking / SIP)
+aiohttp==3.13.5
 
-# LLM (choose one or more)
-anthropic>=0.30
-openai>=1.0
+# --- database ---------------------------------------------------------
+SQLAlchemy==2.0.36
+psycopg2-binary==2.9.10    # Neon Postgres driver
+greenlet==3.5.3            # required by SQLAlchemy on some platforms
 
-# Telephony
-twilio>=8.9
+# --- speech -----------------------------------------------------------
+edge-tts==7.2.8            # free TTS, 9 voices, 4 African accents
+elevenlabs==2.45.0         # premium TTS
+pydub==0.25.1
+scipy==1.17.1
 
-# Audio processing
-pydub
-scipy>=1.11
+# --- speech-to-text ---------------------------------------------------
+# openai-whisper is deliberately NOT pinned here. It pulls torch (~2 GB)
+# and needs ffmpeg on PATH, which is a heavy default for anyone who only
+# wants to run the tests. Two options:
+#
+#   local  : pip install openai-whisper==20250625   (also: apt install ffmpeg)
+#   hosted : set GROQ_API_KEY and stt_provider="groq_whisper" - no install
+#
+# cynea_africa.transcriber.whisper.best_available_stt() picks whichever is
+# present, so a deploy works either way. The Dockerfile installs the local
+# one; see the ARG at the top of it to skip that and halve the image.
 
-# Token counting
-tiktoken
+# --- testing ----------------------------------------------------------
+pytest==9.1.1
+pytest-asyncio==1.4.0

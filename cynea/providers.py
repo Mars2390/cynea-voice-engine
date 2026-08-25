@@ -99,9 +99,32 @@ class MockLLM:
         return "Sure, let me help with that."
 
 
-# Auto-register built-in providers when available
+# ----------------------------------------------------------------------
+# Auto-registration
+#
+# Each provider module registers itself at import time, so the only job
+# here is to *import* them. That distinction matters: the ElevenLabs
+# synthesiser always carried its own register_tts() call, but nothing
+# imported the module, so the registry never saw it and
+# get_tts_provider("elevenlabs") raised. Importing is the fix.
+#
+# Every import is guarded: a provider whose optional dependency is absent
+# is simply unavailable, and asking for it by name gives a clear error
+# listing what *is* registered.
+# ----------------------------------------------------------------------
+
 register_llm("mock", MockLLM)
 
+# --- LLM ---------------------------------------------------------------
+try:
+    import cynea.llms  # noqa: F401  (registers "groq" and the "anthropic" alias)
+except Exception as _exc:  # pragma: no cover - depends on optional httpx
+    import logging
+    logging.getLogger("cynea.providers").warning(
+        "LLM adapters unavailable (%s). Only the 'mock' provider is registered.", _exc
+    )
+
+# --- STT ---------------------------------------------------------------
 try:
     from cynea_africa.transcriber.whisper import WhisperTranscriber
     register_stt("whisper", WhisperTranscriber)
@@ -109,7 +132,29 @@ except ImportError:
     pass
 
 try:
+    from cynea_africa.transcriber.whisper import GroqWhisperTranscriber
+    register_stt("groq_whisper", GroqWhisperTranscriber)
+except ImportError:
+    pass
+
+# --- TTS ---------------------------------------------------------------
+try:
     from cynea_africa.synthesizer.edge_tts import EdgeTTSSynthesizer
     register_tts("edge_tts", EdgeTTSSynthesizer)
 except ImportError:
     pass
+
+try:
+    from cynea_africa.synthesizer.elevenlabs_synthesizer import ElevenLabsSynthesizer
+    register_tts("elevenlabs", ElevenLabsSynthesizer)
+except ImportError:
+    pass
+
+
+def registered() -> dict:
+    """Snapshot of what is actually wired up. Useful in tests and at boot."""
+    return {
+        "stt": sorted(_stt_providers),
+        "llm": sorted(_llm_providers),
+        "tts": sorted(_tts_providers),
+    }

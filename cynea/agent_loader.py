@@ -88,6 +88,16 @@ try:
 except ImportError:
     pass
 
+try:
+    from cynea_africa.persona.maya import (
+        MAYA_SYSTEM_PROMPT,
+        MAYA_VOICE_CONFIG,
+        MAYA_FIRST_MESSAGE,
+    )
+    _register("maya", MAYA_SYSTEM_PROMPT, MAYA_VOICE_CONFIG, MAYA_FIRST_MESSAGE)
+except ImportError:
+    pass
+
 
 # ---------------------------------------------------------------------
 # Validation
@@ -216,7 +226,10 @@ class AgentLoader:
             name=config["agent_name"],
             system_prompt=system_prompt,
             stt_provider=config.get("stt_provider", "whisper"),
-            llm_provider=config.get("llm_provider", "mock"),
+            # Was "mock", which meant every loaded agent silently used the
+            # test double even once a real adapter existed. Configs that
+            # genuinely want the double still ask for it by name.
+            llm_provider=config.get("llm_provider", "groq"),
             tts_provider=voice.get("provider") or persona["voice"].get("provider", "edge_tts"),
             voice=voice.get("voice_id") or persona["voice"].get("voice", "en-GB-RyanNeural"),
             speed=float(voice.get("speed", persona["voice"].get("speed", 1.0))),

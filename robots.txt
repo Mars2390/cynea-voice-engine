@@ -1,0 +1,12 @@
+# Cynea - https://cynea.ai
+User-agent: *
+Allow: /
+
+# Signed-in surfaces: no value in the index, and dashboard.html carries a
+# noindex meta tag as the authoritative signal. Disallow only stops
+# crawling, not indexing, so both are needed.
+Disallow: /dashboard.html
+Disallow: /agent_manager.html
+Disallow: /signin.html
+
+Sitemap: https://cynea.ai/sitemap.xml

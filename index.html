@@ -509,6 +509,40 @@ if(!window.matchMedia('(min-width:760px)').matches){
   document.documentElement.className+=' no-video';
 }
 </script>
+
+<!-- ═══ ANALYTICS ══════════════════════════════════════════════════════
+     Plausible rather than GA4, deliberately:
+       - no cookies, so no consent banner is required
+       - not covered by the GDPR/Kenya-DPA consent rules GA4 triggers
+       - ~1 KB, versus ~45 KB for gtag.js on a page budgeted to 1.5 MB
+
+     TODO(setup): this is inert until the domain is registered at
+     plausible.io/register — the script 404s and no data is collected,
+     which is the correct failure mode. If you would rather use GA4,
+     swap the block below for gtag.js and add a consent banner first.
+     ═══════════════════════════════════════════════════════════════════ -->
+<script defer data-domain="cynea.ai" src="https://plausible.io/js/script.outbound-links.js"></script>
+<script>
+/* Queue events fired before (or instead of) the script loading, so a
+   blocked or not-yet-configured analytics endpoint never throws. */
+window.plausible = window.plausible || function(){ (window.plausible.q = window.plausible.q || []).push(arguments); };
+
+addEventListener('DOMContentLoaded', function(){
+  /* Track the three actions that indicate real intent. Page views are
+     automatic; these are the ones worth a funnel. */
+  var track = function(sel, name){
+    document.querySelectorAll(sel).forEach(function(el){
+      el.addEventListener('click', function(){ window.plausible(name); });
+    });
+  };
+  track('a[href="#try-demo"]', 'Demo: intent');
+  track('a[href*="calendly"]', 'Contact sales');
+  track('.agent-play', 'Agent: hear demo');
+
+  var demo = document.getElementById('demo-form');
+  if (demo) demo.addEventListener('submit', function(){ window.plausible('Demo: submitted'); });
+});
+</script>
 </head>
 <body>
 

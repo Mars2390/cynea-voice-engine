@@ -150,6 +150,11 @@ try:
 except ImportError:
     pass
 
+try:
+    import cynea_africa.transcriber.groq_stt  # noqa: F401  (registers "groq-stt")
+except ImportError:
+    pass
+
 # --- TTS ---------------------------------------------------------------
 try:
     from cynea_africa.synthesizer.edge_tts import EdgeTTSSynthesizer

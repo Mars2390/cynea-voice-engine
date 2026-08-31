@@ -115,6 +115,7 @@ class CyneaEngine:
         agent_id: Optional[str] = None,
         caller_number: str = "unknown",
         persist: bool = True,
+        on_audio: Optional[Callable[[bytes, str], None]] = None,
     ):
         """
         Args:
@@ -134,6 +135,17 @@ class CyneaEngine:
                 visibly missing it instead of looking like a real number.
             persist: set False to keep a call entirely out of the database
                 (previews, evaluation runs, tests).
+            on_audio: called as on_audio(audio_bytes, format) as soon as a
+                turn is synthesised, before process_audio() returns. This
+                is the *sink* for generated speech: on a call the telephony
+                layer writes it to the carrier socket; on a laptop the test
+                harness plays it through the speakers.
+
+                The engine deliberately does not play audio itself. A
+                server that pipes replies to its own sound card is one
+                where the caller hears silence and the room hears the
+                call. Exceptions from the sink are logged and swallowed,
+                because a failed speaker must not drop a live call.
         """
         self.config = config
         self.history = ConversationHistory()
@@ -141,6 +153,7 @@ class CyneaEngine:
         self.state = ConversationState.IDLE
         self.on_error = on_error
         self.synthesize = synthesize
+        self.on_audio = on_audio
 
         # --- persistence -------------------------------------------------
         self.agent_id = agent_id
@@ -197,6 +210,7 @@ class CyneaEngine:
         self.history.append_welcome(first)
         self.interruption.on_agent_speech_started()
         audio = await self._synthesize(first) if self.synthesize else b""
+        self._emit_audio(audio)
         return TurnResult(text=first, audio=audio, sequence_id=0)
 
     async def process_audio(self, audio: AudioChunk) -> Optional[TurnResult]:
@@ -251,6 +265,7 @@ class CyneaEngine:
         audio_bytes = b""
         if self.synthesize and response_text:
             audio_bytes = await self._synthesize(response_text)
+            self._emit_audio(audio_bytes)
 
         self.interruption.on_agent_speech_started()
         self.state = ConversationState.SPEAKING
@@ -274,6 +289,22 @@ class CyneaEngine:
             user_text=text,
             call_id=self.call_id,
         )
+
+    def _emit_audio(self, audio: bytes) -> None:
+        """Hand synthesised speech to whatever is going to output it."""
+        if not audio or not self.on_audio:
+            return
+        try:
+            self.on_audio(audio, getattr(self.config, "audio_format", "mp3"))
+        except Exception as exc:
+            # The reply text is still valid and the call is still up; a
+            # broken sink is not a reason to end either.
+            log.error("on_audio sink raised: %s", exc, exc_info=True)
+            if self.on_error:
+                try:
+                    self.on_error("audio", exc)
+                except Exception:
+                    log.exception("on_error raised while reporting an audio fault")
 
     # ------------------------------------------------------------------
     # Persistence

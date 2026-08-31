@@ -98,8 +98,22 @@ button,input,select{font:inherit;color:inherit}
 .btn-light:hover{box-shadow:inset 0 0 0 1px rgba(14,18,27,.34)}
 
 /* ── one reveal animation. That is the whole motion budget. ────────── */
-.rv{opacity:0;transform:translateY(14px);transition:opacity .7s cubic-bezier(.2,.7,.2,1),transform .7s cubic-bezier(.2,.7,.2,1)}
+.rv{opacity:0;transform:translateY(16px) scale(.98);transition:opacity .6s cubic-bezier(.16,.84,.44,1),transform .6s cubic-bezier(.16,.84,.44,1)}
 .rv.in{opacity:1;transform:none}
+
+/* .stg staggers a container's direct children instead of the container. */
+.stg>*{opacity:0;transform:translateY(16px) scale(.98);transition:opacity .6s cubic-bezier(.16,.84,.44,1),transform .6s cubic-bezier(.16,.84,.44,1)}
+.stg.in>*{opacity:1;transform:none}
+.stg.in>*:nth-child(2){transition-delay:80ms}
+.stg.in>*:nth-child(3){transition-delay:160ms}
+.stg.in>*:nth-child(4){transition-delay:240ms}
+.stg.in>*:nth-child(5){transition-delay:320ms}
+.stg.in>*:nth-child(6){transition-delay:400ms}
+
+/* .swap is for section photography. Unlike .rv it fades back out on the way
+   past, so the outgoing image crossfades with the one arriving below it. */
+.swap{opacity:0;transform:translateY(26px) scale(.985);transition:opacity .75s cubic-bezier(.16,.84,.44,1),transform .75s cubic-bezier(.16,.84,.44,1)}
+.swap.in{opacity:1;transform:none}
 
 /* ═══ NAV ═══════════════════════════════════════════════════════════ */
 .nav{position:sticky;top:0;z-index:60;background:rgba(245,241,234,.82);backdrop-filter:blur(12px);border-bottom:1px solid transparent;transition:border-color .2s}
@@ -209,25 +223,112 @@ button,input,select{font:inherit;color:inherit}
 .demo-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;align-items:stretch}
 @media(max-width:900px){.demo-grid{grid-template-columns:1fr}}
 .panel{border-radius:var(--r-card);border:1px solid var(--line);padding:44px 38px}
-.panel-a{background:var(--card);display:flex;flex-direction:column;align-items:center}
+@media(max-width:560px){.panel{padding:32px 20px}}
+.panel-a{background:var(--card);display:flex;flex-direction:column;align-items:center;overflow:hidden}
 .panel-b{background:var(--card-2);display:flex;flex-direction:column}
 
-/* the animated call orb — pulse + two ripple rings, nothing else */
-.orb{width:154px;height:154px;position:relative;display:grid;place-items:center;margin:10px 0 34px}
-.orb-core{
-  width:104px;height:104px;border-radius:50%;position:relative;z-index:2;
-  background:radial-gradient(120% 120% at 32% 26%,#8FEBFF,#00D4FF 44%,#00618F 100%);
-  box-shadow:0 14px 44px rgba(0,140,190,.34);
-  animation:beat 2.8s ease-in-out infinite;
-}
-.orb-ripple{position:absolute;inset:0;border-radius:50%;border:1px solid rgba(0,212,255,.46);animation:ripple 2.8s ease-out infinite}
-.orb-ripple.b{animation-delay:1.4s}
-@keyframes beat{0%,100%{transform:scale(1)}50%{transform:scale(1.045)}}
-@keyframes ripple{0%{transform:scale(.68);opacity:.85}100%{transform:scale(1.18);opacity:0}}
+/* ── the call stage: a glass orb with the phone standing on top of it.
+      Every layer is stacked in one grid cell so nothing is positioned
+      absolutely, and only transform/opacity ever animate. .is-playing is
+      set by the shared audio controller — the whole scene keys off it. ── */
+.callzone{--tint:var(--accent);width:100%;display:flex;flex-direction:column;align-items:center;margin-bottom:30px}
+.stage{position:relative;display:grid;place-items:center;width:100%;padding:22px 0 4px;isolation:isolate}
+.stage>*{grid-area:1/1}
 
-.orb-play{display:inline-flex;align-items:center;gap:9px;margin-bottom:30px}
-.orb-play .btn{height:32px}
-.orb-play small{font-size:12px;color:var(--muted);letter-spacing:-.16px}
+/* the colour the glass has to refract — without this the frost reads flat */
+.stage-wash{
+  width:min(430px,96%);aspect-ratio:1;border-radius:50%;
+  background:radial-gradient(58% 58% at 34% 30%,rgba(0,212,255,.46),transparent 70%),
+             radial-gradient(52% 52% at 70% 72%,rgba(255,170,96,.36),transparent 72%);
+  filter:blur(30px);
+}
+.stage-glow{
+  width:min(470px,104%);aspect-ratio:1;border-radius:50%;
+  background:radial-gradient(closest-side,rgba(0,212,255,.40),transparent 74%);
+  opacity:.34;transition:opacity .7s ease;
+}
+.stage-rays{
+  width:min(520px,112%);aspect-ratio:1;border-radius:50%;opacity:0;transition:opacity .9s ease;
+  background:repeating-conic-gradient(from 0deg,rgba(0,212,255,.30) 0deg 1.4deg,transparent 1.4deg 15deg);
+  -webkit-mask-image:radial-gradient(closest-side,transparent 36%,#000 54%,transparent 78%);
+          mask-image:radial-gradient(closest-side,transparent 36%,#000 54%,transparent 78%);
+}
+.glass{
+  width:min(372px,88%);aspect-ratio:1;border-radius:50%;
+  background:linear-gradient(150deg,rgba(255,255,255,.64),rgba(0,212,255,.18) 48%,rgba(255,255,255,.34));
+  border:1px solid rgba(255,255,255,.72);
+  -webkit-backdrop-filter:blur(20px) saturate(150%);backdrop-filter:blur(20px) saturate(150%);
+  box-shadow:0 40px 90px rgba(0,118,164,.20),inset 0 1px 0 rgba(255,255,255,.95);
+  animation:glassTurn 34s linear infinite;
+}
+.stage-ring{
+  width:min(330px,80%);aspect-ratio:1;border-radius:50%;
+  border:1px solid rgba(0,212,255,.55);opacity:0;transform:scale(.62);
+}
+@keyframes glassTurn{to{transform:rotate(360deg)}}
+@keyframes glassLive{0%{transform:rotate(0) scale(1)}50%{transform:rotate(180deg) scale(1.04)}100%{transform:rotate(360deg) scale(1)}}
+@keyframes stageRing{0%{transform:scale(.62);opacity:.8}100%{transform:scale(1.52);opacity:0}}
+@keyframes glowBreathe{0%,100%{opacity:.68}50%{opacity:1}}
+@keyframes beat{0%,100%{transform:scale(1)}50%{transform:scale(1.045)}}
+
+/* mid-call — the one moment the page is allowed to be cinematic */
+.callzone.is-playing .stage-glow{opacity:1;animation:glowBreathe 2.8s ease-in-out infinite}
+.callzone.is-playing .stage-rays{opacity:.46;animation:glassTurn 48s linear infinite}
+.callzone.is-playing .glass{animation:glassLive 16s linear infinite}
+.callzone.is-playing .stage-ring{animation:stageRing 3.3s ease-out infinite}
+.callzone.is-playing .stage-ring.r2{animation-delay:1.1s}
+.callzone.is-playing .stage-ring.r3{animation-delay:2.2s}
+
+/* the phone reuses the telephony section's device, resized and made live */
+.phone.phone-live{
+  position:relative;z-index:3;width:min(212px,52%);aspect-ratio:9/15.4;margin:0;
+  padding:16px 14px 14px;border-radius:34px;
+  box-shadow:0 44px 90px rgba(14,18,27,.34);
+}
+.phone.phone-live::before{width:74px;height:18px;top:11px}
+.ph-banner{
+  display:flex;align-items:center;justify-content:center;gap:7px;margin-top:22px;
+  font-size:10px;letter-spacing:.06em;text-transform:uppercase;color:rgba(255,255,255,.74);
+}
+.ph-banner .dot{width:6px;height:6px;border-radius:50%;background:#22A565;animation:beat 1.6s ease-in-out infinite}
+.ph-live{display:none}
+.callzone.is-playing .ph-banner .dot{background:var(--accent)}
+.callzone.is-playing .ph-ring{display:none}
+.callzone.is-playing .ph-live{display:inline}
+.ph-caller{
+  width:68px;height:68px;border-radius:50%;overflow:hidden;margin:17px auto 0;
+  box-shadow:0 0 0 1px rgba(255,255,255,.24),0 14px 30px rgba(0,0,0,.42);
+}
+.ph-caller img{width:100%;height:100%;object-fit:cover;display:block}
+.phone-live .ph-call{margin-top:13px}
+.phone-live .who{font-size:21px}
+.ph-wave{display:flex;align-items:flex-end;justify-content:center;gap:3px;height:24px;margin-top:16px}
+.ph-wave i{width:3px;border-radius:2px;background:rgba(255,255,255,.26);transition:background .3s}
+.ph-wave i:nth-child(1){height:5px}
+.ph-wave i:nth-child(2){height:11px}
+.ph-wave i:nth-child(3){height:7px}
+.ph-wave i:nth-child(4){height:15px}
+.ph-wave i:nth-child(5){height:9px}
+.ph-wave i:nth-child(6){height:13px}
+.ph-wave i:nth-child(7){height:6px}
+.callzone.is-playing .ph-wave i{background:var(--accent);animation:wv .9s ease-in-out infinite}
+.callzone.is-playing .ph-wave i:nth-child(1){animation-delay:-.15s;animation-duration:.78s}
+.callzone.is-playing .ph-wave i:nth-child(2){animation-delay:-.42s;animation-duration:1.02s}
+.callzone.is-playing .ph-wave i:nth-child(3){animation-delay:-.06s;animation-duration:.86s}
+.callzone.is-playing .ph-wave i:nth-child(4){animation-delay:-.55s;animation-duration:.94s}
+.callzone.is-playing .ph-wave i:nth-child(5){animation-delay:-.28s;animation-duration:.72s}
+.callzone.is-playing .ph-wave i:nth-child(6){animation-delay:-.48s;animation-duration:1.10s}
+.callzone.is-playing .ph-wave i:nth-child(7){animation-delay:-.20s;animation-duration:.90s}
+.phone-live .ph-btns{margin:auto 0 2px;padding:0 8px}
+.phone-live .ph-btn{width:50px;height:50px;border:0;cursor:pointer;transition:transform .18s}
+.phone-live .ph-btn:hover{transform:scale(1.07)}
+.phone-live .ph-btn:focus-visible{outline:2px solid #fff;outline-offset:3px}
+.ph-hold{display:none}
+.callzone.is-playing .ph-btn.yes{background:#1B7F4F}
+.callzone.is-playing .ph-btn.yes::after{opacity:0;animation:none}
+.callzone.is-playing .ph-ico{display:none}
+.callzone.is-playing .ph-hold{display:block}
+.call-foot{display:flex;align-items:center;gap:12px;width:min(296px,84%);margin-top:20px}
 
 .pills{display:flex;flex-wrap:wrap;gap:8px;justify-content:center}
 .pill input{position:absolute;opacity:0;pointer-events:none}
@@ -498,7 +599,8 @@ button,input,select{font:inherit;color:inherit}
 
 @media(prefers-reduced-motion:reduce){
   *,*::before,*::after{animation-duration:.001ms!important;animation-iteration-count:1!important;transition-duration:.001ms!important}
-  .rv{opacity:1;transform:none}
+  .rv,.swap{opacity:1;transform:none}
+  .stg>*{opacity:1;transform:none}
 }
 </style>
 
@@ -612,23 +714,61 @@ addEventListener('DOMContentLoaded', function(){
     <h2 class="display">Try Our<br>Live Demo</h2>
   </div>
 
-  <div class="demo-grid rv">
+  <div class="demo-grid stg">
     <!-- LEFT: orb + use-case selection -->
     <div class="panel panel-a">
-      <div class="orb" aria-hidden="true">
-        <span class="orb-ripple"></span>
-        <span class="orb-ripple b"></span>
-        <span class="orb-core"></span>
-      </div>
+      <!-- data-agent is what wires this into the shared audio controller:
+           it toggles .is-playing here and drives .agent-prog / .agent-time
+           below, exactly as it does for the four agent cards. -->
+      <div class="callzone" data-agent>
+        <div class="stage">
+          <span class="stage-wash" aria-hidden="true"></span>
+          <span class="stage-rays" aria-hidden="true"></span>
+          <span class="stage-glow" aria-hidden="true"></span>
+          <span class="stage-ring" aria-hidden="true"></span>
+          <span class="stage-ring r2" aria-hidden="true"></span>
+          <span class="stage-ring r3" aria-hidden="true"></span>
+          <span class="glass" aria-hidden="true"></span>
 
-      <div class="orb-play">
-        <button class="btn btn-line" id="sample" type="button" aria-label="Play a recorded sample of Amina"
-                data-audio="assets/amina_real_voice.mp3" data-dur="1:07"
-                data-prefix="Amina · " data-status="#sample-label">
-          <svg width="9" height="10" viewBox="0 0 9 10" fill="currentColor" aria-hidden="true"><path d="M0 0l9 5-9 5z"/></svg>
-          Play sample
-        </button>
-        <small id="sample-label">Amina · 1:07</small>
+          <div class="phone phone-live">
+            <div class="ph-banner">
+              <span class="dot" aria-hidden="true"></span>
+              <span class="ph-ring">Incoming call</span>
+              <span class="ph-live">On the call</span>
+            </div>
+
+            <div class="ph-caller">
+              <picture>
+                <source srcset="assets/avatar-amina.webp" type="image/webp">
+                <img src="assets/avatar-amina.jpg" alt="" width="68" height="68" decoding="async">
+              </picture>
+            </div>
+
+            <div class="ph-call">
+              <div class="who">Amina</div>
+              <div class="sub">Bank Support · Nairobi</div>
+            </div>
+
+            <div class="ph-wave" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+
+            <div class="ph-btns">
+              <button class="ph-btn no" id="call-decline" type="button" aria-label="Decline the call">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true" transform="rotate(135)"><path d="M6.5 3h-3v3a14.5 14.5 0 0 0 14.5 14.5h3v-3l-4-1.5-2 2A11.5 11.5 0 0 1 9 9.5l2-2z"/></svg>
+              </button>
+              <button class="ph-btn yes" id="call-accept" type="button"
+                      aria-label="Accept the call and hear Amina's recording"
+                      data-audio="assets/amina_real_voice.mp3" data-dur="1:07" data-status="#call-time">
+                <span class="ph-ico"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true"><path d="M6.5 3h-3v3a14.5 14.5 0 0 0 14.5 14.5h3v-3l-4-1.5-2 2A11.5 11.5 0 0 1 9 9.5l2-2z"/></svg></span>
+                <svg class="ph-hold" width="18" height="18" viewBox="0 0 8 10" fill="currentColor" aria-hidden="true"><rect width="2.6" height="10" rx="1.1"/><rect x="5.4" width="2.6" height="10" rx="1.1"/></svg>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div class="call-foot">
+          <div class="agent-prog"><i></i></div>
+          <small class="agent-time" id="call-time">1:07</small>
+        </div>
       </div>
 
       <fieldset class="pills" style="border:0;padding:0;margin:0">
@@ -723,7 +863,7 @@ addEventListener('DOMContentLoaded', function(){
     <p class="lede" style="margin-top:16px;max-width:44ch">Every clip below is a real human recording.</p>
   </div>
 
-  <div class="agent-grid rv">
+  <div class="agent-grid stg">
     <article class="agent" data-agent
              style="--tint:#00D4FF;--tint-2:#0088AA;--glow:rgba(0,212,255,.55)">
       <div class="agent-figure">
@@ -846,7 +986,7 @@ addEventListener('DOMContentLoaded', function(){
     <h2 class="h-sec" style="margin-top:14px;max-width:20ch">Human-standard AI voice agents, out of the box</h2>
   </div>
 
-  <div class="hl-photo rv">
+  <div class="hl-photo swap">
     <picture>
       <source srcset="assets/hl-callcenter.webp" type="image/webp">
       <img src="assets/hl-callcenter.jpg" alt="An agent taking calls in a contact centre" width="1600" height="900" loading="lazy" decoding="async">
@@ -876,7 +1016,7 @@ addEventListener('DOMContentLoaded', function(){
     <h2 class="h-sec" style="margin-top:14px;max-width:20ch">Effortless to use, highly configurable</h2>
   </div>
 
-  <div class="slides rv" id="slides">
+  <div class="slides swap" id="slides">
     <div class="slide on" data-slide>
       <div class="slide-card">
         <picture>
@@ -1229,15 +1369,25 @@ addEventListener('DOMContentLoaded', function(){
 
 /* ── scroll reveal — the entire motion budget ─────────────────────── */
 (function(){
-  var els=[].slice.call(document.querySelectorAll('.rv'));
+  var once=[].slice.call(document.querySelectorAll('.rv,.stg')),
+      media=[].slice.call(document.querySelectorAll('.swap'));
   if(!('IntersectionObserver' in window)||matchMedia('(prefers-reduced-motion:reduce)').matches){
-    els.forEach(function(e){ e.classList.add('in'); });
+    once.concat(media).forEach(function(e){ e.classList.add('in'); });
     return;
   }
+  /* sections and their staggered children reveal once and stay put */
   var io=new IntersectionObserver(function(es){
     es.forEach(function(e){ if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); } });
   },{rootMargin:'0px 0px -8% 0px',threshold:.08});
-  els.forEach(function(e){ io.observe(e); });
+  once.forEach(function(e){ io.observe(e); });
+
+  /* section photography keeps its observer, so the image being scrolled
+     away from fades out while the next one fades in — a crossfade rather
+     than a one-way reveal. */
+  var swap=new IntersectionObserver(function(es){
+    es.forEach(function(e){ e.target.classList.toggle('in',e.isIntersecting); });
+  },{rootMargin:'-6% 0px -6% 0px',threshold:.18});
+  media.forEach(function(e){ swap.observe(e); });
 })();
 
 /* ── nav hairline on scroll ───────────────────────────────────────── */
@@ -1359,6 +1509,10 @@ addEventListener('DOMContentLoaded', function(){
                    });
     });
   });
+
+  /* the phone's red button is a hang-up: same teardown as finishing. */
+  var decline=document.getElementById('call-decline');
+  if(decline) decline.addEventListener('click',function(){ stop(); });
 
   player.addEventListener('timeupdate',function(){
     if(!active) return;

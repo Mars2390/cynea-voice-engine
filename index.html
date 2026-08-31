@@ -334,19 +334,6 @@ button,input,select{font:inherit;color:inherit}
 .agent-prog i{display:block;height:100%;width:0;background:var(--tint);border-radius:2px;transition:width .12s linear}
 .agent-time{font-size:11px;color:var(--muted);font-variant-numeric:tabular-nums;min-width:62px;text-align:right}
 
-/* "Real human voice" badge. Marks the cards whose clip is an actual
-   recording of a person rather than a synthesised sample, so the two
-   are never confused. .play-row only exists to sit the badge beside the
-   button without breaking the card's centred column. */
-.play-row{display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:10px}
-.real-badge{
-  display:inline-flex;align-items:center;gap:5px;flex:none;
-  font-size:10px;font-weight:500;line-height:1;letter-spacing:.02em;white-space:nowrap;
-  color:var(--muted);background:var(--card-2);
-  border:1px solid var(--line);border-radius:999px;padding:5px 9px;
-}
-.real-badge::before{content:'';width:5px;height:5px;border-radius:50%;background:var(--accent);flex:none}
-
 /* ═══ 5. HIGHLIGHTS ═════════════════════════════════════════════════ */
 .hl-photo{border-radius:var(--r-block);overflow:hidden;margin-top:54px;aspect-ratio:16/9;max-height:560px}
 .hl-photo img{width:100%;height:100%;object-fit:cover}
@@ -733,6 +720,7 @@ addEventListener('DOMContentLoaded', function(){
   <div class="rv">
     <p class="kicker">Agents</p>
     <h2 class="h-sec" style="margin-top:14px;max-width:20ch">Meet your voice agents</h2>
+    <p class="lede" style="margin-top:16px;max-width:44ch">Every clip below is a real human recording.</p>
   </div>
 
   <div class="agent-grid rv">
@@ -751,20 +739,17 @@ addEventListener('DOMContentLoaded', function(){
       <p class="agent-role">Hotel Receptionist</p>
       <p class="agent-place">Ghana</p>
       <div class="wave" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i></div>
-      <div class="play-row">
-        <button class="agent-play" type="button" aria-label="Hear Kwame's demo — real human voice recording"
-                data-audio="assets/kwame_real_voice.mp3" data-dur="1:38" data-status="#t-kwame">
-          <span class="pp" aria-hidden="true">
-            <svg class="i-play" width="9" height="10" viewBox="0 0 9 10" fill="currentColor"><path d="M0 0l9 5-9 5z"/></svg>
-            <svg class="i-pause" width="8" height="10" viewBox="0 0 8 10" fill="currentColor"><rect width="2.6" height="10" rx="1.1"/><rect x="5.4" width="2.6" height="10" rx="1.1"/></svg>
-          </span>
-          Hear Demo
-        </button>
-        <span class="real-badge">Real human voice</span>
-      </div>
+      <button class="agent-play" type="button" aria-label="Hear Kwame's demo"
+              data-audio="assets/kwame_card_demo.mp3" data-dur="0:20" data-status="#t-kwame">
+        <span class="pp" aria-hidden="true">
+          <svg class="i-play" width="9" height="10" viewBox="0 0 9 10" fill="currentColor"><path d="M0 0l9 5-9 5z"/></svg>
+          <svg class="i-pause" width="8" height="10" viewBox="0 0 8 10" fill="currentColor"><rect width="2.6" height="10" rx="1.1"/><rect x="5.4" width="2.6" height="10" rx="1.1"/></svg>
+        </span>
+        Hear Demo
+      </button>
       <div class="agent-foot">
         <div class="agent-prog"><i></i></div>
-        <small class="agent-time" id="t-kwame">1:38</small>
+        <small class="agent-time" id="t-kwame">0:20</small>
       </div>
     </article>
     <article class="agent" data-agent
@@ -782,20 +767,17 @@ addEventListener('DOMContentLoaded', function(){
       <p class="agent-role">Bank Support</p>
       <p class="agent-place">Kenya</p>
       <div class="wave" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i></div>
-      <div class="play-row">
-        <button class="agent-play" type="button" aria-label="Hear Amina's demo — real human voice recording"
-                data-audio="assets/amina_real_voice.mp3" data-dur="1:07" data-status="#t-amina">
-          <span class="pp" aria-hidden="true">
-            <svg class="i-play" width="9" height="10" viewBox="0 0 9 10" fill="currentColor"><path d="M0 0l9 5-9 5z"/></svg>
-            <svg class="i-pause" width="8" height="10" viewBox="0 0 8 10" fill="currentColor"><rect width="2.6" height="10" rx="1.1"/><rect x="5.4" width="2.6" height="10" rx="1.1"/></svg>
-          </span>
-          Hear Demo
-        </button>
-        <span class="real-badge">Real human voice</span>
-      </div>
+      <button class="agent-play" type="button" aria-label="Hear Amina's demo"
+              data-audio="assets/amina_card_demo.mp3" data-dur="0:20" data-status="#t-amina">
+        <span class="pp" aria-hidden="true">
+          <svg class="i-play" width="9" height="10" viewBox="0 0 9 10" fill="currentColor"><path d="M0 0l9 5-9 5z"/></svg>
+          <svg class="i-pause" width="8" height="10" viewBox="0 0 8 10" fill="currentColor"><rect width="2.6" height="10" rx="1.1"/><rect x="5.4" width="2.6" height="10" rx="1.1"/></svg>
+        </span>
+        Hear Demo
+      </button>
       <div class="agent-foot">
         <div class="agent-prog"><i></i></div>
-        <small class="agent-time" id="t-amina">1:07</small>
+        <small class="agent-time" id="t-amina">0:20</small>
       </div>
     </article>
     <article class="agent" data-agent
@@ -814,7 +796,7 @@ addEventListener('DOMContentLoaded', function(){
       <p class="agent-place">Ghana</p>
       <div class="wave" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i></div>
       <button class="agent-play" type="button" aria-label="Hear Kofi's demo"
-              data-audio="assets/kofi_test_1.mp3" data-dur="0:07" data-status="#t-kofi">
+              data-audio="assets/kofi_card_demo.mp3" data-dur="0:20" data-status="#t-kofi">
         <span class="pp" aria-hidden="true">
           <svg class="i-play" width="9" height="10" viewBox="0 0 9 10" fill="currentColor"><path d="M0 0l9 5-9 5z"/></svg>
           <svg class="i-pause" width="8" height="10" viewBox="0 0 8 10" fill="currentColor"><rect width="2.6" height="10" rx="1.1"/><rect x="5.4" width="2.6" height="10" rx="1.1"/></svg>
@@ -823,13 +805,11 @@ addEventListener('DOMContentLoaded', function(){
       </button>
       <div class="agent-foot">
         <div class="agent-prog"><i></i></div>
-        <small class="agent-time" id="t-kofi">0:07</small>
+        <small class="agent-time" id="t-kofi">0:20</small>
       </div>
     </article>
     <article class="agent" data-agent
              style="--tint:#FFD7A6;--tint-2:#E0902F;--glow:rgba(224,144,47,.5)">
-      <!-- FLAG: placeholder audio. This is Amina's clip standing in until
-           assets/maya_test_1.mp3 is recorded. Swap data-audio + data-dur then. -->
       <div class="agent-figure">
         <span class="agent-orb" aria-hidden="true"></span>
         <span class="agent-ring" aria-hidden="true"></span>
@@ -843,8 +823,8 @@ addEventListener('DOMContentLoaded', function(){
       <p class="agent-role">Bookings & Scheduling</p>
       <p class="agent-place">Pan-African</p>
       <div class="wave" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i></div>
-      <button class="agent-play" type="button" aria-label="Hear Maya's demo (placeholder voice sample)"
-              data-audio="assets/amina_test_1.mp3" data-dur="0:02" data-status="#t-maya">
+      <button class="agent-play" type="button" aria-label="Hear Maya's demo"
+              data-audio="assets/maya_card_demo.mp3" data-dur="0:20" data-status="#t-maya">
         <span class="pp" aria-hidden="true">
           <svg class="i-play" width="9" height="10" viewBox="0 0 9 10" fill="currentColor"><path d="M0 0l9 5-9 5z"/></svg>
           <svg class="i-pause" width="8" height="10" viewBox="0 0 8 10" fill="currentColor"><rect width="2.6" height="10" rx="1.1"/><rect x="5.4" width="2.6" height="10" rx="1.1"/></svg>
@@ -853,7 +833,7 @@ addEventListener('DOMContentLoaded', function(){
       </button>
       <div class="agent-foot">
         <div class="agent-prog"><i></i></div>
-        <small class="agent-time" id="t-maya">0:02</small>
+        <small class="agent-time" id="t-maya">0:20</small>
       </div>
     </article>
   </div>

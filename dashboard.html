@@ -191,7 +191,15 @@ picture{display:contents}
   padding:16px;text-align:left;transition:border-color .16s}
 .acard:hover{border-color:var(--ink)}
 .acard-top{display:flex;align-items:center;gap:11px}
-.acard img{width:40px;height:40px;border-radius:50%;object-fit:cover;flex-shrink:0}
+.acard-top .ph{width:80px;height:80px;border-radius:50%;flex-shrink:0;position:relative;
+  overflow:hidden;background:linear-gradient(135deg,var(--c1,#FF6B4A),var(--c2,#D4457E));
+  box-shadow:0 0 0 2px var(--bg),0 0 0 3px var(--c1,#FF6B4A)}
+.acard-top .ph img{width:100%;height:100%;object-fit:cover;display:block}
+/* Failed photo: the ring and the tinted disc stay, so the card still reads
+   as this agent rather than as a broken image. */
+.acard-top .ph.no-photo picture{display:none}
+.acard-top .ph.no-photo::after{content:attr(data-initial);position:absolute;inset:0;
+  display:grid;place-items:center;color:#fff;font-weight:700;font-size:30px}
 .acard b{display:block;font-size:14px;font-weight:600}
 .acard .role{font-size:12px;color:var(--muted)}
 .acard{display:flex;flex-direction:column}
@@ -884,11 +892,21 @@ var $=function(s,r){return (r||document).querySelector(s);};
 var $$=function(s,r){return [].slice.call((r||document).querySelectorAll(s));};
 function esc(s){return String(s).replace(/[&<>"]/g,function(c){
   return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});}
-function pic(name,cls,alt,size){
+/* `host` is a selector for the element that carries the fallback styling.
+   Passing it adds an onerror that marks that ancestor, so a missing file
+   degrades to the agent's gradient instead of a broken-image icon. */
+function pic(name,cls,alt,size,host){
   return '<picture><source srcset="assets/'+name+'.webp" type="image/webp">'+
          '<img'+(cls?' class="'+cls+'"':'')+' src="assets/'+name+'.jpg" alt="'+esc(alt)+'"'+
-         ' width="'+size+'" height="'+size+'" loading="lazy" decoding="async"></picture>';
+         ' width="'+size+'" height="'+size+'" loading="lazy" decoding="async"'+
+         (host?' onerror="this.closest(\''+host+'\').classList.add(\'no-photo\')"':'')+
+         '></picture>';
 }
+
+/* Card accent per agent — the same tints the landing page uses. */
+function tint(k){ return TINT[k]||TINT.kwame; }
+var TINT={kwame:['#FF6B4A','#E24A2E'], amina:['#F9B3BE','#D4457E'],
+          kofi:['#8FE6DD','#1F9D93'],  maya:['#F7CE9A','#F2A03D']};
 var BADGE={
   ok:['b-ok','Resolved','M4 12.5l4.5 4.5L20 6'],
   warn:['b-warn','Escalated','M12 3.5L21.5 20h-19zM12 9.5v4.5M12 16.5v.5'],
@@ -1000,7 +1018,9 @@ function renderAgents(){
   $('#agentCards').innerHTML=keys.map(function(k){
     var a=AGENTS[k],s=STATUS[k];
     return '<button class="acard" type="button" data-agent="'+k+'">'+
-      '<span class="acard-top">'+pic(a.photo,'',a.name,240)+
+      '<span class="acard-top">'+
+      '<span class="ph" style="--c1:'+tint(k)[0]+';--c2:'+tint(k)[1]+'" data-initial="'+
+        esc(a.name.charAt(0))+'">'+pic(a.photo||('avatar-'+k),'',a.name,240,'.ph')+'</span>'+
       '<span><b>'+esc(a.name)+'</b><span class="role">'+esc(a.role)+' · '+esc(a.place)+'</span></span></span>'+
       '<span class="acard-st '+(s.on?'st-on':'st-idle')+'"><i aria-hidden="true"></i>'+
       (s.on?'On call':'Idle')+'<span class="timer">'+esc(s.timer)+'</span></span></button>';

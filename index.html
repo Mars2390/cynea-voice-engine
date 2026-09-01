@@ -467,6 +467,13 @@ button,input,select{font:inherit;color:inherit}
 .agent.is-playing .agent-orb{opacity:.52;animation:orbPulse 2.2s ease-in-out infinite}
 .agent.is-playing .agent-ring{animation:ring 2.2s ease-out infinite}
 .agent.is-playing .agent-photo{box-shadow:0 0 0 3px var(--card),0 0 22px 3px var(--glow)}
+/* Photo failed to load: the orb behind it becomes the avatar, keeping the
+   agent's tint and every animation, rather than leaving a broken image. */
+.agent-figure.no-photo picture{display:none}
+.agent-figure.no-photo .agent-orb{inset:0;opacity:.92}
+.agent.is-playing .agent-figure.no-photo .agent-orb{opacity:1}
+.ph-caller.no-photo picture{display:none}
+.ph-caller.no-photo{background:linear-gradient(140deg,#F9B3BE,#D4457E)}
 @keyframes orbPulse{0%,100%{transform:scale(1)}50%{transform:scale(1.07)}}
 
 .agent h3{font-size:18px;font-weight:600;letter-spacing:-.4px}
@@ -916,7 +923,8 @@ addEventListener('DOMContentLoaded', function(){
             <div class="ph-caller">
               <picture>
                 <source srcset="assets/avatar-amina.webp" type="image/webp">
-                <img src="assets/avatar-amina.jpg" alt="" width="68" height="68" decoding="async">
+                <img src="assets/avatar-amina.jpg" alt="" width="68" height="68" decoding="async"
+                     onerror="this.closest('.ph-caller').classList.add('no-photo')">
               </picture>
             </div>
 
@@ -1085,7 +1093,8 @@ addEventListener('DOMContentLoaded', function(){
         <picture>
           <source srcset="assets/avatar-kwame.webp" type="image/webp">
           <img class="agent-photo" src="assets/avatar-kwame.jpg" alt="Kwame"
-               width="240" height="240" loading="lazy" decoding="async">
+               width="240" height="240" loading="lazy" decoding="async"
+               onerror="this.closest('.agent-figure').classList.add('no-photo')">
         </picture>
       </div>
       <h3>Kwame</h3>
@@ -1114,7 +1123,8 @@ addEventListener('DOMContentLoaded', function(){
         <picture>
           <source srcset="assets/avatar-amina.webp" type="image/webp">
           <img class="agent-photo" src="assets/avatar-amina.jpg" alt="Amina"
-               width="240" height="240" loading="lazy" decoding="async">
+               width="240" height="240" loading="lazy" decoding="async"
+               onerror="this.closest('.agent-figure').classList.add('no-photo')">
         </picture>
       </div>
       <h3>Amina</h3>
@@ -1143,7 +1153,8 @@ addEventListener('DOMContentLoaded', function(){
         <picture>
           <source srcset="assets/avatar-kofi.webp" type="image/webp">
           <img class="agent-photo" src="assets/avatar-kofi.jpg" alt="Kofi"
-               width="240" height="240" loading="lazy" decoding="async">
+               width="240" height="240" loading="lazy" decoding="async"
+               onerror="this.closest('.agent-figure').classList.add('no-photo')">
         </picture>
       </div>
       <h3>Kofi</h3>
@@ -1172,7 +1183,8 @@ addEventListener('DOMContentLoaded', function(){
         <picture>
           <source srcset="assets/avatar-maya.webp" type="image/webp">
           <img class="agent-photo" src="assets/avatar-maya.jpg" alt="Maya"
-               width="240" height="240" loading="lazy" decoding="async">
+               width="240" height="240" loading="lazy" decoding="async"
+               onerror="this.closest('.agent-figure').classList.add('no-photo')">
         </picture>
       </div>
       <h3>Maya</h3>

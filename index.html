@@ -784,17 +784,9 @@ section[id],header[id],footer[id]{scroll-margin-top:76px}
 .call.on::before{opacity:1}
 
 /* ── who is on the call ── */
-.call-head{display:flex;align-items:flex-start;justify-content:space-between;gap:14px;margin-bottom:20px}
+.call-head{margin-bottom:20px}
 .call-title{font-size:clamp(16px,.29vw + 14.9px,19px);font-weight:500;letter-spacing:-.4px}
 .call-sub{font-size:clamp(12.5px,.14vw + 12px,14px);color:var(--muted);margin-top:3px;max-width:36ch}
-.call-badge{
-  flex-shrink:0;display:inline-flex;align-items:center;gap:6px;
-  font-size:11px;font-weight:500;letter-spacing:-.16px;white-space:nowrap;
-  padding:5px 10px;border-radius:999px;
-  color:var(--coral-deep);background:rgba(255,107,74,.09);
-  box-shadow:inset 0 0 0 1px rgba(255,107,74,.34);
-}
-.call-badge::before{content:"";width:5px;height:5px;border-radius:50%;background:var(--coral)}
 
 /* ── the two ends of the line ── */
 .call-pair{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:12px;margin-bottom:18px}
@@ -844,9 +836,9 @@ section[id],header[id],footer[id]{scroll-margin-top:76px}
    itself to whoever is speaking.
 
    It is aria-hidden and it is not the only copy: the whole conversation
-   is written out underneath in <details>, which is what assistive tech
-   and a reader with no JavaScript get. A caption that animates is a
-   nicety; the transcript is the content. ── */
+   is written out underneath in a visually-hidden block, which is what
+   assistive tech and a reader with no JavaScript get. A caption that
+   animates is a nicety; the transcript is the content. ── */
 .call-tape{
   position:relative;border-radius:12px;overflow:hidden;
   background:linear-gradient(168deg,#1B2050 0%,#171A2E 58%,#241C3A 100%);
@@ -932,22 +924,15 @@ section[id],header[id],footer[id]{scroll-margin-top:76px}
 .call-ghost:hover{box-shadow:inset 0 0 0 1px var(--ink)}
 
 /* ── the transcript in full, for anyone the animation does not serve ── */
-.call-script{margin-top:16px;border-top:1px solid var(--line);padding-top:14px}
-.call-script summary{
-  cursor:pointer;font-size:12px;font-weight:500;color:var(--muted);
-  letter-spacing:-.16px;list-style:none;display:flex;align-items:center;gap:7px;
+/* The written-out conversation, present for assistive tech, crawlers and
+   anyone without JavaScript, and shown to nobody. The animated tape above
+   is aria-hidden and starts empty, so without this the section would carry
+   no readable content at all for those readers. Not display:none, which
+   would take it out of the accessibility tree along with the layout. */
+.call-script{
+  position:absolute;width:1px;height:1px;padding:0;margin:-1px;
+  overflow:hidden;clip:rect(0 0 0 0);border:0;
 }
-.call-script summary::-webkit-details-marker{display:none}
-.call-script summary::before{
-  content:"";width:5px;height:5px;border-right:1.2px solid currentColor;
-  border-bottom:1.2px solid currentColor;transform:rotate(-45deg);transition:transform .24s ease;
-}
-.call-script[open] summary::before{transform:rotate(45deg)}
-.call-script summary:hover{color:var(--ink)}
-.call-script ol{margin-top:14px;display:flex;flex-direction:column;gap:10px}
-.call-script li{font-size:13px;line-height:1.5;color:var(--muted)}
-.call-script li b{color:var(--ink);font-weight:500}
-.call-script li.sc-agent b{color:var(--coral-deep)}
 
 @media(prefers-reduced-motion:reduce){
   /* The words still arrive on cue — that is the sync, and it is a fade,
@@ -2274,10 +2259,9 @@ addEventListener('DOMContentLoaded', function(){
              data-audio-src="assets/kwame_full_conversation.mp3" data-duration="128.564">
       <div class="call-head">
         <div>
-          <h3 class="call-title">An anniversary weekend</h3>
+          <h3 class="call-title">Kwame Assistant</h3>
           <p class="call-sub">A guest books a tenth-anniversary weekend. Kwame recommends a suite, prices it, adds a package, and takes the booking.</p>
         </div>
-        <span class="call-badge">Real human voice</span>
       </div>
 
       <div class="call-pair">
@@ -2302,7 +2286,7 @@ addEventListener('DOMContentLoaded', function(){
       </div>
 
       <!-- The animated tape. Decorative: the same words are written out in
-           full under "Read the full transcript" below, which is what a
+           full in the visually-hidden .call-script below, which is what a
            screen reader and a reader with no JavaScript get. -->
       <div class="call-tape" data-tape aria-hidden="true">
         <p class="call-idle">Answer the call to hear it.</p>
@@ -2323,8 +2307,7 @@ addEventListener('DOMContentLoaded', function(){
         <button class="call-ghost" type="button" data-restart hidden>Restart</button>
       </div>
 
-      <details class="call-script">
-        <summary>Read the full transcript</summary>
+      <div class="call-script">
         <ol>
           <li class="sc-agent"><b>Kwame</b> Hello? Adinkra Hotel, Kwame speaking. How can I help you today?</li>
           <li class="sc-caller"><b>David Osei</b> Hi, Kwame. Good afternoon. I'm planning something special for my wife. Our tenth anniversary. I want to book a room for the weekend.</li>
@@ -2347,17 +2330,16 @@ addEventListener('DOMContentLoaded', function(){
           <li class="sc-agent"><b>Kwame</b> You're most welcome, David. We'll have everything ready for you and your wife. Enjoy your anniversary. We'll see you Friday. Bye now!</li>
           <li class="sc-caller"><b>David Osei</b> Thank you. Bye.</li>
         </ol>
-      </details>
+      </div>
     </article>
 
     <article class="call rv" data-call="amina"
              data-audio-src="assets/amina_full_conversation.mp3" data-duration="74.684">
       <div class="call-head">
         <div>
-          <h3 class="call-title">A transfer that has not landed</h3>
+          <h3 class="call-title">Amina Assistant</h3>
           <p class="call-sub">An M-Pesa transfer is stuck. Amina finds it, escalates it, and commits to a callback window and a reversal rather than an apology.</p>
         </div>
-        <span class="call-badge">Real human voice</span>
       </div>
 
       <div class="call-pair">
@@ -2384,7 +2366,7 @@ addEventListener('DOMContentLoaded', function(){
       </div>
 
       <!-- The animated tape. Decorative: the same words are written out in
-           full under "Read the full transcript" below, which is what a
+           full in the visually-hidden .call-script below, which is what a
            screen reader and a reader with no JavaScript get. -->
       <div class="call-tape" data-tape aria-hidden="true">
         <p class="call-idle">Answer the call to hear it.</p>
@@ -2405,8 +2387,7 @@ addEventListener('DOMContentLoaded', function(){
         <button class="call-ghost" type="button" data-restart hidden>Restart</button>
       </div>
 
-      <details class="call-script">
-        <summary>Read the full transcript</summary>
+      <div class="call-script">
         <ol>
           <li class="sc-agent"><b>Amina</b> Hello, this is Amina from Cynea Bank. How can I help you today?</li>
           <li class="sc-caller"><b>Caller</b> Hi, Amina. I sent money through M-Pesa two hours ago, and the person hasn't received it.</li>
@@ -2424,7 +2405,7 @@ addEventListener('DOMContentLoaded', function(){
           <li class="sc-caller"><b>Caller</b> No, that's all.</li>
           <li class="sc-agent"><b>Amina</b> Asante sana for calling. Have a good day.</li>
         </ol>
-      </details>
+      </div>
     </article>
   </div>
 </section>

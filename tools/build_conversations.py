@@ -124,7 +124,7 @@ SCRIPT: dict[str, dict] = {
                   "where": "Adinkra Hotel · Accra", "avatar": "avatar-kwame"},
         "caller": {"name": "David Osei", "role": "Guest",
                    "where": "Calling from Accra", "avatar": None},
-        "title": "An anniversary weekend",
+        "title": "Kwame Assistant",
         "summary": "A guest books a tenth-anniversary weekend. Kwame recommends "
                    "a suite, prices it, adds a package, and takes the booking.",
         "turns": [
@@ -156,7 +156,7 @@ SCRIPT: dict[str, dict] = {
                   "where": "Cynea Bank · Nairobi", "avatar": "avatar-amina"},
         "caller": {"name": "Caller", "role": "Customer",
                    "where": "Calling from Nairobi", "avatar": None},
-        "title": "A transfer that has not landed",
+        "title": "Amina Assistant",
         "summary": "An M-Pesa transfer is stuck. Amina finds it, escalates it, "
                    "and commits to a callback window and a reversal rather than "
                    "an apology.",

@@ -2,7 +2,7 @@
  "kwame": {
   "audio": "assets/kwame_full_conversation.mp3",
   "duration": 128.564,
-  "title": "An anniversary weekend",
+  "title": "Kwame Assistant",
   "summary": "A guest books a tenth-anniversary weekend. Kwame recommends a suite, prices it, adds a package, and takes the booking.",
   "agent": {
    "name": "Kwame",
@@ -1507,7 +1507,7 @@
  "amina": {
   "audio": "assets/amina_full_conversation.mp3",
   "duration": 74.684,
-  "title": "A transfer that has not landed",
+  "title": "Amina Assistant",
   "summary": "An M-Pesa transfer is stuck. Amina finds it, escalates it, and commits to a callback window and a reversal rather than an apology.",
   "agent": {
    "name": "Amina",

@@ -293,19 +293,30 @@ button,input,select{font:inherit;color:inherit}
   .stmt .row:nth-child(3){margin-left:1em}
   .stmt .row:nth-child(4){margin-left:.3em}
 }
-/* the one decorative motion in a statement banner: a slow dot ring */
-.dotring{width:.62em;height:.62em;position:relative;flex-shrink:0;animation:spin 14s linear infinite}
-.dotring i{position:absolute;inset:0}
-.dotring i::before{
-  content:"";position:absolute;top:0;left:50%;width:.1em;height:.1em;
-  margin-left:-.05em;border-radius:50%;background:var(--accent);
+/* ── the voice mark ────────────────────────────────────────────────
+   The one decorative motion in a statement banner. It replaced a ring of
+   four rotating dots, which sat close enough to a competitor's mark to be
+   worth losing on that ground alone; what stands here now is worth keeping
+   on its own.
+
+   Every tick is one amplitude bucket of Kwame's actual greeting, measured
+   by tools/make_voicemark.py and baked in as coordinates — so the outline
+   is the shape of a real person saying a real sentence, which is the claim
+   the rest of the page is making. The loudest bucket carries the accent.
+   It breathes rather than spins: a voice is not a wheel. */
+.vmark{width:.92em;height:.92em;flex-shrink:0;overflow:visible;display:block}
+.vmark line{
+  stroke:var(--ink);stroke-width:3.2;stroke-linecap:round;opacity:.3;
+  transform-box:fill-box;transform-origin:center;
+  animation:vmarkBreathe 3.6s ease-in-out infinite;animation-delay:var(--d,0s);
 }
-.dotring i:nth-child(2){transform:rotate(90deg)}
-.dotring i:nth-child(3){transform:rotate(180deg)}
-.dotring i:nth-child(4){transform:rotate(270deg)}
-.dotring i:nth-child(2)::before,.dotring i:nth-child(4)::before{background:var(--muted);opacity:.5}
-.dotring i:nth-child(3)::before{background:var(--ink);opacity:.35}
-@keyframes spin{to{transform:rotate(360deg)}}
+.vmark line.lead{stroke:var(--accent);stroke-width:4;animation-name:vmarkLead}
+@keyframes vmarkBreathe{0%,100%{opacity:.24;transform:scale(.84)}50%{opacity:.68;transform:scale(1)}}
+@keyframes vmarkLead{0%,100%{opacity:.72;transform:scale(.9)}50%{opacity:1;transform:scale(1.14)}}
+@media(prefers-reduced-motion:reduce){
+  .vmark line{animation:none;opacity:.3}
+  .vmark line.lead{animation:none;opacity:1}
+}
 /* warm photo tile set between the words of statement 2 */
 .stmt-tile{
   width:clamp(96px,15vw,190px);aspect-ratio:14/9;border-radius:12px;
@@ -703,7 +714,62 @@ button,input,select{font:inherit;color:inherit}
 
 /* ═══ 7. OMNI-CHANNEL — diagonal cascade ════════════════════════════ */
 .cascade{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-top:54px;align-items:start}
-.casc{background:var(--card);border:1px solid var(--line);border-radius:var(--r-card);padding:30px 26px 34px}
+/* ── channel cards ─────────────────────────────────────────────────
+   Hovering one card is treated as choosing it: that card rises, warms to
+   its own channel tint and lights its badge, while the other three step
+   back. Dimming the siblings is what makes it read as focus rather than
+   as a card that merely wiggled — and with only four cards in the cascade
+   the whole group stays legible while it happens.
+
+   The tint per card is set in the markup as --c/--c2, so the palette lives
+   beside the content instead of in four nth-child rules down here.
+   color-mix is progressive: where it is unsupported the plain accent
+   fallback declared above it still applies. */
+.casc{
+  background:var(--card);border:1px solid var(--line);border-radius:var(--r-card);
+  padding:30px 26px 34px;position:relative;isolation:isolate;
+  transition:transform .38s cubic-bezier(.2,.8,.2,1),
+             box-shadow .38s cubic-bezier(.2,.8,.2,1),
+             border-color .3s ease, background .38s ease, opacity .38s ease;
+}
+/* the glow sits behind the card and only exists while it is chosen */
+.casc::after{
+  content:"";position:absolute;inset:-1px;border-radius:inherit;z-index:-1;
+  background:radial-gradient(120% 120% at 50% 0,var(--c,var(--coral)),transparent 62%);
+  opacity:0;transition:opacity .38s ease;
+}
+/* Siblings recede by changing surface, not by fading their text. Dimming
+   to the strength this effect wants (55%) took body copy on the unhovered
+   cards to 2.7:1, and the level that would have kept them at AA was too
+   faint to read as focus at all. Dropping them onto the recessed ground
+   and shrinking them a hair separates the planes just as clearly and
+   leaves every word at full strength. */
+.cascade:hover .casc{background:var(--card-2);transform:scale(.982);opacity:.92}
+.cascade .casc:hover{
+  background:var(--card);opacity:1;transform:translateY(-8px) scale(1);
+  border-color:var(--c,var(--coral));
+  border-color:color-mix(in srgb,var(--c,var(--coral)) 42%,var(--line));
+  box-shadow:0 26px 54px -22px rgba(22,22,22,.16),0 4px 14px rgba(22,22,22,.05);
+  box-shadow:0 26px 54px -22px color-mix(in srgb,var(--c,var(--coral)) 55%,transparent),
+             0 4px 14px rgba(22,22,22,.05);
+}
+.cascade .casc:hover::after{opacity:.16}
+.casc .badge{transition:background .38s ease,color .3s ease,box-shadow .38s ease,
+             transform .38s cubic-bezier(.2,.8,.2,1)}
+.cascade .casc:hover .badge{
+  background:linear-gradient(140deg,var(--c,var(--coral)),var(--c2,var(--coral-deep)));
+  color:#fff;box-shadow:0 8px 20px -8px var(--c,var(--coral));
+  transform:translateY(-2px) rotate(-6deg);
+}
+/* No pointer, no cascade: this is decoration, so on touch it simply does
+   not happen rather than being approximated by a tap state. */
+@media(hover:none){
+  .cascade:hover .casc{opacity:1;transform:none;background:var(--card)}
+}
+@media(prefers-reduced-motion:reduce){
+  .casc,.casc .badge,.casc::after{transition:none}
+  .cascade:hover .casc,.cascade .casc:hover{transform:none}
+}
 .cascade .casc:nth-child(1){margin-top:0}
 .cascade .casc:nth-child(2){margin-top:44px}
 .cascade .casc:nth-child(3){margin-top:88px}
@@ -1033,10 +1099,52 @@ addEventListener('DOMContentLoaded', function(){
   <h2 class="stmt stmt-1 rv">
     <span class="row">Built</span>
     <span class="row">
-      <span class="dotring" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
+      <!-- Kwame's greeting, drawn. See tools/make_voicemark.py. -->
+      <svg class="vmark" viewBox="0 0 100 100" aria-hidden="true" focusable="false">
+          <line x1="50.0" y1="27.0" x2="50.0" y2="16.0" style="--d:0.00s"/>
+          <line x1="53.6" y1="27.3" x2="57.4" y2="3.2" style="--d:0.04s"/>
+          <line class="lead" x1="57.1" y1="28.1" x2="65.1" y2="3.4" style="--d:0.09s"/>
+          <line x1="60.4" y1="29.5" x2="67.3" y2="16.1" style="--d:0.14s"/>
+          <line x1="63.5" y1="31.4" x2="68.8" y2="24.2" style="--d:0.18s"/>
+          <line x1="66.3" y1="33.7" x2="72.9" y2="27.1" style="--d:0.22s"/>
+          <line x1="68.6" y1="36.5" x2="76.2" y2="31.0" style="--d:0.27s"/>
+          <line x1="70.5" y1="39.6" x2="78.8" y2="35.3" style="--d:0.32s"/>
+          <line x1="71.9" y1="42.9" x2="81.2" y2="39.9" style="--d:0.36s"/>
+          <line x1="72.7" y1="46.4" x2="91.4" y2="43.4" style="--d:0.40s"/>
+          <line x1="73.0" y1="50.0" x2="84.7" y2="50.0" style="--d:0.45s"/>
+          <line x1="72.7" y1="53.6" x2="83.2" y2="55.3" style="--d:0.49s"/>
+          <line x1="71.9" y1="57.1" x2="86.9" y2="62.0" style="--d:0.54s"/>
+          <line x1="70.5" y1="60.4" x2="90.1" y2="70.4" style="--d:0.58s"/>
+          <line x1="68.6" y1="63.5" x2="84.4" y2="75.0" style="--d:0.63s"/>
+          <line x1="66.3" y1="66.3" x2="80.6" y2="80.6" style="--d:0.67s"/>
+          <line x1="63.5" y1="68.6" x2="75.5" y2="85.1" style="--d:0.72s"/>
+          <line x1="60.4" y1="70.5" x2="68.7" y2="86.6" style="--d:0.77s"/>
+          <line x1="57.1" y1="71.9" x2="61.6" y2="85.7" style="--d:0.81s"/>
+          <line x1="53.6" y1="72.7" x2="55.1" y2="82.4" style="--d:0.85s"/>
+          <line x1="50.0" y1="73.0" x2="50.0" y2="83.1" style="--d:0.90s"/>
+          <line x1="46.4" y1="72.7" x2="44.6" y2="84.3" style="--d:0.94s"/>
+          <line x1="42.9" y1="71.9" x2="36.4" y2="91.9" style="--d:0.99s"/>
+          <line x1="39.6" y1="70.5" x2="32.0" y2="85.3" style="--d:1.03s"/>
+          <line x1="36.5" y1="68.6" x2="27.7" y2="80.7" style="--d:1.08s"/>
+          <line x1="33.7" y1="66.3" x2="23.7" y2="76.3" style="--d:1.12s"/>
+          <line x1="31.4" y1="63.5" x2="21.5" y2="70.7" style="--d:1.17s"/>
+          <line x1="29.5" y1="60.4" x2="21.8" y2="64.4" style="--d:1.21s"/>
+          <line x1="28.1" y1="57.1" x2="18.6" y2="60.2" style="--d:1.26s"/>
+          <line x1="27.3" y1="53.6" x2="18.3" y2="55.0" style="--d:1.30s"/>
+          <line x1="27.0" y1="50.0" x2="18.5" y2="50.0" style="--d:1.35s"/>
+          <line x1="27.3" y1="46.4" x2="8.8" y2="43.5" style="--d:1.40s"/>
+          <line x1="28.1" y1="42.9" x2="7.6" y2="36.2" style="--d:1.44s"/>
+          <line x1="29.5" y1="39.6" x2="9.3" y2="29.3" style="--d:1.48s"/>
+          <line x1="31.4" y1="36.5" x2="12.0" y2="22.4" style="--d:1.53s"/>
+          <line x1="33.7" y1="33.7" x2="20.0" y2="20.0" style="--d:1.57s"/>
+          <line x1="36.5" y1="31.4" x2="25.6" y2="16.4" style="--d:1.62s"/>
+          <line x1="39.6" y1="29.5" x2="29.3" y2="9.5" style="--d:1.67s"/>
+          <line x1="42.9" y1="28.1" x2="36.7" y2="9.1" style="--d:1.71s"/>
+          <line x1="46.4" y1="27.3" x2="44.9" y2="17.6" style="--d:1.75s"/>
+      </svg>
       in Nairobi,
     </span>
-    <span class="row">for Africa.</span>
+    <span class="row">answered by people.</span>
   </h2>
 </section>
 
@@ -1531,28 +1639,28 @@ addEventListener('DOMContentLoaded', function(){
   </div>
 
   <div class="cascade rv">
-    <div class="casc">
+    <div class="casc" style="--c:#FF6B4A;--c2:#E24A2E">
       <span class="badge" aria-hidden="true">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6.5 3h-3v3a14.5 14.5 0 0 0 14.5 14.5h3v-3l-4-1.5-2 2A11.5 11.5 0 0 1 9 9.5l2-2z"/></svg>
       </span>
       <h3>Voice Calls</h3>
       <p>Inbound and outbound over SIP or a local number.</p>
     </div>
-    <div class="casc">
+    <div class="casc" style="--c:#4FD1C5;--c2:#1F9D93">
       <span class="badge" aria-hidden="true">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.5 8.5 0 0 1-12.6 7.4L3 20.5l1.7-5.2A8.5 8.5 0 1 1 21 11.5z"/></svg>
       </span>
       <h3>WhatsApp</h3>
       <p>The same agent, answering on the channel Africa actually uses.</p>
     </div>
-    <div class="casc">
+    <div class="casc" style="--c:#F2A03D;--c2:#D9902B">
       <span class="badge" aria-hidden="true">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6.5h18v11H8l-5 3.5z"/></svg>
       </span>
       <h3>SMS</h3>
       <p>Confirmations, reminders and fallbacks when a call drops.</p>
     </div>
-    <div class="casc">
+    <div class="casc" style="--c:#7B4FD4;--c2:#3A3F8F">
       <span class="badge" aria-hidden="true">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 7l-5 5 5 5M15 7l5 5-5 5"/></svg>
       </span>

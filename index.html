@@ -18,6 +18,13 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
 
+<noscript><style>
+/* Every .rv/.stg block starts at opacity 0 and is revealed by script. With
+   no script there is nothing to reveal them, so they are simply shown —
+   this is also what lets the reduced-motion block above hand the reveal
+   back to the observer instead of forcing everything visible. */
+.rv,.swap,.stg>*{opacity:1!important;transform:none!important}
+</style></noscript>
 <style>
 /* ═══════════════════════════════════════════════════════════════════
    CYNEA — design tokens
@@ -1305,9 +1312,22 @@ section[id],header[id],footer[id]{scroll-margin-top:76px}
    the clamps were written to replace. */
 
 @media(prefers-reduced-motion:reduce){
-  *,*::before,*::after{animation-duration:.001ms!important;animation-iteration-count:1!important;transition-duration:.001ms!important}
-  .rv,.swap{opacity:1;transform:none}
-  .stg>*{opacity:1;transform:none}
+  /* Motion goes; a cross-fade is not motion and stays.
+     WCAG 2.3.3 is about vestibular triggers — travel, parallax, spin,
+     zoom — not about forbidding a page to change state at all. Killing
+     every transition by duration also silently beat the caption engine's
+     own reduced-motion rule, which deliberately keeps the word reveal as
+     a fade: an !important .001ms wins against a .2s further down the
+     file, so the thing that block was written to preserve went anyway.
+     Restricting the *property* keeps opacity and drops everything that
+     moves, including height, margin and transform. */
+  *,*::before,*::after{
+    animation-duration:.001ms!important;animation-iteration-count:1!important;
+    transition-property:opacity!important;transition-duration:.22s!important;
+  }
+  /* The reveal keeps its fade and loses its rise. */
+  .rv,.swap{transform:none}
+  .stg>*{transform:none}
 }
 
 /* ══ LIVE CAPTIONS ═══════════════════════════════════════════════════
@@ -1609,7 +1629,13 @@ section[id],header[id],footer[id]{scroll-margin-top:76px}
 }
 @keyframes wordUp{to{transform:none;opacity:1}}
 @media(prefers-reduced-motion:reduce){
-  .wsp>i{transform:none !important;opacity:1 !important;animation:none !important}
+  /* The hero's line has no scroll to ride in on — it arrives on a clock —
+     so under reduced motion it is simply there. */
+  .hero-display .wsp>i{transform:none !important;opacity:1 !important;animation:none !important}
+  /* Every other split block keeps its reveal. The engine writes opacity
+     and nothing else there, which is a fade rather than movement; this
+     rule used to force all of them to 1 and take the reveal with it. */
+  .wsp>i{transform:none !important}
 }
 
 /* ── planes, not panels ────────────────────────────────────────────
@@ -2903,7 +2929,10 @@ addEventListener('DOMContentLoaded', function(){
 (function(){
   var once=[].slice.call(document.querySelectorAll('.rv,.stg')),
       media=[].slice.call(document.querySelectorAll('.swap,.secbg'));
-  if(!('IntersectionObserver' in window)||matchMedia('(prefers-reduced-motion:reduce)').matches){
+  /* Reduced motion is no longer a reason to skip this. The reveal is a
+     fade once the CSS above drops the rise, and a section quietly
+     arriving is not the kind of movement anybody asked to be spared. */
+  if(!('IntersectionObserver' in window)){
     once.concat(media).forEach(function(e){ e.classList.add('in'); });
     return;
   }
@@ -4191,10 +4220,20 @@ addEventListener('DOMContentLoaded', function(){
       .forEach(function(s){ sleeper.observe(s); });
   }
 
-  /* The sky, the rail and the reading line are position and colour
-     rather than motion, so they stay. Everything past here is movement,
-     and movement is what was asked not to happen. */
-  if(still.matches){ wake(); return; }
+  /* ── what reduced motion actually costs ──────────────────────────
+     This used to `return` here, and that was too blunt by half: it took
+     the word reveal, the lit row and every section reveal with it and
+     left the entire page below the hero frozen. Anyone whose machine
+     asks for reduced motion — which on Windows is the single Animation
+     effects toggle, and is off on a great many laptops by default — got
+     a page that looked broken rather than a page that was calm.
+
+     So `calm` removes travel and nothing else: no sinking hero, no
+     parallax drift, no lean, no 3D tilt, no scaling arrival. What stays
+     is everything the engine expresses as opacity or colour, which is
+     the same line the caption engine already draws a few hundred lines
+     up. A cross-fade is not what WCAG 2.3.3 is about. */
+  var calm = still.matches;
 
   /* ═══ registrations ═══════════════════════════════════════════════ */
 
@@ -4210,7 +4249,7 @@ addEventListener('DOMContentLoaded', function(){
      planes carry the effect on their own. */
   (function(){
     var hero = document.querySelector('#top .hero');
-    if(!hero) return;
+    if(!hero || calm) return;                      /* three planes travelling */
     var vid  = hero.querySelector('.hero-vid'),
         eye  = hero.querySelector('.hero-eyebrow'),
         mid  = hero.querySelector('.hero-mid'),
@@ -4282,6 +4321,9 @@ addEventListener('DOMContentLoaded', function(){
 
     function place(el, t){
       if(t >= .999){ el.style.transform = ''; el.style.opacity = ''; return; }
+      /* The reveal survives reduced motion; the rise it rides in on does
+         not. Same cue, same timing, no travel. */
+      if(calm){ el.style.opacity = t.toFixed(3); return; }
       var away = 1 - t;
       el.style.transform = 'translate3d(0,' + (away * 100).toFixed(2) + '%,0)' +
                            ' translate3d(0,' + (away * .58).toFixed(3) + 'em,0)';
@@ -4330,7 +4372,7 @@ addEventListener('DOMContentLoaded', function(){
   /* Not `opt` any more: this is one transform on two elements, written
      only when velocity actually changes, and it was one of the effects
      that simply did not exist on a phone. */
-  [].slice.call(document.querySelectorAll('.stmt,.foot-serif')).forEach(function(el){
+  if(!calm) [].slice.call(document.querySelectorAll('.stmt,.foot-serif')).forEach(function(el){
     var was = -1;
     on(el, function(p, v, d){
       if(Math.abs(v - was) < .01) return;
@@ -4350,7 +4392,7 @@ addEventListener('DOMContentLoaded', function(){
      The two photographs are the effect; the cards are the garnish, so
      the cards are what a lite machine goes without. */
   function drift(el, dist, scale, opt){
-    if(!el) return;
+    if(!el || calm) return;
     on(el, function(p){
       el.style.transform = 'translate3d(0,' + ((p * 2 - 1) * -dist).toFixed(1) + 'px,0)' +
                            (scale ? ' scale(' + scale + ')' : '');
@@ -4379,7 +4421,7 @@ addEventListener('DOMContentLoaded', function(){
      you walk past it. Pointer widths only, and not on a lite machine:
      a 3D transform on a large screenshot is the most expensive layer
      here and the easiest one to do without. */
-  if(wide.matches && !lite){
+  if(wide.matches && !lite && !calm){
     [].slice.call(document.querySelectorAll('.slide-card')).forEach(function(card){
       on(card, function(p){
         var c = p * 2 - 1;                     /* -1 below, 0 centred, +1 above */
@@ -4396,7 +4438,7 @@ addEventListener('DOMContentLoaded', function(){
   (function(){
     var block = document.querySelector('.cta-block'),
         cta   = block && block.parentElement;   /* the .bleed frame, corners and all */
-    if(cta) on(cta, function(p){
+    if(cta && !calm) on(cta, function(p){
       cta.style.transform = 'scale(' + (.955 + .045 * ease(clamp(p / .62))).toFixed(4) + ')';
     });
   })();

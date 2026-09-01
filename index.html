@@ -69,11 +69,27 @@
   --grad-iris:linear-gradient(150deg,#7B4FD4 0%,#E0308F 58%,#FF8A5C 100%);
 
   --gutter:8px;          /* full-bleed blocks inset this far from the edge */
-  --r-block:24px;        /* big rounded blocks       */
   --r-card:16px;
   --r-btn:6px;
-  --pad:140px;           /* section padding          */
   --maxw:1200px;
+
+  /* ── one ramp instead of three steps ────────────────────────────
+     Section padding and block radius used to change at max-width 1000
+     and 760, which meant the page breathed at three fixed rates and
+     jumped 44px at a single pixel of window width. Both now interpolate
+     continuously: 76px of padding at 390, 140px from 1440 up, and every
+     width in between gets the value it should have. Nothing keys off a
+     breakpoint that a reader can find by dragging the window. */
+  --pad:clamp(76px,6.1vw + 52.2px,140px);
+  --r-block:clamp(18px,.62vw + 15.6px,24px);
+
+  /* ── the shared content column ──────────────────────────────────
+     .wrap resolves to this, and so does every full-bleed section that
+     used to centre on the window instead: the two statement banners,
+     the hero's foot and the whole footer. Before this, at 1920 the
+     footer laid four columns across 1824px while the section above it
+     sat in 1200 — the same page measured two different ways. */
+  --col:calc(var(--maxw) - 48px);
 
   --sans:'Inter Tight',system-ui,-apple-system,'Segoe UI',sans-serif;
   --serif:'Instrument Serif',Georgia,'Times New Roman',serif;
@@ -156,7 +172,7 @@ button,input,select{font:inherit;color:inherit}
 /* Mobile keeps the atmosphere and drops the parallax: the transform is
    the expensive part, and a fixed layer is what a small screen wants
    anyway. Slightly lighter, because the text sits closer to it. */
-@media(max-width:860px){
+@media(max-width:900px){
   .secbg img{transform:none !important;filter:blur(1px) saturate(.55) brightness(1.3) sepia(.25);
     opacity:calc(var(--o,.10) * .85)}
 }
@@ -172,11 +188,23 @@ button,input,select{font:inherit;color:inherit}
   line-height:.95;letter-spacing:-1.5px;
 }
 .kicker{
-  font-size:12px;text-transform:uppercase;letter-spacing:-.16px;
+  font-size:clamp(12px,.1vw + 11.6px,13px);text-transform:uppercase;letter-spacing:-.16px;
   font-weight:500;color:var(--muted);
 }
-.lede{font-size:16px;line-height:1.45;color:var(--muted)}
-.h-sec{font-family:var(--serif);font-weight:400;font-size:clamp(34px,4.4vw,52px);line-height:1;letter-spacing:-1px}
+.lede{font-size:clamp(15px,.29vw + 13.9px,18px);line-height:1.45;color:var(--muted)}
+
+/* The display type on this page scales 2.2x between a phone and a
+   1920 desktop while the secondary type used to be pinned. That is what
+   made the two feel like different sites rather than one resized: at 390
+   the ratio of a statement to body copy is 2.6:1, at 1920 it was 6.3:1,
+   so the same page had a different typographic voice at each end. Every
+   size below now rides the same ramp as the display sizes, and the
+   hierarchy holds at all five widths.
+
+   .h-sec in particular resolved to its 34px floor everywhere from 390 to
+   773px, so the entire tablet range wore the phone's section headings
+   under near-desktop statement banners. */
+.h-sec{font-family:var(--serif);font-weight:400;font-size:clamp(32px,2.6vw + 22px,52px);line-height:1;letter-spacing:-1px}
 
 /* ── buttons: 32px tall, 6px radius, 12px type, inset ring on hover ── */
 .btn{
@@ -194,6 +222,10 @@ button,input,select{font:inherit;color:inherit}
 .btn-line:hover{box-shadow:inset 0 0 0 1px var(--ink)}
 .btn-light{background:#fff;color:var(--ink)}
 .btn-light:hover{box-shadow:inset 0 0 0 1px rgba(14,18,27,.34)}
+/* The chat's Send button asks for .btn-dark, which was never declared —
+   so it rendered as bare ink-on-nothing at every width. */
+.btn-dark{background:var(--ink);color:#fff}
+.btn-dark:hover{box-shadow:inset 0 0 0 1px rgba(255,255,255,.38)}
 
 /* ── one reveal animation. That is the whole motion budget. ────────── */
 .rv{opacity:0;transform:translateY(16px) scale(.98);transition:opacity .6s cubic-bezier(.16,.84,.44,1),transform .6s cubic-bezier(.16,.84,.44,1)}
@@ -223,12 +255,68 @@ button,input,select{font:inherit;color:inherit}
 .nav-links a{font-size:13px;color:var(--muted);transition:color .18s}
 .nav-links a:hover{color:var(--ink)}
 .nav-cta{display:flex;gap:8px;margin-left:22px}
-@media(max-width:900px){.nav-links{display:none}.nav-cta{margin-left:auto}}
+/* ── the links below 900px ──────────────────────────────────────────
+   These six used to be display:none with nothing put in their place, so
+   every section of the page was reachable from the nav on a laptop and
+   none of them were on a phone. That is not a smaller version of the
+   navigation, it is a different one. They now fold into a panel under
+   the bar: same links, same order, same labels.
+
+   Closed, the panel is visibility:hidden as well as zero-height, so it
+   is out of the tab order rather than a run of invisible focus stops. */
+.nav-burger{display:none}
+@media(max-width:900px){
+  .nav-cta{margin-left:auto}
+  .nav-burger{
+    display:grid;align-content:center;justify-items:center;gap:5px;
+    width:32px;height:32px;border-radius:var(--r-btn);margin-left:8px;
+    background:transparent;border:0;cursor:pointer;
+    box-shadow:inset 0 0 0 1px var(--line);transition:box-shadow .18s;
+  }
+  .nav-burger:hover{box-shadow:inset 0 0 0 1px var(--ink)}
+  .nav-burger span{
+    display:block;width:14px;height:1.5px;background:var(--ink);border-radius:1px;
+    transition:transform .26s cubic-bezier(.2,.8,.2,1);
+  }
+  .nav-burger[aria-expanded="true"] span:nth-child(1){transform:translateY(3.25px) rotate(45deg)}
+  .nav-burger[aria-expanded="true"] span:nth-child(2){transform:translateY(-3.25px) rotate(-45deg)}
+
+  .nav-links{
+    display:grid;position:absolute;left:0;right:0;top:100%;margin:0;gap:0;
+    background:rgba(245,241,234,.97);
+    -webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);
+    border-bottom:1px solid transparent;
+    padding:0 24px;max-height:0;overflow:hidden;visibility:hidden;
+    transition:max-height .3s cubic-bezier(.2,.7,.2,1),
+               padding .3s cubic-bezier(.2,.7,.2,1),
+               visibility .3s, border-color .3s;
+  }
+  .nav-links.open{
+    max-height:70vh;overflow-y:auto;visibility:visible;
+    padding:8px 24px 16px;border-bottom-color:var(--line);
+  }
+  /* 44px of target, which the 13px desktop link is not. */
+  .nav-links a{
+    font-size:15px;color:var(--ink);padding:13px 2px;
+    border-bottom:1px solid var(--line);
+  }
+  .nav-links a:last-child{border-bottom:0}
+}
+.lite .nav-links{-webkit-backdrop-filter:none;backdrop-filter:none;background:rgba(245,241,234,.99)}
+@media(prefers-reduced-motion:reduce){
+  .nav-links{transition:none}
+  .nav-burger span{transition:none}
+}
 
 /* ═══ 0. HERO ═══════════════════════════════════════════════════════ */
+/* min-height is shared. The phone used to get min-height:auto, which
+   collapsed the hero to 391px — under half a screen, where the desktop
+   hero is a full 88vh. That is the single largest "different site"
+   moment on the page, and it was one declaration. */
 .hero{
   min-height:min(860px,88vh);display:flex;flex-direction:column;
-  padding:38px 38px 34px;color:#fff;background:var(--grad-dusk);
+  padding:clamp(24px,2.4vw + 14.6px,38px) clamp(20px,2.6vw + 9.9px,38px) clamp(24px,1.7vw + 17.4px,34px);
+  color:#fff;background:var(--grad-dusk);
 }
 .hero-vid{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0;opacity:.30;mix-blend-mode:luminosity}
 .hero-scrim{position:absolute;inset:0;z-index:1;pointer-events:none;
@@ -237,16 +325,26 @@ button,input,select{font:inherit;color:inherit}
    which are absolutely positioned and would drop into flow if matched */
 .hero>*:not(.hero-vid):not(.hero-scrim){position:relative;z-index:2}
 .hero-eyebrow{
-  text-align:center;font-size:16px;text-transform:uppercase;
+  text-align:center;font-size:clamp(13px,.29vw + 11.9px,16px);text-transform:uppercase;
   letter-spacing:-.16px;font-weight:500;color:rgba(255,255,255,.92);
 }
-.hero-mid{flex:1;display:grid;place-items:center;padding-block:56px}
+.hero-mid{flex:1;display:grid;place-items:center;padding-block:clamp(40px,1.5vw + 34.1px,56px)}
+/* The cap was 75px, reached at 1104px wide and held from there to 1920,
+   so the hero line stopped growing a third of the way through the range
+   it has to cover. */
 .hero-display{
   color:#fff;text-align:center;max-width:13ch;
-  font-size:clamp(40px,6.8vw,75px);
+  font-size:clamp(40px,4.2vw + 23.6px,88px);
 }
-.hero-foot{display:flex;align-items:flex-end;justify-content:space-between;gap:32px}
-.hero-body{font-size:14px;line-height:1.5;max-width:44ch;color:rgba(255,255,255,.86)}
+/* On the column, like everything else. At 1920 this used to spread the
+   body copy and the pill to opposite ends of an 1828px bar with 1300px
+   of nothing between them. */
+.hero-foot{
+  display:flex;align-items:flex-end;justify-content:space-between;
+  gap:clamp(22px,1vw + 18.1px,32px);flex-wrap:wrap;
+  width:100%;max-width:var(--col);margin-inline:auto;
+}
+.hero-body{font-size:clamp(13.5px,.14vw + 13px,15px);line-height:1.5;max-width:44ch;color:rgba(255,255,255,.86)}
 .hero-pill{
   display:inline-flex;align-items:center;gap:12px;flex-shrink:0;
   background:rgba(23,26,46,.46);backdrop-filter:blur(10px);
@@ -266,32 +364,48 @@ button,input,select{font:inherit;color:inherit}
   border:1px solid rgba(255,107,74,.5);animation:ring 2.6s ease-out infinite;
 }
 @keyframes ring{0%{transform:scale(.86);opacity:.9}100%{transform:scale(1.5);opacity:0}}
-@media(max-width:760px){
-  .hero{padding:26px 20px 24px;min-height:auto}
-  /* 16px is the desktop spec; at phone width it crowds the display line */
-  .hero-eyebrow{font-size:13px}
-  .hero-mid{padding-block:52px}
-  .hero-foot{flex-direction:column;align-items:flex-start;gap:22px}
+/* The foot stacks only once the two halves genuinely cannot sit side by
+   side. Between there and full width it wraps rather than jumping. */
+@media(max-width:560px){
+  .hero-foot{flex-direction:column;align-items:flex-start}
 }
 
 /* ═══ 1 & 4. STATEMENT BANNERS ══════════════════════════════════════ */
-.statement{background:var(--card);min-height:600px;display:grid;place-items:center;padding:110px 24px}
+.statement{
+  background:var(--card);min-height:clamp(380px,56vh,600px);
+  display:grid;place-items:center;
+  padding:clamp(84px,2.5vw + 74.2px,110px) 24px;
+}
 .statement-2{background:var(--bg)}
+/* Centred on the shared column, not on the window. These are the two
+   full-bleed sections with real copy in them, and at 1920 their text
+   began 160px left of every other section's — the page looked like two
+   layouts spliced together. */
 .stmt{
   font-family:var(--serif);font-weight:400;line-height:.92;letter-spacing:-1.5px;
   display:flex;flex-direction:column;align-items:flex-start;gap:.04em;
+  width:100%;max-width:var(--col);margin-inline:auto;
 }
 .stmt-1{font-size:clamp(42px,8vw,90px)}
 .stmt-2{font-size:clamp(44px,8.6vw,100px)}
+/* The indent ladder is in em, so it already scales with the type. What
+   it needed was a middle: it went straight from the phone's tight
+   stagger to the full one at 761px, which is the width where the line
+   is least able to carry it. Three steps, so the composition tightens
+   as the column narrows instead of snapping. */
 .stmt .row{display:flex;align-items:center;gap:.3em}
-.stmt .row:nth-child(2){margin-left:1.1em}
-.stmt .row:nth-child(3){margin-left:2.4em}
-.stmt .row:nth-child(4){margin-left:.7em}
-@media(max-width:760px){
-  .statement{min-height:auto;padding:84px 20px}
-  .stmt .row:nth-child(2){margin-left:.5em}
-  .stmt .row:nth-child(3){margin-left:1em}
-  .stmt .row:nth-child(4){margin-left:.3em}
+.stmt .row:nth-child(2){margin-left:.5em}
+.stmt .row:nth-child(3){margin-left:1em}
+.stmt .row:nth-child(4){margin-left:.3em}
+@media(min-width:561px){
+  .stmt .row:nth-child(2){margin-left:.8em}
+  .stmt .row:nth-child(3){margin-left:1.7em}
+  .stmt .row:nth-child(4){margin-left:.5em}
+}
+@media(min-width:901px){
+  .stmt .row:nth-child(2){margin-left:1.1em}
+  .stmt .row:nth-child(3){margin-left:2.4em}
+  .stmt .row:nth-child(4){margin-left:.7em}
 }
 /* ── the voice mark ────────────────────────────────────────────────
    The one decorative motion in a statement banner. It replaced a ring of
@@ -327,12 +441,14 @@ button,input,select{font:inherit;color:inherit}
 .stmt-tile::after{content:"";position:absolute;inset:0;background:linear-gradient(140deg,rgba(255,107,74,.16),rgba(255,168,92,.20))}
 
 /* ═══ 2. LIVE DEMO ══════════════════════════════════════════════════ */
-.demo-head{text-align:center;margin-bottom:64px}
+.demo-head{text-align:center;margin-bottom:clamp(44px,1.9vw + 36.6px,64px)}
 .demo-head .display{font-size:clamp(40px,6.6vw,80px)}
-.demo-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;align-items:stretch}
-@media(max-width:900px){.demo-grid{grid-template-columns:1fr}}
-.panel{border-radius:var(--r-card);border:1px solid var(--line);padding:44px 38px}
-@media(max-width:560px){.panel{padding:32px 20px}}
+.demo-grid{display:grid;grid-template-columns:1fr;gap:16px;align-items:stretch}
+@media(min-width:901px){.demo-grid{grid-template-columns:1fr 1fr}}
+.panel{
+  border-radius:var(--r-card);border:1px solid var(--line);
+  padding:clamp(30px,1.34vw + 24.8px,44px) clamp(20px,1.72vw + 13.3px,38px);
+}
 .panel-a{background:var(--card);display:flex;flex-direction:column;align-items:center;overflow:hidden}
 .panel-b{background:var(--card-2);display:flex;flex-direction:column}
 
@@ -397,8 +513,12 @@ button,input,select{font:inherit;color:inherit}
 .callzone.is-playing .stage-ring.r3{animation-delay:2.2s}
 
 /* the phone reuses the telephony section's device, resized and made live */
+/* 52% of a phone-width panel resolved to a 157px device, which is why
+   the live transcript below had to be switched off under 560px. A floor
+   keeps the device readable, so the caption can stay on at every width
+   and the demo is the same demo on a phone as on a laptop. */
 .phone.phone-live{
-  position:relative;z-index:3;width:min(212px,52%);aspect-ratio:9/15.4;margin:0;
+  position:relative;z-index:3;width:min(212px,max(178px,52%));aspect-ratio:9/15.4;margin:0;
   padding:16px 14px 14px;border-radius:34px;
   box-shadow:0 44px 90px rgba(14,18,27,.34);
 }
@@ -478,7 +598,10 @@ button,input,select{font:inherit;color:inherit}
 .demo-msg.show{display:block}
 
 /* ── scripted chat demo: keyword -> pre-cut human recording ────────── */
-.chat{margin-top:16px;border:1px solid var(--line);border-radius:var(--r-card);background:var(--card);padding:30px 30px 26px}
+.chat{
+  margin-top:16px;border:1px solid var(--line);border-radius:var(--r-card);background:var(--card);
+  padding:clamp(24px,.72vw + 21.2px,30px) clamp(20px,1.2vw + 15.3px,30px) clamp(22px,.48vw + 20.1px,26px);
+}
 .chat-head{display:flex;align-items:baseline;justify-content:space-between;gap:20px;flex-wrap:wrap;margin-bottom:20px}
 .chat-head p{font-size:13px;color:var(--muted);max-width:56ch}
 .chat-tabs{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:20px}
@@ -517,25 +640,38 @@ button,input,select{font:inherit;color:inherit}
   transition:box-shadow .18s,color .18s;
 }
 .chat-chip:hover{box-shadow:inset 0 0 0 1px var(--coral);color:var(--ink)}
-@media(max-width:560px){.chat{padding:24px 20px 22px}.bub{max-width:88%}}
+@media(max-width:560px){.bub{max-width:88%}}
 
 /* ═══ 3. TESTIMONIALS (placeholder) ═════════════════════════════════ */
 .tm-placeholder{
   border:1px dashed var(--line);border-radius:var(--r-card);
-  background:var(--card);padding:64px 40px;text-align:center;margin-top:54px;
+  background:var(--card);padding:clamp(44px,1.9vw + 36.6px,64px) clamp(24px,1.52vw + 18.1px,40px);
+  text-align:center;margin-top:clamp(38px,1.5vw + 32.1px,54px);
 }
 .tm-placeholder .dot{width:7px;height:7px;border-radius:50%;background:var(--accent);display:inline-block;margin-right:9px;vertical-align:middle}
-.tm-placeholder p{font-size:15px;color:var(--muted);max-width:52ch;margin-inline:auto}
+.tm-placeholder p{font-size:clamp(14.5px,.24vw + 13.6px,17px);color:var(--muted);max-width:52ch;margin-inline:auto}
 
 /* ═══ 4b. VOICE AGENTS ══════════════════════════════════════════════ */
-.agent-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-top:54px}
-@media(max-width:980px){.agent-grid{grid-template-columns:1fr 1fr}}
-@media(max-width:520px){.agent-grid{grid-template-columns:1fr}}
+/* The two four-across grids on this page — these portraits and the
+   channel cascade — used to break at different widths (980/520 here,
+   900/560 there), so between 901 and 980 the page showed two columns of
+   agents beside four columns of channels. Both now change at the same
+   two widths, which is most of what "one design, resized" means. */
+.agent-grid{display:grid;grid-template-columns:1fr;gap:16px;margin-top:clamp(38px,1.5vw + 32.1px,54px)}
+@media(min-width:561px){.agent-grid{grid-template-columns:1fr 1fr}}
+@media(min-width:1001px){.agent-grid{grid-template-columns:repeat(4,1fr)}}
 .agent{
   background:var(--card);border:1px solid var(--line);border-radius:12px;
-  padding:34px 24px 24px;display:flex;flex-direction:column;align-items:center;text-align:center;
+  padding:clamp(28px,.57vw + 25.8px,34px) clamp(18px,.57vw + 15.8px,24px) 24px;
+  display:flex;flex-direction:column;align-items:center;text-align:center;
 }
-.agent-figure{position:relative;width:120px;height:120px;display:grid;place-items:center;margin-bottom:20px}
+/* The portrait was a hard 120px at every width, so it filled a 232px
+   card at 1024 and floated in a 352px one at 768. It now takes its size
+   from the card, within the range the crop supports. */
+.agent-figure{
+  position:relative;width:clamp(108px,6.4vw + 42px,132px);aspect-ratio:1;height:auto;
+  display:grid;place-items:center;margin-bottom:20px;
+}
 /* soft gradient orb sitting behind the photo */
 .agent-orb{
   position:absolute;inset:-16px;border-radius:50%;opacity:.22;
@@ -544,7 +680,7 @@ button,input,select{font:inherit;color:inherit}
 }
 .agent-ring{position:absolute;inset:-8px;border-radius:50%;border:1px solid var(--tint);opacity:0}
 .agent-photo{
-  width:120px;height:120px;border-radius:50%;object-fit:cover;
+  width:100%;height:100%;border-radius:50%;object-fit:cover;
   position:relative;z-index:1;transition:box-shadow .4s ease;
 }
 .agent.is-playing .agent-orb{opacity:.52;animation:orbPulse 2.2s ease-in-out infinite}
@@ -559,8 +695,8 @@ button,input,select{font:inherit;color:inherit}
 .ph-caller.no-photo{background:linear-gradient(140deg,#F9B3BE,#D4457E)}
 @keyframes orbPulse{0%,100%{transform:scale(1)}50%{transform:scale(1.07)}}
 
-.agent h3{font-size:18px;font-weight:600;letter-spacing:-.4px}
-.agent-role{font-size:13px;color:var(--ink);margin-top:5px}
+.agent h3{font-size:clamp(17px,.29vw + 15.9px,20px);font-weight:600;letter-spacing:-.4px}
+.agent-role{font-size:clamp(12.5px,.14vw + 12px,14px);color:var(--ink);margin-top:5px}
 .agent-place{font-size:12px;color:var(--muted);letter-spacing:-.16px;margin-top:2px}
 
 /* waveform — six bars, animated only while that agent is speaking */
@@ -616,19 +752,26 @@ button,input,select{font:inherit;color:inherit}
       argument for the layout, so the diagrams carry no information the
       sentence beside them does not already state — they are evidence for
       sighted readers and skipped entirely by assistive tech. */
-.spec{display:grid;grid-template-columns:.8fr 1.2fr;gap:72px;align-items:start;margin-top:56px}
-.spec-aside{position:sticky;top:104px}
+.spec{
+  display:grid;grid-template-columns:1fr;gap:40px;align-items:start;
+  margin-top:clamp(40px,1.5vw + 34.1px,56px);
+}
+@media(min-width:901px){
+  .spec{grid-template-columns:.8fr 1.2fr;gap:clamp(40px,4.9vw + -4.1px,72px)}
+}
+.spec-aside{position:static}
+@media(min-width:901px){.spec-aside{position:sticky;top:104px}}
 .spec-photo{border-radius:var(--r-block);overflow:hidden;aspect-ratio:4/3}
 .spec-photo img{width:100%;height:100%;object-fit:cover}
-.spec-aside p{margin-top:22px;font-size:15px;color:var(--muted);max-width:34ch}
+.spec-aside p{margin-top:22px;font-size:clamp(14.5px,.24vw + 13.6px,17px);color:var(--muted);max-width:34ch}
 
 .spec-list{border-top:1px solid var(--line)}
 .spec-row{display:grid;grid-template-columns:auto 1fr;gap:22px;
   padding:32px 0;border-bottom:1px solid var(--line)}
 .spec-n{font-size:12px;font-weight:600;color:var(--faint);
   font-variant-numeric:tabular-nums;padding-top:5px;letter-spacing:.06em}
-.spec-row h3{font-size:19px;font-weight:500;letter-spacing:-.4px}
-.spec-row p{margin-top:8px;font-size:15px;color:var(--muted);max-width:46ch}
+.spec-row h3{font-size:clamp(17.5px,.29vw + 16.4px,20.5px);font-weight:500;letter-spacing:-.4px}
+.spec-row p{margin-top:8px;font-size:clamp(14.5px,.24vw + 13.6px,17px);color:var(--muted);max-width:46ch}
 .spec-row p b{color:var(--ink);font-weight:500;font-variant-numeric:tabular-nums}
 .spec-link{display:inline-block;margin-top:12px;font-size:13.5px;font-weight:500;
   color:var(--coral-deep);border-bottom:1px solid rgba(226,74,46,.3);padding-bottom:1px}
@@ -682,10 +825,12 @@ button,input,select{font:inherit;color:inherit}
 .demo-path .out{border-style:dashed;color:var(--faint);background:transparent;
   text-decoration:line-through;text-decoration-color:var(--coral)}
 
-@media(max-width:900px){
-  .spec{grid-template-columns:1fr;gap:40px}
-  .spec-aside{position:static}
-  .spec-photo{aspect-ratio:16/9}
+/* The row's own two-column form (number beside the claim) needs less
+   room than the section split, so it holds down to the small breakpoint
+   rather than collapsing with the section around it. */
+.spec-photo{aspect-ratio:16/9}
+@media(min-width:901px){.spec-photo{aspect-ratio:4/3}}
+@media(max-width:560px){
   .spec-row{grid-template-columns:1fr;gap:0}
   .spec-n{padding-top:0;margin-bottom:6px}
   .demo-turn .gap{font-size:10px}
@@ -694,14 +839,14 @@ button,input,select{font:inherit;color:inherit}
   .demo-wave i,.demo-turn .bar > i{animation:none}
   .demo-turn .bar > i{opacity:1}
 }
-@media(max-width:760px){.hl-row{grid-template-columns:1fr;gap:8px;padding:26px 0}}
+/* (.hl-row was removed from the markup; its rule went with it.) */
 
 /* ═══ 6. PRODUCT SCREENSHOTS ════════════════════════════════════════ */
-.slides{margin-top:54px;position:relative}
+.slides{margin-top:clamp(38px,1.5vw + 32.1px,54px);position:relative}
 .slide{display:none}
 .slide.on{display:block}
 .slide-card{
-  border-radius:var(--r-block);padding:44px 44px 0;overflow:hidden;
+  border-radius:var(--r-block);padding:clamp(22px,2.1vw + 13.8px,44px) clamp(22px,2.1vw + 13.8px,44px) 0;overflow:hidden;
   background:linear-gradient(150deg,#FDEFE9 0%,#F3EEE6 52%,#FBEFE4 100%);
   border:1px solid var(--line);
 }
@@ -710,18 +855,30 @@ button,input,select{font:inherit;color:inherit}
   box-shadow:0 -2px 0 var(--line),0 26px 60px rgba(14,18,27,.16);
 }
 .slide-meta{display:flex;align-items:center;justify-content:space-between;gap:20px;margin-top:26px}
-.slide-meta h3{font-size:19px;font-weight:500;letter-spacing:-.4px}
-.slide-meta p{font-size:14px;color:var(--muted);margin-top:2px}
+.slide-meta h3{font-size:clamp(17.5px,.29vw + 16.4px,20.5px);font-weight:500;letter-spacing:-.4px}
+.slide-meta p{font-size:clamp(13.5px,.14vw + 13px,15px);color:var(--muted);margin-top:2px}
 .slide-nav{display:flex;align-items:center;gap:10px;flex-shrink:0}
 .slide-count{font-size:12px;color:var(--muted);letter-spacing:-.16px;font-variant-numeric:tabular-nums;min-width:44px;text-align:center}
 .sq{width:32px;height:32px;border-radius:var(--r-btn);background:transparent;box-shadow:inset 0 0 0 1px var(--line);display:grid;place-items:center;cursor:pointer;transition:box-shadow .18s}
 .sq:hover{box-shadow:inset 0 0 0 1px var(--ink)}
 .sq[disabled]{opacity:.34;cursor:default}
 .sq[disabled]:hover{box-shadow:inset 0 0 0 1px var(--line)}
-@media(max-width:760px){.slide-card{padding:22px 22px 0}}
+
 
 /* ═══ 7. OMNI-CHANNEL — diagonal cascade ════════════════════════════ */
-.cascade{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-top:54px;align-items:start}
+/* The diagonal is a transform now, not a margin-top. As margins it
+   fought the grid: at 1024 the three cards whose copy wrapped to an
+   extra line stood 21px taller than the first, so the cascade lost the
+   straight line that is the entire idea. Off the flow, the row stretches
+   all four to one height and the offset is pure geometry. .cascade
+   reserves the travel below itself as padding, since a transform takes
+   no space. */
+.cascade{
+  display:grid;grid-template-columns:1fr;gap:16px;
+  margin-top:clamp(38px,1.5vw + 32.1px,54px);align-items:stretch;
+  --casc-step:0px;--casc-max:0;
+  padding-bottom:calc(var(--casc-max) * var(--casc-step));
+}
 /* ── channel cards ─────────────────────────────────────────────────
    Hovering one card is treated as choosing it: that card rises, warms to
    its own channel tint and lights its badge, while the other three step
@@ -734,8 +891,11 @@ button,input,select{font:inherit;color:inherit}
    color-mix is progressive: where it is unsupported the plain accent
    fallback declared above it still applies. */
 .casc{
+  --casc-y:calc(var(--casc-i,0) * var(--casc-step));
+  transform:translateY(var(--casc-y));
   background:var(--card);border:1px solid var(--line);border-radius:var(--r-card);
-  padding:30px 26px 34px;position:relative;isolation:isolate;
+  padding:clamp(26px,.38vw + 24.5px,30px) clamp(20px,.57vw + 17.8px,26px) clamp(28px,.57vw + 25.8px,34px);
+  position:relative;isolation:isolate;
   transition:transform .38s cubic-bezier(.2,.8,.2,1),
              box-shadow .38s cubic-bezier(.2,.8,.2,1),
              border-color .3s ease, background .38s ease, opacity .38s ease;
@@ -752,9 +912,9 @@ button,input,select{font:inherit;color:inherit}
    faint to read as focus at all. Dropping them onto the recessed ground
    and shrinking them a hair separates the planes just as clearly and
    leaves every word at full strength. */
-.cascade:hover .casc{background:var(--card-2);transform:scale(.982);opacity:.92}
+.cascade:hover .casc{background:var(--card-2);transform:translateY(var(--casc-y)) scale(.982);opacity:.92}
 .cascade .casc:hover{
-  background:var(--card);opacity:1;transform:translateY(-8px) scale(1);
+  background:var(--card);opacity:1;transform:translateY(calc(var(--casc-y) - 8px)) scale(1);
   border-color:var(--c,var(--coral));
   border-color:color-mix(in srgb,var(--c,var(--coral)) 42%,var(--line));
   box-shadow:0 26px 54px -22px rgba(22,22,22,.16),0 4px 14px rgba(22,22,22,.05);
@@ -772,34 +932,40 @@ button,input,select{font:inherit;color:inherit}
 /* No pointer, no cascade: this is decoration, so on touch it simply does
    not happen rather than being approximated by a tap state. */
 @media(hover:none){
-  .cascade:hover .casc{opacity:1;transform:none;background:var(--card)}
+  .cascade:hover .casc{opacity:1;transform:translateY(var(--casc-y));background:var(--card)}
 }
 @media(prefers-reduced-motion:reduce){
   .casc,.casc .badge,.casc::after{transition:none}
-  .cascade:hover .casc,.cascade .casc:hover{transform:none}
+  .cascade:hover .casc,.cascade .casc:hover{transform:translateY(var(--casc-y))}
 }
-.cascade .casc:nth-child(1){margin-top:0}
-.cascade .casc:nth-child(2){margin-top:44px}
-.cascade .casc:nth-child(3){margin-top:88px}
-.cascade .casc:nth-child(4){margin-top:132px}
-.badge{width:46px;height:46px;border-radius:50%;background:#fff;box-shadow:inset 0 0 0 1px var(--line);display:grid;place-items:center;margin-bottom:22px;color:var(--ink)}
-.casc h3{font-size:17px;font-weight:500;letter-spacing:-.4px;margin-bottom:7px}
-.casc p{font-size:14px;color:var(--muted)}
-@media(max-width:900px){
-  .cascade{grid-template-columns:1fr 1fr}
-  .cascade .casc:nth-child(n){margin-top:0}
-  .cascade .casc:nth-child(2),.cascade .casc:nth-child(4){margin-top:36px}
+/* Two columns from the small breakpoint, four from the large one — the
+   same two widths the agent portraits use. The step scales with the
+   column so the diagonal is the same gesture at 1024 as at 1920 rather
+   than a fixed 44px that reads as a stumble on a narrow laptop. */
+@media(min-width:561px){
+  .cascade{grid-template-columns:1fr 1fr;--casc-step:36px;--casc-max:1}
+  .cascade .casc:nth-child(2),.cascade .casc:nth-child(4){--casc-i:1}
 }
-@media(max-width:560px){
-  .cascade{grid-template-columns:1fr}
-  .cascade .casc:nth-child(n){margin-top:0}
+@media(min-width:1001px){
+  .cascade{grid-template-columns:repeat(4,1fr);--casc-step:clamp(26px,1.9vw + 6.5px,44px);--casc-max:3}
+  .cascade .casc:nth-child(2){--casc-i:1}
+  .cascade .casc:nth-child(3){--casc-i:2}
+  .cascade .casc:nth-child(4){--casc-i:3}
 }
+.badge{width:clamp(42px,.38vw + 40.5px,46px);aspect-ratio:1;border-radius:50%;background:#fff;box-shadow:inset 0 0 0 1px var(--line);display:grid;place-items:center;margin-bottom:22px;color:var(--ink);flex-shrink:0}
+.casc h3{font-size:clamp(16px,.29vw + 14.9px,19px);font-weight:500;letter-spacing:-.4px;margin-bottom:7px}
+.casc p{font-size:clamp(13.5px,.14vw + 13px,15px);color:var(--muted)}
 
 /* ═══ 8. TELEPHONY ══════════════════════════════════════════════════ */
-.tel-grid{display:grid;grid-template-columns:.85fr 1.15fr;gap:72px;align-items:center;margin-top:54px}
-@media(max-width:900px){.tel-grid{grid-template-columns:1fr;gap:48px}}
+.tel-grid{
+  display:grid;grid-template-columns:1fr;gap:48px;align-items:center;
+  margin-top:clamp(38px,1.5vw + 32.1px,54px);
+}
+@media(min-width:901px){
+  .tel-grid{grid-template-columns:.85fr 1.15fr;gap:clamp(48px,3.7vw + 14.7px,72px)}
+}
 .phone{
-  width:290px;aspect-ratio:9/19;margin-inline:auto;border-radius:42px;
+  width:min(290px,84%);aspect-ratio:9/19;margin-inline:auto;border-radius:42px;
   background:linear-gradient(165deg,#10151F,#00122E 62%);
   border:1px solid rgba(255,255,255,.1);position:relative;overflow:hidden;
   box-shadow:0 34px 80px rgba(14,18,27,.30);
@@ -822,8 +988,8 @@ button,input,select{font:inherit;color:inherit}
 .acc-item:first-child{border-top:1px solid var(--line)}
 .acc-btn{
   width:100%;background:none;border:0;cursor:pointer;text-align:left;
-  padding:26px 0;display:flex;align-items:center;justify-content:space-between;gap:20px;
-  font-size:19px;font-weight:500;letter-spacing:-.4px;
+  padding:clamp(22px,.38vw + 20.5px,26px) 0;display:flex;align-items:center;justify-content:space-between;gap:20px;
+  font-size:clamp(17px,.38vw + 15.5px,21px);font-weight:500;letter-spacing:-.4px;
 }
 .acc-ico{width:22px;height:22px;flex-shrink:0;position:relative;color:var(--muted)}
 .acc-ico::before,.acc-ico::after{content:"";position:absolute;background:currentColor;left:50%;top:50%}
@@ -831,12 +997,23 @@ button,input,select{font:inherit;color:inherit}
 .acc-ico::after{width:1px;height:11px;transform:translate(-50%,-50%);transition:transform .26s ease}
 .acc-btn[aria-expanded="true"] .acc-ico::after{transform:translate(-50%,-50%) scaleY(0)}
 .acc-panel{overflow:hidden;height:0;transition:height .3s cubic-bezier(.2,.7,.2,1)}
-.acc-panel p{font-size:15px;color:var(--muted);padding-bottom:26px;max-width:58ch}
+.acc-panel p{font-size:clamp(14.5px,.24vw + 13.6px,17px);color:var(--muted);padding-bottom:26px;max-width:58ch}
 
 /* ═══ 9. SECURITY ═══════════════════════════════════════════════════ */
-.sec-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:54px}
-@media(max-width:860px){.sec-cards{grid-template-columns:1fr}}
-.scard{background:var(--card);border:1px solid var(--line);border-radius:var(--r-card);padding:34px 30px 38px;position:relative;overflow:hidden}
+/* Three cards went straight from one column to three at 861px, so a
+   768 tablet showed three 720x195 stubs — the widest, shortest cards on
+   the page, at the width where everything else had already stacked. The
+   middle state pairs two and lets the third take the full column. */
+.sec-cards{display:grid;grid-template-columns:1fr;gap:16px;margin-top:clamp(38px,1.5vw + 32.1px,54px)}
+@media(min-width:561px){
+  .sec-cards{grid-template-columns:1fr 1fr}
+  .sec-cards .scard:nth-child(3){grid-column:1/-1}
+}
+@media(min-width:901px){
+  .sec-cards{grid-template-columns:repeat(3,1fr)}
+  .sec-cards .scard:nth-child(3){grid-column:auto}
+}
+.scard{background:var(--card);border:1px solid var(--line);border-radius:var(--r-card);padding:clamp(28px,.57vw + 25.8px,34px) clamp(24px,.57vw + 21.8px,30px) clamp(30px,.76vw + 27.1px,38px);position:relative;overflow:hidden}
 .scard::before{
   content:"";position:absolute;top:0;right:0;width:132px;height:132px;
   background:var(--grad-iris);opacity:.16;filter:blur(26px);
@@ -844,36 +1021,43 @@ button,input,select{font:inherit;color:inherit}
 }
 .scard:nth-child(2)::before{background:var(--grad-dawn)}
 .scard:nth-child(3)::before{background:var(--grad-warm)}
-.scard h3{font-size:17px;font-weight:500;letter-spacing:-.4px;margin:20px 0 8px}
-.scard p{font-size:14px;color:var(--muted)}
+.scard h3{font-size:clamp(16px,.29vw + 14.9px,19px);font-weight:500;letter-spacing:-.4px;margin:20px 0 8px}
+.scard p{font-size:clamp(13.5px,.14vw + 13px,15px);color:var(--muted)}
 
 /* ═══ 10. FAQ ═══════════════════════════════════════════════════════ */
-.faq{max-width:880px;margin-inline:auto;margin-top:54px}
-.faq .acc-btn{font-size:17px;padding:24px 0}
-.faq .acc-panel p{font-size:15px}
+.faq{max-width:880px;margin-inline:auto;margin-top:clamp(38px,1.5vw + 32.1px,54px)}
+.faq .acc-btn{font-size:clamp(16px,.29vw + 14.9px,19px);padding:clamp(20px,.38vw + 18.5px,24px) 0}
+.faq .acc-panel p{font-size:clamp(14.5px,.24vw + 13.6px,17px)}
 
 /* ═══ 11. FINAL CTA ═════════════════════════════════════════════════ */
-.cta-block{min-height:560px;display:grid;place-items:center;padding:110px 24px;background:var(--grad-warm)}
+.cta-block{min-height:clamp(400px,52vh,560px);display:grid;place-items:center;padding:clamp(72px,3.6vw + 57.9px,110px) 24px;background:var(--grad-warm)}
 .cta-block .hero-vid{z-index:0}
 .cta-scrim{position:absolute;inset:0;z-index:1;background:linear-gradient(180deg,rgba(23,26,46,.30),rgba(23,26,46,.52))}
 .cta-card{
   position:relative;z-index:2;background:var(--card);border-radius:var(--r-block);
-  padding:58px 54px;max-width:620px;text-align:center;
+  padding:clamp(40px,1.71vw + 33.3px,58px) clamp(26px,2.67vw + 15.6px,54px);
+  max-width:620px;text-align:center;
   box-shadow:0 30px 80px rgba(0,8,22,.28);
 }
 .cta-card h2{font-family:var(--serif);font-weight:400;font-size:clamp(30px,4vw,46px);line-height:1;letter-spacing:-1.2px}
-.cta-card p{margin:16px 0 30px;color:var(--muted);font-size:15px}
+.cta-card p{margin:16px 0 30px;color:var(--muted);font-size:clamp(14.5px,.24vw + 13.6px,17px)}
 .cta-row{display:flex;gap:9px;justify-content:center;flex-wrap:wrap}
-@media(max-width:760px){.cta-card{padding:40px 26px}}
+
 
 /* ═══ 12. FOOTER ════════════════════════════════════════════════════ */
 .foot{
   background:var(--grad-iris);
   color:#fff;margin-block:var(--gutter) var(--gutter);
-  border-radius:var(--r-block);padding:88px 48px 34px;
+  border-radius:var(--r-block);
+  padding:clamp(64px,2.29vw + 55.1px,88px) clamp(24px,2.29vw + 15.1px,48px) 34px;
 }
-.foot-top{display:grid;grid-template-columns:.85fr 1.15fr;gap:56px;align-items:start}
-@media(max-width:960px){.foot-top{grid-template-columns:1fr;gap:48px}}
+/* Every row of the footer sits on the same measure as the sections
+   above it. Unbounded, at 1920 this laid four link columns across
+   1824px under a page whose content column is 1200 — the footer of a
+   different, wider site. */
+.foot-top,.foot-cols,.foot-base{width:100%;max-width:var(--col);margin-inline:auto}
+.foot-top{display:grid;grid-template-columns:1fr;gap:48px;align-items:start}
+@media(min-width:901px){.foot-top{grid-template-columns:.85fr 1.15fr;gap:clamp(48px,1.2vw + 37.2px,56px)}}
 .news label{display:block;font-size:12px;text-transform:uppercase;letter-spacing:-.16px;color:rgba(255,255,255,.6);margin-bottom:14px}
 .news-pill{
   display:flex;align-items:center;gap:8px;padding:6px 6px 6px 18px;
@@ -891,24 +1075,26 @@ button,input,select{font:inherit;color:inherit}
 .foot-serif .row:nth-child(2){margin-left:.8em}
 .foot-serif .row:nth-child(3){margin-left:.3em}
 .foot-serif .row:nth-child(4){margin-left:1.5em}
-.foot-cols{display:grid;grid-template-columns:repeat(4,1fr);gap:32px;margin-top:88px;padding-top:44px;border-top:1px solid rgba(255,255,255,.14)}
-@media(max-width:760px){.foot-cols{grid-template-columns:1fr 1fr;gap:34px;margin-top:60px}}
+.foot-cols{display:grid;grid-template-columns:1fr 1fr;gap:34px;margin-top:60px;padding-top:44px;border-top:1px solid rgba(255,255,255,.14)}
+@media(min-width:901px){.foot-cols{grid-template-columns:repeat(4,1fr);gap:32px;margin-top:88px}}
 .foot-cols h4{font-size:12px;text-transform:uppercase;letter-spacing:-.16px;font-weight:500;color:rgba(255,255,255,.54);margin-bottom:16px}
-.foot-cols a{display:block;font-size:14px;color:rgba(255,255,255,.86);padding:5px 0;transition:color .18s}
+.foot-cols a{display:block;font-size:clamp(13.5px,.14vw + 13px,15px);color:rgba(255,255,255,.86);padding:5px 0;transition:color .18s}
 .foot-cols a:hover{color:#fff}
-.foot-base{display:flex;justify-content:space-between;align-items:center;gap:18px;flex-wrap:wrap;margin-top:52px;padding-top:24px;border-top:1px solid rgba(255,255,255,.14);font-size:12px;color:rgba(255,255,255,.54);letter-spacing:-.16px}
+.foot-base{display:flex;justify-content:space-between;align-items:center;gap:18px;flex-wrap:wrap;margin-top:52px;padding-top:24px;border-top:1px solid rgba(255,255,255,.14);font-size:clamp(12px,.1vw + 11.6px,13px);color:rgba(255,255,255,.54);letter-spacing:-.16px}
 .foot-social{display:flex;gap:8px}
 .foot-social a{width:32px;height:32px;border-radius:50%;display:grid;place-items:center;box-shadow:inset 0 0 0 1px rgba(255,255,255,.2);color:#fff;transition:box-shadow .18s}
 .foot-social a:hover{box-shadow:inset 0 0 0 1px rgba(255,255,255,.6)}
-@media(max-width:760px){.foot{padding:64px 24px 28px}}
+
 
 /* ── mobile / no-JS: videos are never given a src, so nothing is
       fetched. This only hides the empty elements so the navy ground
       and gradients underneath read cleanly. ─────────────────────────── */
 .no-video .hero-vid{display:none}
 
-@media(max-width:1000px){:root{--pad:96px}}
-@media(max-width:760px){:root{--pad:76px;--r-block:18px}}
+/* --pad and --r-block are continuous clamps declared with the rest of
+   the tokens now. These two overrides sat after that block and would
+   have won under 1000px, pinning the page back to the stepped values
+   the clamps were written to replace. */
 
 @media(prefers-reduced-motion:reduce){
   *,*::before,*::after{animation-duration:.001ms!important;animation-iteration-count:1!important;transition-duration:.001ms!important}
@@ -973,13 +1159,15 @@ button,input,select{font:inherit;color:inherit}
    so the transcript opening simply takes slack off that margin. */
 .cap-phone{
   margin:0 6px;
-  font-size:12px; line-height:1.4; letter-spacing:-.01em;
+  line-height:1.4; letter-spacing:-.01em;
   color:#EDE9F4; text-align:left;
 }
 .cap-phone.on{height:38px; margin-top:10px}
-/* Below this the hero phone renders under ~160px wide, where a caption is
-   too cramped to read. The card and chat captions carry on. */
-@media(max-width:560px){.cap-phone{display:none}}
+/* This used to be display:none below 560px, because the device resolved
+   to 157px there. The device now has a floor wide enough to hold a line,
+   so the transcript runs on a phone exactly as it does on a laptop —
+   which is the one thing this page is actually demonstrating. */
+.cap-phone{font-size:clamp(11px,.1vw + 10.6px,12px)}
 .cap-phone .cap-w.now{color:#fff; text-shadow:0 0 14px rgba(255,255,255,.35)}
 
 /* ── surface: under an agent card ── */
@@ -1131,10 +1319,14 @@ button,input,select{font:inherit;color:inherit}
 }
 /* Narrower than this the gutter is holding the bleed blocks' rounded
    corners and there is no room for a rail that is not touching them.
-   A lite machine does not get one at all: it is the least load-bearing
-   thing on the page and the only one that costs something every frame. */
+
+   Width is now the only condition. It used to also require a non-lite
+   machine, which made the rail's presence depend on core count: two
+   1440px laptops side by side, one with the spine and one without, from
+   the same markup. Four style writes a frame is not the thing to spend
+   that unpredictability on — and every width below 1280 still has the
+   reading line under the nav, which carries the same journey. */
 @media(min-width:1280px){.rail{display:block}}
-.lite .rail{display:none}
 
 .rail-line{position:absolute;left:0;top:0;bottom:0;width:1px;background:rgba(23,26,46,.13)}
 .rail-wave{
@@ -1224,7 +1416,9 @@ button,input,select{font:inherit;color:inherit}
   margin-top:-38px;border-radius:34px 34px 0 0;
   box-shadow:0 -34px 70px -30px rgba(23,26,46,.34);
 }
-@media(max-width:760px){
+/* The overlap and the corner scale with the block radius they belong
+   to, rather than stepping at one width. */
+@media(max-width:900px){
   .statement:not(.statement-2){margin-top:-24px;border-radius:22px 22px 0 0}
 }
 /* The second statement gives up its opaque cream so the travelling
@@ -1294,25 +1488,37 @@ button,input,select{font:inherit;color:inherit}
    the layer they sit on moves. The colour grade is a cheap matrix and
    stays; the blur is the multi-pass one and goes. */
 .lite .secbg img{filter:saturate(.55) brightness(1.3) sepia(.25) !important;transform:none !important}
-/* A blend mode over a playing video composites the whole frame twice. */
-.lite .hero-vid{mix-blend-mode:normal;opacity:.22}
+/* A blend mode over a playing video composites the whole frame twice.
+   Luminosity at .30 and plain compositing at .24 land close enough that
+   the hero reads the same either way. */
+.lite .hero-vid{mix-blend-mode:normal;opacity:.24}
 /* A sticky bar with a backdrop-filter re-blurs the width of the window
    on every scrolled frame. A little more opacity reads almost the same
    and reads it for free. */
 .lite .nav{backdrop-filter:none;-webkit-backdrop-filter:none;background:rgba(245,241,234,.95)}
 .lite .hero-pill,.lite .news-pill{backdrop-filter:none;-webkit-backdrop-filter:none}
-.lite .glass{-webkit-backdrop-filter:none;backdrop-filter:none}
+/* The frost is the expensive layer and the one most worth keeping the
+   look of. Rather than removing it and leaving a bare ring, the lite
+   tier paints the result: a translucent white ground plus the same
+   gradient at a heavier mix reads as the same orb at a glance, and
+   costs one raster instead of a re-blur per frame. The two tiers should
+   differ in what they cost, not in what they look like. */
+.lite .glass{
+  -webkit-backdrop-filter:none;backdrop-filter:none;
+  background:radial-gradient(72% 72% at 32% 26%,rgba(255,255,255,.62),rgba(255,255,255,.34) 62%,rgba(255,255,255,.20));
+}
 .lite .glass::after{background:linear-gradient(150deg,rgba(255,255,255,.80),rgba(255,107,74,.20) 48%,rgba(255,255,255,.52))}
 .lite .stage-wash{filter:blur(14px)}
 .lite .slides{perspective:none}
 .lite .slide-card{transform:none !important}
 
-/* ── mobile ────────────────────────────────────────────────────────
-   Everything survives except the rail and the deepest parallax. A phone
-   gets the travelling ground, the words arriving, the sheet over the
-   hero and the lit row — the parts that are about the story — and none
-   of the parts that are about a pointer. */
-@media(max-width:860px){
+/* ── narrow ────────────────────────────────────────────────────────
+   Everything survives except the rail and the 3D tilt on the screenshot.
+   A phone gets the travelling ground, the words arriving, the sheet over
+   the hero, the depth on the cards and the lit row — the parts that are
+   about the story. Aligned to the same 900px line the layout uses, so a
+   single width changes both. */
+@media(max-width:900px){
   .slides{perspective:none}
   .slide-card{transform:none !important}
 }
@@ -1333,12 +1539,28 @@ button,input,select{font:inherit;color:inherit}
    engine, which measures frames instead of asking. */
 (function(){
   var m = window.matchMedia, cls = '';
+  var conn = navigator.connection || {};
+
+  /* `lite` is about the machine and nothing else. It used to include
+     `(max-width:860px)`, which conflated a small screen with a slow one
+     and had two consequences worth naming: every phone was demoted no
+     matter how capable, and a laptop window dragged under 861px turned
+     into a different-looking page. Screen size is a layout question and
+     the stylesheet answers it; this answers only "can this device
+     afford the expensive layers".
+
+     Save-Data is honoured because a reader who asked for less should
+     get less, and it is the one hint here that is an explicit request
+     rather than an inference. */
   var slow = (navigator.deviceMemory && navigator.deviceMemory <= 4)
           || (navigator.hardwareConcurrency && navigator.hardwareConcurrency <= 4)
-          || m('(max-width:860px)').matches
-          || m('(update:slow)').matches;
+          || m('(update:slow)').matches
+          || conn.saveData === true;
   if(slow) cls += ' lite';
-  if(slow || !m('(min-width:760px)').matches) cls += ' no-video';
+
+  /* Video is a bandwidth decision, so it keeps its own width test —
+     aligned to the 900px line the layout uses everywhere else. */
+  if(slow || !m('(min-width:900px)').matches) cls += ' no-video';
   if(cls) document.documentElement.className += cls;
 })();
 </script>
@@ -1383,7 +1605,7 @@ addEventListener('DOMContentLoaded', function(){
 <nav class="nav" id="nav">
   <div class="nav-in">
     <a class="logo" href="#top">CYNEA <span>voice</span></a>
-    <div class="nav-links">
+    <div class="nav-links" id="nav-links">
       <a href="#try-demo">Live demo</a>
       <a href="#agents">Agents</a>
       <a href="#highlights">Product</a>
@@ -1395,6 +1617,10 @@ addEventListener('DOMContentLoaded', function(){
       <a class="btn btn-line" href="signin.html">Sign in</a>
       <a class="btn btn-navy" href="#try-demo">Get a call</a>
     </div>
+    <button class="nav-burger" id="nav-burger" type="button"
+            aria-expanded="false" aria-controls="nav-links" aria-label="Menu">
+      <span aria-hidden="true"></span><span aria-hidden="true"></span>
+    </button>
   </div>
 </nav>
 
@@ -2251,12 +2477,12 @@ addEventListener('DOMContentLoaded', function(){
 'use strict';
 
 /* ── video gate, part 2 ─────────────────────────────────────────────
-   Videos ship with no src at all — only data-src. Below 760px we never
+   Videos ship with no src at all — only data-src. Below 900px we never
    attach one, so the clips are never fetched on mobile (CSS display:none
-   would still have downloaded them). Above 760px the hero clip loads
+   would still have downloaded them). Above 900px the hero clip loads
    immediately and the rest load as they approach the viewport. */
 (function(){
-  var desktop=matchMedia('(min-width:760px)');
+  var desktop=matchMedia('(min-width:900px)');
   var vids=[].slice.call(document.querySelectorAll('video[data-src]'));
   var io=null;
 
@@ -2338,7 +2564,7 @@ addEventListener('DOMContentLoaded', function(){
 
   var SHIFT=48,                      /* px of travel; the layer has 60 to give */
       still=matchMedia('(prefers-reduced-motion:reduce)'),
-      narrow=matchMedia('(max-width:860px)'),
+      narrow=matchMedia('(max-width:900px)'),
       live=[], queued=false;
 
   var io=new IntersectionObserver(function(entries){
@@ -2490,6 +2716,37 @@ addEventListener('DOMContentLoaded', function(){
   });
 
   select(names[0]);
+})();
+
+/* ── the links panel below 900px ──────────────────────────────────
+   Pure state: the button owns aria-expanded and the panel mirrors it in
+   one class. Closing on a link click matters because every link here is
+   a same-page anchor — without it the panel would sit over the section
+   it just scrolled you to. */
+(function(){
+  var btn=document.getElementById('nav-burger'),
+      panel=document.getElementById('nav-links');
+  if(!btn||!panel) return;
+
+  function set(open){
+    btn.setAttribute('aria-expanded',open?'true':'false');
+    panel.classList.toggle('open',open);
+  }
+  btn.addEventListener('click',function(){
+    set(btn.getAttribute('aria-expanded')!=='true');
+  });
+  panel.addEventListener('click',function(e){
+    if(e.target.closest && e.target.closest('a')) set(false);
+  });
+  addEventListener('keydown',function(e){
+    if(e.key==='Escape'&&btn.getAttribute('aria-expanded')==='true'){ set(false); btn.focus(); }
+  });
+  /* Widening past the breakpoint restores the desktop row; the panel
+     must not still be holding an open state behind it. */
+  var wide=matchMedia('(min-width:901px)');
+  function sync(e){ if(e.matches) set(false); }
+  if(wide.addEventListener) wide.addEventListener('change',sync);
+  else if(wide.addListener) wide.addListener(sync);
 })();
 
 /* ── nav hairline on scroll ───────────────────────────────────────── */
@@ -2927,21 +3184,36 @@ addEventListener('DOMContentLoaded', function(){
      tier does without. */
   var layers = [], live = [], io = null;
 
+  /* __mo is a list, not a slot.
+
+     It was a slot, and one element on this page is registered twice —
+     .stmt takes both the word scrub and the momentum lean. The second
+     registration overwrote the first, and since this callback resolves
+     what to paint through __mo, the scrub layer was never added to
+     `live` and never ran. Its words stayed at the closed state scrub()
+     paints them in, which is opacity 0: on a laptop both statement
+     banners rendered blank.
+
+     It only ever showed on a laptop. Momentum used to be registered as
+     an `opt` layer, and `on()` returns early for those on the lite
+     tier — which every phone was — so on a phone the scrub layer kept
+     the slot and the words appeared. Two machines, one file, and the
+     headline present on exactly one of them. */
   if('IntersectionObserver' in window){
     io = new IntersectionObserver(function(entries){
       entries.forEach(function(entry){
-        var layer = entry.target.__mo;
-        if(!layer) return;
-        var at = live.indexOf(layer);
-        if(entry.isIntersecting){
-          if(at < 0){ live.push(layer); entry.target.classList.add('mo-live'); }
-        }else if(at >= 0){
-          live.splice(at, 1);
-          /* Give the layer back. It keeps the transform it stopped at —
-             which is the right one for where it now sits — but stops
-             being a composited layer until it is needed again. */
-          entry.target.classList.remove('mo-live');
+        var group = entry.target.__mo;
+        if(!group) return;
+        for(var i = 0; i < group.length; i++){
+          var layer = group[i], at = live.indexOf(layer);
+          if(entry.isIntersecting){
+            if(at < 0) live.push(layer);
+          }else if(at >= 0){
+            live.splice(at, 1);
+          }
         }
+        /* Promotion is per element, not per layer. */
+        entry.target.classList.toggle('mo-live', entry.isIntersecting);
       });
       wake();
     },{rootMargin:'200px 0px 200px 0px'});
@@ -2951,9 +3223,12 @@ addEventListener('DOMContentLoaded', function(){
     if(!el) return;
     if(opt && lite) return;
     var layer = {el:el, write:write, top:0, h:0, opt:!!opt};
-    el.__mo = layer;
+    var group = el.__mo || (el.__mo = []);
+    group.push(layer);
     layers.push(layer);
-    if(io) io.observe(el); else live.push(layer);
+    /* One observation per element however many layers it carries. */
+    if(io){ if(group.length === 1) io.observe(el); }
+    else live.push(layer);
     return layer;
   }
 
@@ -3072,8 +3347,9 @@ addEventListener('DOMContentLoaded', function(){
     if(lite) return;
     lite = true;
     root.classList.add('lite');
-    if(rail && rail.parentNode) rail.parentNode.removeChild(rail);
-    rail = null;
+    /* The rail stays. It is four style writes a frame — not what a
+       struggling machine is struggling with — and tearing it out mid
+       scroll is a visible change to a page the reader is looking at. */
     [].slice.call(document.querySelectorAll('video[data-loaded]')).forEach(function(v){
       try{ v.pause(); }catch(e){}
       v.style.transform = '';
@@ -3083,10 +3359,19 @@ addEventListener('DOMContentLoaded', function(){
        whatever offsets it happened to be holding. */
     layers.filter(function(l){ return l.opt; }).forEach(function(l){
       l.el.style.transform = '';
-      l.el.classList.remove('mo-live');
-      if(io) io.unobserve(l.el);
       var a = layers.indexOf(l); if(a >= 0) layers.splice(a, 1);
       var b = live.indexOf(l);   if(b >= 0) live.splice(b, 1);
+      /* Only stop watching the element once nothing is left on it —
+         an element can carry more than one layer, and the others are
+         still owed their frames. */
+      var group = l.el.__mo;
+      if(group){
+        var c = group.indexOf(l); if(c >= 0) group.splice(c, 1);
+        if(!group.length){
+          l.el.classList.remove('mo-live');
+          if(io) io.unobserve(l.el);
+        }
+      }
     });
     trim();                                   /* drop the third sky layer */
   }
@@ -3158,7 +3443,12 @@ addEventListener('DOMContentLoaded', function(){
      halves. Four style writes a frame for the whole thing. */
   var rail = null, railWaves = null, railLit = null, railNode = null;
   var spine = function(){}, amp = function(){};
-  if(!still.matches && !lite){
+  /* Built for every width the stylesheet will show it at. The `!lite`
+     that used to be here made the rail depend on the machine as well as
+     the window, so the same 1440px layout had it or did not depending on
+     a core count — see the CSS gate for why that is not a trade worth
+     making. CSS still decides whether it is displayed. */
+  if(!still.matches){
     rail = document.createElement('div');
     rail.className = 'rail';
     rail.setAttribute('aria-hidden','true');
@@ -3370,6 +3660,9 @@ addEventListener('DOMContentLoaded', function(){
      The display type leans a little into the direction of travel and
      settles when you stop. Two percent at the very most: if you can
      name the effect, it is too strong. */
+  /* Not `opt` any more: this is one transform on two elements, written
+     only when velocity actually changes, and it was one of the effects
+     that simply did not exist on a phone. */
   [].slice.call(document.querySelectorAll('.stmt,.foot-serif')).forEach(function(el){
     var was = -1;
     on(el, function(p, v, d){
@@ -3377,7 +3670,7 @@ addEventListener('DOMContentLoaded', function(){
       was = v;
       el.style.transform = 'translate3d(0,' + (v * d * -7).toFixed(2) + 'px,0)' +
                            ' scaleY(' + (1 + v * .018).toFixed(4) + ')';
-    }, true);
+    });
   });
 
   /* ── depth ───────────────────────────────────────────────────────
@@ -3399,14 +3692,19 @@ addEventListener('DOMContentLoaded', function(){
 
   drift(document.querySelector('.stmt-tile img'), 11, 1.24);
   drift(document.querySelector('.spec-photo img'), 16, 1.18);
+  /* These two used to be `opt`, which meant a phone — demoted on sight
+     by the old tier test — got flat cards where a desktop got depth.
+     A translate3d on eight small elements is not what costs a slow
+     machine its frames, and the watchdog is still there for one that
+     genuinely cannot. The cards drift on every screen now; only the
+     3D tilt below, which is a real perspective pass over a large
+     screenshot, is still held back. */
   [].slice.call(document.querySelectorAll('.agent-figure')).forEach(function(el, i){
-    drift(el, 5 + (i % 4) * 3, 0, true);
+    drift(el, 5 + (i % 4) * 3);
   });
-  if(wide.matches){
-    [].slice.call(document.querySelectorAll('.scard')).forEach(function(el, i){
-      drift(el, 6 + (i % 3) * 7, 0, true);
-    });
-  }
+  [].slice.call(document.querySelectorAll('.scard')).forEach(function(el, i){
+    drift(el, 6 + (i % 3) * 7);
+  });
 
   /* ── the screenshot lies back, then stands up ────────────────────
      The product shot enters tilted away from you and comes flat as it

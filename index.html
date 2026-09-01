@@ -24,15 +24,49 @@
    Retell's structural discipline, Cynea's warm cream identity.
    ═══════════════════════════════════════════════════════════════════ */
 :root{
-  --bg:#F5F1EA;          /* cream page ground        */
-  --card:#FFFFFF;        /* primary card             */
-  --card-2:#F5F7FA;      /* secondary card           */
-  --line:#E1E4EA;        /* hairline                 */
-  --ink:#0E121B;         /* near-black text          */
-  --muted:#617481;       /* slate                    */
-  --accent:#00D4FF;      /* cyan — used sparingly    */
-  --navy:#00122E;        /* dark CTA                 */
-  --blue:#3E6AEF;        /* secondary CTA            */
+  /* ── palette sampled from the reference imagery ───────────────────
+     Warm side: rolled coral paper, orange ink in water, café amber,
+     tulle. Cool side: dusk gradient, pink/teal sky. Deep side: the
+     navy top of the dusk gradient. Structure and restraint follow
+     Retell — near-white page, one dark block, saturated gradients
+     reserved for full-bleed sections. ───────────────────────────── */
+
+  /* neutrals — warm near-white, not grey */
+  --bg:#FBF8F5;          /* page ground   (ink-in-water cream)       */
+  --bg-2:#F4EFE9;        /* recessed band                            */
+  --card:#FFFFFF;        /* primary card                             */
+  --card-2:#F7F2ED;      /* secondary card                           */
+  --line:#E9E1D8;        /* hairline                                 */
+  --ink:#171A2E;         /* text — deep dusk indigo, not black       */
+  --muted:#6E6B7C;       /* secondary text                           */
+  --faint:#9B98A6;       /* tertiary text                            */
+
+  /* brand */
+  --coral:#FF6B4A;       /* primary accent  (rolled paper)           */
+  --coral-deep:#E24A2E;
+  --amber:#F2A03D;       /* secondary accent (café light, tulle)     */
+  --blush:#F9B3BE;       /* soft pink       (sky, dusk)              */
+  --peach:#FBD3C2;
+  --teal:#4FD1C5;        /* cool counterweight (sky)                 */
+  --violet:#7B4FD4;      /* rare accent     (light rays, satin)      */
+  --magenta:#E0308F;
+  --navy:#1B2050;        /* the one dark block (dusk gradient top)   */
+  --indigo:#3A3F8F;      /* secondary CTA                            */
+
+  /* aliases kept so existing rules keep resolving */
+  --accent:var(--coral);
+  --blue:var(--indigo);
+
+  /* status */
+  --ok:#2E9E6B;          /* green brushstrokes                       */
+  --warn:#D9902B;
+  --bad:#D9455F;         /* crimson in the chiffon                   */
+
+  /* gradients — the Retell move: saturated, full-bleed, sparing */
+  --grad-dusk:linear-gradient(142deg,#1B2050 0%,#4A3A7E 34%,#B8437E 66%,#FF8A5C 100%);
+  --grad-warm:linear-gradient(140deg,#FF6B4A 0%,#F2A03D 54%,#F9B3BE 100%);
+  --grad-dawn:linear-gradient(135deg,#F9B3BE 0%,#FBD3C2 46%,#4FD1C5 100%);
+  --grad-iris:linear-gradient(150deg,#7B4FD4 0%,#E0308F 58%,#FF8A5C 100%);
 
   --gutter:8px;          /* full-bleed blocks inset this far from the edge */
   --r-block:24px;        /* big rounded blocks       */
@@ -130,11 +164,11 @@ button,input,select{font:inherit;color:inherit}
 /* ═══ 0. HERO ═══════════════════════════════════════════════════════ */
 .hero{
   min-height:min(860px,88vh);display:flex;flex-direction:column;
-  padding:38px 38px 34px;color:#fff;background:var(--navy);
+  padding:38px 38px 34px;color:#fff;background:var(--grad-dusk);
 }
-.hero-vid{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0}
+.hero-vid{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0;opacity:.30;mix-blend-mode:luminosity}
 .hero-scrim{position:absolute;inset:0;z-index:1;pointer-events:none;
-  background:linear-gradient(180deg,rgba(0,8,22,.62) 0%,rgba(0,8,22,.42) 42%,rgba(0,8,22,.78) 100%)}
+  background:linear-gradient(180deg,rgba(23,26,46,.40) 0%,rgba(23,26,46,.12) 40%,rgba(23,26,46,.58) 100%)}
 /* lift the content above the video — but never the video or scrim itself,
    which are absolutely positioned and would drop into flow if matched */
 .hero>*:not(.hero-vid):not(.hero-scrim){position:relative;z-index:2}
@@ -151,7 +185,7 @@ button,input,select{font:inherit;color:inherit}
 .hero-body{font-size:14px;line-height:1.5;max-width:44ch;color:rgba(255,255,255,.86)}
 .hero-pill{
   display:inline-flex;align-items:center;gap:12px;flex-shrink:0;
-  background:rgba(0,18,46,.72);backdrop-filter:blur(10px);
+  background:rgba(23,26,46,.46);backdrop-filter:blur(10px);
   border:1px solid rgba(255,255,255,.16);
   border-radius:999px;padding:8px 18px 8px 8px;color:#fff;
   transition:border-color .2s;
@@ -161,11 +195,11 @@ button,input,select{font:inherit;color:inherit}
 .hero-pill small{display:block;font-size:11px;color:rgba(255,255,255,.6)}
 .pill-orb{
   width:38px;height:38px;border-radius:50%;flex-shrink:0;position:relative;
-  background:radial-gradient(120% 120% at 32% 26%,#7FE6FF,#00D4FF 46%,#0069A8 100%);
+  background:radial-gradient(120% 120% at 32% 26%,#FFC9AE,#FF6B4A 46%,#E24A2E 100%);
 }
 .pill-orb::after{
   content:"";position:absolute;inset:-5px;border-radius:50%;
-  border:1px solid rgba(0,212,255,.5);animation:ring 2.6s ease-out infinite;
+  border:1px solid rgba(255,107,74,.5);animation:ring 2.6s ease-out infinite;
 }
 @keyframes ring{0%{transform:scale(.86);opacity:.9}100%{transform:scale(1.5);opacity:0}}
 @media(max-width:760px){
@@ -215,7 +249,7 @@ button,input,select{font:inherit;color:inherit}
   box-shadow:0 12px 40px rgba(14,18,27,.14);
 }
 .stmt-tile img{width:100%;height:100%;object-fit:cover}
-.stmt-tile::after{content:"";position:absolute;inset:0;background:linear-gradient(140deg,rgba(0,212,255,.16),rgba(255,168,92,.20))}
+.stmt-tile::after{content:"";position:absolute;inset:0;background:linear-gradient(140deg,rgba(255,107,74,.16),rgba(255,168,92,.20))}
 
 /* ═══ 2. LIVE DEMO ══════════════════════════════════════════════════ */
 .demo-head{text-align:center;margin-bottom:64px}
@@ -238,24 +272,24 @@ button,input,select{font:inherit;color:inherit}
 /* the colour the glass has to refract — without this the frost reads flat */
 .stage-wash{
   width:min(430px,96%);aspect-ratio:1;border-radius:50%;
-  background:radial-gradient(58% 58% at 34% 30%,rgba(0,212,255,.46),transparent 70%),
+  background:radial-gradient(58% 58% at 34% 30%,rgba(255,107,74,.46),transparent 70%),
              radial-gradient(52% 52% at 70% 72%,rgba(255,170,96,.36),transparent 72%);
   filter:blur(30px);
 }
 .stage-glow{
   width:min(470px,104%);aspect-ratio:1;border-radius:50%;
-  background:radial-gradient(closest-side,rgba(0,212,255,.40),transparent 74%);
+  background:radial-gradient(closest-side,rgba(255,107,74,.40),transparent 74%);
   opacity:.34;transition:opacity .7s ease;
 }
 .stage-rays{
   width:min(520px,112%);aspect-ratio:1;border-radius:50%;opacity:0;transition:opacity .9s ease;
-  background:repeating-conic-gradient(from 0deg,rgba(0,212,255,.30) 0deg 1.4deg,transparent 1.4deg 15deg);
+  background:repeating-conic-gradient(from 0deg,rgba(255,107,74,.30) 0deg 1.4deg,transparent 1.4deg 15deg);
   -webkit-mask-image:radial-gradient(closest-side,transparent 36%,#000 54%,transparent 78%);
           mask-image:radial-gradient(closest-side,transparent 36%,#000 54%,transparent 78%);
 }
 .glass{
   width:min(372px,88%);aspect-ratio:1;border-radius:50%;
-  background:linear-gradient(150deg,rgba(255,255,255,.64),rgba(0,212,255,.18) 48%,rgba(255,255,255,.34));
+  background:linear-gradient(150deg,rgba(255,255,255,.64),rgba(255,107,74,.18) 48%,rgba(255,255,255,.34));
   border:1px solid rgba(255,255,255,.72);
   -webkit-backdrop-filter:blur(20px) saturate(150%);backdrop-filter:blur(20px) saturate(150%);
   box-shadow:0 40px 90px rgba(0,118,164,.20),inset 0 1px 0 rgba(255,255,255,.95);
@@ -263,7 +297,7 @@ button,input,select{font:inherit;color:inherit}
 }
 .stage-ring{
   width:min(330px,80%);aspect-ratio:1;border-radius:50%;
-  border:1px solid rgba(0,212,255,.55);opacity:0;transform:scale(.62);
+  border:1px solid rgba(255,107,74,.55);opacity:0;transform:scale(.62);
 }
 @keyframes glassTurn{to{transform:rotate(360deg)}}
 @keyframes glassLive{0%{transform:rotate(0) scale(1)}50%{transform:rotate(180deg) scale(1.04)}100%{transform:rotate(360deg) scale(1)}}
@@ -451,7 +485,7 @@ button,input,select{font:inherit;color:inherit}
 .slide.on{display:block}
 .slide-card{
   border-radius:var(--r-block);padding:44px 44px 0;overflow:hidden;
-  background:linear-gradient(150deg,#EAF6FB 0%,#F3EEE6 52%,#FBEFE4 100%);
+  background:linear-gradient(150deg,#FDEFE9 0%,#F3EEE6 52%,#FBEFE4 100%);
   border:1px solid var(--line);
 }
 .slide-card img{
@@ -530,7 +564,14 @@ button,input,select{font:inherit;color:inherit}
 /* ═══ 9. SECURITY ═══════════════════════════════════════════════════ */
 .sec-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:54px}
 @media(max-width:860px){.sec-cards{grid-template-columns:1fr}}
-.scard{background:var(--card);border:1px solid var(--line);border-radius:var(--r-card);padding:34px 30px 38px}
+.scard{background:var(--card);border:1px solid var(--line);border-radius:var(--r-card);padding:34px 30px 38px;position:relative;overflow:hidden}
+.scard::before{
+  content:"";position:absolute;top:0;right:0;width:132px;height:132px;
+  background:var(--grad-iris);opacity:.16;filter:blur(26px);
+  border-radius:50%;transform:translate(28%,-34%);pointer-events:none;
+}
+.scard:nth-child(2)::before{background:var(--grad-dawn)}
+.scard:nth-child(3)::before{background:var(--grad-warm)}
 .scard h3{font-size:17px;font-weight:500;letter-spacing:-.4px;margin:20px 0 8px}
 .scard p{font-size:14px;color:var(--muted)}
 
@@ -540,9 +581,9 @@ button,input,select{font:inherit;color:inherit}
 .faq .acc-panel p{font-size:15px}
 
 /* ═══ 11. FINAL CTA ═════════════════════════════════════════════════ */
-.cta-block{min-height:560px;display:grid;place-items:center;padding:110px 24px;background:var(--navy)}
+.cta-block{min-height:560px;display:grid;place-items:center;padding:110px 24px;background:var(--grad-warm)}
 .cta-block .hero-vid{z-index:0}
-.cta-scrim{position:absolute;inset:0;z-index:1;background:linear-gradient(180deg,rgba(0,8,22,.52),rgba(0,8,22,.72))}
+.cta-scrim{position:absolute;inset:0;z-index:1;background:linear-gradient(180deg,rgba(23,26,46,.30),rgba(23,26,46,.52))}
 .cta-card{
   position:relative;z-index:2;background:var(--card);border-radius:var(--r-block);
   padding:58px 54px;max-width:620px;text-align:center;
@@ -555,7 +596,7 @@ button,input,select{font:inherit;color:inherit}
 
 /* ═══ 12. FOOTER ════════════════════════════════════════════════════ */
 .foot{
-  background:linear-gradient(168deg,#00122E 0%,#001B3F 46%,#062A4F 100%);
+  background:var(--grad-iris);
   color:#fff;margin-block:var(--gutter) var(--gutter);
   border-radius:var(--r-block);padding:88px 48px 34px;
 }
@@ -865,7 +906,7 @@ addEventListener('DOMContentLoaded', function(){
 
   <div class="agent-grid stg">
     <article class="agent" data-agent
-             style="--tint:#00D4FF;--tint-2:#0088AA;--glow:rgba(0,212,255,.55)">
+             style="--tint:#FF6B4A;--tint-2:#E24A2E;--glow:rgba(255,107,74,.50)">
       <div class="agent-figure">
         <span class="agent-orb" aria-hidden="true"></span>
         <span class="agent-ring" aria-hidden="true"></span>
@@ -893,7 +934,7 @@ addEventListener('DOMContentLoaded', function(){
       </div>
     </article>
     <article class="agent" data-agent
-             style="--tint:#C9B6FF;--tint-2:#7C5CFC;--glow:rgba(124,92,252,.5)">
+             style="--tint:#F9B3BE;--tint-2:#D4457E;--glow:rgba(212,69,126,.46)">
       <div class="agent-figure">
         <span class="agent-orb" aria-hidden="true"></span>
         <span class="agent-ring" aria-hidden="true"></span>
@@ -921,7 +962,7 @@ addEventListener('DOMContentLoaded', function(){
       </div>
     </article>
     <article class="agent" data-agent
-             style="--tint:#9BF0C9;--tint-2:#1E9E76;--glow:rgba(30,158,118,.5)">
+             style="--tint:#8FE6DD;--tint-2:#1F9D93;--glow:rgba(31,157,147,.44)">
       <div class="agent-figure">
         <span class="agent-orb" aria-hidden="true"></span>
         <span class="agent-ring" aria-hidden="true"></span>
@@ -949,7 +990,7 @@ addEventListener('DOMContentLoaded', function(){
       </div>
     </article>
     <article class="agent" data-agent
-             style="--tint:#FFD7A6;--tint-2:#E0902F;--glow:rgba(224,144,47,.5)">
+             style="--tint:#F7CE9A;--tint-2:#C77518;--glow:rgba(199,117,24,.44)">
       <div class="agent-figure">
         <span class="agent-orb" aria-hidden="true"></span>
         <span class="agent-ring" aria-hidden="true"></span>

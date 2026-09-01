@@ -13,20 +13,24 @@
 /* ═══════════════════════════════════════════════════════════════════
    CYNEA CONSOLE — application shell
    Chrome palette is the brand's. Data colours are a separate, validated
-   set: #00D4FF fails the lightness band (L .80) and reads 1.65:1 on the
+   set: #FF6B4A fails the lightness band (L .80) and reads 1.65:1 on the
    panel, so it stays a UI accent and never encodes a value.
    ═══════════════════════════════════════════════════════════════════ */
 :root{
-  /* chrome */
-  --bg:#FFFFFF; --panel:#F5F7FA; --line:#E1E4EA;
-  --ink:#0E121B; --muted:#617481; --accent:#00D4FF; --navy:#00122E;
-  --panel-2:#EEF1F6;
+  /* chrome — palette sampled from the reference imagery (see index.html) */
+  --bg:#FBF8F5; --panel:#F7F2ED; --line:#E9E1D8;
+  --ink:#171A2E; --muted:#6E6B7C; --accent:#FF6B4A; --navy:#1B2050;
+  --panel-2:#F1EAE2;
+  --coral:#FF6B4A; --coral-deep:#E24A2E; --amber:#F2A03D;
+  --blush:#F9B3BE; --teal:#4FD1C5; --violet:#7B4FD4; --indigo:#3A3F8F;
+  --grad-dusk:linear-gradient(142deg,#1B2050 0%,#4A3A7E 34%,#B8437E 66%,#FF8A5C 100%);
+  --grad-warm:linear-gradient(140deg,#FF6B4A 0%,#F2A03D 54%,#F9B3BE 100%);
 
   /* data — validated: worst adjacent CVD ΔE 17.1 (protan), norm 30.3 */
   --viz-1:#0E80A8; --viz-2:#eb6834; --viz-3:#4a3aa7; --viz-4:#eda100;
   --viz-solo:#0088AA;      /* single-series mark: passes all six checks */
   --viz-track:#D3EAF1;     /* meter track = lighter step of the same hue */
-  --grid:#E8EBF0;          /* recessive hairline, solid, never dashed */
+  --grid:#EDE6DD;          /* recessive hairline, solid, never dashed */
 
   /* status — reserved, never reused as a series colour */
   --ok:#067647; --ok-bg:#E7F5EE;

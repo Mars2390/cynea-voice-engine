@@ -9,7 +9,15 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
-:root{--cream:#F5F1EA;--cream-2:#EFEAE0;--surface:#FFFFFF;--surface-2:#FBF8F2;--ink:#161616;--muted:#6B6660;--faint:#9A938A;--line:#E6E0D5;--black:#0A0A0A;--accent:#00D4FF;--accent-ink:#0089A8;--r:18px;--r-lg:28px;--maxw:1200px}
+:root{
+  /* palette sampled from the reference imagery — see index.html */
+  --cream:#FBF8F5;--cream-2:#F4EFE9;--surface:#FFFFFF;--surface-2:#F7F2ED;
+  --ink:#171A2E;--muted:#6E6B7C;--faint:#9B98A6;--line:#E9E1D8;--black:#12142A;
+  --accent:#FF6B4A;--accent-ink:#E24A2E;
+  --coral:#FF6B4A;--amber:#F2A03D;--blush:#F9B3BE;--teal:#4FD1C5;--navy:#1B2050;
+  --grad-dusk:linear-gradient(142deg,#1B2050 0%,#4A3A7E 34%,#B8437E 66%,#FF8A5C 100%);
+  --grad-warm:linear-gradient(140deg,#FF6B4A 0%,#F2A03D 54%,#F9B3BE 100%);
+  --r:18px;--r-lg:28px;--maxw:1200px}
 *,*::before,*::after{box-sizing:border-box}html{scroll-behavior:smooth}
 body{margin:0;background:var(--cream);color:var(--ink);font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;font-size:16px;line-height:1.55;-webkit-font-smoothing:antialiased;overflow-x:hidden}
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important}}
@@ -17,13 +25,13 @@ a{color:inherit;text-decoration:none}img{max-width:100%;display:block}
 .eyebrow{font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--accent-ink);font-weight:500}
 h1,h2,h3{letter-spacing:-.02em;font-weight:600;margin:0}.muted{color:var(--muted)}
 .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;font-family:inherit;font-size:15px;font-weight:500;padding:12px 20px;border-radius:999px;border:1px solid var(--line);background:var(--surface);color:var(--ink);cursor:pointer;transition:transform .18s,box-shadow .2s,background .2s,border-color .2s}
-.btn:hover{transform:translateY(-1px)}.btn-dark{background:var(--black);color:#fff;border-color:var(--black)}.btn-dark:hover{background:#262626;box-shadow:0 10px 28px rgba(0,0,0,.18)}
+.btn:hover{transform:translateY(-1px)}.btn-dark{background:var(--black);color:#fff;border-color:var(--black)}.btn-dark:hover{background:#2A2E4A;box-shadow:0 10px 28px rgba(0,0,0,.18)}
 
 /* ── ambient drifting orbs ───────────────────────────────────── */
 .orbs{position:fixed;inset:0;z-index:0;overflow:hidden;pointer-events:none}
 .orb{position:absolute;border-radius:50%;filter:blur(80px);will-change:transform;opacity:.9}
-.orb-cyan{width:560px;height:560px;top:-160px;left:-120px;background:radial-gradient(circle at 50% 50%,rgba(0,212,255,.22),transparent 70%);animation:drift1 26s ease-in-out infinite}
-.orb-lav{width:620px;height:620px;bottom:-200px;right:-160px;background:radial-gradient(circle at 50% 50%,rgba(124,92,252,.20),transparent 70%);animation:drift2 32s ease-in-out infinite}
+.orb-cyan{width:560px;height:560px;top:-160px;left:-120px;background:radial-gradient(circle at 50% 50%,rgba(255,107,74,.22),transparent 70%);animation:drift1 26s ease-in-out infinite}
+.orb-lav{width:620px;height:620px;bottom:-200px;right:-160px;background:radial-gradient(circle at 50% 50%,rgba(212,69,126,.16),transparent 70%);animation:drift2 32s ease-in-out infinite}
 @keyframes drift1{0%,100%{transform:translate3d(0,0,0)}50%{transform:translate3d(80px,60px,0)}}
 @keyframes drift2{0%,100%{transform:translate3d(0,0,0)}50%{transform:translate3d(-70px,-50px,0)}}
 
@@ -36,8 +44,8 @@ h1,h2,h3{letter-spacing:-.02em;font-weight:600;margin:0}.muted{color:var(--muted
 .logo span{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.32em;color:var(--faint);font-weight:500}
 
 /* ── card ────────────────────────────────────────────────────── */
-.card{position:relative;width:100%;max-width:430px;background:var(--surface);border:1px solid var(--line);border-radius:20px;padding:34px;box-shadow:0 1px 0 rgba(255,255,255,.6) inset,0 20px 50px rgba(0,0,0,.07),0 40px 90px rgba(0,212,255,.06);overflow:hidden;animation:cardIn .6s cubic-bezier(.2,.8,.2,1) both}
-.card::before{content:"";position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(0,212,255,.55),transparent);pointer-events:none}
+.card{position:relative;width:100%;max-width:430px;background:var(--surface);border:1px solid var(--line);border-radius:20px;padding:34px;box-shadow:0 1px 0 rgba(255,255,255,.6) inset,0 20px 50px rgba(0,0,0,.07),0 40px 90px rgba(255,107,74,.06);overflow:hidden;animation:cardIn .6s cubic-bezier(.2,.8,.2,1) both}
+.card::before{content:"";position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(255,107,74,.55),transparent);pointer-events:none}
 @keyframes cardIn{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
 .card h1{font-size:23px;margin:0 0 7px}
 .card .lead{font-size:14px;color:var(--muted);margin:0 0 24px}
@@ -47,7 +55,7 @@ h1,h2,h3{letter-spacing:-.02em;font-weight:600;margin:0}.muted{color:var(--muted
 .field{display:flex;flex-direction:column;gap:7px}
 .label{font-family:'JetBrains Mono',monospace;font-size:11px;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);font-weight:500}
 .input{width:100%;background:var(--surface-2);color:var(--ink);border:1px solid var(--line);border-radius:10px;padding:12px 14px;font-family:inherit;font-size:15px;outline:none;transition:border-color .15s,box-shadow .15s,background .15s}
-.input:focus{border-color:var(--accent);background:var(--surface);box-shadow:0 0 0 3px rgba(0,212,255,.22)}
+.input:focus{border-color:var(--accent);background:var(--surface);box-shadow:0 0 0 3px rgba(255,107,74,.22)}
 .input::placeholder{color:var(--faint)}
 .btn-submit{width:100%;margin-top:4px;font-size:15px;font-weight:600;padding:13px 20px;border-radius:999px}
 
@@ -56,8 +64,8 @@ h1,h2,h3{letter-spacing:-.02em;font-weight:600;margin:0}.muted{color:var(--muted
 .divider::before,.divider::after{content:"";flex:1;height:1px;background:var(--line)}
 .divider span{font-family:'JetBrains Mono',monospace;font-size:11px;text-transform:uppercase;letter-spacing:.12em;color:var(--faint)}
 .msg{min-height:20px;margin:14px 0 0;font-size:13.5px;color:var(--muted);text-align:center}
-.msg.err{color:#B42318}
-.msg.ok{color:#067647}
+.msg.err{color:#D9455F}
+.msg.ok{color:#2E9E6B}
 
 /* ── google btn ──────────────────────────────────────────────── */
 .btn-google{width:100%;gap:10px;font-weight:500;padding:12px 18px}

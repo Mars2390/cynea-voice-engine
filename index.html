@@ -1000,6 +1000,259 @@ button,input,select{font:inherit;color:inherit}
   .cap-line{transition:opacity .2s linear}
   .cap-line.out{transform:none}
 }
+
+/* ═══════════════════════════════════════════════════════════════════
+   THE JOURNEY
+   ───────────────────────────────────────────────────────────────────
+   Everything below turns the page from a stack of sections into one
+   continuous surface you travel through. It is additive: strip this
+   block and the script that pairs with it and the page renders exactly
+   as it did before.
+
+   Four rules hold the whole thing together.
+
+   1. Only transform and opacity are ever written per frame. Nothing
+      here can cause layout or paint while you scroll — the two
+      exceptions, a clip-path on a 30px rail and opacity on five fixed
+      layers, are compositor work.
+   2. Every scroll-driven value is a *position*, not a *trigger*. Scroll
+      back up and the page runs backwards, at your speed, exactly. That
+      is what makes it worth scrolling twice.
+   3. The tint budget is 3.4%, and tools/check_contrast.py is what set
+      it. The travelling ground never darkens the page ground by more
+      than one climate layer, because the layers cross-fade as a
+      partition rather than stacking. At 4% the worst-case sample — body
+      copy in the security section, which already carries a photographic
+      wash of its own — moved from 4.64:1 to 4.56:1: still passing, and
+      still a fifth of the headroom this palette has, spent on something
+      nobody would have noticed. At 3.4% it costs 0.04, and the check still reads 4.60:1.
+   4. Reduced motion gets the finished page, not a broken one: every
+      scrubbed value is forced to its end state and the engine never
+      starts.
+   ═══════════════════════════════════════════════════════════════════ */
+
+/* ── the travelling ground ─────────────────────────────────────────
+   One fixed sky behind the entire document. Sections have no ground of
+   their own, so what sits under every word on this page is a single
+   surface whose colour moves as you descend: dusk at the hero, dawn
+   through the demo, noon over the agents, one cool step at the
+   channels, ember for the close. The seams between sections stop
+   existing because there is nothing on either side of them to seam.
+
+   Layers cross-fade as a partition — their opacities always sum to one
+   — so the tint at any point is one climate's worth and never two
+   stacked. That is the whole reason the 4% budget holds. */
+.field{position:fixed;inset:0;z-index:-3;pointer-events:none;overflow:hidden}
+.fx{position:absolute;inset:-14%;opacity:0;will-change:opacity,transform}
+
+/* Each climate is two soft radials placed off the reading column, so
+   most of the peak tint falls in the margins and the text column sees
+   less than the budget rather than all of it. The parallax is pure CSS
+   off the shared --p: the sky drifts without costing a frame. */
+.f-dusk{
+  background:
+    radial-gradient(62% 48% at 14% 8%,rgba(123,79,212,.034),transparent 70%),
+    radial-gradient(54% 44% at 92% 30%,rgba(27,32,80,.026),transparent 72%);
+  transform:translate3d(0,calc(var(--p,0) * -120px),0);
+}
+.f-dawn{
+  background:
+    radial-gradient(60% 50% at 88% 14%,rgba(249,179,190,.034),transparent 72%),
+    radial-gradient(56% 46% at 8% 62%,rgba(251,211,194,.032),transparent 74%);
+  transform:translate3d(0,calc(var(--p,0) * -190px),0);
+}
+.f-noon{
+  background:
+    radial-gradient(58% 46% at 16% 24%,rgba(242,160,61,.032),transparent 70%),
+    radial-gradient(62% 52% at 94% 74%,rgba(255,107,74,.026),transparent 74%);
+  transform:translate3d(0,calc(var(--p,0) * -260px),0);
+}
+.f-cool{
+  background:
+    radial-gradient(60% 48% at 86% 20%,rgba(79,209,197,.032),transparent 72%),
+    radial-gradient(54% 44% at 10% 76%,rgba(242,160,61,.026),transparent 74%);
+  transform:translate3d(0,calc(var(--p,0) * -330px),0);
+}
+.f-ember{
+  background:
+    radial-gradient(64% 50% at 20% 18%,rgba(255,107,74,.034),transparent 72%),
+    radial-gradient(58% 48% at 90% 80%,rgba(224,48,143,.024),transparent 74%);
+  transform:translate3d(0,calc(var(--p,0) * -400px),0);
+}
+/* While a recording is playing the ground leans half a step warmer.
+   The page is listening too. */
+.is-live .f-ember,.is-live .f-noon{filter:saturate(1.4)}
+@media(prefers-reduced-motion:reduce){.fx{transform:none !important}}
+
+/* ── the voice rail ────────────────────────────────────────────────
+   A spine running the height of the window, in the gutter left of
+   everything. It is not a progress bar with a voice motif bolted on —
+   it is a waveform, and the thing it is a waveform of is you.
+
+   Amplitude tracks scroll velocity. Sit still and it flatlines to a
+   column of dots; move and it speaks; stop and it settles with the
+   weight of something physical rather than the snap of a value being
+   set. The travelled part carries the accent, a node rides the
+   boundary, and when a real recording is playing the rail takes its
+   amplitude from the audio instead of from you.
+
+   Cost per frame: two custom properties on one element. Every tick's
+   width is a calc off --amp and its own baked --k, so the compositor
+   does the other ninety multiplications. */
+.rail{
+  position:fixed;left:calc(var(--gutter) + 10px);top:0;bottom:0;width:30px;
+  z-index:40;pointer-events:none;display:none;
+  --amp:0;
+}
+/* The spine. Without a continuous line behind them the ticks read as a
+   dashed border rather than as one thing with a voice; with it, the
+   quiet state is a hairline and the loud state is that same hairline
+   speaking. Both halves are clipped by the same --p as the ticks, so
+   the line and its waveform can never disagree about where you are. */
+.rail::before,.rail::after{content:"";position:absolute;left:0;top:0;bottom:0;width:1px}
+.rail::before{background:rgba(23,26,46,.13)}
+.rail::after{background:var(--coral);clip-path:inset(0 0 calc((1 - var(--p,0)) * 100%) 0)}
+/* Narrower than this the gutter is holding the bleed blocks' rounded
+   corners and there is no room for a rail that is not touching them. */
+@media(min-width:1280px){.rail{display:block}}
+.rail-col{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:center;gap:6px}
+.rail-col i{
+  display:block;height:2px;width:24px;border-radius:1px;
+  background:currentColor;transform-origin:left center;
+  transform:scaleX(calc(.10 + var(--amp) * var(--k,.5)));
+}
+.rail-track{color:rgba(23,26,46,.16)}
+/* The travelled half. clip-path rather than a height, so the ticks keep
+   their proportions instead of being squashed as the boundary moves. */
+.rail-fill{
+  color:var(--coral);
+  clip-path:inset(0 0 calc((1 - var(--p,0)) * 100%) 0);
+}
+.rail-node{
+  position:absolute;left:-2px;top:0;width:7px;height:7px;border-radius:50%;
+  background:var(--coral);box-shadow:0 0 0 3px rgba(255,107,74,.16);
+  transform:translate3d(0,calc(var(--p,0) * (100vh - 7px)),0);
+}
+.is-live .rail-node{box-shadow:0 0 0 4px rgba(255,107,74,.22),0 0 18px 4px rgba(255,107,74,.45)}
+.is-live .rail-fill i{
+  animation:railSpeak 1s ease-in-out infinite;
+  animation-delay:calc(var(--k,.5) * -1.4s);
+}
+@keyframes railSpeak{
+  0%,100%{transform:scaleX(calc(.10 + var(--amp) * var(--k,.5)))}
+  50%{transform:scaleX(calc(.34 + var(--amp) * var(--k,.5) * 1.4))}
+}
+@media(prefers-reduced-motion:reduce){.rail{display:none}}
+
+/* ── the reading line under the nav ────────────────────────────────
+   The same journey, for every width the rail cannot serve. It carries
+   the page's own colour arc — coral through amber to iris, the order
+   the ground travels in. */
+.nav::after{
+  content:"";position:absolute;left:0;right:0;bottom:-1px;height:2px;
+  background:linear-gradient(90deg,var(--coral),var(--amber) 42%,var(--magenta) 74%,var(--violet));
+  transform-origin:left center;transform:scaleX(var(--p,0));
+  opacity:.85;
+}
+
+/* ── words that arrive as you reach them ───────────────────────────
+   The display type is split into words, each riding up out of its own
+   line box. The value driving it is the block's position on screen, so
+   the sentence assembles as you come down and takes itself apart as you
+   go back up, at whatever speed you choose. Nothing here fires once:
+   there is nothing to miss, and nothing to replay that is not simply
+   there again. */
+.wsp{display:inline-block;overflow:hidden;vertical-align:bottom;
+     padding-bottom:.14em;margin-bottom:-.14em}
+.wsp>i{
+  display:inline-block;font-style:inherit;
+  transform:translate3d(0,calc((1 - var(--t,1)) * 100%),0)
+            translate3d(0,calc((1 - var(--t,1)) * .58em),0);
+  opacity:var(--t,1);
+}
+/* The hero cannot wait for a scroll it has not had yet, so its line
+   arrives on a clock instead — the same shape, at load. */
+.hero-display .wsp>i{
+  transform:translate3d(0,100%,0) translate3d(0,.58em,0);opacity:0;
+  animation:wordUp .9s cubic-bezier(.16,.84,.44,1) both;
+  animation-delay:calc(var(--i,0) * 70ms + 140ms);
+}
+@keyframes wordUp{to{transform:none;opacity:1}}
+@media(prefers-reduced-motion:reduce){
+  .wsp>i{transform:none !important;opacity:1 !important;animation:none !important}
+}
+
+/* ── planes, not panels ────────────────────────────────────────────
+   The first statement is a sheet of paper sliding up over the dusk of
+   the hero. It is the only place on the page where one section
+   physically overlaps another, which is what makes the whole thing read
+   as layered rather than stacked. One instance is a gesture; five would
+   be a tic. */
+.statement:not(.statement-2){
+  position:relative;z-index:2;
+  margin-top:-38px;border-radius:34px 34px 0 0;
+  box-shadow:0 -34px 70px -30px rgba(23,26,46,.34);
+}
+@media(max-width:760px){
+  .statement:not(.statement-2){margin-top:-24px;border-radius:22px 22px 0 0}
+}
+
+/* The second statement, the trust cards and the FAQ all sat on their own
+   opaque cream. They give it up so the travelling ground runs behind them
+   unbroken — the sheet over the hero is the only opaque plane left. */
+.statement-2{background:transparent}
+
+/* The hero sinks while the sheet comes over it: the content inside
+   travels slower than the frame around it, so leaving the hero feels
+   like a camera pulling back off a face rather than a block scrolling
+   out of the way. */
+.hero-layer{will-change:transform}
+
+/* ── depth ─────────────────────────────────────────────────────────
+   Cards, photographs and devices move at their own rates through the
+   viewport. The spread is small — front and back are about 40px apart
+   over a full screen of travel — but it is the difference between
+   looking at a page and looking into one. */
+.mo-live{will-change:transform}
+.slides{perspective:1800px}
+.slide-card{transform-style:preserve-3d}
+
+/* ── the lit row ───────────────────────────────────────────────────
+   In the receipts section only the claim you are actually reading is
+   animated; the rest hold still. This began as a performance decision
+   and turned out to be a design one — four diagrams moving at once is
+   noise, and one moving is attention. */
+.spec-row .spec-n{transition:color .45s ease,transform .45s cubic-bezier(.2,.8,.2,1)}
+.spec-row.lit .spec-n{color:var(--coral-deep);transform:translateX(3px)}
+.spec-row:not(.lit) .demo-wave i,
+.spec-row:not(.lit) .demo-turn .bar > i{animation-play-state:paused}
+.spec-row .spec-demo{transition:border-color .45s ease,background .45s ease}
+.spec-row.lit .spec-demo{border-color:rgba(255,107,74,.34);background:var(--card)}
+
+/* ── momentum ──────────────────────────────────────────────────────
+   --vel is 0 when the page is still and 1 when it is moving fast. The
+   only things allowed to read it are the ones that would have weight if
+   they were real: the display type leans into the direction of travel,
+   and the glass orb in the demo stretches a hair. Two percent, at the
+   very most. If you can name the effect, it is too strong. */
+.stmt,.foot-serif{
+  transform:translate3d(0,calc(var(--vel,0) * var(--dir,1) * -7px),0)
+            scaleY(calc(1 + var(--vel,0) * .018));
+  transform-origin:center top;
+}
+@media(prefers-reduced-motion:reduce){
+  .stmt,.foot-serif{transform:none}
+}
+
+/* ── mobile ────────────────────────────────────────────────────────
+   Everything above survives except the rail and the deepest parallax. A
+   phone gets the travelling ground, the words arriving, the sheet over
+   the hero and the lit row — the parts that are about the story — and
+   none of the parts that are about a pointer. */
+@media(max-width:860px){
+  .slides{perspective:none}
+  .slide-card{transform:none !important}
+}
 </style>
 
 <script>
@@ -2528,6 +2781,424 @@ addEventListener('DOMContentLoaded', function(){
     e.preventDefault();
     m.textContent='Newsletter isn’t live yet — nothing was sent.';
   });
+})();
+</script>
+
+<script>
+'use strict';
+
+/* ── THE JOURNEY ────────────────────────────────────────────────────
+   One engine for every scroll-driven thing on the page.
+
+   There is exactly one rAF loop and one scroll listener. Each frame runs
+   in two halves: every live layer is measured, then every live layer is
+   written. Nothing reads geometry after a write, so the browser is never
+   asked to lay the page out mid-frame — which is the one thing that
+   separates this from being a slideshow.
+
+   Layers are gated by an IntersectionObserver: off-screen work is not
+   deferred, it does not happen. A frame in the middle of this page
+   touches about a dozen elements.
+
+   The loop sleeps. It wakes on scroll, runs while there is velocity left
+   to decay, and stops, so a page sitting still costs nothing.
+
+   All of it is additive and independent of the audio, caption and chat
+   controllers above. If this block throws, is stripped, or never runs,
+   the page below still works exactly as it did. */
+(function(){
+  var root  = document.documentElement,
+      still = matchMedia('(prefers-reduced-motion:reduce)'),
+      wide  = matchMedia('(min-width:900px)');
+
+  function clamp(v){ return v < 0 ? 0 : v > 1 ? 1 : v; }
+  function ease(t){ return t * t * (3 - 2 * t); }        /* smoothstep */
+
+  /* ── the registry ────────────────────────────────────────────────
+     A layer is an element, the last measurement of where it is, and a
+     function that writes to it. `write` is called with the element's
+     progress through the viewport: 0 the moment it enters from below,
+     1 as it leaves past the top. */
+  var layers = [], live = [], io = null;
+
+  if('IntersectionObserver' in window){
+    io = new IntersectionObserver(function(entries){
+      entries.forEach(function(entry){
+        var layer = entry.target.__mo;
+        if(!layer) return;
+        var at = live.indexOf(layer);
+        if(entry.isIntersecting){
+          if(at < 0){ live.push(layer); entry.target.classList.add('mo-live'); }
+        }else if(at >= 0){
+          live.splice(at, 1); entry.target.classList.remove('mo-live');
+        }
+      });
+      wake();
+    },{rootMargin:'25% 0px 25% 0px'});
+  }
+
+  function on(el, write){
+    if(!el) return;
+    var layer = {el:el, write:write, top:0, h:0};
+    el.__mo = layer;
+    layers.push(layer);
+    if(io) io.observe(el); else live.push(layer);
+    return layer;
+  }
+
+  /* ── the clock ───────────────────────────────────────────────────── */
+  var lastY = scrollY, vel = 0, dir = 1, idle = 0, running = false,
+      lastP = -1, lastVel = -1, lastAmp = -1, rail = null;
+
+  function wake(){
+    idle = 0;
+    if(running) return;
+    running = true;
+    requestAnimationFrame(frame);
+  }
+
+  function paint(list, vh){
+    var i;
+    for(i = 0; i < list.length; i++){
+      var box = list[i].el.getBoundingClientRect();
+      list[i].top = box.top; list[i].h = box.height;
+    }
+    for(i = 0; i < list.length; i++){
+      list[i].write(clamp((vh - list[i].top) / (vh + list[i].h)), vel, dir, vh);
+    }
+  }
+
+  function frame(){
+    var y  = scrollY,
+        dy = y - lastY,
+        vh = innerHeight;
+    lastY = y;
+
+    /* Velocity rises fast and settles slowly, which is what gives the
+       rail its weight — a real needle overshoots and comes back, it does
+       not step to a number. */
+    var target = Math.min(1, Math.abs(dy) / 55);
+    vel += (target - vel) * (target > vel ? .5 : .075);
+    if(vel < .0015) vel = 0;
+    if(dy) dir = dy > 0 ? 1 : -1;
+
+    /* page progress, shared by the rail, the nav line and the sky */
+    var span = root.scrollHeight - vh,
+        p    = span > 0 ? clamp(y / span) : 0;
+
+    if(Math.abs(p - lastP) > .0008){
+      root.style.setProperty('--p', p.toFixed(4));
+      sky(p);
+      lastP = p;
+    }
+    if(Math.abs(vel - lastVel) > .004){
+      root.style.setProperty('--vel', vel.toFixed(3));
+      root.style.setProperty('--dir', String(dir));
+      lastVel = vel;
+    }
+    /* The rail lags the page a little further still, so it keeps
+       speaking for a beat after you stop. */
+    var amp = Math.min(1, vel * 1.25);
+    if(rail && Math.abs(amp - lastAmp) > .006){
+      rail.style.setProperty('--amp', amp.toFixed(3));
+      lastAmp = amp;
+    }
+
+    paint(live, vh);
+
+    if(!dy && !vel) idle++; else idle = 0;
+    if(idle > 6){ running = false; return; }
+    requestAnimationFrame(frame);
+  }
+
+  addEventListener('scroll', wake, {passive:true});
+  addEventListener('resize', function(){ lastP = lastVel = lastAmp = -1; wake(); });
+
+  /* ── the sky ─────────────────────────────────────────────────────
+     Five climates, cross-faded as a partition of one: whatever the
+     scroll position, the layers' opacities add to exactly 1. That is the
+     invariant the contrast budget rests on — no point on this page ever
+     carries two tints stacked. */
+  var sky = function(){};
+  (function(){
+    var wrap = document.createElement('div');
+    wrap.className = 'field';
+    wrap.setAttribute('aria-hidden','true');
+    var stops = [0, .25, .5, .72, .92],
+        cells = ['f-dusk','f-dawn','f-noon','f-cool','f-ember'].map(function(n){
+          var s = document.createElement('span');
+          s.className = 'fx ' + n;
+          wrap.appendChild(s);
+          return s;
+        });
+    document.body.insertBefore(wrap, document.body.firstChild);
+
+    var shown = [];
+    sky = function(p){
+      var op = [0,0,0,0,0], k;
+      if(p <= stops[0]) op[0] = 1;
+      else if(p >= stops[stops.length - 1]) op[op.length - 1] = 1;
+      else for(k = 0; k < stops.length - 1; k++){
+        if(p >= stops[k] && p <= stops[k + 1]){
+          var f = (p - stops[k]) / (stops[k + 1] - stops[k]);
+          op[k] = 1 - f; op[k + 1] = f;
+          break;
+        }
+      }
+      for(k = 0; k < cells.length; k++){
+        if(Math.abs(op[k] - (shown[k] || 0)) < .005) continue;
+        cells[k].style.opacity = op[k].toFixed(3);
+        shown[k] = op[k];
+      }
+    };
+    sky(0);
+  })();
+
+  /* ── the rail ────────────────────────────────────────────────────
+     Ticks are built, not written. Each is given a fixed --k once, and
+     its width for the rest of the session is a calc off that and the
+     single --amp the loop sets. Two style writes drive ninety bars. */
+  if(!still.matches){
+    rail = document.createElement('div');
+    rail.className = 'rail';
+    rail.setAttribute('aria-hidden','true');
+
+    var track = document.createElement('div'), fill = document.createElement('div'),
+        node  = document.createElement('span');
+    track.className = 'rail-col rail-track';
+    fill.className  = 'rail-col rail-fill';
+    node.className  = 'rail-node';
+
+    var build = function(){
+      var n = Math.max(24, Math.ceil(innerHeight / 8));
+      [track, fill].forEach(function(col){
+        col.innerHTML = '';
+        for(var i = 0; i < n; i++){
+          var tick = document.createElement('i');
+          /* A fixed, unrepeating profile, so the rail reads as a
+             recorded waveform and not a row of equal bars. */
+          var k = .22 + .78 * Math.abs(Math.sin(i * 1.7) * .6 + Math.sin(i * .43) * .4);
+          tick.style.setProperty('--k', k.toFixed(3));
+          col.appendChild(tick);
+        }
+      });
+    };
+    build();
+    rail.appendChild(track); rail.appendChild(fill); rail.appendChild(node);
+    document.body.appendChild(rail);
+
+    var rebuild;
+    addEventListener('resize', function(){
+      clearTimeout(rebuild); rebuild = setTimeout(build, 220);
+    });
+  }
+
+  /* Whenever a real recording is playing, the page knows: the rail takes
+     its amplitude from the audio instead of from you, the node lights,
+     and the ground leans warmer.
+
+     This listens to the one <audio> element rather than to the
+     cynea:audio* events the caption engine uses, because the element is
+     the only thing that is never wrong. The events announce a clip
+     starting and stopping; they say nothing about a clip being *paused*,
+     which is a state the page should not be glowing through. Every
+     surface on the page — the four cards, the phone, the chat — drives
+     this same element, so one pair of listeners covers all of them. */
+  (function(){
+    var player = document.getElementById('player');
+    if(!player) return;
+    player.addEventListener('playing', function(){ root.classList.add('is-live'); });
+    ['pause','ended','emptied','error'].forEach(function(e){
+      player.addEventListener(e, function(){ root.classList.remove('is-live'); });
+    });
+  })();
+
+  /* The sky and the rail are the parts of this that are colour and
+     position rather than motion, so they stay. Everything past here is
+     movement, and movement is what was asked not to happen. */
+  if(still.matches){ wake(); return; }
+
+  /* ═══ registrations ═══════════════════════════════════════════════ */
+
+  /* ── the hero sinks ──────────────────────────────────────────────
+     Three planes leaving at three speeds, the video slowest of all. The
+     frame travels at the speed of the page and everything inside it
+     lags, so the hero holds your eye a beat longer than the scroll says
+     it should — and the statement below arrives over the top of it like
+     a sheet of paper laid down on a photograph. */
+  (function(){
+    var hero = document.querySelector('#top .hero');
+    if(!hero) return;
+    var vid  = hero.querySelector('.hero-vid'),
+        eye  = hero.querySelector('.hero-eyebrow'),
+        mid  = hero.querySelector('.hero-mid'),
+        foot = hero.querySelector('.hero-foot');
+    [eye, mid, foot, vid].forEach(function(el){ if(el) el.classList.add('hero-layer'); });
+
+    on(hero, function(){
+      var gone = clamp(-this.top / Math.max(1, this.h)),   /* screens travelled off the top */
+          lift = gone * this.h;
+      if(eye)  eye.style.transform  = 'translate3d(0,' + (lift * .22).toFixed(1) + 'px,0)';
+      if(mid)  mid.style.transform  = 'translate3d(0,' + (lift * .40).toFixed(1) + 'px,0)';
+      if(foot) foot.style.transform = 'translate3d(0,' + (lift * .28).toFixed(1) + 'px,0)';
+      if(vid)  vid.style.transform  = 'translate3d(0,' + (lift * .12).toFixed(1) + 'px,0) scale(' +
+                                      (1 + gone * .10).toFixed(3) + ')';
+    });
+  })();
+
+  /* ── word splitting ──────────────────────────────────────────────
+     Only text nodes are split. The voice mark in the first statement,
+     the photo tile in the second and the line breaks in the demo
+     headings are elements, and they come through untouched in place.
+     The whitespace between words stays real whitespace, so the line
+     still wraps where the type says it should. */
+  function split(block){
+    var words = [];
+    (function walk(node){
+      [].slice.call(node.childNodes).forEach(function(kid){
+        if(kid.nodeType === 3){
+          var parts = kid.nodeValue.split(/(\s+)/);
+          var frag = document.createDocumentFragment();
+          parts.forEach(function(part){
+            if(!part) return;
+            if(/^\s+$/.test(part)){ frag.appendChild(document.createTextNode(part)); return; }
+            var box  = document.createElement('span'),
+                lift = document.createElement('i');
+            box.className = 'wsp';
+            lift.textContent = part;
+            box.appendChild(lift);
+            frag.appendChild(box);
+            words.push(lift);
+          });
+          node.replaceChild(frag, kid);
+        }else if(kid.nodeType === 1 && kid.tagName.toLowerCase() !== 'svg'
+                 && !kid.classList.contains('wsp')){
+          walk(kid);
+        }
+      });
+    })(block);
+    return words;
+  }
+
+  /* ── the display type assembles as you reach it ──────────────────
+     Each word's own progress is the block's progress minus its place in
+     the line, so the sentence lands left to right — and comes apart the
+     same way in reverse, at whatever speed you go back up. */
+  function scrub(block, opts){
+    var words = split(block);
+    if(!words.length) return;
+    opts = opts || {};
+    var spread = opts.spread == null ? .55 : opts.spread,
+        from   = opts.from   == null ? .10 : opts.from,
+        over   = opts.over   == null ? .30 : opts.over,
+        step   = spread / Math.max(1, words.length - 1),
+        shown  = [];
+
+    /* Start closed. Otherwise a block sitting past the observer's reach
+       renders finished, then resets the instant you arrive at it. */
+    words.forEach(function(w){ w.style.setProperty('--t','0'); });
+
+    /* Two entrances on one element read as a stutter, so the wrapper's
+       own reveal stands down and the words become the reveal. */
+    var host = block.closest ? block.closest('.rv') : null;
+    if(host){ host.classList.remove('rv'); host.classList.add('in'); }
+    if(block.classList.contains('rv')){ block.classList.remove('rv'); block.classList.add('in'); }
+
+    on(block, function(p){
+      var t = clamp((p - from) / over);
+      for(var i = 0; i < words.length; i++){
+        var w = ease(clamp((t - i * step) / (1 - spread)));
+        if(Math.abs(w - (shown[i] || 0)) < .004) continue;
+        words[i].style.setProperty('--t', w.toFixed(3));
+        shown[i] = w;
+      }
+    });
+  }
+
+  [].slice.call(document.querySelectorAll('.stmt'))
+    .forEach(function(b){ scrub(b, {from:.14, over:.26}); });
+  [].slice.call(document.querySelectorAll('.demo-head .display, .sec-sm .display'))
+    .forEach(function(b){ scrub(b, {from:.10, over:.28, spread:.45}); });
+  [].slice.call(document.querySelectorAll('.foot-serif .row'))
+    .forEach(function(row, i){ scrub(row, {from:.06 + i * .04, over:.26, spread:.4}); });
+
+  /* The hero's line has no scroll to ride in on, so it arrives on a
+     clock instead — the same rise, at load. */
+  (function(){
+    var h = document.querySelector('.hero-display');
+    if(h) split(h).forEach(function(w, i){ w.style.setProperty('--i', String(i)); });
+  })();
+
+  /* ── depth ───────────────────────────────────────────────────────
+     Photographs drift inside their frames; agent portraits sit at four
+     different distances and the trust cards at three. Every travelling
+     image is scaled past its frame by more than it can ever travel, so
+     no edge can scroll into view — the same rule the section
+     photography follows. The whole spread is under 25px. */
+  function drift(el, dist, scale){
+    if(!el) return;
+    on(el, function(p){
+      el.style.transform = 'translate3d(0,' + ((p * 2 - 1) * -dist).toFixed(1) + 'px,0)' +
+                           (scale ? ' scale(' + scale + ')' : '');
+    });
+  }
+
+  drift(document.querySelector('.stmt-tile img'), 11, 1.24);
+  drift(document.querySelector('.spec-photo img'), 16, 1.18);
+  [].slice.call(document.querySelectorAll('.agent-figure')).forEach(function(el, i){
+    drift(el, 5 + (i % 4) * 3);
+  });
+  if(wide.matches){
+    [].slice.call(document.querySelectorAll('.scard')).forEach(function(el, i){
+      drift(el, 6 + (i % 3) * 7);
+    });
+  }
+
+  /* ── the screenshot lies back, then stands up ────────────────────
+     The product shot enters tilted away from you and comes flat as it
+     reaches the middle of the screen, the way a real object does when
+     you walk past it. Pointer widths only: a phone is already holding
+     the thing at arm's length. */
+  if(wide.matches){
+    [].slice.call(document.querySelectorAll('.slide-card')).forEach(function(card){
+      on(card, function(p){
+        var c = p * 2 - 1;                     /* -1 below, 0 centred, +1 above */
+        card.style.transform = 'translate3d(0,' + (c * -14).toFixed(1) + 'px,0) rotateX(' +
+                               (c * -4.2).toFixed(2) + 'deg)';
+      });
+    });
+  }
+
+  /* ── the arrival ─────────────────────────────────────────────────
+     The closing block comes up to meet you, a hair under size until it
+     lands, so the end of the page reads as arriving somewhere rather
+     than as running out of document. */
+  (function(){
+    var block = document.querySelector('.cta-block'),
+        cta   = block && block.parentElement;   /* the .bleed frame, corners and all */
+    if(cta) on(cta, function(p){
+      cta.style.transform = 'scale(' + (.955 + .045 * ease(clamp(p / .62))).toFixed(4) + ')';
+    });
+  })();
+
+  /* ── the lit row ─────────────────────────────────────────────────
+     Whichever claim is crossing the middle of the screen is the one that
+     is alive; the other three hold still. A narrow band through the
+     centre of the viewport decides it, so it is genuinely the row you
+     are reading. */
+  (function(){
+    var rows = [].slice.call(document.querySelectorAll('.spec-row'));
+    if(!rows.length || !io) return;
+    var band = new IntersectionObserver(function(entries){
+      entries.forEach(function(e){ e.target.classList.toggle('lit', e.isIntersecting); });
+    },{rootMargin:'-42% 0px -42% 0px'});
+    rows.forEach(function(r){ band.observe(r); });
+  })();
+
+  /* One synchronous pass over everything before the first paint, so the
+     page is never briefly wrong while the observer catches up. */
+  paint(layers, innerHeight);
+  wake();
 })();
 </script>
 

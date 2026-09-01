@@ -1,0 +1,1464 @@
+{
+ "task": "transcribe",
+ "language": "English",
+ "duration": 67.317567488,
+ "text": " Hello, this is Amina. How can I help you today? Good morning, Amina speaking. What can I do for you? Karibu. Welcome to Cynea Bank. How may I assist you? Let me check your account. Yes, I can see your balance. Your current balance is 15,000 shillings. Your last transaction was yesterday. A payment of 2,000 shillings. Would you like me to help with that transfer? I'll need your account number and phone number to verify. Let me repeat that. Account number 123456. Is that correct? Your payment has been processed. You'll get an SMS confirmation. Is there anything else I can help with today? I'm sorry to hear about that. Let me look into it. I understand your frustration. Let me fix this right away. Your card has been blocked for security. A new one will arrive in five days. We can reverse that transaction. It will take up to 24 hours. M-Pesa payments usually reflect within a few minutes. Sawasawa. No problem at all. Poll for the inconvenience. Let me make it right. I'll transfer you to the disputes team now. Thank you for calling. Aseante sana. Have a good day.",
+ "words": [
+  {
+   "word": "Hello,",
+   "start": 0,
+   "end": 0.54
+  },
+  {
+   "word": "this",
+   "start": 0.54,
+   "end": 0.64
+  },
+  {
+   "word": "is",
+   "start": 0.64,
+   "end": 0.86
+  },
+  {
+   "word": "Amina.",
+   "start": 0.86,
+   "end": 1.52
+  },
+  {
+   "word": "How",
+   "start": 1.52,
+   "end": 1.78
+  },
+  {
+   "word": "can",
+   "start": 1.78,
+   "end": 1.9
+  },
+  {
+   "word": "I",
+   "start": 1.9,
+   "end": 2.04
+  },
+  {
+   "word": "help",
+   "start": 2.04,
+   "end": 2.2
+  },
+  {
+   "word": "you",
+   "start": 2.2,
+   "end": 2.32
+  },
+  {
+   "word": "today?",
+   "start": 2.32,
+   "end": 3.56
+  },
+  {
+   "word": "Good",
+   "start": 3.56,
+   "end": 3.82
+  },
+  {
+   "word": "morning,",
+   "start": 3.82,
+   "end": 4.34
+  },
+  {
+   "word": "Amina",
+   "start": 4.34,
+   "end": 4.6
+  },
+  {
+   "word": "speaking.",
+   "start": 4.6,
+   "end": 5.34
+  },
+  {
+   "word": "What",
+   "start": 5.34,
+   "end": 5.42
+  },
+  {
+   "word": "can",
+   "start": 5.42,
+   "end": 5.56
+  },
+  {
+   "word": "I",
+   "start": 5.56,
+   "end": 5.68
+  },
+  {
+   "word": "do",
+   "start": 5.68,
+   "end": 5.8
+  },
+  {
+   "word": "for",
+   "start": 5.8,
+   "end": 5.98
+  },
+  {
+   "word": "you?",
+   "start": 5.98,
+   "end": 6.72
+  },
+  {
+   "word": "Karibu.",
+   "start": 7.16,
+   "end": 7.96
+  },
+  {
+   "word": "Welcome",
+   "start": 7.96,
+   "end": 8.44
+  },
+  {
+   "word": "to",
+   "start": 8.44,
+   "end": 8.64
+  },
+  {
+   "word": "Cynea",
+   "start": 8.64,
+   "end": 8.9
+  },
+  {
+   "word": "Bank.",
+   "start": 8.9,
+   "end": 9.6
+  },
+  {
+   "word": "How",
+   "start": 9.6,
+   "end": 9.78
+  },
+  {
+   "word": "may",
+   "start": 9.78,
+   "end": 9.92
+  },
+  {
+   "word": "I",
+   "start": 9.92,
+   "end": 10.04
+  },
+  {
+   "word": "assist",
+   "start": 10.04,
+   "end": 10.32
+  },
+  {
+   "word": "you?",
+   "start": 10.32,
+   "end": 10.9
+  },
+  {
+   "word": "Let",
+   "start": 10.9,
+   "end": 11.06
+  },
+  {
+   "word": "me",
+   "start": 11.06,
+   "end": 11.14
+  },
+  {
+   "word": "check",
+   "start": 11.14,
+   "end": 11.36
+  },
+  {
+   "word": "your",
+   "start": 11.36,
+   "end": 11.5
+  },
+  {
+   "word": "account.",
+   "start": 11.5,
+   "end": 12.34
+  },
+  {
+   "word": "Yes,",
+   "start": 12.34,
+   "end": 12.48
+  },
+  {
+   "word": "I",
+   "start": 12.48,
+   "end": 12.64
+  },
+  {
+   "word": "can",
+   "start": 12.64,
+   "end": 12.76
+  },
+  {
+   "word": "see",
+   "start": 12.76,
+   "end": 12.94
+  },
+  {
+   "word": "your",
+   "start": 12.94,
+   "end": 13.08
+  },
+  {
+   "word": "balance.",
+   "start": 13.08,
+   "end": 13.4
+  },
+  {
+   "word": "Your",
+   "start": 14.66,
+   "end": 14.76
+  },
+  {
+   "word": "current",
+   "start": 14.76,
+   "end": 15.04
+  },
+  {
+   "word": "balance",
+   "start": 15.04,
+   "end": 15.4
+  },
+  {
+   "word": "is",
+   "start": 15.4,
+   "end": 15.62
+  },
+  {
+   "word": "15,000",
+   "start": 15.62,
+   "end": 16.36
+  },
+  {
+   "word": "shillings.",
+   "start": 16.36,
+   "end": 16.86
+  },
+  {
+   "word": "Your",
+   "start": 16.86,
+   "end": 16.98
+  },
+  {
+   "word": "last",
+   "start": 16.98,
+   "end": 17.26
+  },
+  {
+   "word": "transaction",
+   "start": 17.26,
+   "end": 17.8
+  },
+  {
+   "word": "was",
+   "start": 17.8,
+   "end": 18.08
+  },
+  {
+   "word": "yesterday.",
+   "start": 18.08,
+   "end": 19.14
+  },
+  {
+   "word": "A",
+   "start": 19.14,
+   "end": 19.22
+  },
+  {
+   "word": "payment",
+   "start": 19.22,
+   "end": 19.52
+  },
+  {
+   "word": "of",
+   "start": 19.52,
+   "end": 19.82
+  },
+  {
+   "word": "2,000",
+   "start": 19.82,
+   "end": 20.48
+  },
+  {
+   "word": "shillings.",
+   "start": 20.48,
+   "end": 21.06
+  },
+  {
+   "word": "Would",
+   "start": 21.78,
+   "end": 21.88
+  },
+  {
+   "word": "you",
+   "start": 21.88,
+   "end": 21.98
+  },
+  {
+   "word": "like",
+   "start": 21.98,
+   "end": 22.16
+  },
+  {
+   "word": "me",
+   "start": 22.16,
+   "end": 22.26
+  },
+  {
+   "word": "to",
+   "start": 22.26,
+   "end": 22.42
+  },
+  {
+   "word": "help",
+   "start": 22.42,
+   "end": 22.58
+  },
+  {
+   "word": "with",
+   "start": 22.58,
+   "end": 22.7
+  },
+  {
+   "word": "that",
+   "start": 22.7,
+   "end": 22.86
+  },
+  {
+   "word": "transfer?",
+   "start": 22.86,
+   "end": 23.78
+  },
+  {
+   "word": "I'll",
+   "start": 23.78,
+   "end": 24.04
+  },
+  {
+   "word": "need",
+   "start": 24.04,
+   "end": 24.16
+  },
+  {
+   "word": "your",
+   "start": 24.16,
+   "end": 24.32
+  },
+  {
+   "word": "account",
+   "start": 24.32,
+   "end": 24.64
+  },
+  {
+   "word": "number",
+   "start": 24.64,
+   "end": 24.88
+  },
+  {
+   "word": "and",
+   "start": 24.88,
+   "end": 25.02
+  },
+  {
+   "word": "phone",
+   "start": 25.02,
+   "end": 25.26
+  },
+  {
+   "word": "number",
+   "start": 25.26,
+   "end": 25.46
+  },
+  {
+   "word": "to",
+   "start": 25.46,
+   "end": 25.58
+  },
+  {
+   "word": "verify.",
+   "start": 25.58,
+   "end": 26.06
+  },
+  {
+   "word": "Let",
+   "start": 26.06,
+   "end": 26.2
+  },
+  {
+   "word": "me",
+   "start": 26.2,
+   "end": 26.3
+  },
+  {
+   "word": "repeat",
+   "start": 26.3,
+   "end": 26.62
+  },
+  {
+   "word": "that.",
+   "start": 26.62,
+   "end": 26.92
+  },
+  {
+   "word": "Account",
+   "start": 27,
+   "end": 27.8
+  },
+  {
+   "word": "number",
+   "start": 27.8,
+   "end": 28.04
+  },
+  {
+   "word": "123456.",
+   "start": 28.04,
+   "end": 31.26
+  },
+  {
+   "word": "Is",
+   "start": 31.26,
+   "end": 31.68
+  },
+  {
+   "word": "that",
+   "start": 31.68,
+   "end": 31.8
+  },
+  {
+   "word": "correct?",
+   "start": 31.8,
+   "end": 32.72
+  },
+  {
+   "word": "Your",
+   "start": 32.94,
+   "end": 33.08
+  },
+  {
+   "word": "payment",
+   "start": 33.08,
+   "end": 33.38
+  },
+  {
+   "word": "has",
+   "start": 33.38,
+   "end": 33.58
+  },
+  {
+   "word": "been",
+   "start": 33.58,
+   "end": 33.74
+  },
+  {
+   "word": "processed.",
+   "start": 33.74,
+   "end": 34.88
+  },
+  {
+   "word": "You'll",
+   "start": 34.88,
+   "end": 35
+  },
+  {
+   "word": "get",
+   "start": 35,
+   "end": 35.16
+  },
+  {
+   "word": "an",
+   "start": 35.16,
+   "end": 35.32
+  },
+  {
+   "word": "SMS",
+   "start": 35.32,
+   "end": 35.82
+  },
+  {
+   "word": "confirmation.",
+   "start": 35.82,
+   "end": 36.9
+  },
+  {
+   "word": "Is",
+   "start": 37,
+   "end": 37.28
+  },
+  {
+   "word": "there",
+   "start": 37.28,
+   "end": 37.4
+  },
+  {
+   "word": "anything",
+   "start": 37.4,
+   "end": 37.62
+  },
+  {
+   "word": "else",
+   "start": 37.62,
+   "end": 37.9
+  },
+  {
+   "word": "I",
+   "start": 37.9,
+   "end": 38
+  },
+  {
+   "word": "can",
+   "start": 38,
+   "end": 38.12
+  },
+  {
+   "word": "help",
+   "start": 38.12,
+   "end": 38.32
+  },
+  {
+   "word": "with",
+   "start": 38.32,
+   "end": 38.5
+  },
+  {
+   "word": "today?",
+   "start": 38.5,
+   "end": 39.32
+  },
+  {
+   "word": "I'm",
+   "start": 39.22,
+   "end": 39.82
+  },
+  {
+   "word": "sorry",
+   "start": 39.82,
+   "end": 40.02
+  },
+  {
+   "word": "to",
+   "start": 40.02,
+   "end": 40.18
+  },
+  {
+   "word": "hear",
+   "start": 40.18,
+   "end": 40.32
+  },
+  {
+   "word": "about",
+   "start": 40.32,
+   "end": 40.56
+  },
+  {
+   "word": "that.",
+   "start": 40.56,
+   "end": 41.14
+  },
+  {
+   "word": "Let",
+   "start": 41.14,
+   "end": 41.24
+  },
+  {
+   "word": "me",
+   "start": 41.24,
+   "end": 41.36
+  },
+  {
+   "word": "look",
+   "start": 41.36,
+   "end": 41.52
+  },
+  {
+   "word": "into",
+   "start": 41.52,
+   "end": 41.76
+  },
+  {
+   "word": "it.",
+   "start": 41.76,
+   "end": 42.38
+  },
+  {
+   "word": "I",
+   "start": 41.62,
+   "end": 42.52
+  },
+  {
+   "word": "understand",
+   "start": 42.52,
+   "end": 42.9
+  },
+  {
+   "word": "your",
+   "start": 42.9,
+   "end": 43.06
+  },
+  {
+   "word": "frustration.",
+   "start": 43.06,
+   "end": 43.72
+  },
+  {
+   "word": "Let",
+   "start": 43.72,
+   "end": 43.8
+  },
+  {
+   "word": "me",
+   "start": 43.8,
+   "end": 43.92
+  },
+  {
+   "word": "fix",
+   "start": 43.92,
+   "end": 44.12
+  },
+  {
+   "word": "this",
+   "start": 44.12,
+   "end": 44.34
+  },
+  {
+   "word": "right",
+   "start": 44.34,
+   "end": 44.58
+  },
+  {
+   "word": "away.",
+   "start": 44.58,
+   "end": 44.9
+  },
+  {
+   "word": "Your",
+   "start": 44.34,
+   "end": 45.04
+  },
+  {
+   "word": "card",
+   "start": 45.04,
+   "end": 45.28
+  },
+  {
+   "word": "has",
+   "start": 45.28,
+   "end": 45.46
+  },
+  {
+   "word": "been",
+   "start": 45.46,
+   "end": 45.6
+  },
+  {
+   "word": "blocked",
+   "start": 45.6,
+   "end": 45.82
+  },
+  {
+   "word": "for",
+   "start": 45.82,
+   "end": 45.98
+  },
+  {
+   "word": "security.",
+   "start": 45.98,
+   "end": 46.98
+  },
+  {
+   "word": "A",
+   "start": 46.98,
+   "end": 47.06
+  },
+  {
+   "word": "new",
+   "start": 47.06,
+   "end": 47.26
+  },
+  {
+   "word": "one",
+   "start": 47.26,
+   "end": 47.38
+  },
+  {
+   "word": "will",
+   "start": 47.38,
+   "end": 47.52
+  },
+  {
+   "word": "arrive",
+   "start": 47.52,
+   "end": 47.82
+  },
+  {
+   "word": "in",
+   "start": 47.82,
+   "end": 47.98
+  },
+  {
+   "word": "five",
+   "start": 47.98,
+   "end": 48.2
+  },
+  {
+   "word": "days.",
+   "start": 48.2,
+   "end": 48.68
+  },
+  {
+   "word": "We",
+   "start": 48.18,
+   "end": 49.14
+  },
+  {
+   "word": "can",
+   "start": 49.14,
+   "end": 49.3
+  },
+  {
+   "word": "reverse",
+   "start": 49.3,
+   "end": 49.62
+  },
+  {
+   "word": "that",
+   "start": 49.62,
+   "end": 49.82
+  },
+  {
+   "word": "transaction.",
+   "start": 49.82,
+   "end": 50.46
+  },
+  {
+   "word": "It",
+   "start": 50.46,
+   "end": 50.54
+  },
+  {
+   "word": "will",
+   "start": 50.54,
+   "end": 50.66
+  },
+  {
+   "word": "take",
+   "start": 50.66,
+   "end": 50.88
+  },
+  {
+   "word": "up",
+   "start": 50.88,
+   "end": 51
+  },
+  {
+   "word": "to",
+   "start": 51,
+   "end": 51.12
+  },
+  {
+   "word": "24",
+   "start": 51.12,
+   "end": 51.52
+  },
+  {
+   "word": "hours.",
+   "start": 51.52,
+   "end": 52.5
+  },
+  {
+   "word": "M-Pesa",
+   "start": 52.38,
+   "end": 52.76
+  },
+  {
+   "word": "payments",
+   "start": 52.76,
+   "end": 53.14
+  },
+  {
+   "word": "usually",
+   "start": 53.14,
+   "end": 53.44
+  },
+  {
+   "word": "reflect",
+   "start": 53.44,
+   "end": 53.88
+  },
+  {
+   "word": "within",
+   "start": 53.88,
+   "end": 54.08
+  },
+  {
+   "word": "a",
+   "start": 54.08,
+   "end": 54.24
+  },
+  {
+   "word": "few",
+   "start": 54.24,
+   "end": 54.38
+  },
+  {
+   "word": "minutes.",
+   "start": 54.38,
+   "end": 55.28
+  },
+  {
+   "word": "Sawasawa.",
+   "start": 54.84,
+   "end": 56.28
+  },
+  {
+   "word": "No",
+   "start": 56.28,
+   "end": 56.6
+  },
+  {
+   "word": "problem",
+   "start": 56.6,
+   "end": 56.92
+  },
+  {
+   "word": "at",
+   "start": 56.92,
+   "end": 57.12
+  },
+  {
+   "word": "all.",
+   "start": 57.12,
+   "end": 57.9
+  },
+  {
+   "word": "Poll",
+   "start": 57.9,
+   "end": 58.04
+  },
+  {
+   "word": "for",
+   "start": 58.04,
+   "end": 58.24
+  },
+  {
+   "word": "the",
+   "start": 58.24,
+   "end": 58.36
+  },
+  {
+   "word": "inconvenience.",
+   "start": 58.36,
+   "end": 59.14
+  },
+  {
+   "word": "Let",
+   "start": 60.7,
+   "end": 60.86
+  },
+  {
+   "word": "me",
+   "start": 60.86,
+   "end": 60.96
+  },
+  {
+   "word": "make",
+   "start": 60.96,
+   "end": 61.12
+  },
+  {
+   "word": "it",
+   "start": 61.12,
+   "end": 61.32
+  },
+  {
+   "word": "right.",
+   "start": 61.32,
+   "end": 62.04
+  },
+  {
+   "word": "I'll",
+   "start": 62.04,
+   "end": 62.14
+  },
+  {
+   "word": "transfer",
+   "start": 62.14,
+   "end": 62.48
+  },
+  {
+   "word": "you",
+   "start": 62.48,
+   "end": 62.64
+  },
+  {
+   "word": "to",
+   "start": 62.64,
+   "end": 62.76
+  },
+  {
+   "word": "the",
+   "start": 62.76,
+   "end": 62.86
+  },
+  {
+   "word": "disputes",
+   "start": 62.86,
+   "end": 63.18
+  },
+  {
+   "word": "team",
+   "start": 63.18,
+   "end": 63.46
+  },
+  {
+   "word": "now.",
+   "start": 63.46,
+   "end": 63.86
+  },
+  {
+   "word": "Thank",
+   "start": 63.86,
+   "end": 63.98
+  },
+  {
+   "word": "you",
+   "start": 63.98,
+   "end": 64.1
+  },
+  {
+   "word": "for",
+   "start": 64.1,
+   "end": 64.24
+  },
+  {
+   "word": "calling.",
+   "start": 64.24,
+   "end": 65.04
+  },
+  {
+   "word": "Aseante",
+   "start": 65.16,
+   "end": 65.48
+  },
+  {
+   "word": "sana.",
+   "start": 65.48,
+   "end": 66.28
+  },
+  {
+   "word": "Have",
+   "start": 66.28,
+   "end": 66.4
+  },
+  {
+   "word": "a",
+   "start": 66.4,
+   "end": 66.52
+  },
+  {
+   "word": "good",
+   "start": 66.52,
+   "end": 66.62
+  },
+  {
+   "word": "day.",
+   "start": 66.62,
+   "end": 66.88
+  }
+ ],
+ "segments": [
+  {
+   "id": 0,
+   "seek": 0,
+   "start": 0,
+   "end": 6.24,
+   "text": " Hello, this is Amina. How can I help you today? Good morning, Amina speaking. What can I do for you?",
+   "tokens": [
+    50365,
+    2425,
+    11,
+    341,
+    307,
+    2012,
+    1426,
+    13,
+    1012,
+    393,
+    286,
+    854,
+    291,
+    965,
+    30,
+    2205,
+    2446,
+    11,
+    2012,
+    1426,
+    4124,
+    13,
+    708,
+    393,
+    286,
+    360,
+    337,
+    291,
+    30,
+    50677
+   ],
+   "temperature": 0,
+   "avg_logprob": -0.1145358,
+   "compression_ratio": 1.6346864,
+   "no_speech_prob": 0.0045280457
+  },
+  {
+   "id": 1,
+   "seek": 0,
+   "start": 7.14,
+   "end": 13.58,
+   "text": " Karibu. Welcome to Cynea Bank. How may I assist you? Let me check your account. Yes, I can see your balance.",
+   "tokens": [
+    50722,
+    8009,
+    897,
+    84,
+    13,
+    4027,
+    281,
+    383,
+    88,
+    22160,
+    8915,
+    13,
+    1012,
+    815,
+    286,
+    4255,
+    291,
+    30,
+    961,
+    385,
+    1520,
+    428,
+    2696,
+    13,
+    1079,
+    11,
+    286,
+    393,
+    536,
+    428,
+    4772,
+    13,
+    51044
+   ],
+   "temperature": 0,
+   "avg_logprob": -0.1145358,
+   "compression_ratio": 1.6346864,
+   "no_speech_prob": 0.0045280457
+  },
+  {
+   "id": 2,
+   "seek": 0,
+   "start": 14.32,
+   "end": 21.18,
+   "text": " Your current balance is 15,000 shillings. Your last transaction was yesterday. A payment of 2,000 shillings.",
+   "tokens": [
+    51081,
+    2260,
+    2190,
+    4772,
+    307,
+    2119,
+    11,
+    1360,
+    402,
+    373,
+    1109,
+    13,
+    2260,
+    1036,
+    14425,
+    390,
+    5186,
+    13,
+    316,
+    10224,
+    295,
+    568,
+    11,
+    1360,
+    402,
+    373,
+    1109,
+    13,
+    51424
+   ],
+   "temperature": 0,
+   "avg_logprob": -0.1145358,
+   "compression_ratio": 1.6346864,
+   "no_speech_prob": 0.0045280457
+  },
+  {
+   "id": 3,
+   "seek": 0,
+   "start": 21.38,
+   "end": 27,
+   "text": " Would you like me to help with that transfer? I'll need your account number and phone number to verify. Let me repeat that.",
+   "tokens": [
+    51434,
+    6068,
+    291,
+    411,
+    385,
+    281,
+    854,
+    365,
+    300,
+    5003,
+    30,
+    286,
+    603,
+    643,
+    428,
+    2696,
+    1230,
+    293,
+    2593,
+    1230,
+    281,
+    16888,
+    13,
+    961,
+    385,
+    7149,
+    300,
+    13,
+    51715
+   ],
+   "temperature": 0,
+   "avg_logprob": -0.1145358,
+   "compression_ratio": 1.6346864,
+   "no_speech_prob": 0.0045280457
+  },
+  {
+   "id": 4,
+   "seek": 2700,
+   "start": 27,
+   "end": 32.24,
+   "text": " Account number 123456. Is that correct?",
+   "tokens": [
+    50365,
+    24558,
+    1230,
+    34466,
+    8465,
+    21,
+    13,
+    1119,
+    300,
+    3006,
+    30,
+    50627
+   ],
+   "temperature": 0,
+   "avg_logprob": -0.21099667,
+   "compression_ratio": 1.5389831,
+   "no_speech_prob": 0.0049552917
+  },
+  {
+   "id": 5,
+   "seek": 2700,
+   "start": 32.24,
+   "end": 36.76,
+   "text": " Your payment has been processed. You'll get an SMS confirmation.",
+   "tokens": [
+    50627,
+    2260,
+    10224,
+    575,
+    668,
+    18846,
+    13,
+    509,
+    603,
+    483,
+    364,
+    38107,
+    21871,
+    13,
+    50853
+   ],
+   "temperature": 0,
+   "avg_logprob": -0.21099667,
+   "compression_ratio": 1.5389831,
+   "no_speech_prob": 0.0049552917
+  },
+  {
+   "id": 6,
+   "seek": 2700,
+   "start": 36.76,
+   "end": 39,
+   "text": " Is there anything else I can help with today?",
+   "tokens": [
+    50853,
+    1119,
+    456,
+    1340,
+    1646,
+    286,
+    393,
+    854,
+    365,
+    965,
+    30,
+    50965
+   ],
+   "temperature": 0,
+   "avg_logprob": -0.21099667,
+   "compression_ratio": 1.5389831,
+   "no_speech_prob": 0.0049552917
+  },
+  {
+   "id": 7,
+   "seek": 2700,
+   "start": 39,
+   "end": 42.04,
+   "text": " I'm sorry to hear about that. Let me look into it.",
+   "tokens": [
+    50965,
+    286,
+    478,
+    2597,
+    281,
+    1568,
+    466,
+    300,
+    13,
+    961,
+    385,
+    574,
+    666,
+    309,
+    13,
+    51117
+   ],
+   "temperature": 0,
+   "avg_logprob": -0.21099667,
+   "compression_ratio": 1.5389831,
+   "no_speech_prob": 0.0049552917
+  },
+  {
+   "id": 8,
+   "seek": 2700,
+   "start": 42.04,
+   "end": 44.84,
+   "text": " I understand your frustration. Let me fix this right away.",
+   "tokens": [
+    51117,
+    286,
+    1223,
+    428,
+    20491,
+    13,
+    961,
+    385,
+    3191,
+    341,
+    558,
+    1314,
+    13,
+    51257
+   ],
+   "temperature": 0,
+   "avg_logprob": -0.21099667,
+   "compression_ratio": 1.5389831,
+   "no_speech_prob": 0.0049552917
+  },
+  {
+   "id": 9,
+   "seek": 2700,
+   "start": 44.84,
+   "end": 48.68,
+   "text": " Your card has been blocked for security. A new one will arrive in five days.",
+   "tokens": [
+    51257,
+    2260,
+    2920,
+    575,
+    668,
+    15470,
+    337,
+    3825,
+    13,
+    316,
+    777,
+    472,
+    486,
+    8881,
+    294,
+    1732,
+    1708,
+    13,
+    51449
+   ],
+   "temperature": 0,
+   "avg_logprob": -0.21099667,
+   "compression_ratio": 1.5389831,
+   "no_speech_prob": 0.0049552917
+  },
+  {
+   "id": 10,
+   "seek": 2700,
+   "start": 48.68,
+   "end": 52.04,
+   "text": " We can reverse that transaction. It will take up to 24 hours.",
+   "tokens": [
+    51449,
+    492,
+    393,
+    9943,
+    300,
+    14425,
+    13,
+    467,
+    486,
+    747,
+    493,
+    281,
+    4022,
+    2496,
+    13,
+    51617
+   ],
+   "temperature": 0,
+   "avg_logprob": -0.21099667,
+   "compression_ratio": 1.5389831,
+   "no_speech_prob": 0.0049552917
+  },
+  {
+   "id": 11,
+   "seek": 2700,
+   "start": 52.04,
+   "end": 54.84,
+   "text": " M-Pesa payments usually reflect within a few minutes.",
+   "tokens": [
+    51617,
+    376,
+    12,
+    47,
+    13708,
+    14348,
+    2673,
+    5031,
+    1951,
+    257,
+    1326,
+    2077,
+    13,
+    51757
+   ],
+   "temperature": 0,
+   "avg_logprob": -0.21099667,
+   "compression_ratio": 1.5389831,
+   "no_speech_prob": 0.0049552917
+  },
+  {
+   "id": 12,
+   "seek": 5484,
+   "start": 54.84,
+   "end": 59.16,
+   "text": " Sawasawa. No problem at all. Poll for the inconvenience.",
+   "tokens": [
+    50365,
+    27307,
+    296,
+    10449,
+    13,
+    883,
+    1154,
+    412,
+    439,
+    13,
+    31304,
+    337,
+    264,
+    28752,
+    1182,
+    13,
+    50581
+   ],
+   "temperature": 0,
+   "avg_logprob": -0.15396127,
+   "compression_ratio": 1.2642857,
+   "no_speech_prob": 0.002620697
+  },
+  {
+   "id": 13,
+   "seek": 5484,
+   "start": 60.42,
+   "end": 64.56,
+   "text": " Let me make it right. I'll transfer you to the disputes team now. Thank you for calling.",
+   "tokens": [
+    50644,
+    961,
+    385,
+    652,
+    309,
+    558,
+    13,
+    286,
+    603,
+    5003,
+    291,
+    281,
+    264,
+    39666,
+    1469,
+    586,
+    13,
+    1044,
+    291,
+    337,
+    5141,
+    13,
+    50851
+   ],
+   "temperature": 0,
+   "avg_logprob": -0.15396127,
+   "compression_ratio": 1.2642857,
+   "no_speech_prob": 0.002620697
+  },
+  {
+   "id": 14,
+   "seek": 5484,
+   "start": 65.08,
+   "end": 66.92,
+   "text": " Aseante sana. Have a good day.",
+   "tokens": [
+    50877,
+    316,
+    405,
+    2879,
+    15490,
+    13,
+    3560,
+    257,
+    665,
+    786,
+    13,
+    50969
+   ],
+   "temperature": 0,
+   "avg_logprob": -0.15396127,
+   "compression_ratio": 1.2642857,
+   "no_speech_prob": 0.002620697
+  }
+ ],
+ "x_groq": {
+  "id": "req_01m1dct1jzea4a4fwhtfawz72w"
+ }
+}

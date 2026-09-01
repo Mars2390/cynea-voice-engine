@@ -1,0 +1,505 @@
+{
+ "task": "transcribe",
+ "language": "English",
+ "duration": 20,
+ "text": " Akwaaba. This is Kofi at Asaase Restaurant. Ready to take your order? Hello, Asaase Restaurant. Kofi speaking. What can I get for you? Good evening. Kofi here. Are we doing dine-in, takeaway, or delivery? Haha, great choice. Jollof with chicken medium spice. Would you like kelewele with that? It's fresh today. Our specials today are banku with tilapia and groundnut soup.",
+ "words": [
+  {
+   "word": "Akwaaba.",
+   "start": 0,
+   "end": 0.78
+  },
+  {
+   "word": "This",
+   "start": 0.78,
+   "end": 1.12
+  },
+  {
+   "word": "is",
+   "start": 1.12,
+   "end": 1.36
+  },
+  {
+   "word": "Kofi",
+   "start": 1.36,
+   "end": 1.4
+  },
+  {
+   "word": "at",
+   "start": 1.4,
+   "end": 1.56
+  },
+  {
+   "word": "Asaase",
+   "start": 1.56,
+   "end": 1.86
+  },
+  {
+   "word": "Restaurant.",
+   "start": 1.86,
+   "end": 2.26
+  },
+  {
+   "word": "Ready",
+   "start": 2.26,
+   "end": 2.42
+  },
+  {
+   "word": "to",
+   "start": 2.42,
+   "end": 2.6
+  },
+  {
+   "word": "take",
+   "start": 2.6,
+   "end": 2.78
+  },
+  {
+   "word": "your",
+   "start": 2.78,
+   "end": 2.9
+  },
+  {
+   "word": "order?",
+   "start": 2.9,
+   "end": 3.4
+  },
+  {
+   "word": "Hello,",
+   "start": 3.44,
+   "end": 4.14
+  },
+  {
+   "word": "Asaase",
+   "start": 4.14,
+   "end": 4.5
+  },
+  {
+   "word": "Restaurant.",
+   "start": 4.5,
+   "end": 5.08
+  },
+  {
+   "word": "Kofi",
+   "start": 5.08,
+   "end": 5.32
+  },
+  {
+   "word": "speaking.",
+   "start": 5.32,
+   "end": 6.06
+  },
+  {
+   "word": "What",
+   "start": 6.06,
+   "end": 6.14
+  },
+  {
+   "word": "can",
+   "start": 6.14,
+   "end": 6.26
+  },
+  {
+   "word": "I",
+   "start": 6.26,
+   "end": 6.36
+  },
+  {
+   "word": "get",
+   "start": 6.36,
+   "end": 6.5
+  },
+  {
+   "word": "for",
+   "start": 6.5,
+   "end": 6.66
+  },
+  {
+   "word": "you?",
+   "start": 6.66,
+   "end": 6.82
+  },
+  {
+   "word": "Good",
+   "start": 6.82,
+   "end": 7
+  },
+  {
+   "word": "evening.",
+   "start": 7,
+   "end": 7.8
+  },
+  {
+   "word": "Kofi",
+   "start": 7.8,
+   "end": 8.12
+  },
+  {
+   "word": "here.",
+   "start": 8.12,
+   "end": 8.8
+  },
+  {
+   "word": "Are",
+   "start": 8.82,
+   "end": 8.9
+  },
+  {
+   "word": "we",
+   "start": 8.9,
+   "end": 9.02
+  },
+  {
+   "word": "doing",
+   "start": 9.02,
+   "end": 9.2
+  },
+  {
+   "word": "dine-in,",
+   "start": 9.2,
+   "end": 10.04
+  },
+  {
+   "word": "takeaway,",
+   "start": 10.04,
+   "end": 10.58
+  },
+  {
+   "word": "or",
+   "start": 10.58,
+   "end": 10.8
+  },
+  {
+   "word": "delivery?",
+   "start": 10.8,
+   "end": 11.6
+  },
+  {
+   "word": "Haha,",
+   "start": 11.76,
+   "end": 12.18
+  },
+  {
+   "word": "great",
+   "start": 12.18,
+   "end": 12.42
+  },
+  {
+   "word": "choice.",
+   "start": 12.42,
+   "end": 13.1
+  },
+  {
+   "word": "Jollof",
+   "start": 13.1,
+   "end": 13.46
+  },
+  {
+   "word": "with",
+   "start": 13.46,
+   "end": 13.62
+  },
+  {
+   "word": "chicken",
+   "start": 13.62,
+   "end": 13.9
+  },
+  {
+   "word": "medium",
+   "start": 13.9,
+   "end": 14.16
+  },
+  {
+   "word": "spice.",
+   "start": 14.16,
+   "end": 14.58
+  },
+  {
+   "word": "Would",
+   "start": 14.58,
+   "end": 14.7
+  },
+  {
+   "word": "you",
+   "start": 14.7,
+   "end": 14.8
+  },
+  {
+   "word": "like",
+   "start": 14.8,
+   "end": 15.04
+  },
+  {
+   "word": "kelewele",
+   "start": 15.04,
+   "end": 15.46
+  },
+  {
+   "word": "with",
+   "start": 15.46,
+   "end": 15.64
+  },
+  {
+   "word": "that?",
+   "start": 15.64,
+   "end": 16.24
+  },
+  {
+   "word": "It's",
+   "start": 16.22,
+   "end": 16.46
+  },
+  {
+   "word": "fresh",
+   "start": 16.46,
+   "end": 16.72
+  },
+  {
+   "word": "today.",
+   "start": 16.72,
+   "end": 17.04
+  },
+  {
+   "word": "Our",
+   "start": 17.04,
+   "end": 17.16
+  },
+  {
+   "word": "specials",
+   "start": 17.16,
+   "end": 17.48
+  },
+  {
+   "word": "today",
+   "start": 17.48,
+   "end": 17.72
+  },
+  {
+   "word": "are",
+   "start": 17.72,
+   "end": 17.88
+  },
+  {
+   "word": "banku",
+   "start": 17.88,
+   "end": 18.24
+  },
+  {
+   "word": "with",
+   "start": 18.24,
+   "end": 18.42
+  },
+  {
+   "word": "tilapia",
+   "start": 18.42,
+   "end": 18.86
+  },
+  {
+   "word": "and",
+   "start": 18.86,
+   "end": 19.06
+  },
+  {
+   "word": "groundnut",
+   "start": 19.06,
+   "end": 19.48
+  },
+  {
+   "word": "soup.",
+   "start": 19.48,
+   "end": 19.68
+  }
+ ],
+ "segments": [
+  {
+   "id": 0,
+   "seek": 0,
+   "start": 0,
+   "end": 3.06,
+   "text": " Akwaaba. This is Kofi at Asaase Restaurant. Ready to take your order?",
+   "tokens": [
+    50365,
+    316,
+    74,
+    4151,
+    5509,
+    13,
+    639,
+    307,
+    591,
+    2670,
+    72,
+    412,
+    1018,
+    64,
+    651,
+    497,
+    377,
+    3463,
+    394,
+    13,
+    9944,
+    281,
+    747,
+    428,
+    1668,
+    30,
+    50518
+   ],
+   "temperature": 0,
+   "avg_logprob": -0.107883126,
+   "compression_ratio": 1.5265306,
+   "no_speech_prob": 0.0019207001
+  },
+  {
+   "id": 1,
+   "seek": 0,
+   "start": 3.4399998,
+   "end": 8.36,
+   "text": " Hello, Asaase Restaurant. Kofi speaking. What can I get for you? Good evening. Kofi here.",
+   "tokens": [
+    50537,
+    2425,
+    11,
+    1018,
+    64,
+    651,
+    497,
+    377,
+    3463,
+    394,
+    13,
+    591,
+    2670,
+    72,
+    4124,
+    13,
+    708,
+    393,
+    286,
+    483,
+    337,
+    291,
+    30,
+    2205,
+    5634,
+    13,
+    591,
+    2670,
+    72,
+    510,
+    13,
+    50783
+   ],
+   "temperature": 0,
+   "avg_logprob": -0.107883126,
+   "compression_ratio": 1.5265306,
+   "no_speech_prob": 0.0019207001
+  },
+  {
+   "id": 2,
+   "seek": 0,
+   "start": 8.78,
+   "end": 11.12,
+   "text": " Are we doing dine-in, takeaway, or delivery?",
+   "tokens": [
+    50804,
+    2014,
+    321,
+    884,
+    274,
+    533,
+    12,
+    259,
+    11,
+    30681,
+    11,
+    420,
+    8982,
+    30,
+    50921
+   ],
+   "temperature": 0,
+   "avg_logprob": -0.107883126,
+   "compression_ratio": 1.5265306,
+   "no_speech_prob": 0.0019207001
+  },
+  {
+   "id": 3,
+   "seek": 0,
+   "start": 11.679999,
+   "end": 15.88,
+   "text": " Haha, great choice. Jollof with chicken medium spice. Would you like kelewele with that?",
+   "tokens": [
+    50949,
+    19131,
+    11,
+    869,
+    3922,
+    13,
+    508,
+    1833,
+    2670,
+    365,
+    4662,
+    6399,
+    19436,
+    13,
+    6068,
+    291,
+    411,
+    803,
+    306,
+    826,
+    306,
+    365,
+    300,
+    30,
+    51159
+   ],
+   "temperature": 0,
+   "avg_logprob": -0.107883126,
+   "compression_ratio": 1.5265306,
+   "no_speech_prob": 0.0019207001
+  },
+  {
+   "id": 4,
+   "seek": 0,
+   "start": 16.18,
+   "end": 19.72,
+   "text": " It's fresh today. Our specials today are banku with tilapia and groundnut soup.",
+   "tokens": [
+    51174,
+    467,
+    311,
+    4451,
+    965,
+    13,
+    2621,
+    2121,
+    82,
+    965,
+    366,
+    3765,
+    84,
+    365,
+    8440,
+    569,
+    654,
+    293,
+    2727,
+    18316,
+    7884,
+    13,
+    51351
+   ],
+   "temperature": 0,
+   "avg_logprob": -0.107883126,
+   "compression_ratio": 1.5265306,
+   "no_speech_prob": 0.0019207001
+  }
+ ],
+ "x_groq": {
+  "id": "req_01m1dctadpepttqap9rdy7jw85"
+ }
+}

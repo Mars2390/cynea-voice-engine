@@ -1,0 +1,383 @@
+{
+ "task": "transcribe",
+ "language": "English",
+ "duration": 20,
+ "text": " Hello, this is Amina. How can I help you today? Good morning, Amina speaking. What can I do for you? Karibu. Welcome to Cynia Bank. How may I assist you? Let me check your account. Yes, I can see your balance. Your current balance is 15,000 shillings. Your last transaction was yesterday. A payment of...",
+ "words": [
+  {
+   "word": "Hello,",
+   "start": 0,
+   "end": 0.54
+  },
+  {
+   "word": "this",
+   "start": 0.54,
+   "end": 0.64
+  },
+  {
+   "word": "is",
+   "start": 0.64,
+   "end": 0.88
+  },
+  {
+   "word": "Amina.",
+   "start": 0.88,
+   "end": 1.52
+  },
+  {
+   "word": "How",
+   "start": 1.52,
+   "end": 1.78
+  },
+  {
+   "word": "can",
+   "start": 1.78,
+   "end": 1.9
+  },
+  {
+   "word": "I",
+   "start": 1.9,
+   "end": 2.04
+  },
+  {
+   "word": "help",
+   "start": 2.04,
+   "end": 2.2
+  },
+  {
+   "word": "you",
+   "start": 2.2,
+   "end": 2.32
+  },
+  {
+   "word": "today?",
+   "start": 2.32,
+   "end": 3.7
+  },
+  {
+   "word": "Good",
+   "start": 3.7,
+   "end": 3.82
+  },
+  {
+   "word": "morning,",
+   "start": 3.82,
+   "end": 4.34
+  },
+  {
+   "word": "Amina",
+   "start": 4.34,
+   "end": 4.6
+  },
+  {
+   "word": "speaking.",
+   "start": 4.6,
+   "end": 5.34
+  },
+  {
+   "word": "What",
+   "start": 5.34,
+   "end": 5.42
+  },
+  {
+   "word": "can",
+   "start": 5.42,
+   "end": 5.56
+  },
+  {
+   "word": "I",
+   "start": 5.56,
+   "end": 5.68
+  },
+  {
+   "word": "do",
+   "start": 5.68,
+   "end": 5.8
+  },
+  {
+   "word": "for",
+   "start": 5.8,
+   "end": 5.98
+  },
+  {
+   "word": "you?",
+   "start": 5.98,
+   "end": 7.22
+  },
+  {
+   "word": "Karibu.",
+   "start": 7.22,
+   "end": 8.2
+  },
+  {
+   "word": "Welcome",
+   "start": 8.2,
+   "end": 8.42
+  },
+  {
+   "word": "to",
+   "start": 8.42,
+   "end": 8.66
+  },
+  {
+   "word": "Cynia",
+   "start": 8.66,
+   "end": 8.94
+  },
+  {
+   "word": "Bank.",
+   "start": 8.94,
+   "end": 9.64
+  },
+  {
+   "word": "How",
+   "start": 9.64,
+   "end": 9.76
+  },
+  {
+   "word": "may",
+   "start": 9.76,
+   "end": 9.92
+  },
+  {
+   "word": "I",
+   "start": 9.92,
+   "end": 10.04
+  },
+  {
+   "word": "assist",
+   "start": 10.04,
+   "end": 10.3
+  },
+  {
+   "word": "you?",
+   "start": 10.3,
+   "end": 10.92
+  },
+  {
+   "word": "Let",
+   "start": 10.92,
+   "end": 11.04
+  },
+  {
+   "word": "me",
+   "start": 11.04,
+   "end": 11.14
+  },
+  {
+   "word": "check",
+   "start": 11.14,
+   "end": 11.36
+  },
+  {
+   "word": "your",
+   "start": 11.36,
+   "end": 11.52
+  },
+  {
+   "word": "account.",
+   "start": 11.52,
+   "end": 12.4
+  },
+  {
+   "word": "Yes,",
+   "start": 12.4,
+   "end": 12.54
+  },
+  {
+   "word": "I",
+   "start": 12.54,
+   "end": 12.66
+  },
+  {
+   "word": "can",
+   "start": 12.66,
+   "end": 12.76
+  },
+  {
+   "word": "see",
+   "start": 12.76,
+   "end": 12.94
+  },
+  {
+   "word": "your",
+   "start": 12.94,
+   "end": 13.1
+  },
+  {
+   "word": "balance.",
+   "start": 13.1,
+   "end": 14.66
+  },
+  {
+   "word": "Your",
+   "start": 14.66,
+   "end": 14.74
+  },
+  {
+   "word": "current",
+   "start": 14.74,
+   "end": 15.04
+  },
+  {
+   "word": "balance",
+   "start": 15.04,
+   "end": 15.38
+  },
+  {
+   "word": "is",
+   "start": 15.38,
+   "end": 15.62
+  },
+  {
+   "word": "15,000",
+   "start": 15.62,
+   "end": 16.36
+  },
+  {
+   "word": "shillings.",
+   "start": 16.36,
+   "end": 16.9
+  },
+  {
+   "word": "Your",
+   "start": 16.9,
+   "end": 16.98
+  },
+  {
+   "word": "last",
+   "start": 16.98,
+   "end": 17.26
+  },
+  {
+   "word": "transaction",
+   "start": 17.26,
+   "end": 17.84
+  },
+  {
+   "word": "was",
+   "start": 17.84,
+   "end": 18.06
+  },
+  {
+   "word": "yesterday.",
+   "start": 18.06,
+   "end": 19.16
+  },
+  {
+   "word": "A",
+   "start": 19.16,
+   "end": 19.22
+  },
+  {
+   "word": "payment",
+   "start": 19.22,
+   "end": 19.58
+  },
+  {
+   "word": "of...",
+   "start": 19.58,
+   "end": 19.98
+  }
+ ],
+ "segments": [
+  {
+   "id": 0,
+   "seek": 0,
+   "start": 0,
+   "end": 19.98,
+   "text": " Hello, this is Amina. How can I help you today? Good morning, Amina speaking. What can I do for you? Karibu. Welcome to Cynia Bank. How may I assist you? Let me check your account. Yes, I can see your balance. Your current balance is 15,000 shillings. Your last transaction was yesterday. A payment of...",
+   "tokens": [
+    50365,
+    2425,
+    11,
+    341,
+    307,
+    2012,
+    1426,
+    13,
+    1012,
+    393,
+    286,
+    854,
+    291,
+    965,
+    30,
+    2205,
+    2446,
+    11,
+    2012,
+    1426,
+    4124,
+    13,
+    708,
+    393,
+    286,
+    360,
+    337,
+    291,
+    30,
+    8009,
+    897,
+    84,
+    13,
+    4027,
+    281,
+    383,
+    2534,
+    654,
+    8915,
+    13,
+    1012,
+    815,
+    286,
+    4255,
+    291,
+    30,
+    961,
+    385,
+    1520,
+    428,
+    2696,
+    13,
+    1079,
+    11,
+    286,
+    393,
+    536,
+    428,
+    4772,
+    13,
+    2260,
+    2190,
+    4772,
+    307,
+    2119,
+    11,
+    1360,
+    402,
+    373,
+    1109,
+    13,
+    2260,
+    1036,
+    14425,
+    390,
+    5186,
+    13,
+    316,
+    10224,
+    295,
+    485,
+    51364
+   ],
+   "temperature": 0,
+   "avg_logprob": -0.07770545,
+   "compression_ratio": 1.4805825,
+   "no_speech_prob": 0.009284973
+  }
+ ],
+ "x_groq": {
+  "id": "req_01m1dct4q2ey09tcrrkv236993"
+ }
+}

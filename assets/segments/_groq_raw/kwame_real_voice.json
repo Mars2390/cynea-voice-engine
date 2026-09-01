@@ -1,0 +1,1798 @@
+{
+ "task": "transcribe",
+ "language": "English",
+ "duration": 97.828560896,
+ "text": " Hello? Yes, Adinkra Hotel. Kwame speaking. How can I help you today? Good morning, Adinkra Hotel. This is Kwame. Akwaaba. Welcome to Adinkra Hotel. What can I do for you? Ah, let me check that for you. Yes, we have the executive suite available for those dates. That's $200 per night. Breakfast is included. Our standard room is $80. Deluxe is $120. Check-in is at 2 in the afternoon. Check-out is 11 in the morning. Would you like ocean view or city view? How many guests will be staying with us? Shall I hold the booking for you? I'll need your full name, phone number, and email address. Let me repeat that back. Executive suite, March 15th to 18th, two guests. Your booking is confirmed. You'll get a confirmation email shortly. Is there anything else I can help with? I'm really sorry about that. That's not the experience we want for you. Let me connect you with my manager right away. We have a swimming pool, restaurant, free Wi-Fi, and airport shuttle. Breakfast is served from 6.30 to 10 every morning. Free cancellation up to 48 hours before check-in. We accept visa, MasterCard, mobile money, and cash. A deposit equal to the first night is required. The airport is 30 minutes away. Shuttle is $25. You're most welcome. Safe travels, and we'll see you soon. Thank you for calling Adinkra Hotel. Enjoy the rest of your day.",
+ "words": [
+  {
+   "word": "Hello?",
+   "start": 0,
+   "end": 0.92
+  },
+  {
+   "word": "Yes,",
+   "start": 0.92,
+   "end": 1.82
+  },
+  {
+   "word": "Adinkra",
+   "start": 1.82,
+   "end": 2.18
+  },
+  {
+   "word": "Hotel.",
+   "start": 2.18,
+   "end": 3.06
+  },
+  {
+   "word": "Kwame",
+   "start": 3.06,
+   "end": 3.24
+  },
+  {
+   "word": "speaking.",
+   "start": 3.24,
+   "end": 4.44
+  },
+  {
+   "word": "How",
+   "start": 4.44,
+   "end": 4.52
+  },
+  {
+   "word": "can",
+   "start": 4.52,
+   "end": 4.68
+  },
+  {
+   "word": "I",
+   "start": 4.68,
+   "end": 4.8
+  },
+  {
+   "word": "help",
+   "start": 4.8,
+   "end": 4.94
+  },
+  {
+   "word": "you",
+   "start": 4.94,
+   "end": 5.06
+  },
+  {
+   "word": "today?",
+   "start": 5.06,
+   "end": 5.84
+  },
+  {
+   "word": "Good",
+   "start": 5.84,
+   "end": 5.96
+  },
+  {
+   "word": "morning,",
+   "start": 5.96,
+   "end": 6.34
+  },
+  {
+   "word": "Adinkra",
+   "start": 6.34,
+   "end": 6.64
+  },
+  {
+   "word": "Hotel.",
+   "start": 6.64,
+   "end": 7.52
+  },
+  {
+   "word": "This",
+   "start": 7.52,
+   "end": 7.68
+  },
+  {
+   "word": "is",
+   "start": 7.68,
+   "end": 7.86
+  },
+  {
+   "word": "Kwame.",
+   "start": 7.86,
+   "end": 8.28
+  },
+  {
+   "word": "Akwaaba.",
+   "start": 8.28,
+   "end": 9.36
+  },
+  {
+   "word": "Welcome",
+   "start": 8.88,
+   "end": 10.84
+  },
+  {
+   "word": "to",
+   "start": 10.84,
+   "end": 11.12
+  },
+  {
+   "word": "Adinkra",
+   "start": 11.12,
+   "end": 11.58
+  },
+  {
+   "word": "Hotel.",
+   "start": 11.58,
+   "end": 12.62
+  },
+  {
+   "word": "What",
+   "start": 12.62,
+   "end": 12.76
+  },
+  {
+   "word": "can",
+   "start": 12.76,
+   "end": 12.92
+  },
+  {
+   "word": "I",
+   "start": 12.92,
+   "end": 13.04
+  },
+  {
+   "word": "do",
+   "start": 13.04,
+   "end": 13.18
+  },
+  {
+   "word": "for",
+   "start": 13.18,
+   "end": 13.34
+  },
+  {
+   "word": "you?",
+   "start": 13.34,
+   "end": 14
+  },
+  {
+   "word": "Ah,",
+   "start": 14,
+   "end": 14.18
+  },
+  {
+   "word": "let",
+   "start": 14.18,
+   "end": 14.54
+  },
+  {
+   "word": "me",
+   "start": 14.54,
+   "end": 14.64
+  },
+  {
+   "word": "check",
+   "start": 14.64,
+   "end": 14.84
+  },
+  {
+   "word": "that",
+   "start": 14.84,
+   "end": 15.02
+  },
+  {
+   "word": "for",
+   "start": 15.02,
+   "end": 15.2
+  },
+  {
+   "word": "you.",
+   "start": 15.2,
+   "end": 15.4
+  },
+  {
+   "word": "Yes,",
+   "start": 15.4,
+   "end": 16.16
+  },
+  {
+   "word": "we",
+   "start": 16.16,
+   "end": 16.8
+  },
+  {
+   "word": "have",
+   "start": 16.8,
+   "end": 17.26
+  },
+  {
+   "word": "the",
+   "start": 17.26,
+   "end": 17.56
+  },
+  {
+   "word": "executive",
+   "start": 17.56,
+   "end": 18.12
+  },
+  {
+   "word": "suite",
+   "start": 18.12,
+   "end": 18.64
+  },
+  {
+   "word": "available",
+   "start": 18.64,
+   "end": 19.18
+  },
+  {
+   "word": "for",
+   "start": 19.18,
+   "end": 20.02
+  },
+  {
+   "word": "those",
+   "start": 20.02,
+   "end": 20.26
+  },
+  {
+   "word": "dates.",
+   "start": 20.26,
+   "end": 21.06
+  },
+  {
+   "word": "That's $200",
+   "start": 21.06,
+   "end": 21.86
+  },
+  {
+   "word": "per",
+   "start": 21.86,
+   "end": 22.28
+  },
+  {
+   "word": "night.",
+   "start": 22.28,
+   "end": 23.06
+  },
+  {
+   "word": "Breakfast",
+   "start": 23,
+   "end": 23.44
+  },
+  {
+   "word": "is",
+   "start": 23.44,
+   "end": 23.74
+  },
+  {
+   "word": "included.",
+   "start": 23.74,
+   "end": 24.84
+  },
+  {
+   "word": "Our",
+   "start": 24.84,
+   "end": 24.86
+  },
+  {
+   "word": "standard",
+   "start": 24.86,
+   "end": 25.24
+  },
+  {
+   "word": "room",
+   "start": 25.24,
+   "end": 25.58
+  },
+  {
+   "word": "is $80.",
+   "start": 25.58,
+   "end": 27.3
+  },
+  {
+   "word": "Deluxe",
+   "start": 27.3,
+   "end": 27.76
+  },
+  {
+   "word": "is $120.",
+   "start": 27.76,
+   "end": 29.82
+  },
+  {
+   "word": "Check-in",
+   "start": 29.82,
+   "end": 30.18
+  },
+  {
+   "word": "is",
+   "start": 30.18,
+   "end": 30.76
+  },
+  {
+   "word": "at",
+   "start": 30.76,
+   "end": 30.9
+  },
+  {
+   "word": "2",
+   "start": 30.9,
+   "end": 31.06
+  },
+  {
+   "word": "in",
+   "start": 31.06,
+   "end": 31.16
+  },
+  {
+   "word": "the",
+   "start": 31.16,
+   "end": 31.28
+  },
+  {
+   "word": "afternoon.",
+   "start": 31.28,
+   "end": 32.36
+  },
+  {
+   "word": "Check-out",
+   "start": 32.36,
+   "end": 32.78
+  },
+  {
+   "word": "is",
+   "start": 32.78,
+   "end": 33.1
+  },
+  {
+   "word": "11",
+   "start": 33.1,
+   "end": 33.42
+  },
+  {
+   "word": "in",
+   "start": 33.42,
+   "end": 33.6
+  },
+  {
+   "word": "the",
+   "start": 33.6,
+   "end": 33.7
+  },
+  {
+   "word": "morning.",
+   "start": 33.7,
+   "end": 34.54
+  },
+  {
+   "word": "Would",
+   "start": 34.54,
+   "end": 34.62
+  },
+  {
+   "word": "you",
+   "start": 34.62,
+   "end": 34.74
+  },
+  {
+   "word": "like",
+   "start": 34.74,
+   "end": 34.94
+  },
+  {
+   "word": "ocean",
+   "start": 34.94,
+   "end": 35.42
+  },
+  {
+   "word": "view",
+   "start": 35.42,
+   "end": 35.66
+  },
+  {
+   "word": "or",
+   "start": 35.66,
+   "end": 36.08
+  },
+  {
+   "word": "city",
+   "start": 36.08,
+   "end": 36.42
+  },
+  {
+   "word": "view?",
+   "start": 36.42,
+   "end": 37.54
+  },
+  {
+   "word": "How",
+   "start": 37.54,
+   "end": 37.62
+  },
+  {
+   "word": "many",
+   "start": 37.62,
+   "end": 37.82
+  },
+  {
+   "word": "guests",
+   "start": 37.82,
+   "end": 38.12
+  },
+  {
+   "word": "will",
+   "start": 38.12,
+   "end": 38.28
+  },
+  {
+   "word": "be",
+   "start": 38.28,
+   "end": 38.44
+  },
+  {
+   "word": "staying",
+   "start": 38.44,
+   "end": 38.92
+  },
+  {
+   "word": "with",
+   "start": 38.92,
+   "end": 39.1
+  },
+  {
+   "word": "us?",
+   "start": 39.1,
+   "end": 39.92
+  },
+  {
+   "word": "Shall",
+   "start": 39.92,
+   "end": 39.98
+  },
+  {
+   "word": "I",
+   "start": 39.98,
+   "end": 40.16
+  },
+  {
+   "word": "hold",
+   "start": 40.16,
+   "end": 40.32
+  },
+  {
+   "word": "the",
+   "start": 40.32,
+   "end": 40.44
+  },
+  {
+   "word": "booking",
+   "start": 40.44,
+   "end": 40.76
+  },
+  {
+   "word": "for",
+   "start": 40.76,
+   "end": 41.02
+  },
+  {
+   "word": "you?",
+   "start": 41.02,
+   "end": 41.68
+  },
+  {
+   "word": "I'll",
+   "start": 41.68,
+   "end": 41.82
+  },
+  {
+   "word": "need",
+   "start": 41.82,
+   "end": 41.94
+  },
+  {
+   "word": "your",
+   "start": 41.94,
+   "end": 42.16
+  },
+  {
+   "word": "full",
+   "start": 42.16,
+   "end": 42.6
+  },
+  {
+   "word": "name,",
+   "start": 42.6,
+   "end": 43.46
+  },
+  {
+   "word": "phone",
+   "start": 43.46,
+   "end": 43.6
+  },
+  {
+   "word": "number,",
+   "start": 43.6,
+   "end": 44.24
+  },
+  {
+   "word": "and",
+   "start": 44.24,
+   "end": 44.36
+  },
+  {
+   "word": "email",
+   "start": 44.36,
+   "end": 44.74
+  },
+  {
+   "word": "address.",
+   "start": 44.74,
+   "end": 45.86
+  },
+  {
+   "word": "Let",
+   "start": 45.86,
+   "end": 45.94
+  },
+  {
+   "word": "me",
+   "start": 45.94,
+   "end": 46.06
+  },
+  {
+   "word": "repeat",
+   "start": 46.06,
+   "end": 46.42
+  },
+  {
+   "word": "that",
+   "start": 46.42,
+   "end": 46.62
+  },
+  {
+   "word": "back.",
+   "start": 46.62,
+   "end": 47.06
+  },
+  {
+   "word": "Executive",
+   "start": 47.08,
+   "end": 48.26
+  },
+  {
+   "word": "suite,",
+   "start": 48.26,
+   "end": 49.26
+  },
+  {
+   "word": "March",
+   "start": 49.26,
+   "end": 49.42
+  },
+  {
+   "word": "15th",
+   "start": 49.42,
+   "end": 50.02
+  },
+  {
+   "word": "to",
+   "start": 50.02,
+   "end": 50.12
+  },
+  {
+   "word": "18th,",
+   "start": 50.12,
+   "end": 50.94
+  },
+  {
+   "word": "two",
+   "start": 50.94,
+   "end": 51.08
+  },
+  {
+   "word": "guests.",
+   "start": 51.08,
+   "end": 52
+  },
+  {
+   "word": "Your",
+   "start": 52.2,
+   "end": 52.32
+  },
+  {
+   "word": "booking",
+   "start": 52.32,
+   "end": 52.56
+  },
+  {
+   "word": "is",
+   "start": 52.56,
+   "end": 52.74
+  },
+  {
+   "word": "confirmed.",
+   "start": 52.74,
+   "end": 53.48
+  },
+  {
+   "word": "You'll",
+   "start": 53.48,
+   "end": 53.58
+  },
+  {
+   "word": "get",
+   "start": 53.58,
+   "end": 53.7
+  },
+  {
+   "word": "a",
+   "start": 53.7,
+   "end": 53.78
+  },
+  {
+   "word": "confirmation",
+   "start": 53.78,
+   "end": 54.28
+  },
+  {
+   "word": "email",
+   "start": 54.28,
+   "end": 54.6
+  },
+  {
+   "word": "shortly.",
+   "start": 54.6,
+   "end": 55.5
+  },
+  {
+   "word": "Is",
+   "start": 55.6,
+   "end": 55.74
+  },
+  {
+   "word": "there",
+   "start": 55.74,
+   "end": 55.84
+  },
+  {
+   "word": "anything",
+   "start": 55.84,
+   "end": 56.04
+  },
+  {
+   "word": "else",
+   "start": 56.04,
+   "end": 56.3
+  },
+  {
+   "word": "I",
+   "start": 56.3,
+   "end": 56.4
+  },
+  {
+   "word": "can",
+   "start": 56.4,
+   "end": 56.54
+  },
+  {
+   "word": "help",
+   "start": 56.54,
+   "end": 56.74
+  },
+  {
+   "word": "with?",
+   "start": 56.74,
+   "end": 57.48
+  },
+  {
+   "word": "I'm",
+   "start": 57.82,
+   "end": 58.04
+  },
+  {
+   "word": "really",
+   "start": 58.04,
+   "end": 58.24
+  },
+  {
+   "word": "sorry",
+   "start": 58.24,
+   "end": 58.52
+  },
+  {
+   "word": "about",
+   "start": 58.52,
+   "end": 58.72
+  },
+  {
+   "word": "that.",
+   "start": 58.72,
+   "end": 59.5
+  },
+  {
+   "word": "That's",
+   "start": 59.5,
+   "end": 59.7
+  },
+  {
+   "word": "not",
+   "start": 59.7,
+   "end": 59.84
+  },
+  {
+   "word": "the",
+   "start": 59.84,
+   "end": 59.96
+  },
+  {
+   "word": "experience",
+   "start": 59.96,
+   "end": 60.48
+  },
+  {
+   "word": "we",
+   "start": 60.48,
+   "end": 60.78
+  },
+  {
+   "word": "want",
+   "start": 60.78,
+   "end": 61.04
+  },
+  {
+   "word": "for",
+   "start": 61.04,
+   "end": 61.22
+  },
+  {
+   "word": "you.",
+   "start": 61.22,
+   "end": 61.88
+  },
+  {
+   "word": "Let",
+   "start": 62.2,
+   "end": 62.34
+  },
+  {
+   "word": "me",
+   "start": 62.34,
+   "end": 62.44
+  },
+  {
+   "word": "connect",
+   "start": 62.44,
+   "end": 62.74
+  },
+  {
+   "word": "you",
+   "start": 62.74,
+   "end": 62.92
+  },
+  {
+   "word": "with",
+   "start": 62.92,
+   "end": 63.12
+  },
+  {
+   "word": "my",
+   "start": 63.12,
+   "end": 63.26
+  },
+  {
+   "word": "manager",
+   "start": 63.26,
+   "end": 63.66
+  },
+  {
+   "word": "right",
+   "start": 63.66,
+   "end": 63.96
+  },
+  {
+   "word": "away.",
+   "start": 63.96,
+   "end": 64.68
+  },
+  {
+   "word": "We",
+   "start": 65.18,
+   "end": 65.3
+  },
+  {
+   "word": "have",
+   "start": 65.3,
+   "end": 65.38
+  },
+  {
+   "word": "a",
+   "start": 65.38,
+   "end": 65.5
+  },
+  {
+   "word": "swimming",
+   "start": 65.5,
+   "end": 65.74
+  },
+  {
+   "word": "pool,",
+   "start": 65.74,
+   "end": 66.36
+  },
+  {
+   "word": "restaurant,",
+   "start": 66.36,
+   "end": 67.1
+  },
+  {
+   "word": "free",
+   "start": 67.1,
+   "end": 67.26
+  },
+  {
+   "word": "Wi-Fi,",
+   "start": 67.26,
+   "end": 67.92
+  },
+  {
+   "word": "and",
+   "start": 67.92,
+   "end": 68.02
+  },
+  {
+   "word": "airport",
+   "start": 68.02,
+   "end": 68.46
+  },
+  {
+   "word": "shuttle.",
+   "start": 68.46,
+   "end": 69.4
+  },
+  {
+   "word": "Breakfast",
+   "start": 70.04,
+   "end": 70.32
+  },
+  {
+   "word": "is",
+   "start": 70.32,
+   "end": 70.6
+  },
+  {
+   "word": "served",
+   "start": 70.6,
+   "end": 70.96
+  },
+  {
+   "word": "from",
+   "start": 70.96,
+   "end": 71.26
+  },
+  {
+   "word": "6.30",
+   "start": 71.26,
+   "end": 72.02
+  },
+  {
+   "word": "to",
+   "start": 72.02,
+   "end": 72.3
+  },
+  {
+   "word": "10",
+   "start": 72.3,
+   "end": 72.62
+  },
+  {
+   "word": "every",
+   "start": 72.62,
+   "end": 72.8
+  },
+  {
+   "word": "morning.",
+   "start": 72.8,
+   "end": 73.12
+  },
+  {
+   "word": "Free",
+   "start": 73.16,
+   "end": 74.24
+  },
+  {
+   "word": "cancellation",
+   "start": 74.24,
+   "end": 74.74
+  },
+  {
+   "word": "up",
+   "start": 74.74,
+   "end": 75.34
+  },
+  {
+   "word": "to",
+   "start": 75.34,
+   "end": 75.48
+  },
+  {
+   "word": "48",
+   "start": 75.48,
+   "end": 76.02
+  },
+  {
+   "word": "hours",
+   "start": 76.02,
+   "end": 76.5
+  },
+  {
+   "word": "before",
+   "start": 76.5,
+   "end": 77.02
+  },
+  {
+   "word": "check-in.",
+   "start": 77.02,
+   "end": 78.02
+  },
+  {
+   "word": "We",
+   "start": 78.38,
+   "end": 78.46
+  },
+  {
+   "word": "accept",
+   "start": 78.46,
+   "end": 78.72
+  },
+  {
+   "word": "visa,",
+   "start": 78.72,
+   "end": 79.66
+  },
+  {
+   "word": "MasterCard,",
+   "start": 79.66,
+   "end": 80.32
+  },
+  {
+   "word": "mobile",
+   "start": 80.32,
+   "end": 80.56
+  },
+  {
+   "word": "money,",
+   "start": 80.56,
+   "end": 80.88
+  },
+  {
+   "word": "and",
+   "start": 80.88,
+   "end": 81.42
+  },
+  {
+   "word": "cash.",
+   "start": 81.42,
+   "end": 82.46
+  },
+  {
+   "word": "A",
+   "start": 82.46,
+   "end": 82.54
+  },
+  {
+   "word": "deposit",
+   "start": 82.54,
+   "end": 83.08
+  },
+  {
+   "word": "equal",
+   "start": 83.08,
+   "end": 83.5
+  },
+  {
+   "word": "to",
+   "start": 83.5,
+   "end": 83.72
+  },
+  {
+   "word": "the",
+   "start": 83.72,
+   "end": 83.86
+  },
+  {
+   "word": "first",
+   "start": 83.86,
+   "end": 84.12
+  },
+  {
+   "word": "night",
+   "start": 84.12,
+   "end": 84.34
+  },
+  {
+   "word": "is",
+   "start": 84.34,
+   "end": 84.46
+  },
+  {
+   "word": "required.",
+   "start": 84.46,
+   "end": 85.34
+  },
+  {
+   "word": "The",
+   "start": 85.44,
+   "end": 85.5
+  },
+  {
+   "word": "airport",
+   "start": 85.5,
+   "end": 85.94
+  },
+  {
+   "word": "is",
+   "start": 85.94,
+   "end": 86.3
+  },
+  {
+   "word": "30",
+   "start": 86.3,
+   "end": 86.62
+  },
+  {
+   "word": "minutes",
+   "start": 86.62,
+   "end": 86.94
+  },
+  {
+   "word": "away.",
+   "start": 86.94,
+   "end": 87.72
+  },
+  {
+   "word": "Shuttle",
+   "start": 87.8,
+   "end": 88.14
+  },
+  {
+   "word": "is $25.",
+   "start": 88.14,
+   "end": 89.48
+  },
+  {
+   "word": "You're",
+   "start": 89.98,
+   "end": 90.1
+  },
+  {
+   "word": "most",
+   "start": 90.1,
+   "end": 90.32
+  },
+  {
+   "word": "welcome.",
+   "start": 90.32,
+   "end": 91.14
+  },
+  {
+   "word": "Safe",
+   "start": 91.34,
+   "end": 91.5
+  },
+  {
+   "word": "travels,",
+   "start": 91.5,
+   "end": 91.98
+  },
+  {
+   "word": "and",
+   "start": 91.98,
+   "end": 92.54
+  },
+  {
+   "word": "we'll",
+   "start": 92.54,
+   "end": 92.94
+  },
+  {
+   "word": "see",
+   "start": 92.94,
+   "end": 93.08
+  },
+  {
+   "word": "you",
+   "start": 93.08,
+   "end": 93.18
+  },
+  {
+   "word": "soon.",
+   "start": 93.18,
+   "end": 93.92
+  },
+  {
+   "word": "Thank",
+   "start": 94.16,
+   "end": 94.34
+  },
+  {
+   "word": "you",
+   "start": 94.34,
+   "end": 94.44
+  },
+  {
+   "word": "for",
+   "start": 94.44,
+   "end": 94.6
+  },
+  {
+   "word": "calling",
+   "start": 94.6,
+   "end": 94.9
+  },
+  {
+   "word": "Adinkra",
+   "start": 94.9,
+   "end": 95.38
+  },
+  {
+   "word": "Hotel.",
+   "start": 95.38,
+   "end": 95.66
+  },
+  {
+   "word": "Enjoy",
+   "start": 96.46,
+   "end": 96.68
+  },
+  {
+   "word": "the",
+   "start": 96.68,
+   "end": 96.82
+  },
+  {
+   "word": "rest",
+   "start": 96.82,
+   "end": 96.98
+  },
+  {
+   "word": "of",
+   "start": 96.98,
+   "end": 97.16
+  },
+  {
+   "word": "your",
+   "start": 97.16,
+   "end": 97.24
+  },
+  {
+   "word": "day.",
+   "start": 97.24,
+   "end": 97.44
+  }
+ ],
+ "segments": [
+  {
+   "id": 0,
+   "seek": 0,
+   "start": 0,
+   "end": 9.38,
+   "text": " Hello? Yes, Adinkra Hotel. Kwame speaking. How can I help you today? Good morning, Adinkra Hotel. This is Kwame. Akwaaba.",
+   "tokens": [
+    50365,
+    2425,
+    30,
+    1079,
+    11,
+    316,
+    67,
+    475,
+    424,
+    20354,
+    13,
+    43432,
+    529,
+    4124,
+    13,
+    1012,
+    393,
+    286,
+    854,
+    291,
+    965,
+    30,
+    2205,
+    2446,
+    11,
+    316,
+    67,
+    475,
+    424,
+    20354,
+    13,
+    639,
+    307,
+    43432,
+    529,
+    13,
+    316,
+    74,
+    4151,
+    5509,
+    13,
+    50834
+   ],
+   "temperature": 0,
+   "avg_logprob": -0.10827212,
+   "compression_ratio": 1.4690722,
+   "no_speech_prob": 0.009925842
+  },
+  {
+   "id": 1,
+   "seek": 0,
+   "start": 9.38,
+   "end": 22.58,
+   "text": " Welcome to Adinkra Hotel. What can I do for you? Ah, let me check that for you. Yes, we have the executive suite available for those dates. That's $200 per night.",
+   "tokens": [
+    50834,
+    4027,
+    281,
+    316,
+    67,
+    475,
+    424,
+    20354,
+    13,
+    708,
+    393,
+    286,
+    360,
+    337,
+    291,
+    30,
+    2438,
+    11,
+    718,
+    385,
+    1520,
+    300,
+    337,
+    291,
+    13,
+    1079,
+    11,
+    321,
+    362,
+    264,
+    10140,
+    14205,
+    2435,
+    337,
+    729,
+    11691,
+    13,
+    663,
+    311,
+    1848,
+    7629,
+    680,
+    1818,
+    13,
+    51494
+   ],
+   "temperature": 0,
+   "avg_logprob": -0.10827212,
+   "compression_ratio": 1.4690722,
+   "no_speech_prob": 0.009925842
+  },
+  {
+   "id": 2,
+   "seek": 2258,
+   "start": 22.58,
+   "end": 47.079998,
+   "text": " Breakfast is included. Our standard room is $80. Deluxe is $120. Check-in is at 2 in the afternoon. Check-out is 11 in the morning. Would you like ocean view or city view? How many guests will be staying with us? Shall I hold the booking for you? I'll need your full name, phone number, and email address. Let me repeat that back.",
+   "tokens": [
+    50365,
+    45371,
+    307,
+    5556,
+    13,
+    2621,
+    3832,
+    1808,
+    307,
+    1848,
+    4702,
+    13,
+    5831,
+    43344,
+    307,
+    1848,
+    28829,
+    13,
+    6881,
+    12,
+    259,
+    307,
+    412,
+    568,
+    294,
+    264,
+    6499,
+    13,
+    6881,
+    12,
+    346,
+    307,
+    2975,
+    294,
+    264,
+    2446,
+    13,
+    6068,
+    291,
+    411,
+    7810,
+    1910,
+    420,
+    2307,
+    1910,
+    30,
+    1012,
+    867,
+    9804,
+    486,
+    312,
+    7939,
+    365,
+    505,
+    30,
+    12128,
+    286,
+    1797,
+    264,
+    34424,
+    337,
+    291,
+    30,
+    286,
+    603,
+    643,
+    428,
+    1577,
+    1315,
+    11,
+    2593,
+    1230,
+    11,
+    293,
+    3796,
+    2985,
+    13,
+    961,
+    385,
+    7149,
+    300,
+    646,
+    13,
+    51590
+   ],
+   "temperature": 0,
+   "avg_logprob": -0.077580005,
+   "compression_ratio": 1.4206009,
+   "no_speech_prob": 0.058258057
+  },
+  {
+   "id": 3,
+   "seek": 4708,
+   "start": 47.079998,
+   "end": 51.519997,
+   "text": " Executive suite, March 15th to 18th, two guests.",
+   "tokens": [
+    50365,
+    20658,
+    14205,
+    11,
+    6129,
+    2119,
+    392,
+    281,
+    2443,
+    392,
+    11,
+    732,
+    9804,
+    13,
+    50587
+   ],
+   "temperature": 0,
+   "avg_logprob": -0.18728602,
+   "compression_ratio": 1.433213,
+   "no_speech_prob": 0.034362793
+  },
+  {
+   "id": 4,
+   "seek": 4708,
+   "start": 52.12,
+   "end": 55.019997,
+   "text": " Your booking is confirmed. You'll get a confirmation email shortly.",
+   "tokens": [
+    50617,
+    2260,
+    34424,
+    307,
+    11341,
+    13,
+    509,
+    603,
+    483,
+    257,
+    21871,
+    3796,
+    13392,
+    13,
+    50762
+   ],
+   "temperature": 0,
+   "avg_logprob": -0.18728602,
+   "compression_ratio": 1.433213,
+   "no_speech_prob": 0.034362793
+  },
+  {
+   "id": 5,
+   "seek": 4708,
+   "start": 55.499996,
+   "end": 56.999996,
+   "text": " Is there anything else I can help with?",
+   "tokens": [
+    50786,
+    1119,
+    456,
+    1340,
+    1646,
+    286,
+    393,
+    854,
+    365,
+    30,
+    50861
+   ],
+   "temperature": 0,
+   "avg_logprob": -0.18728602,
+   "compression_ratio": 1.433213,
+   "no_speech_prob": 0.034362793
+  },
+  {
+   "id": 6,
+   "seek": 4708,
+   "start": 57.699997,
+   "end": 61.42,
+   "text": " I'm really sorry about that. That's not the experience we want for you.",
+   "tokens": [
+    50896,
+    286,
+    478,
+    534,
+    2597,
+    466,
+    300,
+    13,
+    663,
+    311,
+    406,
+    264,
+    1752,
+    321,
+    528,
+    337,
+    291,
+    13,
+    51082
+   ],
+   "temperature": 0,
+   "avg_logprob": -0.18728602,
+   "compression_ratio": 1.433213,
+   "no_speech_prob": 0.034362793
+  },
+  {
+   "id": 7,
+   "seek": 4708,
+   "start": 62.12,
+   "end": 64.2,
+   "text": " Let me connect you with my manager right away.",
+   "tokens": [
+    51117,
+    961,
+    385,
+    1745,
+    291,
+    365,
+    452,
+    6598,
+    558,
+    1314,
+    13,
+    51221
+   ],
+   "temperature": 0,
+   "avg_logprob": -0.18728602,
+   "compression_ratio": 1.433213,
+   "no_speech_prob": 0.034362793
+  },
+  {
+   "id": 8,
+   "seek": 4708,
+   "start": 64.86,
+   "end": 68.92,
+   "text": " We have a swimming pool, restaurant, free Wi-Fi, and airport shuttle.",
+   "tokens": [
+    51254,
+    492,
+    362,
+    257,
+    11989,
+    7005,
+    11,
+    6383,
+    11,
+    1737,
+    14035,
+    12,
+    13229,
+    11,
+    293,
+    10155,
+    26728,
+    13,
+    51457
+   ],
+   "temperature": 0,
+   "avg_logprob": -0.18728602,
+   "compression_ratio": 1.433213,
+   "no_speech_prob": 0.034362793
+  },
+  {
+   "id": 9,
+   "seek": 4708,
+   "start": 69.899994,
+   "end": 73.159996,
+   "text": " Breakfast is served from 6.30 to 10 every morning.",
+   "tokens": [
+    51506,
+    45371,
+    307,
+    7584,
+    490,
+    1386,
+    13,
+    3446,
+    281,
+    1266,
+    633,
+    2446,
+    13,
+    51669
+   ],
+   "temperature": 0,
+   "avg_logprob": -0.18728602,
+   "compression_ratio": 1.433213,
+   "no_speech_prob": 0.034362793
+  },
+  {
+   "id": 10,
+   "seek": 7316,
+   "start": 73.159996,
+   "end": 77.53999,
+   "text": " Free cancellation up to 48 hours before check-in.",
+   "tokens": [
+    50365,
+    11551,
+    45867,
+    493,
+    281,
+    11174,
+    2496,
+    949,
+    1520,
+    12,
+    259,
+    13,
+    50584
+   ],
+   "temperature": 0,
+   "avg_logprob": -0.15557662,
+   "compression_ratio": 1.3760684,
+   "no_speech_prob": 0.010047913
+  },
+  {
+   "id": 11,
+   "seek": 7316,
+   "start": 78.38,
+   "end": 81.979996,
+   "text": " We accept visa, MasterCard, mobile money, and cash.",
+   "tokens": [
+    50626,
+    492,
+    3241,
+    18589,
+    11,
+    6140,
+    34,
+    515,
+    11,
+    6013,
+    1460,
+    11,
+    293,
+    6388,
+    13,
+    50806
+   ],
+   "temperature": 0,
+   "avg_logprob": -0.15557662,
+   "compression_ratio": 1.3760684,
+   "no_speech_prob": 0.010047913
+  },
+  {
+   "id": 12,
+   "seek": 7316,
+   "start": 82.42,
+   "end": 84.85999,
+   "text": " A deposit equal to the first night is required.",
+   "tokens": [
+    50828,
+    316,
+    19107,
+    2681,
+    281,
+    264,
+    700,
+    1818,
+    307,
+    4739,
+    13,
+    50950
+   ],
+   "temperature": 0,
+   "avg_logprob": -0.15557662,
+   "compression_ratio": 1.3760684,
+   "no_speech_prob": 0.010047913
+  },
+  {
+   "id": 13,
+   "seek": 7316,
+   "start": 85.399994,
+   "end": 87.24,
+   "text": " The airport is 30 minutes away.",
+   "tokens": [
+    50977,
+    440,
+    10155,
+    307,
+    2217,
+    2077,
+    1314,
+    13,
+    51069
+   ],
+   "temperature": 0,
+   "avg_logprob": -0.15557662,
+   "compression_ratio": 1.3760684,
+   "no_speech_prob": 0.010047913
+  },
+  {
+   "id": 14,
+   "seek": 7316,
+   "start": 87.759995,
+   "end": 88.99999,
+   "text": " Shuttle is $25.",
+   "tokens": [
+    51095,
+    13870,
+    10972,
+    307,
+    1848,
+    6074,
+    13,
+    51157
+   ],
+   "temperature": 0,
+   "avg_logprob": -0.15557662,
+   "compression_ratio": 1.3760684,
+   "no_speech_prob": 0.010047913
+  },
+  {
+   "id": 15,
+   "seek": 7316,
+   "start": 89.81999,
+   "end": 90.659996,
+   "text": " You're most welcome.",
+   "tokens": [
+    51198,
+    509,
+    434,
+    881,
+    2928,
+    13,
+    51240
+   ],
+   "temperature": 0,
+   "avg_logprob": -0.15557662,
+   "compression_ratio": 1.3760684,
+   "no_speech_prob": 0.010047913
+  },
+  {
+   "id": 16,
+   "seek": 7316,
+   "start": 91.31999,
+   "end": 93.439995,
+   "text": " Safe travels, and we'll see you soon.",
+   "tokens": [
+    51273,
+    27030,
+    19863,
+    11,
+    293,
+    321,
+    603,
+    536,
+    291,
+    2321,
+    13,
+    51379
+   ],
+   "temperature": 0,
+   "avg_logprob": -0.15557662,
+   "compression_ratio": 1.3760684,
+   "no_speech_prob": 0.010047913
+  },
+  {
+   "id": 17,
+   "seek": 7316,
+   "start": 94.079994,
+   "end": 95.71999,
+   "text": " Thank you for calling Adinkra Hotel.",
+   "tokens": [
+    51411,
+    1044,
+    291,
+    337,
+    5141,
+    1999,
+    475,
+    424,
+    20354,
+    13,
+    51493
+   ],
+   "temperature": 0,
+   "avg_logprob": -0.15557662,
+   "compression_ratio": 1.3760684,
+   "no_speech_prob": 0.010047913
+  },
+  {
+   "id": 18,
+   "seek": 7316,
+   "start": 96.399994,
+   "end": 97.439995,
+   "text": " Enjoy the rest of your day.",
+   "tokens": [
+    51527,
+    15411,
+    264,
+    1472,
+    295,
+    428,
+    786,
+    13,
+    51579
+   ],
+   "temperature": 0,
+   "avg_logprob": -0.15557662,
+   "compression_ratio": 1.3760684,
+   "no_speech_prob": 0.010047913
+  }
+ ],
+ "x_groq": {
+  "id": "req_01m1dcstbkee7af1k7bdne9c18"
+ }
+}

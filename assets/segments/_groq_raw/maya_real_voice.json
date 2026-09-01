@@ -1,0 +1,1365 @@
+{
+ "task": "transcribe",
+ "language": "English",
+ "duration": 72.724938752,
+ "text": " Hello, this is Maya from Cynia Scheduling. How can I help you today? Good morning, Maya speaking. What appointment would you like to book? I can help you schedule a booking. What date works best for you? Let me check availability. One moment, please. Yes, we have slots available on Tuesday at 10 in the morning. Would you prefer morning or afternoon? I can book you for Thursday at 2 in the afternoon. Does that work? Let me repeat that. Tuesday, March 15th, 10 in the morning, correct? Your appointment is confirmed. You'll get an SMS reminder. Would you like to reschedule? I can help with that. I'm sorry, that time is fully booked. How about 1130? The doctor is available on Friday, morning or afternoon. Your booking reference is C-Y-N472. Note that down. A reminder will be sent one day before your appointment. Is there anything else I can help you schedule? I understand. Let me find an earlier slot for you. Sawa sawa. Your booking is all set. Thank you for choosing Cynia. Have a wonderful day. Goodbye, and see you on Tuesday.",
+ "words": [
+  {
+   "word": "Hello,",
+   "start": 0,
+   "end": 0.62
+  },
+  {
+   "word": "this",
+   "start": 0.62,
+   "end": 1.1
+  },
+  {
+   "word": "is",
+   "start": 1.1,
+   "end": 1.32
+  },
+  {
+   "word": "Maya",
+   "start": 1.32,
+   "end": 1.54
+  },
+  {
+   "word": "from",
+   "start": 1.54,
+   "end": 1.8
+  },
+  {
+   "word": "Cynia",
+   "start": 1.8,
+   "end": 2.24
+  },
+  {
+   "word": "Scheduling.",
+   "start": 2.24,
+   "end": 2.86
+  },
+  {
+   "word": "How",
+   "start": 2.86,
+   "end": 3.22
+  },
+  {
+   "word": "can",
+   "start": 3.22,
+   "end": 3.38
+  },
+  {
+   "word": "I",
+   "start": 3.38,
+   "end": 3.52
+  },
+  {
+   "word": "help",
+   "start": 3.52,
+   "end": 3.7
+  },
+  {
+   "word": "you",
+   "start": 3.7,
+   "end": 3.84
+  },
+  {
+   "word": "today?",
+   "start": 3.84,
+   "end": 4.9
+  },
+  {
+   "word": "Good",
+   "start": 4.9,
+   "end": 5.04
+  },
+  {
+   "word": "morning,",
+   "start": 5.04,
+   "end": 5.9
+  },
+  {
+   "word": "Maya",
+   "start": 5.9,
+   "end": 6.12
+  },
+  {
+   "word": "speaking.",
+   "start": 6.12,
+   "end": 7.04
+  },
+  {
+   "word": "What",
+   "start": 7.26,
+   "end": 7.4
+  },
+  {
+   "word": "appointment",
+   "start": 7.4,
+   "end": 7.84
+  },
+  {
+   "word": "would",
+   "start": 7.84,
+   "end": 8.12
+  },
+  {
+   "word": "you",
+   "start": 8.12,
+   "end": 8.24
+  },
+  {
+   "word": "like",
+   "start": 8.24,
+   "end": 8.5
+  },
+  {
+   "word": "to",
+   "start": 8.5,
+   "end": 8.68
+  },
+  {
+   "word": "book?",
+   "start": 8.68,
+   "end": 9.28
+  },
+  {
+   "word": "I",
+   "start": 9.28,
+   "end": 9.62
+  },
+  {
+   "word": "can",
+   "start": 9.62,
+   "end": 9.78
+  },
+  {
+   "word": "help",
+   "start": 9.78,
+   "end": 9.98
+  },
+  {
+   "word": "you",
+   "start": 9.98,
+   "end": 10.14
+  },
+  {
+   "word": "schedule",
+   "start": 10.14,
+   "end": 10.5
+  },
+  {
+   "word": "a",
+   "start": 10.5,
+   "end": 10.64
+  },
+  {
+   "word": "booking.",
+   "start": 10.64,
+   "end": 11.38
+  },
+  {
+   "word": "What",
+   "start": 11.54,
+   "end": 11.7
+  },
+  {
+   "word": "date",
+   "start": 11.7,
+   "end": 11.94
+  },
+  {
+   "word": "works",
+   "start": 11.94,
+   "end": 12.18
+  },
+  {
+   "word": "best",
+   "start": 12.18,
+   "end": 12.46
+  },
+  {
+   "word": "for",
+   "start": 12.46,
+   "end": 12.6
+  },
+  {
+   "word": "you?",
+   "start": 12.6,
+   "end": 13.1
+  },
+  {
+   "word": "Let",
+   "start": 13.1,
+   "end": 13.24
+  },
+  {
+   "word": "me",
+   "start": 13.24,
+   "end": 13.36
+  },
+  {
+   "word": "check",
+   "start": 13.36,
+   "end": 13.58
+  },
+  {
+   "word": "availability.",
+   "start": 13.58,
+   "end": 14.9
+  },
+  {
+   "word": "One",
+   "start": 14.9,
+   "end": 15.02
+  },
+  {
+   "word": "moment,",
+   "start": 15.02,
+   "end": 15.34
+  },
+  {
+   "word": "please.",
+   "start": 15.34,
+   "end": 16.6
+  },
+  {
+   "word": "Yes,",
+   "start": 16.6,
+   "end": 16.82
+  },
+  {
+   "word": "we",
+   "start": 16.82,
+   "end": 17.16
+  },
+  {
+   "word": "have",
+   "start": 17.16,
+   "end": 17.36
+  },
+  {
+   "word": "slots",
+   "start": 17.14,
+   "end": 17.72
+  },
+  {
+   "word": "available",
+   "start": 17.72,
+   "end": 18.12
+  },
+  {
+   "word": "on",
+   "start": 18.12,
+   "end": 18.36
+  },
+  {
+   "word": "Tuesday",
+   "start": 18.36,
+   "end": 18.7
+  },
+  {
+   "word": "at",
+   "start": 18.7,
+   "end": 18.96
+  },
+  {
+   "word": "10",
+   "start": 18.96,
+   "end": 19.16
+  },
+  {
+   "word": "in",
+   "start": 19.16,
+   "end": 19.26
+  },
+  {
+   "word": "the",
+   "start": 19.26,
+   "end": 19.36
+  },
+  {
+   "word": "morning.",
+   "start": 19.36,
+   "end": 20.12
+  },
+  {
+   "word": "Would",
+   "start": 20.12,
+   "end": 20.34
+  },
+  {
+   "word": "you",
+   "start": 20.34,
+   "end": 20.46
+  },
+  {
+   "word": "prefer",
+   "start": 20.46,
+   "end": 20.84
+  },
+  {
+   "word": "morning",
+   "start": 20.84,
+   "end": 21.2
+  },
+  {
+   "word": "or",
+   "start": 21.2,
+   "end": 21.46
+  },
+  {
+   "word": "afternoon?",
+   "start": 21.46,
+   "end": 22.48
+  },
+  {
+   "word": "I",
+   "start": 22.48,
+   "end": 22.72
+  },
+  {
+   "word": "can",
+   "start": 22.72,
+   "end": 22.94
+  },
+  {
+   "word": "book",
+   "start": 22.94,
+   "end": 23.14
+  },
+  {
+   "word": "you",
+   "start": 23,
+   "end": 23.34
+  },
+  {
+   "word": "for",
+   "start": 23.34,
+   "end": 23.5
+  },
+  {
+   "word": "Thursday",
+   "start": 23.5,
+   "end": 23.96
+  },
+  {
+   "word": "at",
+   "start": 23.96,
+   "end": 24.22
+  },
+  {
+   "word": "2",
+   "start": 24.22,
+   "end": 24.36
+  },
+  {
+   "word": "in",
+   "start": 24.36,
+   "end": 24.5
+  },
+  {
+   "word": "the",
+   "start": 24.5,
+   "end": 24.58
+  },
+  {
+   "word": "afternoon.",
+   "start": 24.58,
+   "end": 25.62
+  },
+  {
+   "word": "Does",
+   "start": 25.62,
+   "end": 25.76
+  },
+  {
+   "word": "that",
+   "start": 25.76,
+   "end": 25.96
+  },
+  {
+   "word": "work?",
+   "start": 25.96,
+   "end": 26.52
+  },
+  {
+   "word": "Let",
+   "start": 26.52,
+   "end": 26.66
+  },
+  {
+   "word": "me",
+   "start": 26.66,
+   "end": 26.76
+  },
+  {
+   "word": "repeat",
+   "start": 26.76,
+   "end": 27.1
+  },
+  {
+   "word": "that.",
+   "start": 27.1,
+   "end": 27.46
+  },
+  {
+   "word": "Tuesday,",
+   "start": 27.46,
+   "end": 28.68
+  },
+  {
+   "word": "March",
+   "start": 28.68,
+   "end": 28.84
+  },
+  {
+   "word": "15th,",
+   "start": 28.84,
+   "end": 29.98
+  },
+  {
+   "word": "10",
+   "start": 29.58,
+   "end": 30.18
+  },
+  {
+   "word": "in",
+   "start": 30.18,
+   "end": 30.32
+  },
+  {
+   "word": "the",
+   "start": 30.32,
+   "end": 30.44
+  },
+  {
+   "word": "morning,",
+   "start": 30.44,
+   "end": 30.94
+  },
+  {
+   "word": "correct?",
+   "start": 30.94,
+   "end": 31.92
+  },
+  {
+   "word": "Your",
+   "start": 31.92,
+   "end": 32.4
+  },
+  {
+   "word": "appointment",
+   "start": 32.4,
+   "end": 32.72
+  },
+  {
+   "word": "is",
+   "start": 32.72,
+   "end": 33.1
+  },
+  {
+   "word": "confirmed.",
+   "start": 33.1,
+   "end": 34.2
+  },
+  {
+   "word": "You'll",
+   "start": 34.2,
+   "end": 34.3
+  },
+  {
+   "word": "get",
+   "start": 34.3,
+   "end": 34.5
+  },
+  {
+   "word": "an",
+   "start": 34.5,
+   "end": 34.66
+  },
+  {
+   "word": "SMS",
+   "start": 34.66,
+   "end": 35.18
+  },
+  {
+   "word": "reminder.",
+   "start": 35.18,
+   "end": 35.82
+  },
+  {
+   "word": "Would",
+   "start": 36.68,
+   "end": 36.78
+  },
+  {
+   "word": "you",
+   "start": 36.78,
+   "end": 36.92
+  },
+  {
+   "word": "like",
+   "start": 36.92,
+   "end": 37.06
+  },
+  {
+   "word": "to",
+   "start": 37.06,
+   "end": 37.26
+  },
+  {
+   "word": "reschedule?",
+   "start": 37.26,
+   "end": 38.14
+  },
+  {
+   "word": "I",
+   "start": 38.14,
+   "end": 38.32
+  },
+  {
+   "word": "can",
+   "start": 38.32,
+   "end": 38.46
+  },
+  {
+   "word": "help",
+   "start": 38.46,
+   "end": 38.66
+  },
+  {
+   "word": "with",
+   "start": 38.66,
+   "end": 38.82
+  },
+  {
+   "word": "that.",
+   "start": 38.82,
+   "end": 39.54
+  },
+  {
+   "word": "I'm",
+   "start": 39.54,
+   "end": 39.76
+  },
+  {
+   "word": "sorry,",
+   "start": 39.76,
+   "end": 40.28
+  },
+  {
+   "word": "that",
+   "start": 40.28,
+   "end": 40.4
+  },
+  {
+   "word": "time",
+   "start": 40.4,
+   "end": 40.64
+  },
+  {
+   "word": "is",
+   "start": 40.64,
+   "end": 40.78
+  },
+  {
+   "word": "fully",
+   "start": 40.78,
+   "end": 41
+  },
+  {
+   "word": "booked.",
+   "start": 41,
+   "end": 41.8
+  },
+  {
+   "word": "How",
+   "start": 41.96,
+   "end": 42.1
+  },
+  {
+   "word": "about",
+   "start": 42.1,
+   "end": 42.3
+  },
+  {
+   "word": "1130?",
+   "start": 42.3,
+   "end": 43.38
+  },
+  {
+   "word": "The",
+   "start": 43.38,
+   "end": 43.8
+  },
+  {
+   "word": "doctor",
+   "start": 43.8,
+   "end": 44.08
+  },
+  {
+   "word": "is",
+   "start": 44.08,
+   "end": 44.26
+  },
+  {
+   "word": "available",
+   "start": 44.26,
+   "end": 44.58
+  },
+  {
+   "word": "on",
+   "start": 44.58,
+   "end": 44.86
+  },
+  {
+   "word": "Friday,",
+   "start": 44.86,
+   "end": 45.52
+  },
+  {
+   "word": "morning",
+   "start": 45.52,
+   "end": 45.74
+  },
+  {
+   "word": "or",
+   "start": 45.74,
+   "end": 45.9
+  },
+  {
+   "word": "afternoon.",
+   "start": 45.9,
+   "end": 47
+  },
+  {
+   "word": "Your",
+   "start": 47,
+   "end": 47.08
+  },
+  {
+   "word": "booking",
+   "start": 47.08,
+   "end": 47.36
+  },
+  {
+   "word": "reference",
+   "start": 47.04,
+   "end": 47.8
+  },
+  {
+   "word": "is",
+   "start": 47.8,
+   "end": 47.96
+  },
+  {
+   "word": "C-Y-N472.",
+   "start": 47.96,
+   "end": 53.34
+  },
+  {
+   "word": "Note",
+   "start": 53.34,
+   "end": 53.52
+  },
+  {
+   "word": "that",
+   "start": 53.52,
+   "end": 53.84
+  },
+  {
+   "word": "down.",
+   "start": 53.84,
+   "end": 55.18
+  },
+  {
+   "word": "A",
+   "start": 55.18,
+   "end": 55.28
+  },
+  {
+   "word": "reminder",
+   "start": 55.28,
+   "end": 55.62
+  },
+  {
+   "word": "will",
+   "start": 55.62,
+   "end": 55.82
+  },
+  {
+   "word": "be",
+   "start": 55.82,
+   "end": 55.98
+  },
+  {
+   "word": "sent",
+   "start": 55.98,
+   "end": 56.22
+  },
+  {
+   "word": "one",
+   "start": 56.22,
+   "end": 56.44
+  },
+  {
+   "word": "day",
+   "start": 56.44,
+   "end": 56.6
+  },
+  {
+   "word": "before",
+   "start": 56.6,
+   "end": 56.88
+  },
+  {
+   "word": "your",
+   "start": 56.88,
+   "end": 57.1
+  },
+  {
+   "word": "appointment.",
+   "start": 57.1,
+   "end": 58
+  },
+  {
+   "word": "Is",
+   "start": 57.52,
+   "end": 58.22
+  },
+  {
+   "word": "there",
+   "start": 58.22,
+   "end": 58.36
+  },
+  {
+   "word": "anything",
+   "start": 58.36,
+   "end": 58.62
+  },
+  {
+   "word": "else",
+   "start": 58.62,
+   "end": 58.9
+  },
+  {
+   "word": "I",
+   "start": 58.9,
+   "end": 59.04
+  },
+  {
+   "word": "can",
+   "start": 59.04,
+   "end": 59.14
+  },
+  {
+   "word": "help",
+   "start": 59.14,
+   "end": 59.34
+  },
+  {
+   "word": "you",
+   "start": 59.34,
+   "end": 59.5
+  },
+  {
+   "word": "schedule?",
+   "start": 59.5,
+   "end": 60.56
+  },
+  {
+   "word": "I",
+   "start": 60.56,
+   "end": 60.7
+  },
+  {
+   "word": "understand.",
+   "start": 60.7,
+   "end": 61.98
+  },
+  {
+   "word": "Let",
+   "start": 61.98,
+   "end": 62.08
+  },
+  {
+   "word": "me",
+   "start": 62.08,
+   "end": 62.18
+  },
+  {
+   "word": "find",
+   "start": 62.18,
+   "end": 62.42
+  },
+  {
+   "word": "an",
+   "start": 62.42,
+   "end": 62.58
+  },
+  {
+   "word": "earlier",
+   "start": 62.58,
+   "end": 62.84
+  },
+  {
+   "word": "slot",
+   "start": 62.84,
+   "end": 63.18
+  },
+  {
+   "word": "for",
+   "start": 63.18,
+   "end": 63.4
+  },
+  {
+   "word": "you.",
+   "start": 63.4,
+   "end": 64.12
+  },
+  {
+   "word": "Sawa",
+   "start": 64.2,
+   "end": 64.46
+  },
+  {
+   "word": "sawa.",
+   "start": 64.46,
+   "end": 65.18
+  },
+  {
+   "word": "Your",
+   "start": 65.18,
+   "end": 65.36
+  },
+  {
+   "word": "booking",
+   "start": 65.36,
+   "end": 65.64
+  },
+  {
+   "word": "is",
+   "start": 65.64,
+   "end": 65.88
+  },
+  {
+   "word": "all",
+   "start": 65.88,
+   "end": 66.14
+  },
+  {
+   "word": "set.",
+   "start": 66.14,
+   "end": 66.98
+  },
+  {
+   "word": "Thank",
+   "start": 66.98,
+   "end": 67.16
+  },
+  {
+   "word": "you",
+   "start": 67.16,
+   "end": 67.3
+  },
+  {
+   "word": "for",
+   "start": 67.3,
+   "end": 67.46
+  },
+  {
+   "word": "choosing",
+   "start": 67.46,
+   "end": 67.88
+  },
+  {
+   "word": "Cynia.",
+   "start": 67.88,
+   "end": 68.28
+  },
+  {
+   "word": "Have",
+   "start": 68.28,
+   "end": 69.24
+  },
+  {
+   "word": "a",
+   "start": 69.24,
+   "end": 69.34
+  },
+  {
+   "word": "wonderful",
+   "start": 69.34,
+   "end": 69.66
+  },
+  {
+   "word": "day.",
+   "start": 69.66,
+   "end": 70.02
+  },
+  {
+   "word": "Goodbye,",
+   "start": 70.74,
+   "end": 71.22
+  },
+  {
+   "word": "and",
+   "start": 71.22,
+   "end": 71.48
+  },
+  {
+   "word": "see",
+   "start": 71.48,
+   "end": 71.64
+  },
+  {
+   "word": "you",
+   "start": 71.64,
+   "end": 71.74
+  },
+  {
+   "word": "on",
+   "start": 71.74,
+   "end": 71.88
+  },
+  {
+   "word": "Tuesday.",
+   "start": 71.88,
+   "end": 72.12
+  }
+ ],
+ "segments": [
+  {
+   "id": 0,
+   "seek": 0,
+   "start": 0,
+   "end": 6.56,
+   "text": " Hello, this is Maya from Cynia Scheduling. How can I help you today? Good morning, Maya speaking.",
+   "tokens": [
+    50365,
+    2425,
+    11,
+    341,
+    307,
+    21695,
+    490,
+    383,
+    2534,
+    654,
+    44926,
+    425,
+    278,
+    13,
+    1012,
+    393,
+    286,
+    854,
+    291,
+    965,
+    30,
+    2205,
+    2446,
+    11,
+    21695,
+    4124,
+    13,
+    50693
+   ],
+   "temperature": 0,
+   "avg_logprob": -0.10921164,
+   "compression_ratio": 1.6911764,
+   "no_speech_prob": 0.0007739067
+  },
+  {
+   "id": 1,
+   "seek": 0,
+   "start": 7.16,
+   "end": 10.9,
+   "text": " What appointment would you like to book? I can help you schedule a booking.",
+   "tokens": [
+    50723,
+    708,
+    13653,
+    576,
+    291,
+    411,
+    281,
+    1446,
+    30,
+    286,
+    393,
+    854,
+    291,
+    7567,
+    257,
+    34424,
+    13,
+    50910
+   ],
+   "temperature": 0,
+   "avg_logprob": -0.10921164,
+   "compression_ratio": 1.6911764,
+   "no_speech_prob": 0.0007739067
+  },
+  {
+   "id": 2,
+   "seek": 0,
+   "start": 11.36,
+   "end": 17.38,
+   "text": " What date works best for you? Let me check availability. One moment, please. Yes, we have",
+   "tokens": [
+    50933,
+    708,
+    4002,
+    1985,
+    1151,
+    337,
+    291,
+    30,
+    961,
+    385,
+    1520,
+    17945,
+    13,
+    1485,
+    1623,
+    11,
+    1767,
+    13,
+    1079,
+    11,
+    321,
+    362,
+    51234
+   ],
+   "temperature": 0,
+   "avg_logprob": -0.10921164,
+   "compression_ratio": 1.6911764,
+   "no_speech_prob": 0.0007739067
+  },
+  {
+   "id": 3,
+   "seek": 0,
+   "start": 17.38,
+   "end": 23.18,
+   "text": " slots available on Tuesday at 10 in the morning. Would you prefer morning or afternoon? I can book",
+   "tokens": [
+    51234,
+    24266,
+    2435,
+    322,
+    10017,
+    412,
+    1266,
+    294,
+    264,
+    2446,
+    13,
+    6068,
+    291,
+    4382,
+    2446,
+    420,
+    6499,
+    30,
+    286,
+    393,
+    1446,
+    51524
+   ],
+   "temperature": 0,
+   "avg_logprob": -0.10921164,
+   "compression_ratio": 1.6911764,
+   "no_speech_prob": 0.0007739067
+  },
+  {
+   "id": 4,
+   "seek": 0,
+   "start": 23.18,
+   "end": 29.58,
+   "text": " you for Thursday at 2 in the afternoon. Does that work? Let me repeat that. Tuesday, March 15th,",
+   "tokens": [
+    51524,
+    291,
+    337,
+    10383,
+    412,
+    568,
+    294,
+    264,
+    6499,
+    13,
+    4402,
+    300,
+    589,
+    30,
+    961,
+    385,
+    7149,
+    300,
+    13,
+    10017,
+    11,
+    6129,
+    2119,
+    392,
+    11,
+    51844
+   ],
+   "temperature": 0,
+   "avg_logprob": -0.10921164,
+   "compression_ratio": 1.6911764,
+   "no_speech_prob": 0.0007739067
+  },
+  {
+   "id": 5,
+   "seek": 2958,
+   "start": 29.58,
+   "end": 35.88,
+   "text": " 10 in the morning, correct? Your appointment is confirmed. You'll get an SMS reminder.",
+   "tokens": [
+    50365,
+    1266,
+    294,
+    264,
+    2446,
+    11,
+    3006,
+    30,
+    2260,
+    13653,
+    307,
+    11341,
+    13,
+    509,
+    603,
+    483,
+    364,
+    38107,
+    13548,
+    13,
+    50680
+   ],
+   "temperature": 0,
+   "avg_logprob": -0.07719905,
+   "compression_ratio": 1.4475807,
+   "no_speech_prob": 0.00063323975
+  },
+  {
+   "id": 6,
+   "seek": 2958,
+   "start": 36.68,
+   "end": 41.32,
+   "text": " Would you like to reschedule? I can help with that. I'm sorry, that time is fully booked.",
+   "tokens": [
+    50720,
+    6068,
+    291,
+    411,
+    281,
+    725,
+    19318,
+    2271,
+    30,
+    286,
+    393,
+    854,
+    365,
+    300,
+    13,
+    286,
+    478,
+    2597,
+    11,
+    300,
+    565,
+    307,
+    4498,
+    26735,
+    13,
+    50952
+   ],
+   "temperature": 0,
+   "avg_logprob": -0.07719905,
+   "compression_ratio": 1.4475807,
+   "no_speech_prob": 0.00063323975
+  },
+  {
+   "id": 7,
+   "seek": 2958,
+   "start": 41.86,
+   "end": 47.38,
+   "text": " How about 1130? The doctor is available on Friday, morning or afternoon. Your booking",
+   "tokens": [
+    50979,
+    1012,
+    466,
+    2975,
+    3446,
+    30,
+    440,
+    4631,
+    307,
+    2435,
+    322,
+    6984,
+    11,
+    2446,
+    420,
+    6499,
+    13,
+    2260,
+    34424,
+    51255
+   ],
+   "temperature": 0,
+   "avg_logprob": -0.07719905,
+   "compression_ratio": 1.4475807,
+   "no_speech_prob": 0.00063323975
+  },
+  {
+   "id": 8,
+   "seek": 2958,
+   "start": 47.38,
+   "end": 57.52,
+   "text": " reference is C-Y-N472. Note that down. A reminder will be sent one day before your appointment.",
+   "tokens": [
+    51255,
+    6408,
+    307,
+    383,
+    12,
+    56,
+    12,
+    45,
+    14060,
+    17,
+    13,
+    11633,
+    300,
+    760,
+    13,
+    316,
+    13548,
+    486,
+    312,
+    2279,
+    472,
+    786,
+    949,
+    428,
+    13653,
+    13,
+    51762
+   ],
+   "temperature": 0,
+   "avg_logprob": -0.07719905,
+   "compression_ratio": 1.4475807,
+   "no_speech_prob": 0.00063323975
+  },
+  {
+   "id": 9,
+   "seek": 5752,
+   "start": 57.52,
+   "end": 63.64,
+   "text": " Is there anything else I can help you schedule? I understand. Let me find an earlier slot for you.",
+   "tokens": [
+    50365,
+    1119,
+    456,
+    1340,
+    1646,
+    286,
+    393,
+    854,
+    291,
+    7567,
+    30,
+    286,
+    1223,
+    13,
+    961,
+    385,
+    915,
+    364,
+    3071,
+    14747,
+    337,
+    291,
+    13,
+    50671
+   ],
+   "temperature": 0,
+   "avg_logprob": -0.09974232,
+   "compression_ratio": 1.3580247,
+   "no_speech_prob": 0.0016765594
+  },
+  {
+   "id": 10,
+   "seek": 5752,
+   "start": 64.18,
+   "end": 70.02,
+   "text": " Sawa sawa. Your booking is all set. Thank you for choosing Cynia. Have a wonderful day.",
+   "tokens": [
+    50698,
+    318,
+    10449,
+    1866,
+    64,
+    13,
+    2260,
+    34424,
+    307,
+    439,
+    992,
+    13,
+    1044,
+    291,
+    337,
+    10875,
+    383,
+    2534,
+    654,
+    13,
+    3560,
+    257,
+    3715,
+    786,
+    13,
+    50990
+   ],
+   "temperature": 0,
+   "avg_logprob": -0.09974232,
+   "compression_ratio": 1.3580247,
+   "no_speech_prob": 0.0016765594
+  },
+  {
+   "id": 11,
+   "seek": 5752,
+   "start": 70.7,
+   "end": 72.14,
+   "text": " Goodbye, and see you on Tuesday.",
+   "tokens": [
+    51024,
+    15528,
+    11,
+    293,
+    536,
+    291,
+    322,
+    10017,
+    13,
+    51096
+   ],
+   "temperature": 0,
+   "avg_logprob": -0.09974232,
+   "compression_ratio": 1.3580247,
+   "no_speech_prob": 0.0016765594
+  }
+ ],
+ "x_groq": {
+  "id": "req_01m1dctcjeex781whqf79hfnak"
+ }
+}

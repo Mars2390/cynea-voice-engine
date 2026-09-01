@@ -1,0 +1,1613 @@
+{
+ "task": "transcribe",
+ "language": "English",
+ "duration": 70.452248576,
+ "text": " Akwaaba. This is Kofi at Asaase Restaurant. Ready to take your order? Hello, Asaase Restaurant. Kofi speaking. What can I get for you? Good evening. Kofi here. Are we doing dine-in, takeaway, or delivery? Haha, great choice. Jollof with chicken, medium spice. Would you like kelewele with that? It's fresh today. Our specials today are banku with tilapia and groundnut soup. Let me repeat your order. Jollof rice with chicken, medium spice, extra kelewele. That comes to 53 cedis. How would you like to pay? Okay. We accept mobile money, cash on delivery, and card payment. Your order number is 47. It'll be ready in 25 minutes. Delivery to that area takes about 30 minutes. Is that okay? Sorry, we're out of Wakie today. Can I suggest Jollof instead? Any allergies I should know about? We use groundnuts and some dishes. Would you like a drink? Sobolo is very fresh today. Your food is on the way. The writer will call when nearby. Thank you for choosing Asease Restaurant. Enjoy your meal. We have a special on fried rice this week. Two for 30 cedis. Let me check with the kitchen. One moment, please. Sawa, sawa. I've added extra pepper for you. Thank you for calling. Medase. Come again soon.",
+ "words": [
+  {
+   "word": "Akwaaba.",
+   "start": 0,
+   "end": 0.78
+  },
+  {
+   "word": "This",
+   "start": 0.78,
+   "end": 1.1
+  },
+  {
+   "word": "is",
+   "start": 1.1,
+   "end": 1.36
+  },
+  {
+   "word": "Kofi",
+   "start": 1.36,
+   "end": 1.4
+  },
+  {
+   "word": "at",
+   "start": 1.4,
+   "end": 1.56
+  },
+  {
+   "word": "Asaase",
+   "start": 1.56,
+   "end": 1.86
+  },
+  {
+   "word": "Restaurant.",
+   "start": 1.86,
+   "end": 2.26
+  },
+  {
+   "word": "Ready",
+   "start": 2.26,
+   "end": 2.42
+  },
+  {
+   "word": "to",
+   "start": 2.42,
+   "end": 2.6
+  },
+  {
+   "word": "take",
+   "start": 2.6,
+   "end": 2.78
+  },
+  {
+   "word": "your",
+   "start": 2.78,
+   "end": 2.9
+  },
+  {
+   "word": "order?",
+   "start": 2.9,
+   "end": 3.4
+  },
+  {
+   "word": "Hello,",
+   "start": 3.48,
+   "end": 4.14
+  },
+  {
+   "word": "Asaase",
+   "start": 4.14,
+   "end": 4.5
+  },
+  {
+   "word": "Restaurant.",
+   "start": 4.5,
+   "end": 5.04
+  },
+  {
+   "word": "Kofi",
+   "start": 5.04,
+   "end": 5.28
+  },
+  {
+   "word": "speaking.",
+   "start": 5.28,
+   "end": 6.12
+  },
+  {
+   "word": "What",
+   "start": 6.12,
+   "end": 6.14
+  },
+  {
+   "word": "can",
+   "start": 6.14,
+   "end": 6.26
+  },
+  {
+   "word": "I",
+   "start": 6.26,
+   "end": 6.36
+  },
+  {
+   "word": "get",
+   "start": 6.36,
+   "end": 6.5
+  },
+  {
+   "word": "for",
+   "start": 6.5,
+   "end": 6.66
+  },
+  {
+   "word": "you?",
+   "start": 6.66,
+   "end": 6.84
+  },
+  {
+   "word": "Good",
+   "start": 6.84,
+   "end": 7
+  },
+  {
+   "word": "evening.",
+   "start": 7,
+   "end": 7.78
+  },
+  {
+   "word": "Kofi",
+   "start": 7.78,
+   "end": 8.12
+  },
+  {
+   "word": "here.",
+   "start": 8.12,
+   "end": 8.8
+  },
+  {
+   "word": "Are",
+   "start": 8.82,
+   "end": 8.9
+  },
+  {
+   "word": "we",
+   "start": 8.9,
+   "end": 9.02
+  },
+  {
+   "word": "doing",
+   "start": 9.02,
+   "end": 9.2
+  },
+  {
+   "word": "dine-in,",
+   "start": 9.2,
+   "end": 10.04
+  },
+  {
+   "word": "takeaway,",
+   "start": 10.04,
+   "end": 10.68
+  },
+  {
+   "word": "or",
+   "start": 10.68,
+   "end": 10.8
+  },
+  {
+   "word": "delivery?",
+   "start": 10.8,
+   "end": 11.6
+  },
+  {
+   "word": "Haha,",
+   "start": 11.76,
+   "end": 12.18
+  },
+  {
+   "word": "great",
+   "start": 12.18,
+   "end": 12.42
+  },
+  {
+   "word": "choice.",
+   "start": 12.42,
+   "end": 13.08
+  },
+  {
+   "word": "Jollof",
+   "start": 13.08,
+   "end": 13.44
+  },
+  {
+   "word": "with",
+   "start": 13.44,
+   "end": 13.62
+  },
+  {
+   "word": "chicken,",
+   "start": 13.62,
+   "end": 13.92
+  },
+  {
+   "word": "medium",
+   "start": 13.92,
+   "end": 14.2
+  },
+  {
+   "word": "spice.",
+   "start": 14.2,
+   "end": 14.54
+  },
+  {
+   "word": "Would",
+   "start": 14.54,
+   "end": 14.68
+  },
+  {
+   "word": "you",
+   "start": 14.68,
+   "end": 14.8
+  },
+  {
+   "word": "like",
+   "start": 14.8,
+   "end": 15.04
+  },
+  {
+   "word": "kelewele",
+   "start": 15.04,
+   "end": 15.44
+  },
+  {
+   "word": "with",
+   "start": 15.44,
+   "end": 15.62
+  },
+  {
+   "word": "that?",
+   "start": 15.62,
+   "end": 16.24
+  },
+  {
+   "word": "It's",
+   "start": 16.22,
+   "end": 16.46
+  },
+  {
+   "word": "fresh",
+   "start": 16.46,
+   "end": 16.72
+  },
+  {
+   "word": "today.",
+   "start": 16.72,
+   "end": 17.04
+  },
+  {
+   "word": "Our",
+   "start": 17.04,
+   "end": 17.16
+  },
+  {
+   "word": "specials",
+   "start": 17.16,
+   "end": 17.48
+  },
+  {
+   "word": "today",
+   "start": 17.48,
+   "end": 17.72
+  },
+  {
+   "word": "are",
+   "start": 17.72,
+   "end": 17.88
+  },
+  {
+   "word": "banku",
+   "start": 17.88,
+   "end": 18.24
+  },
+  {
+   "word": "with",
+   "start": 18.24,
+   "end": 18.42
+  },
+  {
+   "word": "tilapia",
+   "start": 18.42,
+   "end": 18.86
+  },
+  {
+   "word": "and",
+   "start": 18.86,
+   "end": 19.06
+  },
+  {
+   "word": "groundnut",
+   "start": 19.06,
+   "end": 19.48
+  },
+  {
+   "word": "soup.",
+   "start": 19.48,
+   "end": 20.2
+  },
+  {
+   "word": "Let",
+   "start": 20.22,
+   "end": 20.32
+  },
+  {
+   "word": "me",
+   "start": 20.32,
+   "end": 20.38
+  },
+  {
+   "word": "repeat",
+   "start": 20.38,
+   "end": 20.62
+  },
+  {
+   "word": "your",
+   "start": 20.62,
+   "end": 20.78
+  },
+  {
+   "word": "order.",
+   "start": 20.78,
+   "end": 21.36
+  },
+  {
+   "word": "Jollof",
+   "start": 21.4,
+   "end": 21.78
+  },
+  {
+   "word": "rice",
+   "start": 21.78,
+   "end": 22.12
+  },
+  {
+   "word": "with",
+   "start": 22.12,
+   "end": 22.36
+  },
+  {
+   "word": "chicken,",
+   "start": 22.36,
+   "end": 22.88
+  },
+  {
+   "word": "medium",
+   "start": 22.88,
+   "end": 23.16
+  },
+  {
+   "word": "spice,",
+   "start": 23.16,
+   "end": 23.82
+  },
+  {
+   "word": "extra",
+   "start": 23.82,
+   "end": 24.12
+  },
+  {
+   "word": "kelewele.",
+   "start": 24.12,
+   "end": 24.66
+  },
+  {
+   "word": "That",
+   "start": 24.66,
+   "end": 25.1
+  },
+  {
+   "word": "comes",
+   "start": 25.1,
+   "end": 25.28
+  },
+  {
+   "word": "to",
+   "start": 25.28,
+   "end": 25.44
+  },
+  {
+   "word": "53",
+   "start": 25.44,
+   "end": 25.88
+  },
+  {
+   "word": "cedis.",
+   "start": 25.88,
+   "end": 26.32
+  },
+  {
+   "word": "How",
+   "start": 26.82,
+   "end": 26.92
+  },
+  {
+   "word": "would",
+   "start": 26.92,
+   "end": 27.04
+  },
+  {
+   "word": "you",
+   "start": 27.04,
+   "end": 27.16
+  },
+  {
+   "word": "like",
+   "start": 27.16,
+   "end": 27.3
+  },
+  {
+   "word": "to",
+   "start": 27.3,
+   "end": 27.48
+  },
+  {
+   "word": "pay?",
+   "start": 27.48,
+   "end": 28.04
+  },
+  {
+   "word": "Okay.",
+   "start": 27.68,
+   "end": 27.7
+  },
+  {
+   "word": "We",
+   "start": 27.7,
+   "end": 28.22
+  },
+  {
+   "word": "accept",
+   "start": 28.22,
+   "end": 28.58
+  },
+  {
+   "word": "mobile",
+   "start": 28.58,
+   "end": 28.84
+  },
+  {
+   "word": "money,",
+   "start": 28.84,
+   "end": 29.3
+  },
+  {
+   "word": "cash",
+   "start": 29.3,
+   "end": 29.44
+  },
+  {
+   "word": "on",
+   "start": 29.44,
+   "end": 29.58
+  },
+  {
+   "word": "delivery,",
+   "start": 29.58,
+   "end": 29.94
+  },
+  {
+   "word": "and",
+   "start": 29.94,
+   "end": 30.08
+  },
+  {
+   "word": "card",
+   "start": 30.08,
+   "end": 30.3
+  },
+  {
+   "word": "payment.",
+   "start": 30.3,
+   "end": 30.9
+  },
+  {
+   "word": "Your",
+   "start": 30.9,
+   "end": 31
+  },
+  {
+   "word": "order",
+   "start": 31,
+   "end": 31.24
+  },
+  {
+   "word": "number",
+   "start": 31.24,
+   "end": 31.44
+  },
+  {
+   "word": "is",
+   "start": 31.44,
+   "end": 31.62
+  },
+  {
+   "word": "47.",
+   "start": 31.62,
+   "end": 32.4
+  },
+  {
+   "word": "It'll",
+   "start": 32.4,
+   "end": 32.6
+  },
+  {
+   "word": "be",
+   "start": 32.6,
+   "end": 32.72
+  },
+  {
+   "word": "ready",
+   "start": 32.72,
+   "end": 32.92
+  },
+  {
+   "word": "in",
+   "start": 32.92,
+   "end": 33.04
+  },
+  {
+   "word": "25",
+   "start": 33.04,
+   "end": 33.36
+  },
+  {
+   "word": "minutes.",
+   "start": 33.36,
+   "end": 34.4
+  },
+  {
+   "word": "Delivery",
+   "start": 34.4,
+   "end": 34.54
+  },
+  {
+   "word": "to",
+   "start": 34.54,
+   "end": 34.72
+  },
+  {
+   "word": "that",
+   "start": 34.72,
+   "end": 34.9
+  },
+  {
+   "word": "area",
+   "start": 34.9,
+   "end": 35.2
+  },
+  {
+   "word": "takes",
+   "start": 35.2,
+   "end": 35.4
+  },
+  {
+   "word": "about",
+   "start": 35.4,
+   "end": 35.6
+  },
+  {
+   "word": "30",
+   "start": 35.6,
+   "end": 35.86
+  },
+  {
+   "word": "minutes.",
+   "start": 35.86,
+   "end": 36.68
+  },
+  {
+   "word": "Is",
+   "start": 37.14,
+   "end": 37.24
+  },
+  {
+   "word": "that",
+   "start": 37.24,
+   "end": 37.42
+  },
+  {
+   "word": "okay?",
+   "start": 37.42,
+   "end": 38.2
+  },
+  {
+   "word": "Sorry,",
+   "start": 38.2,
+   "end": 38.7
+  },
+  {
+   "word": "we're",
+   "start": 38.7,
+   "end": 38.82
+  },
+  {
+   "word": "out",
+   "start": 38.82,
+   "end": 38.96
+  },
+  {
+   "word": "of",
+   "start": 38.96,
+   "end": 39.12
+  },
+  {
+   "word": "Wakie",
+   "start": 39.12,
+   "end": 39.34
+  },
+  {
+   "word": "today.",
+   "start": 39.34,
+   "end": 40.16
+  },
+  {
+   "word": "Can",
+   "start": 40.16,
+   "end": 40.3
+  },
+  {
+   "word": "I",
+   "start": 40.3,
+   "end": 40.42
+  },
+  {
+   "word": "suggest",
+   "start": 40.42,
+   "end": 40.96
+  },
+  {
+   "word": "Jollof",
+   "start": 40.96,
+   "end": 41.6
+  },
+  {
+   "word": "instead?",
+   "start": 41.6,
+   "end": 42.72
+  },
+  {
+   "word": "Any",
+   "start": 42.72,
+   "end": 42.9
+  },
+  {
+   "word": "allergies",
+   "start": 42.9,
+   "end": 43.34
+  },
+  {
+   "word": "I",
+   "start": 43.34,
+   "end": 43.52
+  },
+  {
+   "word": "should",
+   "start": 43.52,
+   "end": 43.64
+  },
+  {
+   "word": "know",
+   "start": 43.64,
+   "end": 43.78
+  },
+  {
+   "word": "about?",
+   "start": 43.78,
+   "end": 44.52
+  },
+  {
+   "word": "We",
+   "start": 44.52,
+   "end": 44.62
+  },
+  {
+   "word": "use",
+   "start": 44.62,
+   "end": 44.84
+  },
+  {
+   "word": "groundnuts",
+   "start": 44.84,
+   "end": 45.34
+  },
+  {
+   "word": "and",
+   "start": 45.34,
+   "end": 45.48
+  },
+  {
+   "word": "some",
+   "start": 45.48,
+   "end": 45.64
+  },
+  {
+   "word": "dishes.",
+   "start": 45.64,
+   "end": 45.9
+  },
+  {
+   "word": "Would",
+   "start": 47.02,
+   "end": 47.14
+  },
+  {
+   "word": "you",
+   "start": 47.14,
+   "end": 47.28
+  },
+  {
+   "word": "like",
+   "start": 47.28,
+   "end": 47.48
+  },
+  {
+   "word": "a",
+   "start": 47.48,
+   "end": 47.6
+  },
+  {
+   "word": "drink?",
+   "start": 47.6,
+   "end": 48.36
+  },
+  {
+   "word": "Sobolo",
+   "start": 48.36,
+   "end": 48.78
+  },
+  {
+   "word": "is",
+   "start": 48.78,
+   "end": 49.08
+  },
+  {
+   "word": "very",
+   "start": 49.08,
+   "end": 49.82
+  },
+  {
+   "word": "fresh",
+   "start": 49.82,
+   "end": 50.34
+  },
+  {
+   "word": "today.",
+   "start": 50.34,
+   "end": 51.3
+  },
+  {
+   "word": "Your",
+   "start": 51.3,
+   "end": 51.42
+  },
+  {
+   "word": "food",
+   "start": 51.42,
+   "end": 51.64
+  },
+  {
+   "word": "is",
+   "start": 51.64,
+   "end": 51.8
+  },
+  {
+   "word": "on",
+   "start": 51.8,
+   "end": 51.96
+  },
+  {
+   "word": "the",
+   "start": 51.96,
+   "end": 52.02
+  },
+  {
+   "word": "way.",
+   "start": 52.02,
+   "end": 52.64
+  },
+  {
+   "word": "The",
+   "start": 52.64,
+   "end": 52.8
+  },
+  {
+   "word": "writer",
+   "start": 52.8,
+   "end": 53
+  },
+  {
+   "word": "will",
+   "start": 53,
+   "end": 53.18
+  },
+  {
+   "word": "call",
+   "start": 53.18,
+   "end": 53.38
+  },
+  {
+   "word": "when",
+   "start": 53.38,
+   "end": 53.52
+  },
+  {
+   "word": "nearby.",
+   "start": 53.52,
+   "end": 54.26
+  },
+  {
+   "word": "Thank",
+   "start": 54.26,
+   "end": 54.42
+  },
+  {
+   "word": "you",
+   "start": 54.42,
+   "end": 54.54
+  },
+  {
+   "word": "for",
+   "start": 54.54,
+   "end": 54.68
+  },
+  {
+   "word": "choosing",
+   "start": 54.68,
+   "end": 54.94
+  },
+  {
+   "word": "Asease",
+   "start": 54.94,
+   "end": 55.48
+  },
+  {
+   "word": "Restaurant.",
+   "start": 55.48,
+   "end": 55.96
+  },
+  {
+   "word": "Enjoy",
+   "start": 55.96,
+   "end": 56.56
+  },
+  {
+   "word": "your",
+   "start": 56.56,
+   "end": 56.86
+  },
+  {
+   "word": "meal.",
+   "start": 56.86,
+   "end": 57.66
+  },
+  {
+   "word": "We",
+   "start": 57.68,
+   "end": 57.82
+  },
+  {
+   "word": "have",
+   "start": 57.82,
+   "end": 57.9
+  },
+  {
+   "word": "a",
+   "start": 57.9,
+   "end": 58.14
+  },
+  {
+   "word": "special",
+   "start": 58.14,
+   "end": 58.28
+  },
+  {
+   "word": "on",
+   "start": 58.28,
+   "end": 58.48
+  },
+  {
+   "word": "fried",
+   "start": 58.48,
+   "end": 58.74
+  },
+  {
+   "word": "rice",
+   "start": 58.74,
+   "end": 58.98
+  },
+  {
+   "word": "this",
+   "start": 58.98,
+   "end": 59.2
+  },
+  {
+   "word": "week.",
+   "start": 59.2,
+   "end": 59.96
+  },
+  {
+   "word": "Two",
+   "start": 59.96,
+   "end": 60.06
+  },
+  {
+   "word": "for",
+   "start": 60.06,
+   "end": 60.24
+  },
+  {
+   "word": "30",
+   "start": 60.24,
+   "end": 60.46
+  },
+  {
+   "word": "cedis.",
+   "start": 60.46,
+   "end": 61.68
+  },
+  {
+   "word": "Let",
+   "start": 61.68,
+   "end": 61.8
+  },
+  {
+   "word": "me",
+   "start": 61.8,
+   "end": 61.92
+  },
+  {
+   "word": "check",
+   "start": 61.92,
+   "end": 62.18
+  },
+  {
+   "word": "with",
+   "start": 62.18,
+   "end": 62.32
+  },
+  {
+   "word": "the",
+   "start": 62.32,
+   "end": 62.42
+  },
+  {
+   "word": "kitchen.",
+   "start": 62.42,
+   "end": 63.16
+  },
+  {
+   "word": "One",
+   "start": 63.52,
+   "end": 63.72
+  },
+  {
+   "word": "moment,",
+   "start": 63.72,
+   "end": 64.18
+  },
+  {
+   "word": "please.",
+   "start": 64.18,
+   "end": 65.08
+  },
+  {
+   "word": "Sawa,",
+   "start": 65.6,
+   "end": 66.06
+  },
+  {
+   "word": "sawa.",
+   "start": 66.06,
+   "end": 66.22
+  },
+  {
+   "word": "I've",
+   "start": 66.22,
+   "end": 66.76
+  },
+  {
+   "word": "added",
+   "start": 66.76,
+   "end": 66.92
+  },
+  {
+   "word": "extra",
+   "start": 66.92,
+   "end": 67.2
+  },
+  {
+   "word": "pepper",
+   "start": 67.2,
+   "end": 67.46
+  },
+  {
+   "word": "for",
+   "start": 67.46,
+   "end": 67.64
+  },
+  {
+   "word": "you.",
+   "start": 67.64,
+   "end": 67.78
+  },
+  {
+   "word": "Thank",
+   "start": 67.78,
+   "end": 67.98
+  },
+  {
+   "word": "you",
+   "start": 67.98,
+   "end": 68.06
+  },
+  {
+   "word": "for",
+   "start": 68.06,
+   "end": 68.2
+  },
+  {
+   "word": "calling.",
+   "start": 68.2,
+   "end": 68.8
+  },
+  {
+   "word": "Medase.",
+   "start": 68.86,
+   "end": 69.5
+  },
+  {
+   "word": "Come",
+   "start": 69.5,
+   "end": 69.62
+  },
+  {
+   "word": "again",
+   "start": 69.62,
+   "end": 69.8
+  },
+  {
+   "word": "soon.",
+   "start": 69.8,
+   "end": 70.06
+  }
+ ],
+ "segments": [
+  {
+   "id": 0,
+   "seek": 0,
+   "start": 0,
+   "end": 3.06,
+   "text": " Akwaaba. This is Kofi at Asaase Restaurant. Ready to take your order?",
+   "tokens": [
+    50365,
+    316,
+    74,
+    4151,
+    5509,
+    13,
+    639,
+    307,
+    591,
+    2670,
+    72,
+    412,
+    1018,
+    64,
+    651,
+    497,
+    377,
+    3463,
+    394,
+    13,
+    9944,
+    281,
+    747,
+    428,
+    1668,
+    30,
+    50518
+   ],
+   "temperature": 0,
+   "avg_logprob": -0.12492046,
+   "compression_ratio": 1.6989967,
+   "no_speech_prob": 0.0021762848
+  },
+  {
+   "id": 1,
+   "seek": 0,
+   "start": 3.4399998,
+   "end": 8.36,
+   "text": " Hello, Asaase Restaurant. Kofi speaking. What can I get for you? Good evening. Kofi here.",
+   "tokens": [
+    50537,
+    2425,
+    11,
+    1018,
+    64,
+    651,
+    497,
+    377,
+    3463,
+    394,
+    13,
+    591,
+    2670,
+    72,
+    4124,
+    13,
+    708,
+    393,
+    286,
+    483,
+    337,
+    291,
+    30,
+    2205,
+    5634,
+    13,
+    591,
+    2670,
+    72,
+    510,
+    13,
+    50783
+   ],
+   "temperature": 0,
+   "avg_logprob": -0.12492046,
+   "compression_ratio": 1.6989967,
+   "no_speech_prob": 0.0021762848
+  },
+  {
+   "id": 2,
+   "seek": 0,
+   "start": 8.78,
+   "end": 11.12,
+   "text": " Are we doing dine-in, takeaway, or delivery?",
+   "tokens": [
+    50804,
+    2014,
+    321,
+    884,
+    274,
+    533,
+    12,
+    259,
+    11,
+    30681,
+    11,
+    420,
+    8982,
+    30,
+    50921
+   ],
+   "temperature": 0,
+   "avg_logprob": -0.12492046,
+   "compression_ratio": 1.6989967,
+   "no_speech_prob": 0.0021762848
+  },
+  {
+   "id": 3,
+   "seek": 0,
+   "start": 11.66,
+   "end": 15.86,
+   "text": " Haha, great choice. Jollof with chicken, medium spice. Would you like kelewele with that?",
+   "tokens": [
+    50948,
+    19131,
+    11,
+    869,
+    3922,
+    13,
+    508,
+    1833,
+    2670,
+    365,
+    4662,
+    11,
+    6399,
+    19436,
+    13,
+    6068,
+    291,
+    411,
+    803,
+    306,
+    826,
+    306,
+    365,
+    300,
+    30,
+    51158
+   ],
+   "temperature": 0,
+   "avg_logprob": -0.12492046,
+   "compression_ratio": 1.6989967,
+   "no_speech_prob": 0.0021762848
+  },
+  {
+   "id": 4,
+   "seek": 0,
+   "start": 16.16,
+   "end": 19.74,
+   "text": " It's fresh today. Our specials today are banku with tilapia and groundnut soup.",
+   "tokens": [
+    51173,
+    467,
+    311,
+    4451,
+    965,
+    13,
+    2621,
+    2121,
+    82,
+    965,
+    366,
+    3765,
+    84,
+    365,
+    8440,
+    569,
+    654,
+    293,
+    2727,
+    18316,
+    7884,
+    13,
+    51352
+   ],
+   "temperature": 0,
+   "avg_logprob": -0.12492046,
+   "compression_ratio": 1.6989967,
+   "no_speech_prob": 0.0021762848
+  },
+  {
+   "id": 5,
+   "seek": 0,
+   "start": 20.16,
+   "end": 20.96,
+   "text": " Let me repeat your order.",
+   "tokens": [
+    51373,
+    961,
+    385,
+    7149,
+    428,
+    1668,
+    13,
+    51413
+   ],
+   "temperature": 0,
+   "avg_logprob": -0.12492046,
+   "compression_ratio": 1.6989967,
+   "no_speech_prob": 0.0021762848
+  },
+  {
+   "id": 6,
+   "seek": 0,
+   "start": 21.34,
+   "end": 26.38,
+   "text": " Jollof rice with chicken, medium spice, extra kelewele. That comes to 53 cedis.",
+   "tokens": [
+    51432,
+    508,
+    1833,
+    2670,
+    5090,
+    365,
+    4662,
+    11,
+    6399,
+    19436,
+    11,
+    2857,
+    803,
+    306,
+    826,
+    306,
+    13,
+    663,
+    1487,
+    281,
+    21860,
+    269,
+    292,
+    271,
+    13,
+    51684
+   ],
+   "temperature": 0,
+   "avg_logprob": -0.12492046,
+   "compression_ratio": 1.6989967,
+   "no_speech_prob": 0.0021762848
+  },
+  {
+   "id": 7,
+   "seek": 0,
+   "start": 26.76,
+   "end": 27.68,
+   "text": " How would you like to pay?",
+   "tokens": [
+    51703,
+    1012,
+    576,
+    291,
+    411,
+    281,
+    1689,
+    30,
+    51749
+   ],
+   "temperature": 0,
+   "avg_logprob": -0.12492046,
+   "compression_ratio": 1.6989967,
+   "no_speech_prob": 0.0021762848
+  },
+  {
+   "id": 8,
+   "seek": 2768,
+   "start": 27.68,
+   "end": 36.2,
+   "text": " Okay. We accept mobile money, cash on delivery, and card payment. Your order number is 47. It'll be ready in 25 minutes. Delivery to that area takes about 30 minutes.",
+   "tokens": [
+    50365,
+    1033,
+    13,
+    492,
+    3241,
+    6013,
+    1460,
+    11,
+    6388,
+    322,
+    8982,
+    11,
+    293,
+    2920,
+    10224,
+    13,
+    2260,
+    1668,
+    1230,
+    307,
+    16953,
+    13,
+    467,
+    603,
+    312,
+    1919,
+    294,
+    3552,
+    2077,
+    13,
+    5831,
+    8549,
+    281,
+    300,
+    1859,
+    2516,
+    466,
+    2217,
+    2077,
+    13,
+    50791
+   ],
+   "temperature": 0,
+   "avg_logprob": -0.10305398,
+   "compression_ratio": 1.5268139,
+   "no_speech_prob": 0.0068359375
+  },
+  {
+   "id": 9,
+   "seek": 2768,
+   "start": 37.06,
+   "end": 45.92,
+   "text": " Is that okay? Sorry, we're out of Wakie today. Can I suggest Jollof instead? Any allergies I should know about? We use groundnuts and some dishes.",
+   "tokens": [
+    50834,
+    1119,
+    300,
+    1392,
+    30,
+    4919,
+    11,
+    321,
+    434,
+    484,
+    295,
+    45077,
+    414,
+    965,
+    13,
+    1664,
+    286,
+    3402,
+    508,
+    1833,
+    2670,
+    2602,
+    30,
+    2639,
+    37007,
+    286,
+    820,
+    458,
+    466,
+    30,
+    492,
+    764,
+    2727,
+    29251,
+    293,
+    512,
+    10814,
+    13,
+    51277
+   ],
+   "temperature": 0,
+   "avg_logprob": -0.10305398,
+   "compression_ratio": 1.5268139,
+   "no_speech_prob": 0.0068359375
+  },
+  {
+   "id": 10,
+   "seek": 2768,
+   "start": 46.66,
+   "end": 57.26,
+   "text": " Would you like a drink? Sobolo is very fresh today. Your food is on the way. The writer will call when nearby. Thank you for choosing Asease Restaurant. Enjoy your meal.",
+   "tokens": [
+    51314,
+    6068,
+    291,
+    411,
+    257,
+    2822,
+    30,
+    407,
+    65,
+    7902,
+    307,
+    588,
+    4451,
+    965,
+    13,
+    2260,
+    1755,
+    307,
+    322,
+    264,
+    636,
+    13,
+    440,
+    9936,
+    486,
+    818,
+    562,
+    11184,
+    13,
+    1044,
+    291,
+    337,
+    10875,
+    316,
+    405,
+    651,
+    497,
+    377,
+    3463,
+    394,
+    13,
+    15411,
+    428,
+    6791,
+    13,
+    51844
+   ],
+   "temperature": 0,
+   "avg_logprob": -0.10305398,
+   "compression_ratio": 1.5268139,
+   "no_speech_prob": 0.0068359375
+  },
+  {
+   "id": 11,
+   "seek": 5768,
+   "start": 57.68,
+   "end": 62.68,
+   "text": " We have a special on fried rice this week. Two for 30 cedis. Let me check with the kitchen.",
+   "tokens": [
+    50365,
+    492,
+    362,
+    257,
+    2121,
+    322,
+    10425,
+    5090,
+    341,
+    1243,
+    13,
+    4453,
+    337,
+    2217,
+    269,
+    292,
+    271,
+    13,
+    961,
+    385,
+    1520,
+    365,
+    264,
+    6525,
+    13,
+    50615
+   ],
+   "temperature": 0,
+   "avg_logprob": -0.13492961,
+   "compression_ratio": 1.3141025,
+   "no_speech_prob": 0.0013256073
+  },
+  {
+   "id": 12,
+   "seek": 5768,
+   "start": 63.48,
+   "end": 64.6,
+   "text": " One moment, please.",
+   "tokens": [
+    50655,
+    1485,
+    1623,
+    11,
+    1767,
+    13,
+    50711
+   ],
+   "temperature": 0,
+   "avg_logprob": -0.13492961,
+   "compression_ratio": 1.3141025,
+   "no_speech_prob": 0.0013256073
+  },
+  {
+   "id": 13,
+   "seek": 5768,
+   "start": 65.56,
+   "end": 68.42,
+   "text": " Sawa, sawa. I've added extra pepper for you. Thank you for calling.",
+   "tokens": [
+    50759,
+    318,
+    10449,
+    11,
+    1866,
+    64,
+    13,
+    286,
+    600,
+    3869,
+    2857,
+    8532,
+    337,
+    291,
+    13,
+    1044,
+    291,
+    337,
+    5141,
+    13,
+    50902
+   ],
+   "temperature": 0,
+   "avg_logprob": -0.13492961,
+   "compression_ratio": 1.3141025,
+   "no_speech_prob": 0.0013256073
+  },
+  {
+   "id": 14,
+   "seek": 5768,
+   "start": 68.88,
+   "end": 70.04,
+   "text": " Medase. Come again soon.",
+   "tokens": [
+    50925,
+    3982,
+    651,
+    13,
+    2492,
+    797,
+    2321,
+    13,
+    50983
+   ],
+   "temperature": 0,
+   "avg_logprob": -0.13492961,
+   "compression_ratio": 1.3141025,
+   "no_speech_prob": 0.0013256073
+  }
+ ],
+ "x_groq": {
+  "id": "req_01m1dct7dme2w9exk4k8vybyn1"
+ }
+}

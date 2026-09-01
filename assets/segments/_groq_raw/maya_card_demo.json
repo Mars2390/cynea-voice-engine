@@ -1,0 +1,426 @@
+{
+ "task": "transcribe",
+ "language": "English",
+ "duration": 20,
+ "text": " Hello, this is Maya from Cynia Scheduling. How can I help you today? Good morning, Maya speaking. What appointment would you like to book? I can help you schedule a booking. What date works best for you? Let me check availability. One moment, please. Yes, we have slots available on Tuesday at 10 in the morning.",
+ "words": [
+  {
+   "word": "Hello,",
+   "start": 0,
+   "end": 0.62
+  },
+  {
+   "word": "this",
+   "start": 0.62,
+   "end": 1.1
+  },
+  {
+   "word": "is",
+   "start": 1.1,
+   "end": 1.32
+  },
+  {
+   "word": "Maya",
+   "start": 1.32,
+   "end": 1.54
+  },
+  {
+   "word": "from",
+   "start": 1.54,
+   "end": 1.82
+  },
+  {
+   "word": "Cynia",
+   "start": 1.82,
+   "end": 2.24
+  },
+  {
+   "word": "Scheduling.",
+   "start": 2.24,
+   "end": 2.86
+  },
+  {
+   "word": "How",
+   "start": 2.86,
+   "end": 3.22
+  },
+  {
+   "word": "can",
+   "start": 3.22,
+   "end": 3.38
+  },
+  {
+   "word": "I",
+   "start": 3.38,
+   "end": 3.54
+  },
+  {
+   "word": "help",
+   "start": 3.54,
+   "end": 3.7
+  },
+  {
+   "word": "you",
+   "start": 3.7,
+   "end": 3.86
+  },
+  {
+   "word": "today?",
+   "start": 3.86,
+   "end": 4.9
+  },
+  {
+   "word": "Good",
+   "start": 4.9,
+   "end": 5.04
+  },
+  {
+   "word": "morning,",
+   "start": 5.04,
+   "end": 5.98
+  },
+  {
+   "word": "Maya",
+   "start": 5.98,
+   "end": 6.12
+  },
+  {
+   "word": "speaking.",
+   "start": 6.12,
+   "end": 7.04
+  },
+  {
+   "word": "What",
+   "start": 7.24,
+   "end": 7.4
+  },
+  {
+   "word": "appointment",
+   "start": 7.4,
+   "end": 7.84
+  },
+  {
+   "word": "would",
+   "start": 7.84,
+   "end": 8.12
+  },
+  {
+   "word": "you",
+   "start": 8.12,
+   "end": 8.26
+  },
+  {
+   "word": "like",
+   "start": 8.26,
+   "end": 8.5
+  },
+  {
+   "word": "to",
+   "start": 8.5,
+   "end": 8.68
+  },
+  {
+   "word": "book?",
+   "start": 8.68,
+   "end": 9.42
+  },
+  {
+   "word": "I",
+   "start": 9.42,
+   "end": 9.62
+  },
+  {
+   "word": "can",
+   "start": 9.62,
+   "end": 9.78
+  },
+  {
+   "word": "help",
+   "start": 9.78,
+   "end": 9.98
+  },
+  {
+   "word": "you",
+   "start": 9.98,
+   "end": 10.14
+  },
+  {
+   "word": "schedule",
+   "start": 10.14,
+   "end": 10.48
+  },
+  {
+   "word": "a",
+   "start": 10.48,
+   "end": 10.64
+  },
+  {
+   "word": "booking.",
+   "start": 10.64,
+   "end": 11.38
+  },
+  {
+   "word": "What",
+   "start": 11.54,
+   "end": 11.7
+  },
+  {
+   "word": "date",
+   "start": 11.7,
+   "end": 11.92
+  },
+  {
+   "word": "works",
+   "start": 11.92,
+   "end": 12.18
+  },
+  {
+   "word": "best",
+   "start": 12.18,
+   "end": 12.46
+  },
+  {
+   "word": "for",
+   "start": 12.46,
+   "end": 12.6
+  },
+  {
+   "word": "you?",
+   "start": 12.6,
+   "end": 13.1
+  },
+  {
+   "word": "Let",
+   "start": 13.1,
+   "end": 13.24
+  },
+  {
+   "word": "me",
+   "start": 13.24,
+   "end": 13.36
+  },
+  {
+   "word": "check",
+   "start": 13.36,
+   "end": 13.58
+  },
+  {
+   "word": "availability.",
+   "start": 13.58,
+   "end": 14.92
+  },
+  {
+   "word": "One",
+   "start": 14.92,
+   "end": 15.02
+  },
+  {
+   "word": "moment,",
+   "start": 15.02,
+   "end": 15.34
+  },
+  {
+   "word": "please.",
+   "start": 15.34,
+   "end": 15.66
+  },
+  {
+   "word": "Yes,",
+   "start": 16.6,
+   "end": 16.96
+  },
+  {
+   "word": "we",
+   "start": 16.96,
+   "end": 17.2
+  },
+  {
+   "word": "have",
+   "start": 17.2,
+   "end": 17.36
+  },
+  {
+   "word": "slots",
+   "start": 17.36,
+   "end": 17.7
+  },
+  {
+   "word": "available",
+   "start": 17.7,
+   "end": 18.08
+  },
+  {
+   "word": "on",
+   "start": 18.08,
+   "end": 18.36
+  },
+  {
+   "word": "Tuesday",
+   "start": 18.36,
+   "end": 18.7
+  },
+  {
+   "word": "at",
+   "start": 18.7,
+   "end": 18.96
+  },
+  {
+   "word": "10",
+   "start": 18.96,
+   "end": 19.16
+  },
+  {
+   "word": "in",
+   "start": 19.16,
+   "end": 19.26
+  },
+  {
+   "word": "the",
+   "start": 19.26,
+   "end": 19.32
+  },
+  {
+   "word": "morning.",
+   "start": 19.32,
+   "end": 19.58
+  }
+ ],
+ "segments": [
+  {
+   "id": 0,
+   "seek": 0,
+   "start": 0,
+   "end": 6.56,
+   "text": " Hello, this is Maya from Cynia Scheduling. How can I help you today? Good morning, Maya speaking.",
+   "tokens": [
+    50365,
+    2425,
+    11,
+    341,
+    307,
+    21695,
+    490,
+    383,
+    2534,
+    654,
+    44926,
+    425,
+    278,
+    13,
+    1012,
+    393,
+    286,
+    854,
+    291,
+    965,
+    30,
+    2205,
+    2446,
+    11,
+    21695,
+    4124,
+    13,
+    50693
+   ],
+   "temperature": 0,
+   "avg_logprob": -0.157503,
+   "compression_ratio": 1.476415,
+   "no_speech_prob": 0.0012216568
+  },
+  {
+   "id": 1,
+   "seek": 0,
+   "start": 7.16,
+   "end": 10.9,
+   "text": " What appointment would you like to book? I can help you schedule a booking.",
+   "tokens": [
+    50723,
+    708,
+    13653,
+    576,
+    291,
+    411,
+    281,
+    1446,
+    30,
+    286,
+    393,
+    854,
+    291,
+    7567,
+    257,
+    34424,
+    13,
+    50910
+   ],
+   "temperature": 0,
+   "avg_logprob": -0.157503,
+   "compression_ratio": 1.476415,
+   "no_speech_prob": 0.0012216568
+  },
+  {
+   "id": 2,
+   "seek": 0,
+   "start": 11.36,
+   "end": 15.719999,
+   "text": " What date works best for you? Let me check availability. One moment, please.",
+   "tokens": [
+    50933,
+    708,
+    4002,
+    1985,
+    1151,
+    337,
+    291,
+    30,
+    961,
+    385,
+    1520,
+    17945,
+    13,
+    1485,
+    1623,
+    11,
+    1767,
+    13,
+    51151
+   ],
+   "temperature": 0,
+   "avg_logprob": -0.157503,
+   "compression_ratio": 1.476415,
+   "no_speech_prob": 0.0012216568
+  },
+  {
+   "id": 3,
+   "seek": 0,
+   "start": 16.359999,
+   "end": 19.6,
+   "text": " Yes, we have slots available on Tuesday at 10 in the morning.",
+   "tokens": [
+    51183,
+    1079,
+    11,
+    321,
+    362,
+    24266,
+    2435,
+    322,
+    10017,
+    412,
+    1266,
+    294,
+    264,
+    2446,
+    13,
+    51345
+   ],
+   "temperature": 0,
+   "avg_logprob": -0.157503,
+   "compression_ratio": 1.476415,
+   "no_speech_prob": 0.0012216568
+  }
+ ],
+ "x_groq": {
+  "id": "req_01m1dctfnweret8bzafzxayf1s"
+ }
+}

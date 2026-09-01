@@ -394,6 +394,48 @@ button,input,select{font:inherit;color:inherit}
 .demo-msg{margin-top:16px;font-size:13px;color:var(--ink);background:#fff;border:1px solid var(--line);border-radius:10px;padding:12px 14px;display:none}
 .demo-msg.show{display:block}
 
+/* ── scripted chat demo: keyword -> pre-cut human recording ────────── */
+.chat{margin-top:16px;border:1px solid var(--line);border-radius:var(--r-card);background:var(--card);padding:30px 30px 26px}
+.chat-head{display:flex;align-items:baseline;justify-content:space-between;gap:20px;flex-wrap:wrap;margin-bottom:20px}
+.chat-head p{font-size:13px;color:var(--muted);max-width:56ch}
+.chat-tabs{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:20px}
+.chat-tab{
+  height:32px;padding:0 15px;border:0;border-radius:var(--r-btn);cursor:pointer;
+  font-size:12px;letter-spacing:-.16px;color:var(--muted);background:transparent;
+  box-shadow:inset 0 0 0 1px var(--line);transition:box-shadow .18s,color .18s,background .18s;
+}
+.chat-tab:hover{box-shadow:inset 0 0 0 1px var(--ink);color:var(--ink)}
+.chat-tab[aria-selected="true"]{background:var(--ink);color:#fff;box-shadow:none}
+.chat-log{
+  min-height:150px;max-height:330px;overflow-y:auto;display:flex;flex-direction:column;gap:10px;
+  padding:18px;border-radius:12px;background:var(--card-2);
+}
+.chat-empty{margin:auto;font-size:13px;color:var(--faint);text-align:center}
+.bub{max-width:78%;padding:10px 14px;border-radius:14px;font-size:14px;line-height:1.45;animation:bubIn .32s cubic-bezier(.16,.84,.44,1) both}
+@keyframes bubIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.bub.me{align-self:flex-end;background:var(--ink);color:#fff;border-bottom-right-radius:5px}
+.bub.them{align-self:flex-start;background:var(--card);border:1px solid var(--line);border-bottom-left-radius:5px}
+.bub .meta{display:flex;align-items:center;gap:7px;margin-top:7px;font-size:11px;color:var(--muted)}
+.bub .tag{padding:1px 7px;border-radius:999px;background:var(--card-2);border:1px solid var(--line)}
+.bub.miss .tag{background:#FDF1E3;border-color:#F0D8B4;color:#8A5A12}
+.bub .replay{background:none;border:0;padding:0;cursor:pointer;color:var(--coral);font:inherit;font-size:11px}
+.bub .replay:hover{text-decoration:underline}
+.bub.on{box-shadow:0 0 0 2px var(--coral)}
+.chat-form{display:flex;gap:9px;margin-top:14px}
+.chat-form input{
+  flex:1;height:38px;padding:0 14px;border-radius:var(--r-btn);
+  border:1px solid var(--line);background:var(--card);color:var(--ink);font-size:14px;
+}
+.chat-form input:focus{outline:2px solid var(--coral);outline-offset:-1px;border-color:transparent}
+.chat-chips{display:flex;flex-wrap:wrap;gap:7px;margin-top:12px}
+.chat-chip{
+  border:0;cursor:pointer;font-size:11.5px;color:var(--muted);background:transparent;
+  padding:5px 11px;border-radius:999px;box-shadow:inset 0 0 0 1px var(--line);
+  transition:box-shadow .18s,color .18s;
+}
+.chat-chip:hover{box-shadow:inset 0 0 0 1px var(--coral);color:var(--ink)}
+@media(max-width:560px){.chat{padding:24px 20px 22px}.bub{max-width:88%}}
+
 /* ═══ 3. TESTIMONIALS (placeholder) ═════════════════════════════════ */
 .tm-placeholder{
   border:1px dashed var(--line);border-radius:var(--r-card);
@@ -643,6 +685,99 @@ button,input,select{font:inherit;color:inherit}
   .rv,.swap{opacity:1;transform:none}
   .stg>*{opacity:1;transform:none}
 }
+
+/* ══ LIVE CAPTIONS ═══════════════════════════════════════════════════
+   Words appear as they are spoken, driven off the audio clock in
+   assets/segments/captions.page.json. Three surfaces share one engine:
+   the phone (a rolling two-line transcript), the agent cards (one line),
+   and the chat bubbles (reveal in place).
+
+   Every word is painted before it is due and revealed by transition, so
+   the per-frame work is a class toggle on the words that just landed —
+   never a reflow. `.cap-w` therefore animates only opacity, transform
+   and filter, all compositor-friendly. */
+
+/* Idle surfaces take no room at all and open when a clip starts, so there
+   is no permanent gap under a card that is not playing. Content is
+   anchored to the bottom: when a line wraps further than the surface can
+   show, the oldest words clip off the top, which is how a running
+   transcript should behave. */
+.cap{
+  display:grid; gap:2px; align-content:end;
+  height:0; opacity:0; overflow:hidden;
+  flex:none;                       /* the phone is a flex column: hold the height */
+  transition:height .34s cubic-bezier(.22,.61,.36,1),
+             margin .34s cubic-bezier(.22,.61,.36,1), opacity .3s ease;
+}
+.cap.on{opacity:1}
+
+/* A line is a <span> so it nests legally inside a chat bubble's .say,
+   and is promoted to a block on the standalone surfaces. */
+.cap-line{
+  display:block; margin:0;
+  transition:opacity .42s cubic-bezier(.22,.61,.36,1),
+             transform .42s cubic-bezier(.22,.61,.36,1);
+}
+.bub .say .cap-line{display:inline}
+.cap-line.out{opacity:0; transform:translateY(-6px)}
+/* the line above the current one in the phone transcript */
+.cap-line.prev{opacity:.34}
+
+.cap-w{
+  display:inline-block;
+  opacity:0;
+  transform:translateY(.42em);
+  filter:blur(3px);
+  transition:opacity .34s cubic-bezier(.22,.61,.36,1),
+             transform .34s cubic-bezier(.22,.61,.36,1),
+             filter .34s cubic-bezier(.22,.61,.36,1),
+             color .25s ease;
+  will-change:opacity,transform,filter;
+}
+.cap-w.in{opacity:1; transform:none; filter:none; will-change:auto}
+/* the word being spoken right now */
+.cap-w.now{color:var(--tint,var(--coral))}
+
+/* ── surface: inside the phone ── */
+/* The phone is a fixed aspect ratio and .ph-btns sits on an auto margin,
+   so the transcript opening simply takes slack off that margin. */
+.cap-phone{
+  margin:0 6px;
+  font-size:12px; line-height:1.4; letter-spacing:-.01em;
+  color:#EDE9F4; text-align:left;
+}
+.cap-phone.on{height:38px; margin-top:10px}
+/* Below this the hero phone renders under ~160px wide, where a caption is
+   too cramped to read. The card and chat captions carry on. */
+@media(max-width:560px){.cap-phone{display:none}}
+.cap-phone .cap-w.now{color:#fff; text-shadow:0 0 14px rgba(255,255,255,.35)}
+
+/* ── surface: under an agent card ── */
+.cap-card{
+  font-size:12.5px; line-height:1.36;
+  color:var(--muted); text-align:left;
+}
+.cap-card.on{height:44px; margin-top:10px}
+
+/* ── surface: a chat bubble reveals in place ── */
+.bub .say .cap-w{white-space:pre-wrap}
+
+/* Captions are decoration over audio the visitor chose to play; the
+   words also land in a live region for anyone not watching the screen.
+   Announcing per word would be unreadable, so it updates per line. */
+.cap-sr{
+  position:absolute; width:1px; height:1px; padding:0; margin:-1px;
+  overflow:hidden; clip:rect(0 0 0 0); white-space:nowrap; border:0;
+}
+
+/* Reduced motion still reveals each word on cue — that *is* the feature,
+   and it is a fade, not motion. What goes is the travel and the blur. */
+@media (prefers-reduced-motion:reduce){
+  .cap-w{transform:none; filter:none; transition:opacity .2s linear,color .2s ease}
+  .cap-w.in{transform:none; filter:none}
+  .cap-line{transition:opacity .2s linear}
+  .cap-line.out{transform:none}
+}
 </style>
 
 <script>
@@ -792,6 +927,11 @@ addEventListener('DOMContentLoaded', function(){
 
             <div class="ph-wave" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
 
+            <!-- Live transcript. Filled by the caption engine from
+                 assets/segments/captions.page.json while the recording
+                 plays; empty and invisible until then. -->
+            <div class="cap cap-phone" data-cap aria-hidden="true"></div>
+
             <div class="ph-btns">
               <button class="ph-btn no" id="call-decline" type="button" aria-label="Decline the call">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true" transform="rotate(135)"><path d="M6.5 3h-3v3a14.5 14.5 0 0 0 14.5 14.5h3v-3l-4-1.5-2 2A11.5 11.5 0 0 1 9 9.5l2-2z"/></svg>
@@ -866,6 +1006,38 @@ addEventListener('DOMContentLoaded', function(){
       </form>
     </div>
   </div>
+
+  <!-- Scripted demo. Replies are slices of the four human recordings,
+       selected by keyword — no TTS and no model in the loop. The intent
+       table below is copied out of assets/segments/manifest.json by
+       tools/sync_landing_data.py, the same file cynea/audio_responder.py
+       reads, so the page and the Python cannot drift apart. Re-run that
+       script after re-cutting segments; --check fails when it is stale. -->
+  <div class="chat rv" id="chat">
+    <div class="chat-head">
+      <div>
+        <p class="kicker">Ask an agent</p>
+        <p style="margin-top:8px">Type a question. Every answer is a clip of the real recording,
+          picked by keyword — a scripted demo, not a live model.</p>
+      </div>
+    </div>
+
+    <div class="chat-tabs" role="tablist" aria-label="Choose an agent"></div>
+
+    <div class="chat-log" id="chat-log" role="log" aria-live="polite">
+      <p class="chat-empty">Say hello to start.</p>
+    </div>
+
+    <form class="chat-form" id="chat-form">
+      <input id="chat-input" type="text" autocomplete="off"
+             placeholder="Ask about rates, booking, or say hello"
+             aria-label="Your message">
+      <button class="btn btn-dark" type="submit">Send</button>
+    </form>
+
+    <div class="chat-chips" id="chat-chips"></div>
+  </div>
+
 </section>
 
 <!-- ═══ 3. TESTIMONIALS (placeholder) ════════════════════════════════ -->
@@ -932,6 +1104,7 @@ addEventListener('DOMContentLoaded', function(){
         <div class="agent-prog"><i></i></div>
         <small class="agent-time" id="t-kwame">0:20</small>
       </div>
+      <div class="cap cap-card" data-cap aria-hidden="true"></div>
     </article>
     <article class="agent" data-agent
              style="--tint:#F9B3BE;--tint-2:#D4457E;--glow:rgba(212,69,126,.46)">
@@ -960,6 +1133,7 @@ addEventListener('DOMContentLoaded', function(){
         <div class="agent-prog"><i></i></div>
         <small class="agent-time" id="t-amina">0:20</small>
       </div>
+      <div class="cap cap-card" data-cap aria-hidden="true"></div>
     </article>
     <article class="agent" data-agent
              style="--tint:#8FE6DD;--tint-2:#1F9D93;--glow:rgba(31,157,147,.44)">
@@ -988,6 +1162,7 @@ addEventListener('DOMContentLoaded', function(){
         <div class="agent-prog"><i></i></div>
         <small class="agent-time" id="t-kofi">0:20</small>
       </div>
+      <div class="cap cap-card" data-cap aria-hidden="true"></div>
     </article>
     <article class="agent" data-agent
              style="--tint:#F7CE9A;--tint-2:#C77518;--glow:rgba(199,117,24,.44)">
@@ -1016,6 +1191,7 @@ addEventListener('DOMContentLoaded', function(){
         <div class="agent-prog"><i></i></div>
         <small class="agent-time" id="t-maya">0:20</small>
       </div>
+      <div class="cap cap-card" data-cap aria-hidden="true"></div>
     </article>
   </div>
 </section>
@@ -1362,6 +1538,7 @@ addEventListener('DOMContentLoaded', function(){
   </div>
 </footer>
 
+<p class="cap-sr" id="cap-sr" role="status" aria-live="polite"></p>
 <audio id="player" preload="none"></audio>
 
 <script>
@@ -1429,6 +1606,122 @@ addEventListener('DOMContentLoaded', function(){
     es.forEach(function(e){ e.target.classList.toggle('in',e.isIntersecting); });
   },{rootMargin:'-6% 0px -6% 0px',threshold:.18});
   media.forEach(function(e){ swap.observe(e); });
+})();
+
+
+/* ── scripted chat demo ────────────────────────────────────────────
+   Same rules as cynea/audio_responder.py: normalise the utterance, find
+   every trigger the agent can actually voice, prefer the longest match,
+   fall back to the greeting when nothing hits. A fallback is labelled as
+   one rather than passed off as an answer. */
+(function(){
+  var DATA={"triggers":{"greeting":["hello","hi","hey","good morning","good afternoon","good evening","hallo","habari","sannu"],"pricing":["price","prices","cost","costs","rate","rates","how much","charge","fee","expensive","cheap"],"booking":["book","booking","reserve","reservation","room","stay","night","nights"],"balance":["balance","account","how much do i have","statement","money","funds"],"transfer":["transfer","send money","pay","payment","deposit","withdraw"],"order":["order","menu","food","eat","jollof","rice","chicken","hungry"],"delivery":["deliver","delivery","how long","when will it arrive","takeaway","take away","pickup"],"scheduling":["schedule","appointment","availability","available","slot","when can i","free"],"confirmation":["confirm","confirmed","confirmation","is it booked","did it work"],"closing":["thank","thanks","bye","goodbye","that's all","nothing else","cheers","asante","medase"]},"agents":{"kwame":{"role":"Hotel Receptionist","fallback":"greeting","suggest":["Hello","What are your rates?","I want to book a room","Thank you"],"seg":{"greeting":["assets/segments/kwame/greeting.mp3",5.64,"Hello? Yes. Adinkra Hotel, Kwame speaking. How can I help you today?"],"pricing":["assets/segments/kwame/pricing.mp3",8.46,"That's $200 per night. Breakfast is included. Our standard room is $80. Deluxe is 120."],"booking":["assets/segments/kwame/booking.mp3",3.24,"Your booking is confirmed. You'll get a confirmation email shortly."],"closing":["assets/segments/kwame/closing.mp3",3.76,"Thank you for calling Adinkra Hotel. Enjoy the rest of your day."]}},"amina":{"role":"Bank Support","fallback":"greeting","suggest":["Hello","What's my balance?","I need a transfer","Thanks, bye"],"seg":{"greeting":["assets/segments/amina/greeting.mp3",2.9,"Hello, this is Amina. How can I help you today?"],"balance":["assets/segments/amina/balance.mp3",7.38,"Your current balance is 15,000 shillings. Your last transaction was yesterday. A payment of 2,000 shillings."],"transfer":["assets/segments/amina/transfer.mp3",2.18,"Would you like me to help with that transfer?"],"closing":["assets/segments/amina/closing.mp3",3.48,"Thank you for calling. Asante Sana, have a good day."]}},"kofi":{"role":"Restaurant Orders","fallback":"greeting","suggest":["Hello","I want to order jollof","How long is delivery?","Thank you"],"seg":{"greeting":["assets/segments/kofi/greeting.mp3",3.36,"Akwaaba. This is Kofi at Asaase Restaurant, ready to take your order?"],"order":["assets/segments/kofi/order.mp3",3.24,"Your order number is 47. It'll be ready in 25 minutes."],"delivery":["assets/segments/kofi/delivery.mp3",3.84,"Delivery to that area takes about 30 minutes. Is that okay?"],"closing":["assets/segments/kofi/closing.mp3",2.66,"Thank you for calling. Medase, come again soon."]}},"maya":{"role":"Bookings & Scheduling","fallback":"greeting","suggest":["Hello","What slots are available?","Confirm my booking","Thanks, bye"],"seg":{"greeting":["assets/segments/maya/greeting.mp3",4.4,"Hello! This is Maya from Cynea Scheduling. How can I help you today?"],"scheduling":["assets/segments/maya/scheduling.mp3",6.96,"Let me check availability. One moment please. Yes, we have slots available on Tuesday at 10 in the morning."],"confirmation":["assets/segments/maya/confirmation.mp3",4.14,"Your appointment is confirmed. You'll get an SMS reminder."],"closing":["assets/segments/maya/closing.mp3",5.68,"Thank you for choosing Cynea. Have a wonderful day. Goodbye and see you on Tuesday."]}}}};
+  var log=document.getElementById('chat-log'),
+      form=document.getElementById('chat-form'),
+      input=document.getElementById('chat-input'),
+      tabs=document.querySelector('#chat .chat-tabs'),
+      chips=document.getElementById('chat-chips');
+  if(!log||!form) return;
+
+  var names=Object.keys(DATA.agents), current=names[0], playingBubble=null;
+
+  function norm(t){ return ' '+String(t).toLowerCase().replace(/[^a-z0-9]+/g,' ').trim()+' '; }
+
+  function detect(text,agent){
+    var seg=DATA.agents[agent].seg, hay=norm(text), best=null;
+    Object.keys(DATA.triggers).forEach(function(intent){
+      if(!seg[intent]) return;                     /* this agent cannot say it */
+      DATA.triggers[intent].forEach(function(trig){
+        if(hay.indexOf(norm(trig).replace(/\s+$/,'')+' ')===-1) return;
+        if(!best||trig.length>best.trigger.length) best={intent:intent,trigger:trig};
+      });
+    });
+    return best;
+  }
+
+  function play(file,bubble){
+    var A=window.__cyneaAudio;
+    if(A&&A.stop) A.stop();                        /* clear any card or the phone */
+    if(playingBubble) playingBubble.classList.remove('on');
+    playingBubble=bubble||null;
+    if(playingBubble) playingBubble.classList.add('on');
+    if(!A||!A.player) return;
+    A.player.src=file; A.player.currentTime=0;
+    A.player.play().then(function(){
+      /* same signal the cards send, so the words reveal in the bubble */
+      if(bubble) dispatchEvent(new CustomEvent('cynea:audiostart',{detail:{el:bubble}}));
+    }).catch(function(){
+      if(playingBubble){ playingBubble.classList.remove('on'); playingBubble=null; }
+    });
+  }
+  addEventListener('cynea:audioended',function(){
+    if(playingBubble){ playingBubble.classList.remove('on'); playingBubble=null; }
+  });
+
+  function bubble(cls,html){
+    var d=document.createElement('div');
+    d.className='bub '+cls; d.innerHTML=html;
+    log.appendChild(d); log.scrollTop=log.scrollHeight;
+    return d;
+  }
+
+  function say(text){
+    var empty=log.querySelector('.chat-empty'); if(empty) empty.remove();
+    bubble('me',document.createTextNode(text).textContent
+      .replace(/&/g,'&amp;').replace(/</g,'&lt;'));
+
+    var agent=DATA.agents[current], hit=detect(text,current);
+    var intent=hit?hit.intent:agent.fallback, hitted=!!hit;
+    if(!agent.seg[intent]) intent=Object.keys(agent.seg)[0];
+    var seg=agent.seg[intent], file=seg[0], dur=seg[1], said=seg[2];
+
+    var b=bubble('them'+(hitted?'':' miss'),
+      '<span class="say"></span>'+
+      '<span class="meta"><span class="tag">'+
+        (hitted?intent:intent+' · no match')+'</span>'+
+        '<span>'+dur.toFixed(1)+'s</span>'+
+        '<button class="replay" type="button">Replay</button></span>');
+    b.querySelector('.say').textContent=said;
+    b.querySelector('.replay').addEventListener('click',function(){ play(file,b); });
+    play(file,b);
+  }
+
+  function renderChips(){
+    chips.innerHTML='';
+    DATA.agents[current].suggest.forEach(function(q){
+      var c=document.createElement('button');
+      c.type='button'; c.className='chat-chip'; c.textContent=q;
+      c.addEventListener('click',function(){ say(q); });
+      chips.appendChild(c);
+    });
+  }
+
+  function select(name){
+    current=name;
+    [].forEach.call(tabs.children,function(t){
+      t.setAttribute('aria-selected',String(t.dataset.agent===name));
+    });
+    input.placeholder='Ask '+name.charAt(0).toUpperCase()+name.slice(1)+
+      ' about '+DATA.agents[name].suggest.slice(1,3).join(' or ').toLowerCase();
+    log.innerHTML='<p class="chat-empty">Say hello to start.</p>';
+    renderChips();
+  }
+
+  names.forEach(function(n){
+    var t=document.createElement('button');
+    t.type='button'; t.className='chat-tab'; t.role='tab'; t.dataset.agent=n;
+    t.textContent=n.charAt(0).toUpperCase()+n.slice(1)+' · '+DATA.agents[n].role;
+    t.addEventListener('click',function(){ select(n); });
+    tabs.appendChild(t);
+  });
+
+  form.addEventListener('submit',function(e){
+    e.preventDefault();
+    var v=input.value.trim(); if(!v) return;
+    input.value=''; say(v);
+  });
+
+  select(names[0]);
 })();
 
 /* ── nav hairline on scroll ───────────────────────────────────────── */
@@ -1528,13 +1821,20 @@ addEventListener('DOMContentLoaded', function(){
     player.pause();
     paint(active,'idle',0);
     active=null;
+    dispatchEvent(new Event('cynea:audiostop'));
+  }
+
+  /* Announce what started, so the caption engine knows which surface to
+     draw on. The engine is optional: nothing here depends on it. */
+  function started(el){
+    dispatchEvent(new CustomEvent('cynea:audiostart',{detail:{el:el}}));
   }
 
   triggers.forEach(function(t){
     t.setAttribute('aria-pressed','false');
     t.addEventListener('click',function(){
       if(active===t){                       /* same trigger: toggle */
-        if(player.paused){ player.play(); paint(t,'playing',player.currentTime); }
+        if(player.paused){ player.play(); paint(t,'playing',player.currentTime); started(t); }
         else { player.pause(); paint(t,'paused',player.currentTime); }
         return;
       }
@@ -1542,7 +1842,7 @@ addEventListener('DOMContentLoaded', function(){
       active=t;
       player.src=t.getAttribute('data-audio');
       player.currentTime=0;
-      player.play().then(function(){ paint(t,'playing',0); })
+      player.play().then(function(){ paint(t,'playing',0); started(t); })
                    .catch(function(){
                      var out=statusOf(t);
                      if(out) out.textContent='unavailable';
@@ -1564,7 +1864,202 @@ addEventListener('DOMContentLoaded', function(){
     }
     if(out&&card) out.textContent=mmss(player.currentTime)+' / '+active.getAttribute('data-dur');
   });
-  player.addEventListener('ended',stop);
+  player.addEventListener('ended',function(){ stop(); dispatchEvent(new Event('cynea:audioended')); });
+
+  /* The chat demo drives the same <audio>. Without this it would leave a
+     card painted as playing while the chat's clip runs, and the card's
+     timeupdate handler would track the wrong duration. */
+  window.__cyneaAudio={player:player,stop:stop};
+})();
+
+/* ── live captions ─────────────────────────────────────────────────
+   The words appear as they are spoken. Timings come from
+   assets/segments/captions.page.json, produced by tools/transcribe_groq.py
+   (whisper-large-v3) and scoped to this page by tools/sync_landing_data.py.
+
+   One engine, three surfaces, chosen from whatever element started the
+   audio: the phone and the agent cards show the line being spoken and roll
+   to the next, and a chat bubble reveals its own text in place.
+
+   Everything here is additive. The file is fetched on first play rather
+   than at load, and if it 404s or the browser is too old the page behaves
+   exactly as it did before — the audio still plays, the bubbles still
+   carry their text. Captions are never the only copy of anything. */
+(function(){
+  var A=window.__cyneaAudio;
+  if(!A||!A.player||!window.fetch||!document.documentElement.closest) return;
+
+  var player=A.player,
+      sr=document.getElementById('cap-sr'),
+      SOURCE='assets/segments/captions.page.json';
+
+  var TRACKS=null, inflight=null;
+
+  function load(){
+    if(TRACKS) return Promise.resolve(TRACKS);
+    if(!inflight){
+      inflight=fetch(SOURCE)
+        .then(function(r){ return r.ok?r.json():{}; })
+        .catch(function(){ return {}; })     /* offline or missing: no captions */
+        .then(function(json){ TRACKS=json; inflight=null; return json; });
+    }
+    return inflight;
+  }
+
+  /* player.src is absolute, the caption keys are repo-relative. Compare on
+     the path so this still resolves when the site is served from a
+     sub-path rather than a domain root. */
+  function trackFor(src){
+    if(!TRACKS||!src) return null;
+    var path=src;
+    try{ path=decodeURI(new URL(src,location.href).pathname); }catch(e){}
+    for(var key in TRACKS){
+      if(path.indexOf(key)>=0) return TRACKS[key];
+    }
+    return null;
+  }
+
+  /* Which surface belongs to the thing that started playing. */
+  function surfaceFor(el){
+    if(!el||!el.classList) return null;
+    if(el.classList.contains('bub')){
+      var say=el.querySelector('.say');
+      /* a bubble is a transcript: keep every line, dim none of it */
+      return say?{node:say,max:99,dim:false,inline:true}:null;
+    }
+    var host=el.closest('[data-agent]'),
+        cap=host&&host.querySelector('[data-cap]');
+    if(!cap) return null;
+    /* One line at a time on both. A 290px phone cannot show two caption
+       lines without clipping the wrapped one across the middle, which
+       reads as broken rather than dense. */
+    return {node:cap,max:1,dim:false,inline:false};
+  }
+
+  var track=null, surface=null,
+      line=-1,                 /* index of the line currently on screen   */
+      cursor=0,                /* how many words have been revealed       */
+      words=[],                /* {el, at} for every word drawn so far    */
+      lines=[],                /* the line nodes currently attached       */
+      spoken=null,             /* the word being said right now           */
+      frame=0;
+
+  function drawLine(entry){
+    var host=document.createElement('span');
+    host.className='cap-line';
+    entry.words.forEach(function(w,i){
+      var span=document.createElement('span');
+      span.className='cap-w';
+      span.textContent=w[0];
+      host.appendChild(span);
+      if(i<entry.words.length-1) host.appendChild(document.createTextNode(' '));
+      words.push({el:span,at:w[1]});
+    });
+    /* Lines are separate elements. Stacked surfaces put them on their own
+       rows, but a bubble runs them together inline, where they need the
+       space between two sentences that the markup does not supply. */
+    if(surface.inline && lines.length) surface.node.appendChild(document.createTextNode(' '));
+    surface.node.appendChild(host);
+    lines.push(host);
+
+    if(surface.dim){
+      lines.forEach(function(node,i){
+        node.classList.toggle('prev',i<lines.length-1);
+      });
+    }
+    while(lines.length>surface.max) retire(lines.shift());
+
+    /* Per line, not per word — a word-by-word live region is unreadable. */
+    if(sr) sr.textContent=entry.text;
+  }
+
+  function retire(node){
+    node.classList.add('out');
+    setTimeout(function(){
+      if(node.parentNode) node.parentNode.removeChild(node);
+    },460);
+  }
+
+  function reset(){
+    lines.forEach(function(node){
+      if(node.parentNode) node.parentNode.removeChild(node);
+    });
+    lines=[]; words=[]; cursor=0; line=-1; spoken=null;
+  }
+
+  function tick(){
+    frame=requestAnimationFrame(tick);
+    if(!track||!surface) return;
+    var t=player.currentTime;
+
+    /* Seeked backwards (or replayed): start the surface over. */
+    if(line>=0 && t<track.lines[line].start-0.15) reset();
+
+    while(line+1<track.lines.length && t>=track.lines[line+1].start-0.02){
+      line++;
+      drawLine(track.lines[line]);
+    }
+    if(line<0) return;
+
+    /* Only the words that just landed are touched, so a frame costs a
+       class toggle rather than a walk of the whole transcript. */
+    while(cursor<words.length && t>=words[cursor].at){
+      words[cursor].el.classList.add('in');
+      cursor++;
+    }
+
+    var current=cursor>0?words[cursor-1].el:null;
+    if(current!==spoken){
+      if(spoken) spoken.classList.remove('now');
+      if(current) current.classList.add('now');
+      spoken=current;
+    }
+  }
+
+  function start(el){
+    finish();
+    var target=surfaceFor(el);
+    if(!target) return;
+    load().then(function(){
+      var found=trackFor(player.src);
+      /* Still the same clip? A fast second click can land here late. */
+      if(!found||!found.lines.length||player.paused) return;
+      track=found; surface=target;
+      reset();
+      surface.node.innerHTML='';
+      surface.node.classList.add('on');
+      tick();
+    });
+  }
+
+  function finish(){
+    if(frame){ cancelAnimationFrame(frame); frame=0; }
+    if(surface){
+      if(surface.inline){
+        /* The bubble's words are its message, not a caption over audio —
+           leave the full text standing once the clip is over. */
+        words.forEach(function(w){ w.el.classList.add('in'); });
+        lines.forEach(function(node){ node.classList.remove('prev'); });
+        if(spoken) spoken.classList.remove('now');
+        lines=[]; words=[];
+      }else{
+        surface.node.classList.remove('on');
+        var doomed=lines.slice();
+        setTimeout(function(){
+          doomed.forEach(function(node){
+            if(node.parentNode) node.parentNode.removeChild(node);
+          });
+        },340);
+        lines=[];
+      }
+    }
+    track=null; surface=null; reset();
+    if(sr) sr.textContent='';
+  }
+
+  addEventListener('cynea:audiostart',function(e){ start(e.detail&&e.detail.el); });
+  addEventListener('cynea:audiostop',finish);
+  addEventListener('cynea:audioended',finish);
 })();
 
 /* ── demo request form ─────────────────────────────────────────────

@@ -23,3 +23,8 @@ assets/Analytics.mp4
 assets/Hero-bg 2.mp4
 assets/Telephony.mp4
 assets/world.mp4
+
+# Caption sources. The page fetches only captions.page.json; the full
+# transcript set and the cached Groq responses are build inputs.
+assets/segments/captions.json
+assets/segments/_groq_raw/

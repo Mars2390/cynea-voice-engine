@@ -1,0 +1,327 @@
+{
+ "task": "transcribe",
+ "language": "English",
+ "duration": 20,
+ "text": " Hello? Yes, Adinkra Hotel. Kwame speaking. How can I help you today? Good morning, Adinkra Hotel. This is Kwame. Akwaaba. Welcome to Adinkra Hotel. What can I do for you? Ah, let me check that for you. Yes, we have the executive suite available for...",
+ "words": [
+  {
+   "word": "Hello?",
+   "start": 0,
+   "end": 0.3
+  },
+  {
+   "word": "Yes,",
+   "start": 0.3,
+   "end": 1.86
+  },
+  {
+   "word": "Adinkra",
+   "start": 1.86,
+   "end": 2.18
+  },
+  {
+   "word": "Hotel.",
+   "start": 2.18,
+   "end": 3.06
+  },
+  {
+   "word": "Kwame",
+   "start": 3.06,
+   "end": 3.24
+  },
+  {
+   "word": "speaking.",
+   "start": 3.24,
+   "end": 4.44
+  },
+  {
+   "word": "How",
+   "start": 4.44,
+   "end": 4.54
+  },
+  {
+   "word": "can",
+   "start": 4.54,
+   "end": 4.68
+  },
+  {
+   "word": "I",
+   "start": 4.68,
+   "end": 4.82
+  },
+  {
+   "word": "help",
+   "start": 4.82,
+   "end": 4.96
+  },
+  {
+   "word": "you",
+   "start": 4.96,
+   "end": 5.06
+  },
+  {
+   "word": "today?",
+   "start": 5.06,
+   "end": 5.86
+  },
+  {
+   "word": "Good",
+   "start": 5.86,
+   "end": 5.96
+  },
+  {
+   "word": "morning,",
+   "start": 5.96,
+   "end": 6.36
+  },
+  {
+   "word": "Adinkra",
+   "start": 6.36,
+   "end": 6.66
+  },
+  {
+   "word": "Hotel.",
+   "start": 6.66,
+   "end": 7.5
+  },
+  {
+   "word": "This",
+   "start": 7.5,
+   "end": 7.68
+  },
+  {
+   "word": "is",
+   "start": 7.68,
+   "end": 7.86
+  },
+  {
+   "word": "Kwame.",
+   "start": 7.86,
+   "end": 8.3
+  },
+  {
+   "word": "Akwaaba.",
+   "start": 8.3,
+   "end": 9.36
+  },
+  {
+   "word": "Welcome",
+   "start": 9.36,
+   "end": 10.82
+  },
+  {
+   "word": "to",
+   "start": 10.82,
+   "end": 11.14
+  },
+  {
+   "word": "Adinkra",
+   "start": 11.14,
+   "end": 11.6
+  },
+  {
+   "word": "Hotel.",
+   "start": 11.6,
+   "end": 12.68
+  },
+  {
+   "word": "What",
+   "start": 12.68,
+   "end": 12.76
+  },
+  {
+   "word": "can",
+   "start": 12.76,
+   "end": 12.92
+  },
+  {
+   "word": "I",
+   "start": 12.92,
+   "end": 13.04
+  },
+  {
+   "word": "do",
+   "start": 13.04,
+   "end": 13.16
+  },
+  {
+   "word": "for",
+   "start": 13.16,
+   "end": 13.34
+  },
+  {
+   "word": "you?",
+   "start": 13.34,
+   "end": 13.96
+  },
+  {
+   "word": "Ah,",
+   "start": 13.96,
+   "end": 14.36
+  },
+  {
+   "word": "let",
+   "start": 14.36,
+   "end": 14.56
+  },
+  {
+   "word": "me",
+   "start": 14.56,
+   "end": 14.64
+  },
+  {
+   "word": "check",
+   "start": 14.64,
+   "end": 14.84
+  },
+  {
+   "word": "that",
+   "start": 14.84,
+   "end": 15.02
+  },
+  {
+   "word": "for",
+   "start": 15.02,
+   "end": 15.22
+  },
+  {
+   "word": "you.",
+   "start": 15.22,
+   "end": 15.92
+  },
+  {
+   "word": "Yes,",
+   "start": 15.92,
+   "end": 16.42
+  },
+  {
+   "word": "we",
+   "start": 16.42,
+   "end": 16.82
+  },
+  {
+   "word": "have",
+   "start": 16.82,
+   "end": 17.32
+  },
+  {
+   "word": "the",
+   "start": 17.32,
+   "end": 17.62
+  },
+  {
+   "word": "executive",
+   "start": 17.62,
+   "end": 18.26
+  },
+  {
+   "word": "suite",
+   "start": 18.26,
+   "end": 18.7
+  },
+  {
+   "word": "available",
+   "start": 18.7,
+   "end": 19.42
+  },
+  {
+   "word": "for...",
+   "start": 19.42,
+   "end": 20.36
+  }
+ ],
+ "segments": [
+  {
+   "id": 0,
+   "seek": 0,
+   "start": 0,
+   "end": 20,
+   "text": " Hello? Yes, Adinkra Hotel. Kwame speaking. How can I help you today? Good morning, Adinkra Hotel. This is Kwame. Akwaaba. Welcome to Adinkra Hotel. What can I do for you? Ah, let me check that for you. Yes, we have the executive suite available for...",
+   "tokens": [
+    50365,
+    2425,
+    30,
+    1079,
+    11,
+    316,
+    67,
+    475,
+    424,
+    20354,
+    13,
+    43432,
+    529,
+    4124,
+    13,
+    1012,
+    393,
+    286,
+    854,
+    291,
+    965,
+    30,
+    2205,
+    2446,
+    11,
+    316,
+    67,
+    475,
+    424,
+    20354,
+    13,
+    639,
+    307,
+    43432,
+    529,
+    13,
+    316,
+    74,
+    4151,
+    5509,
+    13,
+    4027,
+    281,
+    316,
+    67,
+    475,
+    424,
+    20354,
+    13,
+    708,
+    393,
+    286,
+    360,
+    337,
+    291,
+    30,
+    2438,
+    11,
+    718,
+    385,
+    1520,
+    300,
+    337,
+    291,
+    13,
+    1079,
+    11,
+    321,
+    362,
+    264,
+    10140,
+    14205,
+    2435,
+    337,
+    485,
+    51365
+   ],
+   "temperature": 0,
+   "avg_logprob": -0.071900055,
+   "compression_ratio": 1.4911243,
+   "no_speech_prob": 0.008766174
+  }
+ ],
+ "x_groq": {
+  "id": "req_01m1dcsz5re27872zv3xp39pnk"
+ }
+}

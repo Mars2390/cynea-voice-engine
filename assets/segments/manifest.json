@@ -1,0 +1,238 @@
+{
+  "agents": {
+    "kwame": {
+      "source": "kwame_real_voice.mp3",
+      "segments": {
+        "greeting": {
+          "file": "assets/segments/kwame/greeting.mp3",
+          "start": 0.0,
+          "end": 5.64,
+          "duration": 5.64,
+          "text": "Hello? Yes. Adinkra Hotel, Kwame speaking. How can I help you today?"
+        },
+        "pricing": {
+          "file": "assets/segments/kwame/pricing.mp3",
+          "start": 20.8,
+          "end": 29.26,
+          "duration": 8.46,
+          "text": "That's $200 per night. Breakfast is included. Our standard room is $80. Deluxe is 120."
+        },
+        "booking": {
+          "file": "assets/segments/kwame/booking.mp3",
+          "start": 52.0,
+          "end": 55.24,
+          "duration": 3.24,
+          "text": "Your booking is confirmed. You'll get a confirmation email shortly."
+        },
+        "closing": {
+          "file": "assets/segments/kwame/closing.mp3",
+          "start": 93.94,
+          "end": 97.7,
+          "duration": 3.76,
+          "text": "Thank you for calling Adinkra Hotel. Enjoy the rest of your day."
+        }
+      },
+      "fallback": "greeting"
+    },
+    "amina": {
+      "source": "amina_real_voice.mp3",
+      "segments": {
+        "greeting": {
+          "file": "assets/segments/amina/greeting.mp3",
+          "start": 0.0,
+          "end": 2.9,
+          "duration": 2.9,
+          "text": "Hello, this is Amina. How can I help you today?"
+        },
+        "balance": {
+          "file": "assets/segments/amina/balance.mp3",
+          "start": 14.08,
+          "end": 21.46,
+          "duration": 7.38,
+          "text": "Your current balance is 15,000 shillings. Your last transaction was yesterday. A payment of 2,000 shillings."
+        },
+        "transfer": {
+          "file": "assets/segments/amina/transfer.mp3",
+          "start": 21.44,
+          "end": 23.62,
+          "duration": 2.18,
+          "text": "Would you like me to help with that transfer?"
+        },
+        "closing": {
+          "file": "assets/segments/amina/closing.mp3",
+          "start": 63.66,
+          "end": 67.14,
+          "duration": 3.48,
+          "text": "Thank you for calling. Asante Sana, have a good day."
+        }
+      },
+      "fallback": "greeting"
+    },
+    "kofi": {
+      "source": "kofi_real_voice.mp3",
+      "segments": {
+        "greeting": {
+          "file": "assets/segments/kofi/greeting.mp3",
+          "start": 0.0,
+          "end": 3.36,
+          "duration": 3.36,
+          "text": "Akwaaba. This is Kofi at Asaase Restaurant, ready to take your order?"
+        },
+        "order": {
+          "file": "assets/segments/kofi/order.mp3",
+          "start": 30.74,
+          "end": 33.98,
+          "duration": 3.24,
+          "text": "Your order number is 47. It'll be ready in 25 minutes."
+        },
+        "delivery": {
+          "file": "assets/segments/kofi/delivery.mp3",
+          "start": 34.06,
+          "end": 37.9,
+          "duration": 3.84,
+          "text": "Delivery to that area takes about 30 minutes. Is that okay?"
+        },
+        "closing": {
+          "file": "assets/segments/kofi/closing.mp3",
+          "start": 67.66,
+          "end": 70.32,
+          "duration": 2.66,
+          "text": "Thank you for calling. Medase, come again soon."
+        }
+      },
+      "fallback": "greeting"
+    },
+    "maya": {
+      "source": "maya_real_voice.mp3",
+      "segments": {
+        "greeting": {
+          "file": "assets/segments/maya/greeting.mp3",
+          "start": 0.0,
+          "end": 4.4,
+          "duration": 4.4,
+          "text": "Hello! This is Maya from Cynea Scheduling. How can I help you today?"
+        },
+        "scheduling": {
+          "file": "assets/segments/maya/scheduling.mp3",
+          "start": 12.92,
+          "end": 19.88,
+          "duration": 6.96,
+          "text": "Let me check availability. One moment please. Yes, we have slots available on Tuesday at 10 in the morning."
+        },
+        "confirmation": {
+          "file": "assets/segments/maya/confirmation.mp3",
+          "start": 32.02,
+          "end": 36.16,
+          "duration": 4.14,
+          "text": "Your appointment is confirmed. You'll get an SMS reminder."
+        },
+        "closing": {
+          "file": "assets/segments/maya/closing.mp3",
+          "start": 66.78,
+          "end": 72.46,
+          "duration": 5.68,
+          "text": "Thank you for choosing Cynea. Have a wonderful day. Goodbye and see you on Tuesday."
+        }
+      },
+      "fallback": "greeting"
+    }
+  },
+  "triggers": {
+    "greeting": [
+      "hello",
+      "hi",
+      "hey",
+      "good morning",
+      "good afternoon",
+      "good evening",
+      "hallo",
+      "habari",
+      "sannu"
+    ],
+    "pricing": [
+      "price",
+      "prices",
+      "cost",
+      "costs",
+      "rate",
+      "rates",
+      "how much",
+      "charge",
+      "fee",
+      "expensive",
+      "cheap"
+    ],
+    "booking": [
+      "book",
+      "booking",
+      "reserve",
+      "reservation",
+      "room",
+      "stay",
+      "night",
+      "nights"
+    ],
+    "balance": [
+      "balance",
+      "account",
+      "how much do i have",
+      "statement",
+      "money",
+      "funds"
+    ],
+    "transfer": [
+      "transfer",
+      "send money",
+      "pay",
+      "payment",
+      "deposit",
+      "withdraw"
+    ],
+    "order": [
+      "order",
+      "menu",
+      "food",
+      "eat",
+      "jollof",
+      "rice",
+      "chicken",
+      "hungry"
+    ],
+    "delivery": [
+      "deliver",
+      "delivery",
+      "how long",
+      "when will it arrive",
+      "takeaway",
+      "take away",
+      "pickup"
+    ],
+    "scheduling": [
+      "schedule",
+      "appointment",
+      "availability",
+      "available",
+      "slot",
+      "when can i",
+      "free"
+    ],
+    "confirmation": [
+      "confirm",
+      "confirmed",
+      "confirmation",
+      "is it booked",
+      "did it work"
+    ],
+    "closing": [
+      "thank",
+      "thanks",
+      "bye",
+      "goodbye",
+      "that's all",
+      "nothing else",
+      "cheers",
+      "asante",
+      "medase"
+    ]
+  }
+}

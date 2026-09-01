@@ -1,0 +1,4305 @@
+{
+  "kwame": {
+    "file": "kwame_real_voice.mp3",
+    "duration": 97.83,
+    "text": "Hello? Yes. Odin Krohotel, Kwame speaking. How can I help you today? Good morning, Odin Krohotel. This is Kwame. A Kwaba. Welcome to Odin Krohotel. What can I do for you? Ah, let me check that for you. Yes, we have the executive suite available for those dates. That's $200 per night. Breakfast is included. Our standard room is $80. Deluxe is 120. Check in is at 2 in the afternoon. Check out is 11 in the morning. Would you like ocean view or city view? How many guests will be staying with us? Shall I hold the booking for you? I'll need your full name, phone number and email address. Let me repeat that back. Executive suite, March 15 to 18 to 2 guests. Your booking is confirmed. You'll get a confirmation email shortly. Is there anything else I can help with? I'm really sorry about that. That's not the experience we want for you. Let me connect you with my manager right away. We have a swimming pool, restaurant, free Wi-Fi and airport shuttle. Breakfast is served from 630 to 10 every morning. Free cancellation up to 48 hours before check-in. We accept visa, mastercard, mobile money and cash. A deposit equal to the first night is required. The airport is 30 minutes away. Shuttle is $25. You're most welcome. Safe travels and we'll see you soon. Thank you for calling a dinkro hotel. Enjoy the rest of your day.",
+    "words": [
+      {
+        "w": "Hello?",
+        "start": 0.0,
+        "end": 0.28
+      },
+      {
+        "w": "Yes.",
+        "start": 1.1,
+        "end": 1.4
+      },
+      {
+        "w": "Odin",
+        "start": 1.82,
+        "end": 2.04
+      },
+      {
+        "w": "Krohotel,",
+        "start": 2.04,
+        "end": 2.6
+      },
+      {
+        "w": "Kwame",
+        "start": 2.86,
+        "end": 3.26
+      },
+      {
+        "w": "speaking.",
+        "start": 3.26,
+        "end": 3.62
+      },
+      {
+        "w": "How",
+        "start": 4.34,
+        "end": 4.52
+      },
+      {
+        "w": "can",
+        "start": 4.52,
+        "end": 4.68
+      },
+      {
+        "w": "I",
+        "start": 4.68,
+        "end": 4.78
+      },
+      {
+        "w": "help",
+        "start": 4.78,
+        "end": 4.9
+      },
+      {
+        "w": "you",
+        "start": 4.9,
+        "end": 5.06
+      },
+      {
+        "w": "today?",
+        "start": 5.06,
+        "end": 5.34
+      },
+      {
+        "w": "Good",
+        "start": 5.84,
+        "end": 5.92
+      },
+      {
+        "w": "morning,",
+        "start": 5.92,
+        "end": 6.2
+      },
+      {
+        "w": "Odin",
+        "start": 6.34,
+        "end": 6.52
+      },
+      {
+        "w": "Krohotel.",
+        "start": 6.52,
+        "end": 7.08
+      },
+      {
+        "w": "This",
+        "start": 7.54,
+        "end": 7.64
+      },
+      {
+        "w": "is",
+        "start": 7.64,
+        "end": 7.8
+      },
+      {
+        "w": "Kwame.",
+        "start": 7.8,
+        "end": 8.26
+      },
+      {
+        "w": "A",
+        "start": 8.86,
+        "end": 8.9
+      },
+      {
+        "w": "Kwaba.",
+        "start": 8.9,
+        "end": 9.38
+      },
+      {
+        "w": "Welcome",
+        "start": 10.44,
+        "end": 10.84
+      },
+      {
+        "w": "to",
+        "start": 10.84,
+        "end": 11.12
+      },
+      {
+        "w": "Odin",
+        "start": 11.12,
+        "end": 11.44
+      },
+      {
+        "w": "Krohotel.",
+        "start": 11.44,
+        "end": 12.04
+      },
+      {
+        "w": "What",
+        "start": 12.66,
+        "end": 12.76
+      },
+      {
+        "w": "can",
+        "start": 12.76,
+        "end": 12.88
+      },
+      {
+        "w": "I",
+        "start": 12.88,
+        "end": 13.0
+      },
+      {
+        "w": "do",
+        "start": 13.0,
+        "end": 13.16
+      },
+      {
+        "w": "for",
+        "start": 13.16,
+        "end": 13.34
+      },
+      {
+        "w": "you?",
+        "start": 13.34,
+        "end": 13.5
+      },
+      {
+        "w": "Ah,",
+        "start": 13.98,
+        "end": 14.12
+      },
+      {
+        "w": "let",
+        "start": 14.34,
+        "end": 14.52
+      },
+      {
+        "w": "me",
+        "start": 14.52,
+        "end": 14.6
+      },
+      {
+        "w": "check",
+        "start": 14.6,
+        "end": 14.8
+      },
+      {
+        "w": "that",
+        "start": 14.8,
+        "end": 14.98
+      },
+      {
+        "w": "for",
+        "start": 14.98,
+        "end": 15.2
+      },
+      {
+        "w": "you.",
+        "start": 15.2,
+        "end": 15.36
+      },
+      {
+        "w": "Yes,",
+        "start": 15.84,
+        "end": 16.1
+      },
+      {
+        "w": "we",
+        "start": 16.5,
+        "end": 16.82
+      },
+      {
+        "w": "have",
+        "start": 16.82,
+        "end": 17.18
+      },
+      {
+        "w": "the",
+        "start": 17.18,
+        "end": 17.56
+      },
+      {
+        "w": "executive",
+        "start": 17.56,
+        "end": 18.14
+      },
+      {
+        "w": "suite",
+        "start": 18.14,
+        "end": 18.58
+      },
+      {
+        "w": "available",
+        "start": 18.58,
+        "end": 19.22
+      },
+      {
+        "w": "for",
+        "start": 19.22,
+        "end": 20.0
+      },
+      {
+        "w": "those",
+        "start": 20.0,
+        "end": 20.24
+      },
+      {
+        "w": "dates.",
+        "start": 20.24,
+        "end": 20.54
+      },
+      {
+        "w": "That's",
+        "start": 20.98,
+        "end": 21.24
+      },
+      {
+        "w": "$200",
+        "start": 21.24,
+        "end": 21.68
+      },
+      {
+        "w": "per",
+        "start": 21.68,
+        "end": 22.24
+      },
+      {
+        "w": "night.",
+        "start": 22.24,
+        "end": 22.5
+      },
+      {
+        "w": "Breakfast",
+        "start": 23.16,
+        "end": 23.38
+      },
+      {
+        "w": "is",
+        "start": 23.38,
+        "end": 23.72
+      },
+      {
+        "w": "included.",
+        "start": 23.72,
+        "end": 24.24
+      },
+      {
+        "w": "Our",
+        "start": 24.24,
+        "end": 24.82
+      },
+      {
+        "w": "standard",
+        "start": 24.82,
+        "end": 25.18
+      },
+      {
+        "w": "room",
+        "start": 25.18,
+        "end": 25.54
+      },
+      {
+        "w": "is",
+        "start": 25.54,
+        "end": 25.76
+      },
+      {
+        "w": "$80.",
+        "start": 25.76,
+        "end": 26.2
+      },
+      {
+        "w": "Deluxe",
+        "start": 27.14,
+        "end": 27.74
+      },
+      {
+        "w": "is",
+        "start": 27.74,
+        "end": 28.2
+      },
+      {
+        "w": "120.",
+        "start": 28.2,
+        "end": 28.96
+      },
+      {
+        "w": "Check",
+        "start": 29.7,
+        "end": 29.92
+      },
+      {
+        "w": "in",
+        "start": 29.92,
+        "end": 30.22
+      },
+      {
+        "w": "is",
+        "start": 30.22,
+        "end": 30.72
+      },
+      {
+        "w": "at",
+        "start": 30.72,
+        "end": 30.84
+      },
+      {
+        "w": "2",
+        "start": 30.84,
+        "end": 31.02
+      },
+      {
+        "w": "in",
+        "start": 31.02,
+        "end": 31.16
+      },
+      {
+        "w": "the",
+        "start": 31.16,
+        "end": 31.24
+      },
+      {
+        "w": "afternoon.",
+        "start": 31.24,
+        "end": 31.8
+      },
+      {
+        "w": "Check",
+        "start": 32.3,
+        "end": 32.46
+      },
+      {
+        "w": "out",
+        "start": 32.46,
+        "end": 32.78
+      },
+      {
+        "w": "is",
+        "start": 32.78,
+        "end": 33.08
+      },
+      {
+        "w": "11",
+        "start": 33.08,
+        "end": 33.38
+      },
+      {
+        "w": "in",
+        "start": 33.38,
+        "end": 33.58
+      },
+      {
+        "w": "the",
+        "start": 33.58,
+        "end": 33.66
+      },
+      {
+        "w": "morning.",
+        "start": 33.66,
+        "end": 33.94
+      },
+      {
+        "w": "Would",
+        "start": 34.52,
+        "end": 34.6
+      },
+      {
+        "w": "you",
+        "start": 34.6,
+        "end": 34.7
+      },
+      {
+        "w": "like",
+        "start": 34.7,
+        "end": 34.86
+      },
+      {
+        "w": "ocean",
+        "start": 34.86,
+        "end": 35.32
+      },
+      {
+        "w": "view",
+        "start": 35.32,
+        "end": 35.64
+      },
+      {
+        "w": "or",
+        "start": 35.64,
+        "end": 36.06
+      },
+      {
+        "w": "city",
+        "start": 36.06,
+        "end": 36.36
+      },
+      {
+        "w": "view?",
+        "start": 36.36,
+        "end": 36.7
+      },
+      {
+        "w": "How",
+        "start": 37.56,
+        "end": 37.64
+      },
+      {
+        "w": "many",
+        "start": 37.64,
+        "end": 37.78
+      },
+      {
+        "w": "guests",
+        "start": 37.78,
+        "end": 38.06
+      },
+      {
+        "w": "will",
+        "start": 38.06,
+        "end": 38.24
+      },
+      {
+        "w": "be",
+        "start": 38.24,
+        "end": 38.42
+      },
+      {
+        "w": "staying",
+        "start": 38.42,
+        "end": 38.86
+      },
+      {
+        "w": "with",
+        "start": 38.86,
+        "end": 39.08
+      },
+      {
+        "w": "us?",
+        "start": 39.08,
+        "end": 39.4
+      },
+      {
+        "w": "Shall",
+        "start": 39.86,
+        "end": 39.98
+      },
+      {
+        "w": "I",
+        "start": 39.98,
+        "end": 40.12
+      },
+      {
+        "w": "hold",
+        "start": 40.12,
+        "end": 40.28
+      },
+      {
+        "w": "the",
+        "start": 40.28,
+        "end": 40.44
+      },
+      {
+        "w": "booking",
+        "start": 40.44,
+        "end": 40.7
+      },
+      {
+        "w": "for",
+        "start": 40.7,
+        "end": 41.02
+      },
+      {
+        "w": "you?",
+        "start": 41.02,
+        "end": 41.16
+      },
+      {
+        "w": "I'll",
+        "start": 41.68,
+        "end": 41.78
+      },
+      {
+        "w": "need",
+        "start": 41.78,
+        "end": 41.9
+      },
+      {
+        "w": "your",
+        "start": 41.9,
+        "end": 42.12
+      },
+      {
+        "w": "full",
+        "start": 42.12,
+        "end": 42.56
+      },
+      {
+        "w": "name,",
+        "start": 42.56,
+        "end": 42.88
+      },
+      {
+        "w": "phone",
+        "start": 43.46,
+        "end": 43.54
+      },
+      {
+        "w": "number",
+        "start": 43.54,
+        "end": 43.92
+      },
+      {
+        "w": "and",
+        "start": 43.92,
+        "end": 44.34
+      },
+      {
+        "w": "email",
+        "start": 44.34,
+        "end": 44.7
+      },
+      {
+        "w": "address.",
+        "start": 44.7,
+        "end": 45.12
+      },
+      {
+        "w": "Let",
+        "start": 45.7,
+        "end": 45.94
+      },
+      {
+        "w": "me",
+        "start": 45.94,
+        "end": 46.06
+      },
+      {
+        "w": "repeat",
+        "start": 46.06,
+        "end": 46.34
+      },
+      {
+        "w": "that",
+        "start": 46.34,
+        "end": 46.62
+      },
+      {
+        "w": "back.",
+        "start": 46.62,
+        "end": 47.08
+      },
+      {
+        "w": "Executive",
+        "start": 47.72,
+        "end": 48.24
+      },
+      {
+        "w": "suite,",
+        "start": 48.24,
+        "end": 48.76
+      },
+      {
+        "w": "March",
+        "start": 49.24,
+        "end": 49.34
+      },
+      {
+        "w": "15",
+        "start": 49.34,
+        "end": 49.82
+      },
+      {
+        "w": "to",
+        "start": 49.82,
+        "end": 50.1
+      },
+      {
+        "w": "18",
+        "start": 50.1,
+        "end": 50.46
+      },
+      {
+        "w": "to",
+        "start": 50.46,
+        "end": 50.96
+      },
+      {
+        "w": "2",
+        "start": 50.96,
+        "end": 51.1
+      },
+      {
+        "w": "guests.",
+        "start": 51.1,
+        "end": 51.34
+      },
+      {
+        "w": "Your",
+        "start": 52.18,
+        "end": 52.26
+      },
+      {
+        "w": "booking",
+        "start": 52.26,
+        "end": 52.52
+      },
+      {
+        "w": "is",
+        "start": 52.52,
+        "end": 52.72
+      },
+      {
+        "w": "confirmed.",
+        "start": 52.72,
+        "end": 53.24
+      },
+      {
+        "w": "You'll",
+        "start": 53.48,
+        "end": 53.58
+      },
+      {
+        "w": "get",
+        "start": 53.58,
+        "end": 53.68
+      },
+      {
+        "w": "a",
+        "start": 53.68,
+        "end": 53.76
+      },
+      {
+        "w": "confirmation",
+        "start": 53.76,
+        "end": 54.12
+      },
+      {
+        "w": "email",
+        "start": 54.12,
+        "end": 54.56
+      },
+      {
+        "w": "shortly.",
+        "start": 54.56,
+        "end": 54.94
+      },
+      {
+        "w": "Is",
+        "start": 55.58,
+        "end": 55.68
+      },
+      {
+        "w": "there",
+        "start": 55.68,
+        "end": 55.8
+      },
+      {
+        "w": "anything",
+        "start": 55.8,
+        "end": 56.06
+      },
+      {
+        "w": "else",
+        "start": 56.06,
+        "end": 56.26
+      },
+      {
+        "w": "I",
+        "start": 56.26,
+        "end": 56.4
+      },
+      {
+        "w": "can",
+        "start": 56.4,
+        "end": 56.54
+      },
+      {
+        "w": "help",
+        "start": 56.54,
+        "end": 56.7
+      },
+      {
+        "w": "with?",
+        "start": 56.7,
+        "end": 56.92
+      },
+      {
+        "w": "I'm",
+        "start": 57.8,
+        "end": 58.04
+      },
+      {
+        "w": "really",
+        "start": 58.04,
+        "end": 58.18
+      },
+      {
+        "w": "sorry",
+        "start": 58.18,
+        "end": 58.44
+      },
+      {
+        "w": "about",
+        "start": 58.44,
+        "end": 58.72
+      },
+      {
+        "w": "that.",
+        "start": 58.72,
+        "end": 58.98
+      },
+      {
+        "w": "That's",
+        "start": 59.44,
+        "end": 59.68
+      },
+      {
+        "w": "not",
+        "start": 59.68,
+        "end": 59.8
+      },
+      {
+        "w": "the",
+        "start": 59.8,
+        "end": 59.96
+      },
+      {
+        "w": "experience",
+        "start": 59.96,
+        "end": 60.52
+      },
+      {
+        "w": "we",
+        "start": 60.52,
+        "end": 60.78
+      },
+      {
+        "w": "want",
+        "start": 60.78,
+        "end": 61.02
+      },
+      {
+        "w": "for",
+        "start": 61.02,
+        "end": 61.22
+      },
+      {
+        "w": "you.",
+        "start": 61.22,
+        "end": 61.38
+      },
+      {
+        "w": "Let",
+        "start": 62.18,
+        "end": 62.28
+      },
+      {
+        "w": "me",
+        "start": 62.28,
+        "end": 62.4
+      },
+      {
+        "w": "connect",
+        "start": 62.4,
+        "end": 62.64
+      },
+      {
+        "w": "you",
+        "start": 62.64,
+        "end": 62.9
+      },
+      {
+        "w": "with",
+        "start": 62.9,
+        "end": 63.1
+      },
+      {
+        "w": "my",
+        "start": 63.1,
+        "end": 63.26
+      },
+      {
+        "w": "manager",
+        "start": 63.26,
+        "end": 63.62
+      },
+      {
+        "w": "right",
+        "start": 63.62,
+        "end": 63.88
+      },
+      {
+        "w": "away.",
+        "start": 63.88,
+        "end": 64.12
+      },
+      {
+        "w": "We",
+        "start": 64.76,
+        "end": 65.28
+      },
+      {
+        "w": "have",
+        "start": 65.28,
+        "end": 65.36
+      },
+      {
+        "w": "a",
+        "start": 65.36,
+        "end": 65.44
+      },
+      {
+        "w": "swimming",
+        "start": 65.44,
+        "end": 65.66
+      },
+      {
+        "w": "pool,",
+        "start": 65.66,
+        "end": 66.08
+      },
+      {
+        "w": "restaurant,",
+        "start": 66.44,
+        "end": 66.76
+      },
+      {
+        "w": "free",
+        "start": 67.12,
+        "end": 67.22
+      },
+      {
+        "w": "Wi",
+        "start": 67.22,
+        "end": 67.44
+      },
+      {
+        "w": "-Fi",
+        "start": 67.44,
+        "end": 67.7
+      },
+      {
+        "w": "and",
+        "start": 67.7,
+        "end": 68.0
+      },
+      {
+        "w": "airport",
+        "start": 68.0,
+        "end": 68.42
+      },
+      {
+        "w": "shuttle.",
+        "start": 68.42,
+        "end": 68.9
+      },
+      {
+        "w": "Breakfast",
+        "start": 70.02,
+        "end": 70.22
+      },
+      {
+        "w": "is",
+        "start": 70.22,
+        "end": 70.54
+      },
+      {
+        "w": "served",
+        "start": 70.54,
+        "end": 70.94
+      },
+      {
+        "w": "from",
+        "start": 70.94,
+        "end": 71.2
+      },
+      {
+        "w": "630",
+        "start": 71.2,
+        "end": 71.98
+      },
+      {
+        "w": "to",
+        "start": 71.98,
+        "end": 72.3
+      },
+      {
+        "w": "10",
+        "start": 72.3,
+        "end": 72.54
+      },
+      {
+        "w": "every",
+        "start": 72.54,
+        "end": 72.82
+      },
+      {
+        "w": "morning.",
+        "start": 72.82,
+        "end": 73.14
+      },
+      {
+        "w": "Free",
+        "start": 73.82,
+        "end": 74.2
+      },
+      {
+        "w": "cancellation",
+        "start": 74.2,
+        "end": 74.7
+      },
+      {
+        "w": "up",
+        "start": 74.7,
+        "end": 75.3
+      },
+      {
+        "w": "to",
+        "start": 75.3,
+        "end": 75.46
+      },
+      {
+        "w": "48",
+        "start": 75.46,
+        "end": 76.02
+      },
+      {
+        "w": "hours",
+        "start": 76.02,
+        "end": 76.44
+      },
+      {
+        "w": "before",
+        "start": 76.44,
+        "end": 76.98
+      },
+      {
+        "w": "check",
+        "start": 76.98,
+        "end": 77.32
+      },
+      {
+        "w": "-in.",
+        "start": 77.32,
+        "end": 77.54
+      },
+      {
+        "w": "We",
+        "start": 78.24,
+        "end": 78.44
+      },
+      {
+        "w": "accept",
+        "start": 78.44,
+        "end": 78.68
+      },
+      {
+        "w": "visa,",
+        "start": 78.68,
+        "end": 79.06
+      },
+      {
+        "w": "mastercard,",
+        "start": 79.48,
+        "end": 79.98
+      },
+      {
+        "w": "mobile",
+        "start": 80.38,
+        "end": 80.5
+      },
+      {
+        "w": "money",
+        "start": 80.5,
+        "end": 80.84
+      },
+      {
+        "w": "and",
+        "start": 80.84,
+        "end": 81.42
+      },
+      {
+        "w": "cash.",
+        "start": 81.42,
+        "end": 81.78
+      },
+      {
+        "w": "A",
+        "start": 82.4,
+        "end": 82.5
+      },
+      {
+        "w": "deposit",
+        "start": 82.5,
+        "end": 82.98
+      },
+      {
+        "w": "equal",
+        "start": 82.98,
+        "end": 83.48
+      },
+      {
+        "w": "to",
+        "start": 83.48,
+        "end": 83.72
+      },
+      {
+        "w": "the",
+        "start": 83.72,
+        "end": 83.82
+      },
+      {
+        "w": "first",
+        "start": 83.82,
+        "end": 84.04
+      },
+      {
+        "w": "night",
+        "start": 84.04,
+        "end": 84.28
+      },
+      {
+        "w": "is",
+        "start": 84.28,
+        "end": 84.46
+      },
+      {
+        "w": "required.",
+        "start": 84.46,
+        "end": 84.88
+      },
+      {
+        "w": "The",
+        "start": 85.38,
+        "end": 85.48
+      },
+      {
+        "w": "airport",
+        "start": 85.48,
+        "end": 85.84
+      },
+      {
+        "w": "is",
+        "start": 85.84,
+        "end": 86.24
+      },
+      {
+        "w": "30",
+        "start": 86.24,
+        "end": 86.58
+      },
+      {
+        "w": "minutes",
+        "start": 86.58,
+        "end": 86.82
+      },
+      {
+        "w": "away.",
+        "start": 86.82,
+        "end": 87.16
+      },
+      {
+        "w": "Shuttle",
+        "start": 87.7,
+        "end": 88.1
+      },
+      {
+        "w": "is",
+        "start": 88.1,
+        "end": 88.5
+      },
+      {
+        "w": "$25.",
+        "start": 88.5,
+        "end": 89.0
+      },
+      {
+        "w": "You're",
+        "start": 89.74,
+        "end": 90.08
+      },
+      {
+        "w": "most",
+        "start": 90.08,
+        "end": 90.22
+      },
+      {
+        "w": "welcome.",
+        "start": 90.22,
+        "end": 90.62
+      },
+      {
+        "w": "Safe",
+        "start": 91.28,
+        "end": 91.44
+      },
+      {
+        "w": "travels",
+        "start": 91.44,
+        "end": 91.88
+      },
+      {
+        "w": "and",
+        "start": 91.88,
+        "end": 92.4
+      },
+      {
+        "w": "we'll",
+        "start": 92.4,
+        "end": 92.9
+      },
+      {
+        "w": "see",
+        "start": 92.9,
+        "end": 93.06
+      },
+      {
+        "w": "you",
+        "start": 93.06,
+        "end": 93.18
+      },
+      {
+        "w": "soon.",
+        "start": 93.18,
+        "end": 93.36
+      },
+      {
+        "w": "Thank",
+        "start": 94.12,
+        "end": 94.3
+      },
+      {
+        "w": "you",
+        "start": 94.3,
+        "end": 94.44
+      },
+      {
+        "w": "for",
+        "start": 94.44,
+        "end": 94.54
+      },
+      {
+        "w": "calling",
+        "start": 94.54,
+        "end": 94.84
+      },
+      {
+        "w": "a",
+        "start": 94.84,
+        "end": 95.0
+      },
+      {
+        "w": "dinkro",
+        "start": 95.0,
+        "end": 95.38
+      },
+      {
+        "w": "hotel.",
+        "start": 95.38,
+        "end": 95.76
+      },
+      {
+        "w": "Enjoy",
+        "start": 96.36,
+        "end": 96.6
+      },
+      {
+        "w": "the",
+        "start": 96.6,
+        "end": 96.78
+      },
+      {
+        "w": "rest",
+        "start": 96.78,
+        "end": 96.94
+      },
+      {
+        "w": "of",
+        "start": 96.94,
+        "end": 97.1
+      },
+      {
+        "w": "your",
+        "start": 97.1,
+        "end": 97.22
+      },
+      {
+        "w": "day.",
+        "start": 97.22,
+        "end": 97.4
+      }
+    ]
+  },
+  "amina": {
+    "file": "amina_real_voice.mp3",
+    "duration": 67.32,
+    "text": "Hello, this is Amina. How can I help you today? Good morning, Amina speaking. What can I do for you? Karibu, welcome to Sinea Bank. How may I assist you? Let me check your account. Yes, I can see your balance. Your current balance is 15,000 shillings. Your last transaction was yesterday. A payment of 2,000 shillings. Would you like me to help with that transfer? I'll need your account number and phone number to verify. Let me repeat that. Account number one, two, three, four, five, six. Is that correct? Your payment has been processed. You'll get an SMS confirmation. Is there anything else I can help with today? I'm sorry to hear about that. Let me look into it. I understand your frustration. Let me fix this right away. Your card has been blocked for security. A new one will arrive in five days. We can reverse that transaction. It will take up to 24 hours and pays payments usually reflect within a few minutes. Sawa, Sawa, no problem at all. Paul for the inconvenience. Let me make it right. I'll transfer you to the dispute steam now. Thank you for calling. Asante Sana, have a good day.",
+    "words": [
+      {
+        "w": "Hello,",
+        "start": 0.0,
+        "end": 0.3
+      },
+      {
+        "w": "this",
+        "start": 0.48,
+        "end": 0.58
+      },
+      {
+        "w": "is",
+        "start": 0.58,
+        "end": 0.76
+      },
+      {
+        "w": "Amina.",
+        "start": 0.76,
+        "end": 1.06
+      },
+      {
+        "w": "How",
+        "start": 1.66,
+        "end": 1.76
+      },
+      {
+        "w": "can",
+        "start": 1.76,
+        "end": 1.88
+      },
+      {
+        "w": "I",
+        "start": 1.88,
+        "end": 1.98
+      },
+      {
+        "w": "help",
+        "start": 1.98,
+        "end": 2.16
+      },
+      {
+        "w": "you",
+        "start": 2.16,
+        "end": 2.32
+      },
+      {
+        "w": "today?",
+        "start": 2.32,
+        "end": 2.6
+      },
+      {
+        "w": "Good",
+        "start": 3.6,
+        "end": 3.78
+      },
+      {
+        "w": "morning,",
+        "start": 3.78,
+        "end": 4.1
+      },
+      {
+        "w": "Amina",
+        "start": 4.34,
+        "end": 4.58
+      },
+      {
+        "w": "speaking.",
+        "start": 4.58,
+        "end": 4.9
+      },
+      {
+        "w": "What",
+        "start": 5.32,
+        "end": 5.42
+      },
+      {
+        "w": "can",
+        "start": 5.42,
+        "end": 5.54
+      },
+      {
+        "w": "I",
+        "start": 5.54,
+        "end": 5.66
+      },
+      {
+        "w": "do",
+        "start": 5.66,
+        "end": 5.8
+      },
+      {
+        "w": "for",
+        "start": 5.8,
+        "end": 5.98
+      },
+      {
+        "w": "you?",
+        "start": 5.98,
+        "end": 6.26
+      },
+      {
+        "w": "Karibu,",
+        "start": 7.14,
+        "end": 7.62
+      },
+      {
+        "w": "welcome",
+        "start": 8.1,
+        "end": 8.42
+      },
+      {
+        "w": "to",
+        "start": 8.42,
+        "end": 8.64
+      },
+      {
+        "w": "Sinea",
+        "start": 8.64,
+        "end": 8.94
+      },
+      {
+        "w": "Bank.",
+        "start": 8.94,
+        "end": 9.12
+      },
+      {
+        "w": "How",
+        "start": 9.68,
+        "end": 9.76
+      },
+      {
+        "w": "may",
+        "start": 9.76,
+        "end": 9.88
+      },
+      {
+        "w": "I",
+        "start": 9.88,
+        "end": 10.0
+      },
+      {
+        "w": "assist",
+        "start": 10.0,
+        "end": 10.24
+      },
+      {
+        "w": "you?",
+        "start": 10.24,
+        "end": 10.58
+      },
+      {
+        "w": "Let",
+        "start": 10.94,
+        "end": 11.0
+      },
+      {
+        "w": "me",
+        "start": 11.0,
+        "end": 11.12
+      },
+      {
+        "w": "check",
+        "start": 11.12,
+        "end": 11.3
+      },
+      {
+        "w": "your",
+        "start": 11.3,
+        "end": 11.5
+      },
+      {
+        "w": "account.",
+        "start": 11.5,
+        "end": 11.84
+      },
+      {
+        "w": "Yes,",
+        "start": 12.32,
+        "end": 12.46
+      },
+      {
+        "w": "I",
+        "start": 12.56,
+        "end": 12.62
+      },
+      {
+        "w": "can",
+        "start": 12.62,
+        "end": 12.74
+      },
+      {
+        "w": "see",
+        "start": 12.74,
+        "end": 12.94
+      },
+      {
+        "w": "your",
+        "start": 12.94,
+        "end": 13.08
+      },
+      {
+        "w": "balance.",
+        "start": 13.08,
+        "end": 13.36
+      },
+      {
+        "w": "Your",
+        "start": 14.26,
+        "end": 14.74
+      },
+      {
+        "w": "current",
+        "start": 14.74,
+        "end": 15.0
+      },
+      {
+        "w": "balance",
+        "start": 15.0,
+        "end": 15.28
+      },
+      {
+        "w": "is",
+        "start": 15.28,
+        "end": 15.56
+      },
+      {
+        "w": "15",
+        "start": 15.56,
+        "end": 15.88
+      },
+      {
+        "w": ",000",
+        "start": 15.88,
+        "end": 16.34
+      },
+      {
+        "w": "shillings.",
+        "start": 16.34,
+        "end": 16.78
+      },
+      {
+        "w": "Your",
+        "start": 16.86,
+        "end": 16.96
+      },
+      {
+        "w": "last",
+        "start": 16.96,
+        "end": 17.2
+      },
+      {
+        "w": "transaction",
+        "start": 17.2,
+        "end": 17.68
+      },
+      {
+        "w": "was",
+        "start": 17.68,
+        "end": 18.02
+      },
+      {
+        "w": "yesterday.",
+        "start": 18.02,
+        "end": 18.48
+      },
+      {
+        "w": "A",
+        "start": 19.12,
+        "end": 19.2
+      },
+      {
+        "w": "payment",
+        "start": 19.2,
+        "end": 19.52
+      },
+      {
+        "w": "of",
+        "start": 19.52,
+        "end": 19.8
+      },
+      {
+        "w": "2",
+        "start": 19.8,
+        "end": 20.18
+      },
+      {
+        "w": ",000",
+        "start": 20.18,
+        "end": 20.56
+      },
+      {
+        "w": "shillings.",
+        "start": 20.56,
+        "end": 21.16
+      },
+      {
+        "w": "Would",
+        "start": 21.62,
+        "end": 21.86
+      },
+      {
+        "w": "you",
+        "start": 21.86,
+        "end": 21.96
+      },
+      {
+        "w": "like",
+        "start": 21.96,
+        "end": 22.1
+      },
+      {
+        "w": "me",
+        "start": 22.1,
+        "end": 22.24
+      },
+      {
+        "w": "to",
+        "start": 22.24,
+        "end": 22.36
+      },
+      {
+        "w": "help",
+        "start": 22.36,
+        "end": 22.52
+      },
+      {
+        "w": "with",
+        "start": 22.52,
+        "end": 22.68
+      },
+      {
+        "w": "that",
+        "start": 22.68,
+        "end": 22.82
+      },
+      {
+        "w": "transfer?",
+        "start": 22.82,
+        "end": 23.32
+      },
+      {
+        "w": "I'll",
+        "start": 23.9,
+        "end": 24.02
+      },
+      {
+        "w": "need",
+        "start": 24.02,
+        "end": 24.14
+      },
+      {
+        "w": "your",
+        "start": 24.14,
+        "end": 24.3
+      },
+      {
+        "w": "account",
+        "start": 24.3,
+        "end": 24.58
+      },
+      {
+        "w": "number",
+        "start": 24.58,
+        "end": 24.88
+      },
+      {
+        "w": "and",
+        "start": 24.88,
+        "end": 25.0
+      },
+      {
+        "w": "phone",
+        "start": 25.0,
+        "end": 25.22
+      },
+      {
+        "w": "number",
+        "start": 25.22,
+        "end": 25.44
+      },
+      {
+        "w": "to",
+        "start": 25.44,
+        "end": 25.58
+      },
+      {
+        "w": "verify.",
+        "start": 25.58,
+        "end": 25.86
+      },
+      {
+        "w": "Let",
+        "start": 26.1,
+        "end": 26.16
+      },
+      {
+        "w": "me",
+        "start": 26.16,
+        "end": 26.28
+      },
+      {
+        "w": "repeat",
+        "start": 26.28,
+        "end": 26.54
+      },
+      {
+        "w": "that.",
+        "start": 26.54,
+        "end": 26.86
+      },
+      {
+        "w": "Account",
+        "start": 27.28,
+        "end": 27.68
+      },
+      {
+        "w": "number",
+        "start": 27.68,
+        "end": 28.02
+      },
+      {
+        "w": "one,",
+        "start": 28.02,
+        "end": 28.38
+      },
+      {
+        "w": "two,",
+        "start": 28.68,
+        "end": 29.02
+      },
+      {
+        "w": "three,",
+        "start": 29.66,
+        "end": 29.68
+      },
+      {
+        "w": "four,",
+        "start": 30.1,
+        "end": 30.24
+      },
+      {
+        "w": "five,",
+        "start": 30.46,
+        "end": 30.62
+      },
+      {
+        "w": "six.",
+        "start": 30.62,
+        "end": 31.16
+      },
+      {
+        "w": "Is",
+        "start": 31.54,
+        "end": 31.64
+      },
+      {
+        "w": "that",
+        "start": 31.64,
+        "end": 31.76
+      },
+      {
+        "w": "correct?",
+        "start": 31.76,
+        "end": 32.1
+      },
+      {
+        "w": "Your",
+        "start": 32.88,
+        "end": 33.04
+      },
+      {
+        "w": "payment",
+        "start": 33.04,
+        "end": 33.32
+      },
+      {
+        "w": "has",
+        "start": 33.32,
+        "end": 33.52
+      },
+      {
+        "w": "been",
+        "start": 33.52,
+        "end": 33.7
+      },
+      {
+        "w": "processed.",
+        "start": 33.7,
+        "end": 34.16
+      },
+      {
+        "w": "You'll",
+        "start": 34.82,
+        "end": 35.0
+      },
+      {
+        "w": "get",
+        "start": 35.0,
+        "end": 35.12
+      },
+      {
+        "w": "an",
+        "start": 35.12,
+        "end": 35.3
+      },
+      {
+        "w": "SMS",
+        "start": 35.3,
+        "end": 35.58
+      },
+      {
+        "w": "confirmation.",
+        "start": 35.58,
+        "end": 36.34
+      },
+      {
+        "w": "Is",
+        "start": 37.12,
+        "end": 37.24
+      },
+      {
+        "w": "there",
+        "start": 37.24,
+        "end": 37.34
+      },
+      {
+        "w": "anything",
+        "start": 37.34,
+        "end": 37.64
+      },
+      {
+        "w": "else",
+        "start": 37.64,
+        "end": 37.84
+      },
+      {
+        "w": "I",
+        "start": 37.84,
+        "end": 37.98
+      },
+      {
+        "w": "can",
+        "start": 37.98,
+        "end": 38.1
+      },
+      {
+        "w": "help",
+        "start": 38.1,
+        "end": 38.26
+      },
+      {
+        "w": "with",
+        "start": 38.26,
+        "end": 38.44
+      },
+      {
+        "w": "today?",
+        "start": 38.44,
+        "end": 38.74
+      },
+      {
+        "w": "I'm",
+        "start": 39.54,
+        "end": 39.8
+      },
+      {
+        "w": "sorry",
+        "start": 39.8,
+        "end": 39.96
+      },
+      {
+        "w": "to",
+        "start": 39.96,
+        "end": 40.14
+      },
+      {
+        "w": "hear",
+        "start": 40.14,
+        "end": 40.28
+      },
+      {
+        "w": "about",
+        "start": 40.28,
+        "end": 40.48
+      },
+      {
+        "w": "that.",
+        "start": 40.48,
+        "end": 40.74
+      },
+      {
+        "w": "Let",
+        "start": 41.08,
+        "end": 41.22
+      },
+      {
+        "w": "me",
+        "start": 41.22,
+        "end": 41.32
+      },
+      {
+        "w": "look",
+        "start": 41.32,
+        "end": 41.48
+      },
+      {
+        "w": "into",
+        "start": 41.48,
+        "end": 41.76
+      },
+      {
+        "w": "it.",
+        "start": 41.76,
+        "end": 42.0
+      },
+      {
+        "w": "I",
+        "start": 42.3,
+        "end": 42.48
+      },
+      {
+        "w": "understand",
+        "start": 42.48,
+        "end": 42.82
+      },
+      {
+        "w": "your",
+        "start": 42.82,
+        "end": 43.02
+      },
+      {
+        "w": "frustration.",
+        "start": 43.02,
+        "end": 43.52
+      },
+      {
+        "w": "Let",
+        "start": 43.72,
+        "end": 43.76
+      },
+      {
+        "w": "me",
+        "start": 43.76,
+        "end": 43.88
+      },
+      {
+        "w": "fix",
+        "start": 43.88,
+        "end": 44.1
+      },
+      {
+        "w": "this",
+        "start": 44.1,
+        "end": 44.28
+      },
+      {
+        "w": "right",
+        "start": 44.28,
+        "end": 44.48
+      },
+      {
+        "w": "away.",
+        "start": 44.48,
+        "end": 44.72
+      },
+      {
+        "w": "Your",
+        "start": 44.9,
+        "end": 45.0
+      },
+      {
+        "w": "card",
+        "start": 45.0,
+        "end": 45.24
+      },
+      {
+        "w": "has",
+        "start": 45.24,
+        "end": 45.44
+      },
+      {
+        "w": "been",
+        "start": 45.44,
+        "end": 45.58
+      },
+      {
+        "w": "blocked",
+        "start": 45.58,
+        "end": 45.78
+      },
+      {
+        "w": "for",
+        "start": 45.78,
+        "end": 45.96
+      },
+      {
+        "w": "security.",
+        "start": 45.96,
+        "end": 46.46
+      },
+      {
+        "w": "A",
+        "start": 46.94,
+        "end": 47.04
+      },
+      {
+        "w": "new",
+        "start": 47.04,
+        "end": 47.2
+      },
+      {
+        "w": "one",
+        "start": 47.2,
+        "end": 47.34
+      },
+      {
+        "w": "will",
+        "start": 47.34,
+        "end": 47.5
+      },
+      {
+        "w": "arrive",
+        "start": 47.5,
+        "end": 47.74
+      },
+      {
+        "w": "in",
+        "start": 47.74,
+        "end": 47.94
+      },
+      {
+        "w": "five",
+        "start": 47.94,
+        "end": 48.18
+      },
+      {
+        "w": "days.",
+        "start": 48.18,
+        "end": 48.5
+      },
+      {
+        "w": "We",
+        "start": 48.98,
+        "end": 49.14
+      },
+      {
+        "w": "can",
+        "start": 49.14,
+        "end": 49.26
+      },
+      {
+        "w": "reverse",
+        "start": 49.26,
+        "end": 49.52
+      },
+      {
+        "w": "that",
+        "start": 49.52,
+        "end": 49.78
+      },
+      {
+        "w": "transaction.",
+        "start": 49.78,
+        "end": 50.32
+      },
+      {
+        "w": "It",
+        "start": 50.46,
+        "end": 50.52
+      },
+      {
+        "w": "will",
+        "start": 50.52,
+        "end": 50.64
+      },
+      {
+        "w": "take",
+        "start": 50.64,
+        "end": 50.78
+      },
+      {
+        "w": "up",
+        "start": 50.78,
+        "end": 50.94
+      },
+      {
+        "w": "to",
+        "start": 50.94,
+        "end": 51.06
+      },
+      {
+        "w": "24",
+        "start": 51.06,
+        "end": 51.5
+      },
+      {
+        "w": "hours",
+        "start": 51.5,
+        "end": 51.88
+      },
+      {
+        "w": "and",
+        "start": 51.88,
+        "end": 52.48
+      },
+      {
+        "w": "pays",
+        "start": 52.48,
+        "end": 52.68
+      },
+      {
+        "w": "payments",
+        "start": 52.68,
+        "end": 53.06
+      },
+      {
+        "w": "usually",
+        "start": 53.06,
+        "end": 53.4
+      },
+      {
+        "w": "reflect",
+        "start": 53.4,
+        "end": 53.8
+      },
+      {
+        "w": "within",
+        "start": 53.8,
+        "end": 54.06
+      },
+      {
+        "w": "a",
+        "start": 54.06,
+        "end": 54.2
+      },
+      {
+        "w": "few",
+        "start": 54.2,
+        "end": 54.36
+      },
+      {
+        "w": "minutes.",
+        "start": 54.36,
+        "end": 54.62
+      },
+      {
+        "w": "Sawa,",
+        "start": 55.38,
+        "end": 55.5
+      },
+      {
+        "w": "Sawa,",
+        "start": 55.7,
+        "end": 55.9
+      },
+      {
+        "w": "no",
+        "start": 56.42,
+        "end": 56.58
+      },
+      {
+        "w": "problem",
+        "start": 56.58,
+        "end": 56.9
+      },
+      {
+        "w": "at",
+        "start": 56.9,
+        "end": 57.06
+      },
+      {
+        "w": "all.",
+        "start": 57.06,
+        "end": 57.28
+      },
+      {
+        "w": "Paul",
+        "start": 57.88,
+        "end": 58.02
+      },
+      {
+        "w": "for",
+        "start": 58.02,
+        "end": 58.22
+      },
+      {
+        "w": "the",
+        "start": 58.22,
+        "end": 58.36
+      },
+      {
+        "w": "inconvenience.",
+        "start": 58.36,
+        "end": 59.12
+      },
+      {
+        "w": "Let",
+        "start": 60.36,
+        "end": 60.82
+      },
+      {
+        "w": "me",
+        "start": 60.82,
+        "end": 60.94
+      },
+      {
+        "w": "make",
+        "start": 60.94,
+        "end": 61.14
+      },
+      {
+        "w": "it",
+        "start": 61.14,
+        "end": 61.26
+      },
+      {
+        "w": "right.",
+        "start": 61.26,
+        "end": 61.5
+      },
+      {
+        "w": "I'll",
+        "start": 62.02,
+        "end": 62.14
+      },
+      {
+        "w": "transfer",
+        "start": 62.14,
+        "end": 62.48
+      },
+      {
+        "w": "you",
+        "start": 62.48,
+        "end": 62.64
+      },
+      {
+        "w": "to",
+        "start": 62.64,
+        "end": 62.74
+      },
+      {
+        "w": "the",
+        "start": 62.74,
+        "end": 62.84
+      },
+      {
+        "w": "dispute",
+        "start": 62.84,
+        "end": 63.1
+      },
+      {
+        "w": "steam",
+        "start": 63.1,
+        "end": 63.42
+      },
+      {
+        "w": "now.",
+        "start": 63.42,
+        "end": 63.66
+      },
+      {
+        "w": "Thank",
+        "start": 63.84,
+        "end": 63.96
+      },
+      {
+        "w": "you",
+        "start": 63.96,
+        "end": 64.1
+      },
+      {
+        "w": "for",
+        "start": 64.1,
+        "end": 64.22
+      },
+      {
+        "w": "calling.",
+        "start": 64.22,
+        "end": 64.54
+      },
+      {
+        "w": "Asante",
+        "start": 65.06,
+        "end": 65.42
+      },
+      {
+        "w": "Sana,",
+        "start": 65.42,
+        "end": 65.72
+      },
+      {
+        "w": "have",
+        "start": 66.28,
+        "end": 66.36
+      },
+      {
+        "w": "a",
+        "start": 66.36,
+        "end": 66.48
+      },
+      {
+        "w": "good",
+        "start": 66.48,
+        "end": 66.58
+      },
+      {
+        "w": "day.",
+        "start": 66.58,
+        "end": 66.84
+      }
+    ]
+  },
+  "kofi": {
+    "file": "kofi_real_voice.mp3",
+    "duration": 70.45,
+    "text": "Aquaba. This is Kofi at a Sassy Restaurant, ready to take your order? Hello Sassy Restaurant, Kofi speaking. What can I get for you? Good evening! Kofi here. Are we doing dinin'? Take away? Or delivery? Ha ha, great choice. Joll off with chicken medium spice. Would you like Khelewell with that? It's fresh today. Our specials today are Banco with Talapea and Groundnut Soup. Let me repeat your order. Wall off rice with chicken, medium spice, extra Khelewell, that comes to 53 CDs. How would you like to pay? We accept mobile money, cash on delivery, and card payment. Your order number is 47. It'll be ready in 25 minutes. Delivery to that area takes about 30 minutes. Is that okay? Sorry, we're out of wacky A today. Can I suggest Joll off instead? Any allergies I should know about? We use ground nuts and some dishes. Would you like a drink? So Bolo is very fresh today. Your food is on the way. The writer will call when nearby. Thank you for choosing a Sassy Restaurant. Enjoy your meal. We have a special on fried rice this week. Two for 30 CDs. Let me check with the kitchen. One moment please. Sawa, Sawa. I've added extra pepper for you. Thank you for calling. Medase, come again soon.",
+    "words": [
+      {
+        "w": "Aquaba.",
+        "start": 0.0,
+        "end": 0.6
+      },
+      {
+        "w": "This",
+        "start": 1.0,
+        "end": 1.06
+      },
+      {
+        "w": "is",
+        "start": 1.06,
+        "end": 1.2
+      },
+      {
+        "w": "Kofi",
+        "start": 1.2,
+        "end": 1.42
+      },
+      {
+        "w": "at",
+        "start": 1.42,
+        "end": 1.54
+      },
+      {
+        "w": "a",
+        "start": 1.54,
+        "end": 1.6
+      },
+      {
+        "w": "Sassy",
+        "start": 1.6,
+        "end": 1.88
+      },
+      {
+        "w": "Restaurant,",
+        "start": 1.88,
+        "end": 2.18
+      },
+      {
+        "w": "ready",
+        "start": 2.32,
+        "end": 2.4
+      },
+      {
+        "w": "to",
+        "start": 2.4,
+        "end": 2.56
+      },
+      {
+        "w": "take",
+        "start": 2.56,
+        "end": 2.72
+      },
+      {
+        "w": "your",
+        "start": 2.72,
+        "end": 2.88
+      },
+      {
+        "w": "order?",
+        "start": 2.88,
+        "end": 3.06
+      },
+      {
+        "w": "Hello",
+        "start": 3.46,
+        "end": 3.8
+      },
+      {
+        "w": "Sassy",
+        "start": 3.8,
+        "end": 4.52
+      },
+      {
+        "w": "Restaurant,",
+        "start": 4.52,
+        "end": 4.9
+      },
+      {
+        "w": "Kofi",
+        "start": 5.12,
+        "end": 5.3
+      },
+      {
+        "w": "speaking.",
+        "start": 5.3,
+        "end": 5.56
+      },
+      {
+        "w": "What",
+        "start": 6.04,
+        "end": 6.14
+      },
+      {
+        "w": "can",
+        "start": 6.14,
+        "end": 6.24
+      },
+      {
+        "w": "I",
+        "start": 6.24,
+        "end": 6.34
+      },
+      {
+        "w": "get",
+        "start": 6.34,
+        "end": 6.46
+      },
+      {
+        "w": "for",
+        "start": 6.46,
+        "end": 6.64
+      },
+      {
+        "w": "you?",
+        "start": 6.64,
+        "end": 6.78
+      },
+      {
+        "w": "Good",
+        "start": 6.88,
+        "end": 6.98
+      },
+      {
+        "w": "evening!",
+        "start": 6.98,
+        "end": 7.28
+      },
+      {
+        "w": "Kofi",
+        "start": 7.78,
+        "end": 8.1
+      },
+      {
+        "w": "here.",
+        "start": 8.1,
+        "end": 8.32
+      },
+      {
+        "w": "Are",
+        "start": 8.82,
+        "end": 8.88
+      },
+      {
+        "w": "we",
+        "start": 8.88,
+        "end": 8.96
+      },
+      {
+        "w": "doing",
+        "start": 8.96,
+        "end": 9.14
+      },
+      {
+        "w": "dinin'?",
+        "start": 9.14,
+        "end": 10.0
+      },
+      {
+        "w": "Take",
+        "start": 10.0,
+        "end": 10.14
+      },
+      {
+        "w": "away?",
+        "start": 10.14,
+        "end": 10.4
+      },
+      {
+        "w": "Or",
+        "start": 10.7,
+        "end": 10.78
+      },
+      {
+        "w": "delivery?",
+        "start": 10.78,
+        "end": 11.08
+      },
+      {
+        "w": "Ha",
+        "start": 11.68,
+        "end": 11.86
+      },
+      {
+        "w": "ha,",
+        "start": 11.86,
+        "end": 12.0
+      },
+      {
+        "w": "great",
+        "start": 12.18,
+        "end": 12.38
+      },
+      {
+        "w": "choice.",
+        "start": 12.38,
+        "end": 12.64
+      },
+      {
+        "w": "Joll",
+        "start": 13.12,
+        "end": 13.26
+      },
+      {
+        "w": "off",
+        "start": 13.26,
+        "end": 13.48
+      },
+      {
+        "w": "with",
+        "start": 13.48,
+        "end": 13.6
+      },
+      {
+        "w": "chicken",
+        "start": 13.6,
+        "end": 13.82
+      },
+      {
+        "w": "medium",
+        "start": 13.82,
+        "end": 14.1
+      },
+      {
+        "w": "spice.",
+        "start": 14.1,
+        "end": 14.4
+      },
+      {
+        "w": "Would",
+        "start": 14.6,
+        "end": 14.66
+      },
+      {
+        "w": "you",
+        "start": 14.66,
+        "end": 14.78
+      },
+      {
+        "w": "like",
+        "start": 14.78,
+        "end": 14.96
+      },
+      {
+        "w": "Khelewell",
+        "start": 14.96,
+        "end": 15.34
+      },
+      {
+        "w": "with",
+        "start": 15.34,
+        "end": 15.66
+      },
+      {
+        "w": "that?",
+        "start": 15.66,
+        "end": 15.8
+      },
+      {
+        "w": "It's",
+        "start": 16.18,
+        "end": 16.42
+      },
+      {
+        "w": "fresh",
+        "start": 16.42,
+        "end": 16.6
+      },
+      {
+        "w": "today.",
+        "start": 16.6,
+        "end": 16.92
+      },
+      {
+        "w": "Our",
+        "start": 17.06,
+        "end": 17.12
+      },
+      {
+        "w": "specials",
+        "start": 17.12,
+        "end": 17.5
+      },
+      {
+        "w": "today",
+        "start": 17.5,
+        "end": 17.68
+      },
+      {
+        "w": "are",
+        "start": 17.68,
+        "end": 17.84
+      },
+      {
+        "w": "Banco",
+        "start": 17.84,
+        "end": 18.22
+      },
+      {
+        "w": "with",
+        "start": 18.22,
+        "end": 18.44
+      },
+      {
+        "w": "Talapea",
+        "start": 18.44,
+        "end": 18.88
+      },
+      {
+        "w": "and",
+        "start": 18.88,
+        "end": 19.0
+      },
+      {
+        "w": "Groundnut",
+        "start": 19.0,
+        "end": 19.38
+      },
+      {
+        "w": "Soup.",
+        "start": 19.38,
+        "end": 19.66
+      },
+      {
+        "w": "Let",
+        "start": 20.24,
+        "end": 20.28
+      },
+      {
+        "w": "me",
+        "start": 20.28,
+        "end": 20.34
+      },
+      {
+        "w": "repeat",
+        "start": 20.34,
+        "end": 20.54
+      },
+      {
+        "w": "your",
+        "start": 20.54,
+        "end": 20.76
+      },
+      {
+        "w": "order.",
+        "start": 20.76,
+        "end": 20.98
+      },
+      {
+        "w": "Wall",
+        "start": 21.4,
+        "end": 21.52
+      },
+      {
+        "w": "off",
+        "start": 21.52,
+        "end": 21.8
+      },
+      {
+        "w": "rice",
+        "start": 21.8,
+        "end": 22.0
+      },
+      {
+        "w": "with",
+        "start": 22.0,
+        "end": 22.34
+      },
+      {
+        "w": "chicken,",
+        "start": 22.34,
+        "end": 22.58
+      },
+      {
+        "w": "medium",
+        "start": 22.92,
+        "end": 23.06
+      },
+      {
+        "w": "spice,",
+        "start": 23.06,
+        "end": 23.46
+      },
+      {
+        "w": "extra",
+        "start": 23.82,
+        "end": 24.08
+      },
+      {
+        "w": "Khelewell,",
+        "start": 24.08,
+        "end": 24.54
+      },
+      {
+        "w": "that",
+        "start": 25.0,
+        "end": 25.08
+      },
+      {
+        "w": "comes",
+        "start": 25.08,
+        "end": 25.24
+      },
+      {
+        "w": "to",
+        "start": 25.24,
+        "end": 25.38
+      },
+      {
+        "w": "53",
+        "start": 25.38,
+        "end": 25.82
+      },
+      {
+        "w": "CDs.",
+        "start": 25.82,
+        "end": 26.24
+      },
+      {
+        "w": "How",
+        "start": 26.8,
+        "end": 26.92
+      },
+      {
+        "w": "would",
+        "start": 26.92,
+        "end": 27.02
+      },
+      {
+        "w": "you",
+        "start": 27.02,
+        "end": 27.1
+      },
+      {
+        "w": "like",
+        "start": 27.1,
+        "end": 27.24
+      },
+      {
+        "w": "to",
+        "start": 27.24,
+        "end": 27.42
+      },
+      {
+        "w": "pay?",
+        "start": 27.42,
+        "end": 27.62
+      },
+      {
+        "w": "We",
+        "start": 27.98,
+        "end": 28.2
+      },
+      {
+        "w": "accept",
+        "start": 28.2,
+        "end": 28.42
+      },
+      {
+        "w": "mobile",
+        "start": 28.42,
+        "end": 28.82
+      },
+      {
+        "w": "money,",
+        "start": 28.82,
+        "end": 29.08
+      },
+      {
+        "w": "cash",
+        "start": 29.22,
+        "end": 29.4
+      },
+      {
+        "w": "on",
+        "start": 29.4,
+        "end": 29.52
+      },
+      {
+        "w": "delivery,",
+        "start": 29.52,
+        "end": 29.76
+      },
+      {
+        "w": "and",
+        "start": 29.96,
+        "end": 30.04
+      },
+      {
+        "w": "card",
+        "start": 30.04,
+        "end": 30.26
+      },
+      {
+        "w": "payment.",
+        "start": 30.26,
+        "end": 30.54
+      },
+      {
+        "w": "Your",
+        "start": 30.92,
+        "end": 31.0
+      },
+      {
+        "w": "order",
+        "start": 31.0,
+        "end": 31.18
+      },
+      {
+        "w": "number",
+        "start": 31.18,
+        "end": 31.42
+      },
+      {
+        "w": "is",
+        "start": 31.42,
+        "end": 31.58
+      },
+      {
+        "w": "47.",
+        "start": 31.58,
+        "end": 32.02
+      },
+      {
+        "w": "It'll",
+        "start": 32.44,
+        "end": 32.6
+      },
+      {
+        "w": "be",
+        "start": 32.6,
+        "end": 32.72
+      },
+      {
+        "w": "ready",
+        "start": 32.72,
+        "end": 32.86
+      },
+      {
+        "w": "in",
+        "start": 32.86,
+        "end": 33.04
+      },
+      {
+        "w": "25",
+        "start": 33.04,
+        "end": 33.38
+      },
+      {
+        "w": "minutes.",
+        "start": 33.38,
+        "end": 33.68
+      },
+      {
+        "w": "Delivery",
+        "start": 34.24,
+        "end": 34.56
+      },
+      {
+        "w": "to",
+        "start": 34.56,
+        "end": 34.72
+      },
+      {
+        "w": "that",
+        "start": 34.72,
+        "end": 34.88
+      },
+      {
+        "w": "area",
+        "start": 34.88,
+        "end": 35.14
+      },
+      {
+        "w": "takes",
+        "start": 35.14,
+        "end": 35.32
+      },
+      {
+        "w": "about",
+        "start": 35.32,
+        "end": 35.56
+      },
+      {
+        "w": "30",
+        "start": 35.56,
+        "end": 35.84
+      },
+      {
+        "w": "minutes.",
+        "start": 35.84,
+        "end": 36.1
+      },
+      {
+        "w": "Is",
+        "start": 36.8,
+        "end": 37.24
+      },
+      {
+        "w": "that",
+        "start": 37.24,
+        "end": 37.32
+      },
+      {
+        "w": "okay?",
+        "start": 37.32,
+        "end": 37.6
+      },
+      {
+        "w": "Sorry,",
+        "start": 38.24,
+        "end": 38.48
+      },
+      {
+        "w": "we're",
+        "start": 38.7,
+        "end": 38.82
+      },
+      {
+        "w": "out",
+        "start": 38.82,
+        "end": 38.94
+      },
+      {
+        "w": "of",
+        "start": 38.94,
+        "end": 39.08
+      },
+      {
+        "w": "wacky",
+        "start": 39.08,
+        "end": 39.34
+      },
+      {
+        "w": "A",
+        "start": 39.34,
+        "end": 39.42
+      },
+      {
+        "w": "today.",
+        "start": 39.42,
+        "end": 39.66
+      },
+      {
+        "w": "Can",
+        "start": 40.2,
+        "end": 40.28
+      },
+      {
+        "w": "I",
+        "start": 40.28,
+        "end": 40.38
+      },
+      {
+        "w": "suggest",
+        "start": 40.38,
+        "end": 40.74
+      },
+      {
+        "w": "Joll",
+        "start": 40.74,
+        "end": 41.38
+      },
+      {
+        "w": "off",
+        "start": 41.38,
+        "end": 41.58
+      },
+      {
+        "w": "instead?",
+        "start": 41.58,
+        "end": 41.94
+      },
+      {
+        "w": "Any",
+        "start": 42.74,
+        "end": 42.92
+      },
+      {
+        "w": "allergies",
+        "start": 42.92,
+        "end": 43.26
+      },
+      {
+        "w": "I",
+        "start": 43.26,
+        "end": 43.48
+      },
+      {
+        "w": "should",
+        "start": 43.48,
+        "end": 43.64
+      },
+      {
+        "w": "know",
+        "start": 43.64,
+        "end": 43.74
+      },
+      {
+        "w": "about?",
+        "start": 43.74,
+        "end": 43.98
+      },
+      {
+        "w": "We",
+        "start": 44.42,
+        "end": 44.62
+      },
+      {
+        "w": "use",
+        "start": 44.62,
+        "end": 44.82
+      },
+      {
+        "w": "ground",
+        "start": 44.82,
+        "end": 45.04
+      },
+      {
+        "w": "nuts",
+        "start": 45.04,
+        "end": 45.28
+      },
+      {
+        "w": "and",
+        "start": 45.28,
+        "end": 45.44
+      },
+      {
+        "w": "some",
+        "start": 45.44,
+        "end": 45.6
+      },
+      {
+        "w": "dishes.",
+        "start": 45.6,
+        "end": 45.84
+      },
+      {
+        "w": "Would",
+        "start": 46.84,
+        "end": 47.1
+      },
+      {
+        "w": "you",
+        "start": 47.1,
+        "end": 47.24
+      },
+      {
+        "w": "like",
+        "start": 47.24,
+        "end": 47.42
+      },
+      {
+        "w": "a",
+        "start": 47.42,
+        "end": 47.56
+      },
+      {
+        "w": "drink?",
+        "start": 47.56,
+        "end": 47.8
+      },
+      {
+        "w": "So",
+        "start": 48.34,
+        "end": 48.46
+      },
+      {
+        "w": "Bolo",
+        "start": 48.46,
+        "end": 48.74
+      },
+      {
+        "w": "is",
+        "start": 48.74,
+        "end": 49.08
+      },
+      {
+        "w": "very",
+        "start": 49.08,
+        "end": 49.62
+      },
+      {
+        "w": "fresh",
+        "start": 49.62,
+        "end": 50.22
+      },
+      {
+        "w": "today.",
+        "start": 50.22,
+        "end": 50.58
+      },
+      {
+        "w": "Your",
+        "start": 51.16,
+        "end": 51.38
+      },
+      {
+        "w": "food",
+        "start": 51.38,
+        "end": 51.62
+      },
+      {
+        "w": "is",
+        "start": 51.62,
+        "end": 51.8
+      },
+      {
+        "w": "on",
+        "start": 51.8,
+        "end": 51.9
+      },
+      {
+        "w": "the",
+        "start": 51.9,
+        "end": 52.02
+      },
+      {
+        "w": "way.",
+        "start": 52.02,
+        "end": 52.16
+      },
+      {
+        "w": "The",
+        "start": 52.62,
+        "end": 52.76
+      },
+      {
+        "w": "writer",
+        "start": 52.76,
+        "end": 52.96
+      },
+      {
+        "w": "will",
+        "start": 52.96,
+        "end": 53.14
+      },
+      {
+        "w": "call",
+        "start": 53.14,
+        "end": 53.34
+      },
+      {
+        "w": "when",
+        "start": 53.34,
+        "end": 53.52
+      },
+      {
+        "w": "nearby.",
+        "start": 53.52,
+        "end": 53.74
+      },
+      {
+        "w": "Thank",
+        "start": 54.2,
+        "end": 54.38
+      },
+      {
+        "w": "you",
+        "start": 54.38,
+        "end": 54.52
+      },
+      {
+        "w": "for",
+        "start": 54.52,
+        "end": 54.64
+      },
+      {
+        "w": "choosing",
+        "start": 54.64,
+        "end": 54.9
+      },
+      {
+        "w": "a",
+        "start": 54.9,
+        "end": 55.06
+      },
+      {
+        "w": "Sassy",
+        "start": 55.06,
+        "end": 55.26
+      },
+      {
+        "w": "Restaurant.",
+        "start": 55.26,
+        "end": 55.86
+      },
+      {
+        "w": "Enjoy",
+        "start": 55.86,
+        "end": 56.5
+      },
+      {
+        "w": "your",
+        "start": 56.5,
+        "end": 56.86
+      },
+      {
+        "w": "meal.",
+        "start": 56.86,
+        "end": 57.18
+      },
+      {
+        "w": "We",
+        "start": 57.6,
+        "end": 57.78
+      },
+      {
+        "w": "have",
+        "start": 57.78,
+        "end": 57.88
+      },
+      {
+        "w": "a",
+        "start": 57.88,
+        "end": 57.96
+      },
+      {
+        "w": "special",
+        "start": 57.96,
+        "end": 58.26
+      },
+      {
+        "w": "on",
+        "start": 58.26,
+        "end": 58.44
+      },
+      {
+        "w": "fried",
+        "start": 58.44,
+        "end": 58.64
+      },
+      {
+        "w": "rice",
+        "start": 58.64,
+        "end": 58.9
+      },
+      {
+        "w": "this",
+        "start": 58.9,
+        "end": 59.14
+      },
+      {
+        "w": "week.",
+        "start": 59.14,
+        "end": 59.42
+      },
+      {
+        "w": "Two",
+        "start": 59.82,
+        "end": 60.06
+      },
+      {
+        "w": "for",
+        "start": 60.06,
+        "end": 60.18
+      },
+      {
+        "w": "30",
+        "start": 60.18,
+        "end": 60.44
+      },
+      {
+        "w": "CDs.",
+        "start": 60.44,
+        "end": 60.74
+      },
+      {
+        "w": "Let",
+        "start": 61.28,
+        "end": 61.76
+      },
+      {
+        "w": "me",
+        "start": 61.76,
+        "end": 61.9
+      },
+      {
+        "w": "check",
+        "start": 61.9,
+        "end": 62.12
+      },
+      {
+        "w": "with",
+        "start": 62.12,
+        "end": 62.28
+      },
+      {
+        "w": "the",
+        "start": 62.28,
+        "end": 62.4
+      },
+      {
+        "w": "kitchen.",
+        "start": 62.4,
+        "end": 62.64
+      },
+      {
+        "w": "One",
+        "start": 63.46,
+        "end": 63.68
+      },
+      {
+        "w": "moment",
+        "start": 63.68,
+        "end": 63.96
+      },
+      {
+        "w": "please.",
+        "start": 63.96,
+        "end": 64.34
+      },
+      {
+        "w": "Sawa,",
+        "start": 65.42,
+        "end": 65.8
+      },
+      {
+        "w": "Sawa.",
+        "start": 65.98,
+        "end": 66.12
+      },
+      {
+        "w": "I've",
+        "start": 66.58,
+        "end": 66.74
+      },
+      {
+        "w": "added",
+        "start": 66.74,
+        "end": 66.86
+      },
+      {
+        "w": "extra",
+        "start": 66.86,
+        "end": 67.18
+      },
+      {
+        "w": "pepper",
+        "start": 67.18,
+        "end": 67.4
+      },
+      {
+        "w": "for",
+        "start": 67.4,
+        "end": 67.62
+      },
+      {
+        "w": "you.",
+        "start": 67.62,
+        "end": 67.74
+      },
+      {
+        "w": "Thank",
+        "start": 67.84,
+        "end": 67.94
+      },
+      {
+        "w": "you",
+        "start": 67.94,
+        "end": 68.06
+      },
+      {
+        "w": "for",
+        "start": 68.06,
+        "end": 68.16
+      },
+      {
+        "w": "calling.",
+        "start": 68.16,
+        "end": 68.4
+      },
+      {
+        "w": "Medase,",
+        "start": 68.84,
+        "end": 69.32
+      },
+      {
+        "w": "come",
+        "start": 69.52,
+        "end": 69.58
+      },
+      {
+        "w": "again",
+        "start": 69.58,
+        "end": 69.76
+      },
+      {
+        "w": "soon.",
+        "start": 69.76,
+        "end": 70.02
+      }
+    ]
+  },
+  "maya": {
+    "file": "maya_real_voice.mp3",
+    "duration": 72.72,
+    "text": "Hello! This is Maya from Sinia Scheduling. How can I help you today? Good morning. Maya speaking. What appointment would you like to book? I can help you schedule a booking. What date works best for you? Let me check availability. One moment please. Yes, we have slots available on Tuesday at 10 in the morning. Would you prefer morning or afternoon? I can book you for Thursday at 2 in the afternoon. Does that work? Let me repeat that. Tuesday, March 15th, 10 in the morning, correct? Your appointment is confirmed. You'll get an SMS reminder. Would you like to reschedule? I can help with that. I'm sorry, that time is fully booked. How about 1130? The doctor is available on Friday, morning or afternoon. Your booking reference is c-y-n-4-7-2. Note that down. A reminder will be sent one day before your appointment. Is there anything else I can help you schedule? I understand. Let me find an earlier slot for you. Sawa, Sawa. Your booking is all set. Thank you for choosing Sinia. Have a wonderful day. Goodbye and see you on Tuesday.",
+    "words": [
+      {
+        "w": "Hello!",
+        "start": 0.0,
+        "end": 0.32
+      },
+      {
+        "w": "This",
+        "start": 0.84,
+        "end": 1.02
+      },
+      {
+        "w": "is",
+        "start": 1.02,
+        "end": 1.3
+      },
+      {
+        "w": "Maya",
+        "start": 1.3,
+        "end": 1.46
+      },
+      {
+        "w": "from",
+        "start": 1.46,
+        "end": 1.82
+      },
+      {
+        "w": "Sinia",
+        "start": 1.82,
+        "end": 2.22
+      },
+      {
+        "w": "Scheduling.",
+        "start": 2.22,
+        "end": 2.84
+      },
+      {
+        "w": "How",
+        "start": 3.14,
+        "end": 3.22
+      },
+      {
+        "w": "can",
+        "start": 3.22,
+        "end": 3.36
+      },
+      {
+        "w": "I",
+        "start": 3.36,
+        "end": 3.48
+      },
+      {
+        "w": "help",
+        "start": 3.48,
+        "end": 3.66
+      },
+      {
+        "w": "you",
+        "start": 3.66,
+        "end": 3.84
+      },
+      {
+        "w": "today?",
+        "start": 3.84,
+        "end": 4.1
+      },
+      {
+        "w": "Good",
+        "start": 4.9,
+        "end": 5.0
+      },
+      {
+        "w": "morning.",
+        "start": 5.0,
+        "end": 5.32
+      },
+      {
+        "w": "Maya",
+        "start": 5.94,
+        "end": 6.12
+      },
+      {
+        "w": "speaking.",
+        "start": 6.12,
+        "end": 6.52
+      },
+      {
+        "w": "What",
+        "start": 7.26,
+        "end": 7.34
+      },
+      {
+        "w": "appointment",
+        "start": 7.34,
+        "end": 7.78
+      },
+      {
+        "w": "would",
+        "start": 7.78,
+        "end": 8.08
+      },
+      {
+        "w": "you",
+        "start": 8.08,
+        "end": 8.24
+      },
+      {
+        "w": "like",
+        "start": 8.24,
+        "end": 8.44
+      },
+      {
+        "w": "to",
+        "start": 8.44,
+        "end": 8.64
+      },
+      {
+        "w": "book?",
+        "start": 8.64,
+        "end": 8.82
+      },
+      {
+        "w": "I",
+        "start": 9.48,
+        "end": 9.62
+      },
+      {
+        "w": "can",
+        "start": 9.62,
+        "end": 9.74
+      },
+      {
+        "w": "help",
+        "start": 9.74,
+        "end": 9.94
+      },
+      {
+        "w": "you",
+        "start": 9.94,
+        "end": 10.12
+      },
+      {
+        "w": "schedule",
+        "start": 10.12,
+        "end": 10.46
+      },
+      {
+        "w": "a",
+        "start": 10.46,
+        "end": 10.6
+      },
+      {
+        "w": "booking.",
+        "start": 10.6,
+        "end": 10.88
+      },
+      {
+        "w": "What",
+        "start": 11.54,
+        "end": 11.64
+      },
+      {
+        "w": "date",
+        "start": 11.64,
+        "end": 11.84
+      },
+      {
+        "w": "works",
+        "start": 11.84,
+        "end": 12.08
+      },
+      {
+        "w": "best",
+        "start": 12.08,
+        "end": 12.36
+      },
+      {
+        "w": "for",
+        "start": 12.36,
+        "end": 12.58
+      },
+      {
+        "w": "you?",
+        "start": 12.58,
+        "end": 12.76
+      },
+      {
+        "w": "Let",
+        "start": 13.1,
+        "end": 13.2
+      },
+      {
+        "w": "me",
+        "start": 13.2,
+        "end": 13.32
+      },
+      {
+        "w": "check",
+        "start": 13.32,
+        "end": 13.5
+      },
+      {
+        "w": "availability.",
+        "start": 13.5,
+        "end": 13.94
+      },
+      {
+        "w": "One",
+        "start": 14.78,
+        "end": 15.0
+      },
+      {
+        "w": "moment",
+        "start": 15.0,
+        "end": 15.28
+      },
+      {
+        "w": "please.",
+        "start": 15.28,
+        "end": 15.58
+      },
+      {
+        "w": "Yes,",
+        "start": 16.52,
+        "end": 16.76
+      },
+      {
+        "w": "we",
+        "start": 17.1,
+        "end": 17.18
+      },
+      {
+        "w": "have",
+        "start": 17.18,
+        "end": 17.32
+      },
+      {
+        "w": "slots",
+        "start": 17.32,
+        "end": 17.58
+      },
+      {
+        "w": "available",
+        "start": 17.58,
+        "end": 18.02
+      },
+      {
+        "w": "on",
+        "start": 18.02,
+        "end": 18.34
+      },
+      {
+        "w": "Tuesday",
+        "start": 18.34,
+        "end": 18.62
+      },
+      {
+        "w": "at",
+        "start": 18.62,
+        "end": 18.9
+      },
+      {
+        "w": "10",
+        "start": 18.9,
+        "end": 19.1
+      },
+      {
+        "w": "in",
+        "start": 19.1,
+        "end": 19.22
+      },
+      {
+        "w": "the",
+        "start": 19.22,
+        "end": 19.3
+      },
+      {
+        "w": "morning.",
+        "start": 19.3,
+        "end": 19.58
+      },
+      {
+        "w": "Would",
+        "start": 20.1,
+        "end": 20.32
+      },
+      {
+        "w": "you",
+        "start": 20.32,
+        "end": 20.44
+      },
+      {
+        "w": "prefer",
+        "start": 20.44,
+        "end": 20.74
+      },
+      {
+        "w": "morning",
+        "start": 20.74,
+        "end": 21.18
+      },
+      {
+        "w": "or",
+        "start": 21.18,
+        "end": 21.44
+      },
+      {
+        "w": "afternoon?",
+        "start": 21.44,
+        "end": 21.94
+      },
+      {
+        "w": "I",
+        "start": 22.58,
+        "end": 22.74
+      },
+      {
+        "w": "can",
+        "start": 22.74,
+        "end": 22.92
+      },
+      {
+        "w": "book",
+        "start": 22.92,
+        "end": 23.1
+      },
+      {
+        "w": "you",
+        "start": 23.1,
+        "end": 23.3
+      },
+      {
+        "w": "for",
+        "start": 23.3,
+        "end": 23.46
+      },
+      {
+        "w": "Thursday",
+        "start": 23.46,
+        "end": 23.9
+      },
+      {
+        "w": "at",
+        "start": 23.9,
+        "end": 24.16
+      },
+      {
+        "w": "2",
+        "start": 24.16,
+        "end": 24.32
+      },
+      {
+        "w": "in",
+        "start": 24.32,
+        "end": 24.46
+      },
+      {
+        "w": "the",
+        "start": 24.46,
+        "end": 24.54
+      },
+      {
+        "w": "afternoon.",
+        "start": 24.54,
+        "end": 24.96
+      },
+      {
+        "w": "Does",
+        "start": 25.52,
+        "end": 25.74
+      },
+      {
+        "w": "that",
+        "start": 25.74,
+        "end": 25.9
+      },
+      {
+        "w": "work?",
+        "start": 25.9,
+        "end": 26.14
+      },
+      {
+        "w": "Let",
+        "start": 26.52,
+        "end": 26.62
+      },
+      {
+        "w": "me",
+        "start": 26.62,
+        "end": 26.74
+      },
+      {
+        "w": "repeat",
+        "start": 26.74,
+        "end": 27.0
+      },
+      {
+        "w": "that.",
+        "start": 27.0,
+        "end": 27.28
+      },
+      {
+        "w": "Tuesday,",
+        "start": 27.82,
+        "end": 28.1
+      },
+      {
+        "w": "March",
+        "start": 28.54,
+        "end": 28.78
+      },
+      {
+        "w": "15th,",
+        "start": 28.78,
+        "end": 29.52
+      },
+      {
+        "w": "10",
+        "start": 29.82,
+        "end": 30.14
+      },
+      {
+        "w": "in",
+        "start": 30.14,
+        "end": 30.32
+      },
+      {
+        "w": "the",
+        "start": 30.32,
+        "end": 30.38
+      },
+      {
+        "w": "morning,",
+        "start": 30.38,
+        "end": 30.66
+      },
+      {
+        "w": "correct?",
+        "start": 30.96,
+        "end": 31.2
+      },
+      {
+        "w": "Your",
+        "start": 32.2,
+        "end": 32.36
+      },
+      {
+        "w": "appointment",
+        "start": 32.36,
+        "end": 32.72
+      },
+      {
+        "w": "is",
+        "start": 32.72,
+        "end": 33.08
+      },
+      {
+        "w": "confirmed.",
+        "start": 33.08,
+        "end": 33.64
+      },
+      {
+        "w": "You'll",
+        "start": 34.16,
+        "end": 34.3
+      },
+      {
+        "w": "get",
+        "start": 34.3,
+        "end": 34.46
+      },
+      {
+        "w": "an",
+        "start": 34.46,
+        "end": 34.66
+      },
+      {
+        "w": "SMS",
+        "start": 34.66,
+        "end": 35.0
+      },
+      {
+        "w": "reminder.",
+        "start": 35.0,
+        "end": 35.86
+      },
+      {
+        "w": "Would",
+        "start": 36.58,
+        "end": 36.74
+      },
+      {
+        "w": "you",
+        "start": 36.74,
+        "end": 36.88
+      },
+      {
+        "w": "like",
+        "start": 36.88,
+        "end": 37.02
+      },
+      {
+        "w": "to",
+        "start": 37.02,
+        "end": 37.18
+      },
+      {
+        "w": "reschedule?",
+        "start": 37.18,
+        "end": 37.8
+      },
+      {
+        "w": "I",
+        "start": 38.16,
+        "end": 38.3
+      },
+      {
+        "w": "can",
+        "start": 38.3,
+        "end": 38.44
+      },
+      {
+        "w": "help",
+        "start": 38.44,
+        "end": 38.62
+      },
+      {
+        "w": "with",
+        "start": 38.62,
+        "end": 38.8
+      },
+      {
+        "w": "that.",
+        "start": 38.8,
+        "end": 39.0
+      },
+      {
+        "w": "I'm",
+        "start": 39.54,
+        "end": 39.74
+      },
+      {
+        "w": "sorry,",
+        "start": 39.74,
+        "end": 40.0
+      },
+      {
+        "w": "that",
+        "start": 40.28,
+        "end": 40.36
+      },
+      {
+        "w": "time",
+        "start": 40.36,
+        "end": 40.58
+      },
+      {
+        "w": "is",
+        "start": 40.58,
+        "end": 40.76
+      },
+      {
+        "w": "fully",
+        "start": 40.76,
+        "end": 40.98
+      },
+      {
+        "w": "booked.",
+        "start": 40.98,
+        "end": 41.28
+      },
+      {
+        "w": "How",
+        "start": 41.96,
+        "end": 42.04
+      },
+      {
+        "w": "about",
+        "start": 42.04,
+        "end": 42.22
+      },
+      {
+        "w": "1130?",
+        "start": 42.22,
+        "end": 42.86
+      },
+      {
+        "w": "The",
+        "start": 43.68,
+        "end": 43.78
+      },
+      {
+        "w": "doctor",
+        "start": 43.78,
+        "end": 44.06
+      },
+      {
+        "w": "is",
+        "start": 44.06,
+        "end": 44.22
+      },
+      {
+        "w": "available",
+        "start": 44.22,
+        "end": 44.48
+      },
+      {
+        "w": "on",
+        "start": 44.48,
+        "end": 44.8
+      },
+      {
+        "w": "Friday,",
+        "start": 44.8,
+        "end": 45.1
+      },
+      {
+        "w": "morning",
+        "start": 45.52,
+        "end": 45.72
+      },
+      {
+        "w": "or",
+        "start": 45.72,
+        "end": 45.9
+      },
+      {
+        "w": "afternoon.",
+        "start": 45.9,
+        "end": 46.38
+      },
+      {
+        "w": "Your",
+        "start": 47.0,
+        "end": 47.08
+      },
+      {
+        "w": "booking",
+        "start": 47.08,
+        "end": 47.32
+      },
+      {
+        "w": "reference",
+        "start": 47.32,
+        "end": 47.7
+      },
+      {
+        "w": "is",
+        "start": 47.7,
+        "end": 47.96
+      },
+      {
+        "w": "c",
+        "start": 47.96,
+        "end": 48.16
+      },
+      {
+        "w": "-y",
+        "start": 48.16,
+        "end": 49.06
+      },
+      {
+        "w": "-n",
+        "start": 49.06,
+        "end": 50.38
+      },
+      {
+        "w": "-4",
+        "start": 50.38,
+        "end": 51.08
+      },
+      {
+        "w": "-7",
+        "start": 51.08,
+        "end": 51.76
+      },
+      {
+        "w": "-2.",
+        "start": 51.76,
+        "end": 52.42
+      },
+      {
+        "w": "Note",
+        "start": 53.36,
+        "end": 53.48
+      },
+      {
+        "w": "that",
+        "start": 53.48,
+        "end": 53.78
+      },
+      {
+        "w": "down.",
+        "start": 53.78,
+        "end": 54.18
+      },
+      {
+        "w": "A",
+        "start": 55.1,
+        "end": 55.26
+      },
+      {
+        "w": "reminder",
+        "start": 55.26,
+        "end": 55.58
+      },
+      {
+        "w": "will",
+        "start": 55.58,
+        "end": 55.8
+      },
+      {
+        "w": "be",
+        "start": 55.8,
+        "end": 55.96
+      },
+      {
+        "w": "sent",
+        "start": 55.96,
+        "end": 56.18
+      },
+      {
+        "w": "one",
+        "start": 56.18,
+        "end": 56.42
+      },
+      {
+        "w": "day",
+        "start": 56.42,
+        "end": 56.6
+      },
+      {
+        "w": "before",
+        "start": 56.6,
+        "end": 56.9
+      },
+      {
+        "w": "your",
+        "start": 56.9,
+        "end": 57.08
+      },
+      {
+        "w": "appointment.",
+        "start": 57.08,
+        "end": 57.5
+      },
+      {
+        "w": "Is",
+        "start": 58.14,
+        "end": 58.22
+      },
+      {
+        "w": "there",
+        "start": 58.22,
+        "end": 58.34
+      },
+      {
+        "w": "anything",
+        "start": 58.34,
+        "end": 58.66
+      },
+      {
+        "w": "else",
+        "start": 58.66,
+        "end": 58.86
+      },
+      {
+        "w": "I",
+        "start": 58.86,
+        "end": 59.0
+      },
+      {
+        "w": "can",
+        "start": 59.0,
+        "end": 59.12
+      },
+      {
+        "w": "help",
+        "start": 59.12,
+        "end": 59.28
+      },
+      {
+        "w": "you",
+        "start": 59.28,
+        "end": 59.46
+      },
+      {
+        "w": "schedule?",
+        "start": 59.46,
+        "end": 59.78
+      },
+      {
+        "w": "I",
+        "start": 60.44,
+        "end": 60.7
+      },
+      {
+        "w": "understand.",
+        "start": 60.7,
+        "end": 61.2
+      },
+      {
+        "w": "Let",
+        "start": 61.96,
+        "end": 62.06
+      },
+      {
+        "w": "me",
+        "start": 62.06,
+        "end": 62.16
+      },
+      {
+        "w": "find",
+        "start": 62.16,
+        "end": 62.38
+      },
+      {
+        "w": "an",
+        "start": 62.38,
+        "end": 62.52
+      },
+      {
+        "w": "earlier",
+        "start": 62.52,
+        "end": 62.8
+      },
+      {
+        "w": "slot",
+        "start": 62.8,
+        "end": 63.14
+      },
+      {
+        "w": "for",
+        "start": 63.14,
+        "end": 63.4
+      },
+      {
+        "w": "you.",
+        "start": 63.4,
+        "end": 63.56
+      },
+      {
+        "w": "Sawa,",
+        "start": 64.24,
+        "end": 64.4
+      },
+      {
+        "w": "Sawa.",
+        "start": 64.56,
+        "end": 64.74
+      },
+      {
+        "w": "Your",
+        "start": 65.24,
+        "end": 65.3
+      },
+      {
+        "w": "booking",
+        "start": 65.3,
+        "end": 65.6
+      },
+      {
+        "w": "is",
+        "start": 65.6,
+        "end": 65.84
+      },
+      {
+        "w": "all",
+        "start": 65.84,
+        "end": 66.02
+      },
+      {
+        "w": "set.",
+        "start": 66.02,
+        "end": 66.28
+      },
+      {
+        "w": "Thank",
+        "start": 66.96,
+        "end": 67.12
+      },
+      {
+        "w": "you",
+        "start": 67.12,
+        "end": 67.3
+      },
+      {
+        "w": "for",
+        "start": 67.3,
+        "end": 67.44
+      },
+      {
+        "w": "choosing",
+        "start": 67.44,
+        "end": 67.82
+      },
+      {
+        "w": "Sinia.",
+        "start": 67.82,
+        "end": 68.32
+      },
+      {
+        "w": "Have",
+        "start": 69.02,
+        "end": 69.2
+      },
+      {
+        "w": "a",
+        "start": 69.2,
+        "end": 69.32
+      },
+      {
+        "w": "wonderful",
+        "start": 69.32,
+        "end": 69.58
+      },
+      {
+        "w": "day.",
+        "start": 69.58,
+        "end": 69.92
+      },
+      {
+        "w": "Goodbye",
+        "start": 69.92,
+        "end": 70.94
+      },
+      {
+        "w": "and",
+        "start": 70.94,
+        "end": 71.44
+      },
+      {
+        "w": "see",
+        "start": 71.44,
+        "end": 71.62
+      },
+      {
+        "w": "you",
+        "start": 71.62,
+        "end": 71.74
+      },
+      {
+        "w": "on",
+        "start": 71.74,
+        "end": 71.84
+      },
+      {
+        "w": "Tuesday.",
+        "start": 71.84,
+        "end": 72.16
+      }
+    ]
+  }
+}

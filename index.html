@@ -98,8 +98,72 @@ button,input,select{font:inherit;color:inherit}
 /* ── layout primitives ─────────────────────────────────────────────── */
 .wrap{max-width:var(--maxw);margin-inline:auto;padding-inline:24px}
 .bleed{margin-inline:var(--gutter);border-radius:var(--r-block);overflow:hidden;position:relative}
-.sec{padding-block:var(--pad)}
-.sec-sm{padding-block:calc(var(--pad) * .64)}
+.sec{padding-block:var(--pad);position:relative}
+.sec-sm{padding-block:calc(var(--pad) * .64);position:relative}
+
+/* ══ SECTION PHOTOGRAPHY ═══════════════════════════════════════════
+   A photograph washed back to a texture behind four otherwise flat
+   sections, so the scroll reads as one continuous surface rather than
+   a stack of cream panels. Rules it follows:
+
+   - The photo never competes. It sits at 10-12% opacity, softened, and
+     under a tinted wash, so contrast against body copy is untouched.
+   - It carries no meaning. Decorative, aria-hidden, and the page is
+     complete without it — these are not illustrations of anything.
+   - It has no edges. Each layer fades to the page ground at its top and
+     bottom, so one section's colour dissolves into the next instead of
+     ending at a seam.
+
+   z-index:-1 puts it behind the section's own content without needing a
+   stacking context on the section; .sec has no background of its own, so
+   what shows through is the page ground. */
+.secbg{
+  position:absolute;z-index:-1;top:0;bottom:0;left:50%;
+  width:100vw;transform:translateX(-50%);
+  overflow:hidden;pointer-events:none;
+  opacity:0;transition:opacity .9s cubic-bezier(.16,.84,.44,1);
+}
+.secbg.in{opacity:1}
+
+/* The wash darkens the ground these sections' text sits on by about 12 of
+   255. --muted starts at 4.89:1 against the bare page, so that is enough to
+   put body copy under the 4.5:1 AA line. Rather than make the photography
+   invisible, the two secondary text colours step down inside these four
+   sections only — measured back to 4.64:1 and 3.23:1 against the darkest
+   ground any of them actually renders. tools/check_contrast.py enforces it.
+   Elsewhere on the page the palette is untouched. */
+.has-bg{--muted:#5E5B6A;--faint:#777385}
+/* Taller than the frame by a fixed 60px top and bottom, which is more
+   than the parallax ever shifts it — so no edge can scroll into view,
+   whatever height the section ends up. */
+.secbg img{
+  position:absolute;left:0;right:0;top:-60px;
+  width:100%;height:calc(100% + 120px);
+  object-fit:cover;
+  filter:blur(var(--blur,2px)) saturate(.55) brightness(1.3) sepia(.25);
+  opacity:var(--o,.10);
+  will-change:transform;
+}
+/* The wash, then the fade to the page ground at both ends. */
+.secbg::after{
+  content:"";position:absolute;inset:0;
+  background:
+    linear-gradient(180deg,var(--bg) 0%,rgba(251,248,245,0) 24%,
+                    rgba(251,248,245,0) 76%,var(--bg) 100%),
+    var(--wash,transparent);
+}
+
+/* Mobile keeps the atmosphere and drops the parallax: the transform is
+   the expensive part, and a fixed layer is what a small screen wants
+   anyway. Slightly lighter, because the text sits closer to it. */
+@media(max-width:860px){
+  .secbg img{transform:none !important;filter:blur(1px) saturate(.55) brightness(1.3) sepia(.25);
+    opacity:calc(var(--o,.10) * .85)}
+}
+@media(prefers-reduced-motion:reduce){
+  .secbg{transition:none}
+  .secbg img{transform:none !important}
+}
 .hair{height:1px;background:var(--line);border:0;margin:0}
 
 /* ── type scale ────────────────────────────────────────────────────── */
@@ -1077,7 +1141,15 @@ addEventListener('DOMContentLoaded', function(){
 </section>
 
 <!-- ═══ 4b. MEET YOUR VOICE AGENTS ═══════════════════════════════════ -->
-<section class="sec wrap" id="agents">
+<section class="sec wrap has-bg" id="agents">
+  <!-- Amber. The warm end of the palette, picking up from the dusk hero. -->
+  <div class="secbg" aria-hidden="true" style="--o:.10;--wash:linear-gradient(165deg,rgba(242,160,61,.13),rgba(251,211,194,.08) 55%,rgba(255,107,74,.05))">
+    <picture>
+      <source srcset="assets/tile-hotel.webp" type="image/webp">
+      <img src="assets/tile-hotel.jpg" alt="" width="560" height="360"
+           loading="lazy" decoding="async">
+    </picture>
+  </div>
   <div class="rv">
     <p class="kicker">Agents</p>
     <h2 class="h-sec" style="margin-top:14px;max-width:20ch">Meet your voice agents</h2>
@@ -1287,7 +1359,15 @@ addEventListener('DOMContentLoaded', function(){
 </section>
 
 <!-- ═══ 7. OMNI-CHANNEL ══════════════════════════════════════════════ -->
-<section class="sec wrap" id="channels">
+<section class="sec wrap has-bg" id="channels">
+  <!-- Teal. The one cool step in the descent, so the warmth reads as a choice. -->
+  <div class="secbg" aria-hidden="true" style="--o:.09;--wash:linear-gradient(165deg,rgba(242,160,61,.12),rgba(79,209,197,.06) 60%,transparent)">
+    <picture>
+      <source srcset="assets/tile-restaurant.webp" type="image/webp">
+      <img src="assets/tile-restaurant.jpg" alt="" width="560" height="360"
+           loading="lazy" decoding="async">
+    </picture>
+  </div>
   <div class="rv">
     <p class="kicker">Channels</p>
     <h2 class="h-sec" style="margin-top:14px;max-width:20ch">One agent, every way they reach you</h2>
@@ -1373,7 +1453,15 @@ addEventListener('DOMContentLoaded', function(){
 </section>
 
 <!-- ═══ 9. SECURITY ══════════════════════════════════════════════════ -->
-<section class="sec wrap">
+<section class="sec wrap has-bg">
+  <!-- Amber over dusk indigo — the trust section, weighted a little deeper. -->
+  <div class="secbg" aria-hidden="true" style="--o:.09;--wash:linear-gradient(165deg,rgba(242,160,61,.11),rgba(27,32,80,.06) 70%,transparent)">
+    <picture>
+      <source srcset="assets/tile-banking.webp" type="image/webp">
+      <img src="assets/tile-banking.jpg" alt="" width="560" height="360"
+           loading="lazy" decoding="async">
+    </picture>
+  </div>
   <div class="rv">
     <p class="kicker">Trust</p>
     <h2 class="h-sec" style="margin-top:14px">Enterprise-grade security</h2>
@@ -1404,7 +1492,15 @@ addEventListener('DOMContentLoaded', function(){
 </section>
 
 <!-- ═══ 10. FAQ ══════════════════════════════════════════════════════ -->
-<section class="sec wrap" id="faq">
+<section class="sec wrap has-bg" id="faq">
+  <!-- Blush, warming back up so the coral CTA below lands as an arrival. -->
+  <div class="secbg" aria-hidden="true" style="--o:.09;--blur:9px;--wash:linear-gradient(165deg,rgba(249,179,190,.13),rgba(255,107,74,.06) 60%,transparent)">
+    <picture>
+      <source srcset="assets/tile-clinic.webp" type="image/webp">
+      <img src="assets/tile-clinic.jpg" alt="" width="560" height="360"
+           loading="lazy" decoding="async">
+    </picture>
+  </div>
   <div class="rv" style="text-align:center">
     <p class="kicker">FAQ</p>
     <h2 class="h-sec" style="margin-top:14px">Questions, answered</h2>
@@ -1600,7 +1696,7 @@ addEventListener('DOMContentLoaded', function(){
 /* ── scroll reveal — the entire motion budget ─────────────────────── */
 (function(){
   var once=[].slice.call(document.querySelectorAll('.rv,.stg')),
-      media=[].slice.call(document.querySelectorAll('.swap'));
+      media=[].slice.call(document.querySelectorAll('.swap,.secbg'));
   if(!('IntersectionObserver' in window)||matchMedia('(prefers-reduced-motion:reduce)').matches){
     once.concat(media).forEach(function(e){ e.classList.add('in'); });
     return;
@@ -1618,6 +1714,64 @@ addEventListener('DOMContentLoaded', function(){
     es.forEach(function(e){ e.target.classList.toggle('in',e.isIntersecting); });
   },{rootMargin:'-6% 0px -6% 0px',threshold:.18});
   media.forEach(function(e){ swap.observe(e); });
+})();
+
+
+/* ── section photography parallax ──────────────────────────────────
+   The background drifts slower than the page, which is what reads as
+   depth. Deliberately small — 48px over a full section — because the
+   effect should be felt rather than noticed.
+
+   Cost control: an observer keeps a list of the layers actually on
+   screen, and scrolling only ever writes a transform to those. Off-screen
+   sections cost nothing, and the whole thing is one rAF per frame rather
+   than one per layer.
+
+   The transform is skipped entirely on small screens and for anyone who
+   asked for reduced motion — the photograph still fades in, it just
+   stays put. */
+(function(){
+  var layers=[].slice.call(document.querySelectorAll('.secbg'));
+  if(!layers.length||!('IntersectionObserver' in window)) return;
+
+  var SHIFT=48,                      /* px of travel; the layer has 60 to give */
+      still=matchMedia('(prefers-reduced-motion:reduce)'),
+      narrow=matchMedia('(max-width:860px)'),
+      live=[], queued=false;
+
+  var io=new IntersectionObserver(function(entries){
+    entries.forEach(function(entry){
+      var at=live.indexOf(entry.target);
+      if(entry.isIntersecting){ if(at<0) live.push(entry.target); }
+      else if(at>=0){ live.splice(at,1); }
+    });
+    queue();
+  },{rootMargin:'20% 0px 20% 0px'});
+  layers.forEach(function(l){ io.observe(l); });
+
+  function queue(){
+    if(queued||!live.length) return;
+    queued=true;
+    requestAnimationFrame(paint);
+  }
+
+  function paint(){
+    queued=false;
+    var off=still.matches||narrow.matches, vh=innerHeight;
+    live.forEach(function(layer){
+      var img=layer.querySelector('img');
+      if(!img) return;
+      if(off){ img.style.transform=''; return; }
+      var box=layer.getBoundingClientRect();
+      /* -1 when the layer sits a screen below, +1 a screen above. */
+      var travel=((box.top+box.height/2)-vh/2)/((vh+box.height)/2);
+      img.style.transform='translate3d(0,'+(travel*SHIFT).toFixed(1)+'px,0)';
+    });
+  }
+
+  addEventListener('scroll',queue,{passive:true});
+  addEventListener('resize',queue);
+  queue();
 })();
 
 

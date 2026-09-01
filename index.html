@@ -96,6 +96,11 @@
 }
 
 *,*::before,*::after{box-sizing:border-box}
+/* The UA stylesheet's [hidden]{display:none} is beaten by any author rule
+   that sets display on a class — which is how a Restart button declared
+   `hidden` still rendered next to an unanswered call. Anything toggled
+   with el.hidden needs this to actually disappear. */
+[hidden]{display:none !important}
 html{-webkit-text-size-adjust:100%}
 body{
   margin:0;background:var(--bg);color:var(--ink);
@@ -113,6 +118,9 @@ button,input,select{font:inherit;color:inherit}
 
 /* ── layout primitives ─────────────────────────────────────────────── */
 .wrap{max-width:var(--maxw);margin-inline:auto;padding-inline:24px}
+/* The nav is sticky and 60px tall, so an anchor jump used to put the
+   heading it targeted underneath it. */
+section[id],header[id],footer[id]{scroll-margin-top:76px}
 .bleed{margin-inline:var(--gutter);border-radius:var(--r-block);overflow:hidden;position:relative}
 .sec{padding-block:var(--pad);position:relative}
 .sec-sm{padding-block:calc(var(--pad) * .64);position:relative}
@@ -736,6 +744,221 @@ button,input,select{font:inherit;color:inherit}
 .agent-prog{flex:1;height:3px;border-radius:2px;background:var(--line);overflow:hidden}
 .agent-prog i{display:block;height:100%;width:0;background:var(--tint);border-radius:2px;transition:width .12s linear}
 .agent-time{font-size:11px;color:var(--muted);font-variant-numeric:tabular-nums;min-width:62px;text-align:right}
+
+/* ═══ 4c. REAL CONVERSATIONS ════════════════════════════════════════
+   Two whole calls, stitched from the separate agent and caller takes by
+   tools/build_conversations.py and captioned from its timeline.
+
+   The design rule for this section: it has to read as *live*, and it is
+   not allowed to lie about being live. So everything that would be true
+   of a real call is animated — the timer, the progress, the words
+   arriving at the speed they are spoken, the speaker's side lighting up —
+   and everything that would be a claim is labelled. The badge says "Real
+   human voice" because that is checkable; nothing says "AI is answering
+   right now", because it is not.
+
+   Every timing on screen comes from assets/segments/conversations.json,
+   which is the build plan for the audio rather than a guess at it. ── */
+
+.calls{
+  display:grid;grid-template-columns:1fr;gap:16px;
+  margin-top:clamp(38px,1.5vw + 32.1px,54px);
+}
+@media(min-width:901px){.calls{grid-template-columns:1fr 1fr}}
+
+.call{
+  position:relative;overflow:hidden;display:flex;flex-direction:column;
+  background:var(--card);border:1px solid var(--line);border-radius:var(--r-card);
+  padding:clamp(22px,.95vw + 18.3px,30px);
+  transition:border-color .45s ease,box-shadow .45s ease;
+}
+/* The warm wash that comes up when the call connects. One gradient, one
+   opacity — it costs a raster once and nothing per frame. */
+.call::before{
+  content:"";position:absolute;inset:0;z-index:0;pointer-events:none;
+  background:radial-gradient(122% 80% at 50% -14%,rgba(255,107,74,.17),transparent 64%);
+  opacity:0;transition:opacity .6s ease;
+}
+.call>*{position:relative;z-index:1}
+.call.on{border-color:rgba(255,107,74,.45);box-shadow:0 26px 60px -32px rgba(226,74,46,.55)}
+.call.on::before{opacity:1}
+
+/* ── who is on the call ── */
+.call-head{display:flex;align-items:flex-start;justify-content:space-between;gap:14px;margin-bottom:20px}
+.call-title{font-size:clamp(16px,.29vw + 14.9px,19px);font-weight:500;letter-spacing:-.4px}
+.call-sub{font-size:clamp(12.5px,.14vw + 12px,14px);color:var(--muted);margin-top:3px;max-width:36ch}
+.call-badge{
+  flex-shrink:0;display:inline-flex;align-items:center;gap:6px;
+  font-size:11px;font-weight:500;letter-spacing:-.16px;white-space:nowrap;
+  padding:5px 10px;border-radius:999px;
+  color:var(--coral-deep);background:rgba(255,107,74,.09);
+  box-shadow:inset 0 0 0 1px rgba(255,107,74,.34);
+}
+.call-badge::before{content:"";width:5px;height:5px;border-radius:50%;background:var(--coral)}
+
+/* ── the two ends of the line ── */
+.call-pair{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:12px;margin-bottom:18px}
+.call-side{display:flex;flex-direction:column;align-items:center;text-align:center;gap:11px;min-width:0}
+.call-side b{font-size:13px;font-weight:600;letter-spacing:-.2px;display:block}
+.call-side small{font-size:11px;color:var(--muted);display:block;line-height:1.3}
+.call-figure{position:relative;width:52px;height:52px;display:grid;place-items:center;flex-shrink:0}
+.call-figure img{width:52px;height:52px;border-radius:50%;object-fit:cover;position:relative;z-index:1;
+  transition:box-shadow .4s ease}
+/* The caller has no portrait — a monogram in the agent's counter-tint
+   rather than a stock face, which would be inventing a person. */
+.call-mono{
+  width:52px;height:52px;border-radius:50%;display:grid;place-items:center;position:relative;z-index:1;
+  font-size:15px;font-weight:600;letter-spacing:-.4px;color:#fff;
+  background:linear-gradient(150deg,#4A3A7E,#1B2050);
+  transition:box-shadow .4s ease;
+}
+.call-figure .halo{
+  position:absolute;inset:-6px;border-radius:50%;opacity:0;
+  border:1px solid var(--side,var(--coral));
+}
+/* Only the side that is talking moves. */
+.call.talk-agent .s-agent .halo,
+.call.talk-caller .s-caller .halo{animation:ring 2.1s ease-out infinite}
+.call.talk-agent .s-agent img{box-shadow:0 0 0 3px var(--card),0 0 20px 2px rgba(255,107,74,.5)}
+.call.talk-caller .s-caller .call-mono{box-shadow:0 0 0 3px var(--card),0 0 20px 2px rgba(123,79,212,.45)}
+.s-agent{--side:var(--coral)}
+.s-caller{--side:var(--violet)}
+
+/* the line between them, which is also the level meter */
+.call-link{display:flex;align-items:flex-end;justify-content:center;gap:3px;height:26px;padding:0 4px}
+.call-link i{width:3px;height:4px;border-radius:2px;background:var(--line);transition:background .35s ease}
+.call.on .call-link i{animation:wv .9s ease-in-out infinite}
+.call.talk-agent .call-link i{background:var(--coral)}
+.call.talk-caller .call-link i{background:var(--violet)}
+.call-link i:nth-child(1){animation-delay:-.15s;animation-duration:.78s}
+.call-link i:nth-child(2){animation-delay:-.42s;animation-duration:1.02s}
+.call-link i:nth-child(3){animation-delay:-.06s;animation-duration:.86s}
+.call-link i:nth-child(4){animation-delay:-.55s;animation-duration:.94s}
+.call-link i:nth-child(5){animation-delay:-.28s;animation-duration:.72s}
+.call-link i:nth-child(6){animation-delay:-.48s;animation-duration:1.1s}
+.call-link i:nth-child(7){animation-delay:-.2s;animation-duration:.9s}
+
+/* ── the transcript ──────────────────────────────────────────────────
+   Dark, so it reads as the one lit surface in a cream page, and fixed
+   height so a two-minute call does not make a two-metre card. It scrolls
+   itself to whoever is speaking.
+
+   It is aria-hidden and it is not the only copy: the whole conversation
+   is written out underneath in <details>, which is what assistive tech
+   and a reader with no JavaScript get. A caption that animates is a
+   nicety; the transcript is the content. ── */
+.call-tape{
+  position:relative;border-radius:12px;overflow:hidden;
+  background:linear-gradient(168deg,#1B2050 0%,#171A2E 58%,#241C3A 100%);
+  padding:16px 16px 18px;
+  height:clamp(190px,20vw,236px);
+  overflow-y:auto;scrollbar-width:thin;
+  /* A rolling transcript always has a part-line at each edge. Fading them
+     out reads as the call continuing past the frame; slicing them at a
+     hard border reads as a bug. */
+  -webkit-mask-image:linear-gradient(180deg,transparent 0,#000 20px,
+                     #000 calc(100% - 20px),transparent 100%);
+          mask-image:linear-gradient(180deg,transparent 0,#000 20px,
+                     #000 calc(100% - 20px),transparent 100%);
+  scrollbar-color:rgba(255,255,255,.22) transparent;
+  display:flex;flex-direction:column;gap:11px;
+  -webkit-overflow-scrolling:touch;
+}
+.call-tape::-webkit-scrollbar{width:5px}
+.call-tape::-webkit-scrollbar-thumb{background:rgba(255,255,255,.22);border-radius:3px}
+.call-idle{margin:auto;text-align:center;font-size:12.5px;color:rgba(255,255,255,.5);max-width:24ch}
+
+.ct{max-width:86%;font-size:13px;line-height:1.5;letter-spacing:-.1px}
+.ct b{
+  display:block;font-size:10px;font-weight:600;text-transform:uppercase;
+  letter-spacing:.07em;margin-bottom:3px;
+}
+.ct-agent{align-self:flex-start;color:#fff}
+.ct-agent b{color:#FF9C7F}
+.ct-caller{align-self:flex-end;text-align:right;color:rgba(255,255,255,.82)}
+.ct-caller b{color:rgba(255,255,255,.52)}
+/* Every turn is in the DOM from the start — painting them during
+   playback would mean a layout mid-call — but a turn is not shown until
+   it is reached, so the tape fills as the call goes rather than opening
+   as a list of empty name labels. */
+.ct{display:none;opacity:.72;transition:opacity .4s ease}
+.ct.said,.ct.now{display:block}
+.ct.now{opacity:1}
+
+/* One word, revealed on its own onset. Only opacity/filter/transform, so
+   a frame is a class toggle on the words that just landed. */
+.ct-w{
+  display:inline-block;opacity:0;transform:translateY(.28em);filter:blur(2px);
+  transition:opacity .26s cubic-bezier(.22,.61,.36,1),
+             transform .26s cubic-bezier(.22,.61,.36,1),
+             filter .26s cubic-bezier(.22,.61,.36,1);
+}
+.ct-w.in{opacity:1;transform:none;filter:none}
+/* the caret that makes it read as typing rather than fading */
+.ct.now .ct-cursor{
+  display:inline-block;width:1px;height:1em;margin-left:2px;vertical-align:-.14em;
+  background:var(--coral);animation:ctBlink 1.05s steps(1) infinite;
+}
+.ct-cursor{display:none}
+@keyframes ctBlink{0%,49%{opacity:1}50%,100%{opacity:0}}
+
+/* ── meter, timer, controls ── */
+.call-meter{display:flex;align-items:center;gap:12px;margin-top:16px}
+.call-bar{flex:1;height:3px;border-radius:2px;background:var(--line);overflow:hidden}
+.call-bar i{display:block;height:100%;width:0;border-radius:2px;
+  background:linear-gradient(90deg,var(--coral),var(--amber));transition:width .12s linear}
+.call-clock{font-size:11.5px;color:var(--muted);font-variant-numeric:tabular-nums;min-width:76px;text-align:right}
+
+.call-state{display:flex;align-items:center;gap:7px;font-size:11px;letter-spacing:.05em;
+  text-transform:uppercase;color:var(--muted);margin-top:14px}
+.call-state .dot{width:6px;height:6px;border-radius:50%;background:var(--faint);flex-shrink:0}
+.call.on .call-state .dot{background:var(--ok);animation:beat 1.6s ease-in-out infinite}
+.call.ended .call-state .dot{background:var(--faint);animation:none}
+
+.call-btns{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px}
+.call-answer{
+  display:inline-flex;align-items:center;gap:8px;height:36px;padding:0 16px;
+  border:0;border-radius:999px;cursor:pointer;background:#1B7F4F;color:#fff;
+  font-size:12.5px;font-weight:500;letter-spacing:-.16px;
+  transition:box-shadow .18s,background .18s;
+}
+.call-answer:hover{box-shadow:inset 0 0 0 1px rgba(255,255,255,.4)}
+.call-ghost{
+  display:inline-flex;align-items:center;gap:7px;height:36px;padding:0 15px;
+  border:0;border-radius:999px;cursor:pointer;background:transparent;color:var(--ink);
+  box-shadow:inset 0 0 0 1px var(--line);font-size:12.5px;font-weight:500;letter-spacing:-.16px;
+  transition:box-shadow .18s;
+}
+.call-ghost:hover{box-shadow:inset 0 0 0 1px var(--ink)}
+
+/* ── the transcript in full, for anyone the animation does not serve ── */
+.call-script{margin-top:16px;border-top:1px solid var(--line);padding-top:14px}
+.call-script summary{
+  cursor:pointer;font-size:12px;font-weight:500;color:var(--muted);
+  letter-spacing:-.16px;list-style:none;display:flex;align-items:center;gap:7px;
+}
+.call-script summary::-webkit-details-marker{display:none}
+.call-script summary::before{
+  content:"";width:5px;height:5px;border-right:1.2px solid currentColor;
+  border-bottom:1.2px solid currentColor;transform:rotate(-45deg);transition:transform .24s ease;
+}
+.call-script[open] summary::before{transform:rotate(45deg)}
+.call-script summary:hover{color:var(--ink)}
+.call-script ol{margin-top:14px;display:flex;flex-direction:column;gap:10px}
+.call-script li{font-size:13px;line-height:1.5;color:var(--muted)}
+.call-script li b{color:var(--ink);font-weight:500}
+.call-script li.sc-agent b{color:var(--coral-deep)}
+
+@media(prefers-reduced-motion:reduce){
+  /* The words still arrive on cue — that is the sync, and it is a fade,
+     not motion. What goes is the travel, the blur and the caret. */
+  .ct-w{transform:none;filter:none;transition:opacity .18s linear}
+  .ct-w.in{transform:none;filter:none}
+  .ct.now .ct-cursor{animation:none;opacity:1}
+  .call-link i{animation:none !important}
+}
+/* Nothing animates in a card that is scrolled away. */
+.asleep .call-link i,.asleep .call-figure .halo{animation-play-state:paused !important}
 
 /* ═══ 5. HIGHLIGHTS ═════════════════════════════════════════════════ */
 /* ══ SPEC LIST ═════════════════════════════════════════════════════
@@ -2032,6 +2255,180 @@ addEventListener('DOMContentLoaded', function(){
   </div>
 </section>
 
+<!-- ═══ 4c. REAL CONVERSATIONS ═══════════════════════════════════════
+     Two complete calls. The audio is four separate takes — each speaker
+     recorded alone — cut into turns and interleaved by
+     tools/build_conversations.py, which also writes the timings the
+     captions run on. tools/check_conversations.py checks the two against
+     each other. Nothing here is synthesised. ═══════════════════════════ -->
+<section class="sec wrap" id="conversations">
+  <div class="rv">
+    <p class="kicker">Real calls</p>
+    <h2 class="h-sec" style="margin-top:14px;max-width:18ch">Real conversations. Real voices.</h2>
+    <p class="lede" style="margin-top:16px;max-width:52ch">Two calls end to end, the way they were recorded —
+      one voice per person, nothing generated. Answer either one and the words arrive as they are spoken.</p>
+  </div>
+
+  <div class="calls">
+    <article class="call rv" data-call="kwame"
+             data-audio-src="assets/kwame_full_conversation.mp3" data-duration="128.564">
+      <div class="call-head">
+        <div>
+          <h3 class="call-title">An anniversary weekend</h3>
+          <p class="call-sub">A guest books a tenth-anniversary weekend. Kwame recommends a suite, prices it, adds a package, and takes the booking.</p>
+        </div>
+        <span class="call-badge">Real human voice</span>
+      </div>
+
+      <div class="call-pair">
+        <div class="call-side s-agent">
+          <div class="call-figure">
+            <span class="halo" aria-hidden="true"></span>
+            <picture>
+            <source srcset="assets/avatar-kwame.webp" type="image/webp">
+            <img src="assets/avatar-kwame.jpg" alt="" width="52" height="52" loading="lazy" decoding="async">
+          </picture>
+          </div>
+          <span><b>Kwame</b><small>Hotel Receptionist<br>Adinkra Hotel · Accra</small></span>
+        </div>
+        <div class="call-link" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+        <div class="call-side s-caller">
+          <div class="call-figure">
+            <span class="halo" aria-hidden="true"></span>
+            <span class="call-mono" aria-hidden="true">DO</span>
+          </div>
+          <span><b>David Osei</b><small>Guest<br>Calling from Accra</small></span>
+        </div>
+      </div>
+
+      <!-- The animated tape. Decorative: the same words are written out in
+           full under "Read the full transcript" below, which is what a
+           screen reader and a reader with no JavaScript get. -->
+      <div class="call-tape" data-tape aria-hidden="true">
+        <p class="call-idle">Answer the call to hear it.</p>
+      </div>
+
+      <div class="call-meter">
+        <div class="call-bar"><i data-bar></i></div>
+        <small class="call-clock" data-clock>0:00 / 2:09</small>
+      </div>
+
+      <p class="call-state"><span class="dot" aria-hidden="true"></span><span data-state>Incoming call</span></p>
+
+      <div class="call-btns">
+        <button class="call-answer" type="button" data-answer>
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M6.5 3h-3v3a14.5 14.5 0 0 0 14.5 14.5h3v-3l-4-1.5-2 2A11.5 11.5 0 0 1 9 9.5l2-2z"/></svg>
+          <span data-answer-label>Accept the call</span>
+        </button>
+        <button class="call-ghost" type="button" data-restart hidden>Restart</button>
+      </div>
+
+      <details class="call-script">
+        <summary>Read the full transcript</summary>
+        <ol>
+          <li class="sc-agent"><b>Kwame</b> Hello? Adinkra Hotel, Kwame speaking. How can I help you today?</li>
+          <li class="sc-caller"><b>David Osei</b> Hi, Kwame. Good afternoon. I'm planning something special for my wife. Our tenth anniversary. I want to book a room for the weekend.</li>
+          <li class="sc-agent"><b>Kwame</b> Ah, congratulations! Ten years, that's beautiful. Let me see what we can do. Are you looking at this weekend?</li>
+          <li class="sc-caller"><b>David Osei</b> Yes. Friday to Sunday. Two nights. I want something, you know, romantic. Not just a standard room.</li>
+          <li class="sc-agent"><b>Kwame</b> I understand. For an anniversary, I'd recommend our Executive Suite. King bed, private balcony with ocean view. We can also arrange champagne and flowers in the room before you arrive.</li>
+          <li class="sc-caller"><b>David Osei</b> That sounds perfect. How much is it?</li>
+          <li class="sc-agent"><b>Kwame</b> The Executive Suite is $200 per night, so for two nights that's $400. Breakfast is included. Would you like me to add the champagne and flowers?</li>
+          <li class="sc-caller"><b>David Osei</b> Yes, please. How much is that extra?</li>
+          <li class="sc-agent"><b>Kwame</b> The Anniversary Package is an additional $50. It includes a bottle of champagne, fresh flowers, and chocolates. Total would be $450 for the weekend.</li>
+          <li class="sc-caller"><b>David Osei</b> That's fine. Let's do it.</li>
+          <li class="sc-agent"><b>Kwame</b> Perfect. Let me take your details. Your full name.</li>
+          <li class="sc-caller"><b>David Osei</b> David Osei. O-S-E-I.</li>
+          <li class="sc-agent"><b>Kwame</b> Thank you, David. And the best number to reach you?</li>
+          <li class="sc-caller"><b>David Osei</b> 0244567890.</li>
+          <li class="sc-agent"><b>Kwame</b> 024-456-7890. Correct? And an email for the confirmation?</li>
+          <li class="sc-caller"><b>David Osei</b> Yes, that's right. david.osei at gmail.com.</li>
+          <li class="sc-agent"><b>Kwame</b> Let me confirm. Executive Suite, Friday to Sunday, two nights. Anniversary package with champagne and flowers. Total $450. Check-in is from 2 p.m. Is everything correct?</li>
+          <li class="sc-caller"><b>David Osei</b> Perfect. Thank you, Kwame.</li>
+          <li class="sc-agent"><b>Kwame</b> You're most welcome, David. We'll have everything ready for you and your wife. Enjoy your anniversary. We'll see you Friday. Bye now!</li>
+          <li class="sc-caller"><b>David Osei</b> Thank you. Bye.</li>
+        </ol>
+      </details>
+    </article>
+
+    <article class="call rv" data-call="amina"
+             data-audio-src="assets/amina_full_conversation.mp3" data-duration="74.684">
+      <div class="call-head">
+        <div>
+          <h3 class="call-title">A transfer that has not landed</h3>
+          <p class="call-sub">An M-Pesa transfer is stuck. Amina finds it, escalates it, and commits to a callback window and a reversal rather than an apology.</p>
+        </div>
+        <span class="call-badge">Real human voice</span>
+      </div>
+
+      <div class="call-pair">
+        <div class="call-side s-agent">
+          <div class="call-figure">
+            <span class="halo" aria-hidden="true"></span>
+            <picture>
+            <source srcset="assets/avatar-amina.webp" type="image/webp">
+            <img src="assets/avatar-amina.jpg" alt="" width="52" height="52" loading="lazy" decoding="async">
+          </picture>
+          </div>
+          <span><b>Amina</b><small>Bank Support<br>Cynea Bank · Nairobi</small></span>
+        </div>
+        <div class="call-link" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+        <div class="call-side s-caller">
+          <div class="call-figure">
+            <span class="halo" aria-hidden="true"></span>
+            <span class="call-mono" aria-hidden="true">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="9" r="3.4"/><path d="M4.8 20a7.2 7.2 0 0 1 14.4 0"/></svg>
+            </span>
+          </div>
+          <span><b>Caller</b><small>Customer<br>Calling from Nairobi</small></span>
+        </div>
+      </div>
+
+      <!-- The animated tape. Decorative: the same words are written out in
+           full under "Read the full transcript" below, which is what a
+           screen reader and a reader with no JavaScript get. -->
+      <div class="call-tape" data-tape aria-hidden="true">
+        <p class="call-idle">Answer the call to hear it.</p>
+      </div>
+
+      <div class="call-meter">
+        <div class="call-bar"><i data-bar></i></div>
+        <small class="call-clock" data-clock>0:00 / 1:15</small>
+      </div>
+
+      <p class="call-state"><span class="dot" aria-hidden="true"></span><span data-state>Incoming call</span></p>
+
+      <div class="call-btns">
+        <button class="call-answer" type="button" data-answer>
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M6.5 3h-3v3a14.5 14.5 0 0 0 14.5 14.5h3v-3l-4-1.5-2 2A11.5 11.5 0 0 1 9 9.5l2-2z"/></svg>
+          <span data-answer-label>Accept the call</span>
+        </button>
+        <button class="call-ghost" type="button" data-restart hidden>Restart</button>
+      </div>
+
+      <details class="call-script">
+        <summary>Read the full transcript</summary>
+        <ol>
+          <li class="sc-agent"><b>Amina</b> Hello, this is Amina from Cynea Bank. How can I help you today?</li>
+          <li class="sc-caller"><b>Caller</b> Hi, Amina. I sent money through M-Pesa two hours ago, and the person hasn't received it.</li>
+          <li class="sc-agent"><b>Amina</b> I'm so sorry to hear that. Let me check this for you right away.</li>
+          <li class="sc-caller"><b>Caller</b> The money left my account, but they're telling me they got nothing.</li>
+          <li class="sc-agent"><b>Amina</b> Can I have the phone number you sent the money to?</li>
+          <li class="sc-caller"><b>Caller</b> 0712-345-678.</li>
+          <li class="sc-agent"><b>Amina</b> Thank you. Let me pull up the transaction. Um, I can see it here. It's showing as processing. Sometimes M-Pesa transactions can take up to two hours. But since it's been that long, I'll escalate this to our M-Pesa team now.</li>
+          <li class="sc-caller"><b>Caller</b> How long will that take? I need this sorted out. The person is waiting for this money.</li>
+          <li class="sc-agent"><b>Amina</b> I completely understand your frustration. I've marked this as urgent. The team will call you back within 30 minutes. And if the money hasn't reflected in the next hour, we'll reverse it back to your account.</li>
+          <li class="sc-caller"><b>Caller</b> Okay. 30 minutes. Fine, but if I don't hear back I'll be calling again.</li>
+          <li class="sc-agent"><b>Amina</b> That's completely fair. You'll get a call from our team. Let me also send you an SMS with the reference number.</li>
+          <li class="sc-caller"><b>Caller</b> Sawa. Thank you.</li>
+          <li class="sc-agent"><b>Amina</b> Sawa, pole for the inconvenience. We'll sort this out. Anything else I can help with?</li>
+          <li class="sc-caller"><b>Caller</b> No, that's all.</li>
+          <li class="sc-agent"><b>Amina</b> Asante sana for calling. Have a good day.</li>
+        </ol>
+      </details>
+    </article>
+  </div>
+</section>
+
 <!-- ═══ 5. HIGHLIGHTS ════════════════════════════════════════════════ -->
 <section class="sec wrap" id="highlights">
   <div class="rv">
@@ -2895,6 +3292,295 @@ addEventListener('DOMContentLoaded', function(){
      card painted as playing while the chat's clip runs, and the card's
      timeupdate handler would track the wrong duration. */
   window.__cyneaAudio={player:player,stop:stop};
+})();
+
+/* ── the two conversations ─────────────────────────────────────────
+   A whole call, played on the page's one <audio> element, with the words
+   arriving as they are spoken.
+
+   Timings come from assets/segments/conversations.json, which is not a
+   transcription of the stitched file — it is the plan the file was built
+   from. tools/build_conversations.py chose every cut point and every gap,
+   so it knows where each turn and each word lands to the sample. That is
+   why this can drive a per-word reveal off currentTime and stay in sync
+   for two minutes without ever re-syncing.
+
+   Cost: one rAF loop, running only while a call is playing, writing a
+   class to the words that just became due and nothing else. The whole
+   transcript is painted once on first answer; a frame after that is a
+   handful of class toggles, so it holds 60fps on a phone.
+
+   It is additive. The file is fetched on first answer rather than at
+   load, and if it 404s the cards fall back to their static transcripts,
+   which are already in the DOM. */
+(function(){
+  var A = window.__cyneaAudio;
+  var cards = [].slice.call(document.querySelectorAll('[data-call]'));
+  if(!A || !A.player || !window.fetch || !cards.length) return;
+
+  var player = A.player,
+      SOURCE = 'assets/segments/conversations.json',
+      still  = matchMedia('(prefers-reduced-motion:reduce)'),
+      DATA = null, inflight = null, active = null, frame = 0;
+
+  function load(){
+    if(DATA) return Promise.resolve(DATA);
+    if(!inflight){
+      inflight = fetch(SOURCE)
+        .then(function(r){ return r.ok ? r.json() : null; })
+        .catch(function(){ return null; })
+        .then(function(j){ DATA = j; inflight = null; return j; });
+    }
+    return inflight;
+  }
+
+  function mmss(t){
+    t = Math.max(0, Math.floor(t || 0));
+    return Math.floor(t / 60) + ':' + ('0' + (t % 60)).slice(-2);
+  }
+
+  /* ── one card ──────────────────────────────────────────────────── */
+  function Call(el){
+    this.el      = el;
+    this.key     = el.getAttribute('data-call');
+    this.src     = el.getAttribute('data-audio-src');
+    this.dur     = parseFloat(el.getAttribute('data-duration')) || 0;
+    this.tape    = el.querySelector('[data-tape]');
+    this.bar     = el.querySelector('[data-bar]');
+    this.clock   = el.querySelector('[data-clock]');
+    this.state   = el.querySelector('[data-state]');
+    this.answer  = el.querySelector('[data-answer]');
+    this.label   = el.querySelector('[data-answer-label]');
+    this.restart = el.querySelector('[data-restart]');
+    this.built   = false;
+    this.words   = [];   /* {el, at} for every word in the call */
+    this.turns   = [];   /* the line elements, in order            */
+    this.cursor  = 0;
+    this.line    = -1;
+    this.scrollTo = 0;
+    this.lastT   = -1;
+  }
+
+  /* Paint the whole transcript once. Doing it per turn would mean a
+     layout in the middle of playback; doing it once means a frame only
+     ever toggles classes. */
+  Call.prototype.build = function(conv){
+    if(this.built) return true;
+    if(!conv || !conv.lines || !conv.lines.length) return false;
+    var tape = this.tape, self = this;
+    tape.innerHTML = '';
+    this.words = []; this.turns = [];
+
+    conv.lines.forEach(function(L){
+      var p = document.createElement('p');
+      p.className = 'ct ct-' + L.speaker;
+      var who = document.createElement('b');
+      who.textContent = (L.speaker === 'agent' ? conv.agent.name : conv.caller.name);
+      p.appendChild(who);
+
+      L.words.forEach(function(w, i){
+        var span = document.createElement('span');
+        span.className = 'ct-w';
+        span.textContent = w[0];
+        p.appendChild(span);
+        if(i < L.words.length - 1) p.appendChild(document.createTextNode(' '));
+        self.words.push({el:span, at:w[1]});
+      });
+      var caret = document.createElement('span');
+      caret.className = 'ct-cursor';
+      p.appendChild(caret);
+
+      tape.appendChild(p);
+      self.turns.push({el:p, start:L.start, end:L.end, speaker:L.speaker});
+    });
+    this.built = true;
+    return true;
+  };
+
+  Call.prototype.reset = function(){
+    for(var i = 0; i < this.words.length; i++) this.words[i].el.classList.remove('in');
+    for(var j = 0; j < this.turns.length; j++)
+      this.turns[j].el.classList.remove('now', 'said');
+    this.cursor = 0; this.line = -1; this.lastT = -1;
+    this.tape.scrollTop = 0; this.scrollTo = 0;
+    this.bar.style.width = '0%';
+    this.clock.textContent = '0:00 / ' + mmss(this.dur);
+  };
+
+  Call.prototype.paint = function(t){
+    /* Seeked backwards, or restarted: rewind the reveal to match. */
+    if(this.cursor && t < this.words[this.cursor - 1].at - 0.25) this.softRewind(t);
+
+    while(this.cursor < this.words.length && t >= this.words[this.cursor].at){
+      this.words[this.cursor].el.classList.add('in');
+      this.cursor++;
+    }
+
+    var at = this.line;
+    while(at + 1 < this.turns.length && t >= this.turns[at + 1].start - 0.02) at++;
+    if(at !== this.line){
+      /* Every turn is restated from the current position rather than the
+         previous one being nudged along. The nudge was wrong the moment
+         the clock jumped more than one turn — a seek, a restart, a scrub —
+         because the turns in between were never marked and so were never
+         shown: the tape would run two of the agent's turns together with
+         the caller's answer missing from the middle of them. State here is
+         a position, like everything else on this page, not a transition.
+         It costs one pass over ~20 elements on a turn change, which is
+         thirty-five times in a two-minute call. */
+      for(var k = 0; k < this.turns.length; k++){
+        var cl = this.turns[k].el.classList;
+        cl.toggle('said', k < at);
+        cl.toggle('now', k === at);
+      }
+      this.line = at;
+      if(at >= 0){
+        var row = this.turns[at];
+        this.el.classList.remove('talk-agent', 'talk-caller');
+        this.el.classList.add('talk-' + row.speaker);
+        /* Follow the speaker. Target now, eased toward in the loop, so a
+           long turn does not sit half off the top of the tape. */
+        this.scrollTo = Math.max(0, row.el.offsetTop - this.tape.clientHeight * 0.42);
+      }
+    }
+
+    /* One lerp a frame beats a scroll-behaviour:smooth animation that
+       restarts every time the line changes. */
+    var d = this.scrollTo - this.tape.scrollTop;
+    if(Math.abs(d) > 1) this.tape.scrollTop += still.matches ? d : d * 0.18;
+
+    this.bar.style.width = (this.dur ? Math.min(100, t / this.dur * 100) : 0).toFixed(2) + '%';
+    this.clock.textContent = mmss(t) + ' / ' + mmss(this.dur);
+  };
+
+  /* Words only; the turns are restated wholesale in paint(). */
+  Call.prototype.softRewind = function(t){
+    while(this.cursor > 0 && this.words[this.cursor - 1].at > t){
+      this.cursor--;
+      this.words[this.cursor].el.classList.remove('in');
+    }
+    while(this.line >= 0 && this.turns[this.line].start > t) this.line--;
+  };
+
+  Call.prototype.setState = function(text, on, ended){
+    this.state.textContent = text;
+    this.el.classList.toggle('on', !!on);
+    this.el.classList.toggle('ended', !!ended);
+    if(!on) this.el.classList.remove('talk-agent', 'talk-caller');
+  };
+
+  /* Standing down: keep whatever is on screen, stop claiming to be live. */
+  Call.prototype.standDown = function(text, ended){
+    this.setState(text || 'Call ended', false, ended !== false);
+    this.label.textContent = ended === false ? 'Resume' : 'Call again';
+    this.restart.hidden = !this.built;
+  };
+
+  var calls = cards.map(function(el){ return new Call(el); });
+
+  function stopLoop(){
+    if(frame){ cancelAnimationFrame(frame); frame = 0; }
+  }
+
+  /* Deliberately not gated on player.paused. A paused call is still at an
+     instant, and the reveal has to match that instant — otherwise seeking
+     while paused (a scrub, or a test parking the clip to sample it) leaves
+     the words wherever they were when the audio stopped. Repainting the
+     same time twice is skipped instead, so a paused call costs nothing. */
+  function tick(){
+    frame = requestAnimationFrame(tick);
+    if(!active) return;
+    var t = player.currentTime;
+    if(t === active.lastT) return;
+    active.lastT = t;
+    active.paint(t);
+  }
+
+  function begin(call, from){
+    /* Whatever else the page was playing — a card, the phone, a chat
+       bubble — hands over here. stop() clears their painted state; the
+       event tells the caption engine to tear its surface down. */
+    if(A.stop) A.stop();
+    dispatchEvent(new Event('cynea:audiostop'));
+
+    calls.forEach(function(other){
+      if(other !== call && other.built) other.standDown('Call ended');
+    });
+
+    active = call;
+    player.src = call.src;
+    player.currentTime = from || 0;
+    call.reset();
+    call.setState('Connecting…', true);
+    player.play().then(function(){
+      call.setState('On the call', true);
+      call.label.textContent = 'Pause';
+      call.restart.hidden = false;
+      stopLoop(); tick();
+    }).catch(function(){
+      call.setState('Could not play the recording', false, false);
+      call.label.textContent = 'Try again';
+      active = null;
+    });
+  }
+
+  calls.forEach(function(call){
+    call.answer.addEventListener('click', function(){
+      /* Same card, mid-call: the button is a pause. */
+      if(active === call && !player.paused){
+        player.pause();
+        call.setState('On hold', false, false);
+        call.label.textContent = 'Resume';
+        return;
+      }
+      var resumeAt = (active === call && player.paused && !call.finished)
+                   ? player.currentTime : 0;
+      load().then(function(data){
+        var conv = data && data[call.key];
+        if(!call.build(conv)){
+          /* No timings: the static transcript below is still the whole
+             conversation, so say so rather than failing silently. */
+          call.setState('Transcript unavailable — read it below', false, false);
+          return;
+        }
+        call.finished = false;
+        begin(call, resumeAt);
+      });
+    });
+
+    call.restart.addEventListener('click', function(){
+      call.finished = false;
+      begin(call, 0);
+    });
+  });
+
+  player.addEventListener('ended', function(){
+    if(!active) return;
+    var call = active;
+    call.finished = true;
+    call.paint(call.dur);
+    call.bar.style.width = '100%';
+    call.clock.textContent = mmss(call.dur) + ' / ' + mmss(call.dur);
+    if(call.line >= 0) call.turns[call.line].el.classList.remove('now');
+    call.standDown('Call ended');
+    active = null;
+    stopLoop();
+  });
+
+  /* Another surface took the element over. */
+  addEventListener('cynea:audiostart', function(){
+    if(!active) return;
+    active.standDown('Call ended');
+    active = null;
+    stopLoop();
+  });
+
+  /* The loop is not stopped on pause — see tick(). It stops when the call
+     is over or hands the element to something else, which is where the
+     work actually ends. */
+  player.addEventListener('play', function(){
+    if(active && !frame) tick();
+  });
 })();
 
 /* ── live captions ─────────────────────────────────────────────────

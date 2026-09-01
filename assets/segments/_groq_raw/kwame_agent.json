@@ -1,0 +1,1370 @@
+{
+ "task": "transcribe",
+ "language": "English",
+ "duration": 88.685756416,
+ "text": " Hello? Adinkra Hotel, Kwame speaking. How can I help you today? Ah, congratulations! Ten years, that's beautiful. Let me see what we can do. Are you looking at this weekend? I understand. For an anniversary, I'd recommend our Executive Suite. King Bed, private balcony with ocean view. We can also arrange champagne and flowers in the room before you arrive. The Executive Suite is $200 per night, so for two nights that's $400. Breakfast is included. Would you like me to add the champagne and flowers? The Anniversary Package is an additional $50. It includes a bottle of champagne, fresh flowers, and chocolates. Total would be $450 for the weekend. Perfect. Let me take your details. Your full name. Thank you, David. And the best number to reach you? 024-456-7890. Correct? And an email for the confirmation? Let me confirm. Executive Suite, Friday to Sunday, 2 nights. Anniversary package with champagne and flowers. Total $450. Check-in is from 2 p.m. Is everything correct? You're most welcome, David. We'll have everything ready for you and your wife. Enjoy your anniversary. We'll see you Friday. Bye now!",
+ "words": [
+  {
+   "word": "Hello?",
+   "start": 0,
+   "end": 0.88
+  },
+  {
+   "word": "Adinkra",
+   "start": 0.88,
+   "end": 1.74
+  },
+  {
+   "word": "Hotel,",
+   "start": 1.74,
+   "end": 2.64
+  },
+  {
+   "word": "Kwame",
+   "start": 2.64,
+   "end": 2.82
+  },
+  {
+   "word": "speaking.",
+   "start": 2.82,
+   "end": 3.38
+  },
+  {
+   "word": "How",
+   "start": 3.38,
+   "end": 3.62
+  },
+  {
+   "word": "can",
+   "start": 3.62,
+   "end": 3.72
+  },
+  {
+   "word": "I",
+   "start": 3.72,
+   "end": 3.8
+  },
+  {
+   "word": "help",
+   "start": 3.8,
+   "end": 3.92
+  },
+  {
+   "word": "you",
+   "start": 3.92,
+   "end": 4
+  },
+  {
+   "word": "today?",
+   "start": 4,
+   "end": 4.92
+  },
+  {
+   "word": "Ah,",
+   "start": 5.68,
+   "end": 6.02
+  },
+  {
+   "word": "congratulations!",
+   "start": 6.02,
+   "end": 7.2
+  },
+  {
+   "word": "Ten",
+   "start": 7.2,
+   "end": 8.18
+  },
+  {
+   "word": "years,",
+   "start": 8.18,
+   "end": 8.6
+  },
+  {
+   "word": "that's",
+   "start": 8.6,
+   "end": 8.86
+  },
+  {
+   "word": "beautiful.",
+   "start": 8.86,
+   "end": 9.66
+  },
+  {
+   "word": "Let",
+   "start": 9.66,
+   "end": 10.14
+  },
+  {
+   "word": "me",
+   "start": 10.14,
+   "end": 10.2
+  },
+  {
+   "word": "see",
+   "start": 10.2,
+   "end": 10.32
+  },
+  {
+   "word": "what",
+   "start": 10.32,
+   "end": 10.42
+  },
+  {
+   "word": "we",
+   "start": 10.42,
+   "end": 10.54
+  },
+  {
+   "word": "can",
+   "start": 10.54,
+   "end": 10.64
+  },
+  {
+   "word": "do.",
+   "start": 10.64,
+   "end": 10.92
+  },
+  {
+   "word": "Are",
+   "start": 11.7,
+   "end": 11.88
+  },
+  {
+   "word": "you",
+   "start": 11.88,
+   "end": 12
+  },
+  {
+   "word": "looking",
+   "start": 12,
+   "end": 12.18
+  },
+  {
+   "word": "at",
+   "start": 12.18,
+   "end": 12.32
+  },
+  {
+   "word": "this",
+   "start": 12.32,
+   "end": 12.46
+  },
+  {
+   "word": "weekend?",
+   "start": 12.46,
+   "end": 12.92
+  },
+  {
+   "word": "I",
+   "start": 12.92,
+   "end": 13.26
+  },
+  {
+   "word": "understand.",
+   "start": 13.26,
+   "end": 14.5
+  },
+  {
+   "word": "For",
+   "start": 14.5,
+   "end": 14.58
+  },
+  {
+   "word": "an",
+   "start": 14.58,
+   "end": 14.7
+  },
+  {
+   "word": "anniversary,",
+   "start": 14.7,
+   "end": 15.48
+  },
+  {
+   "word": "I'd",
+   "start": 15.48,
+   "end": 15.62
+  },
+  {
+   "word": "recommend",
+   "start": 15.62,
+   "end": 15.98
+  },
+  {
+   "word": "our",
+   "start": 15.98,
+   "end": 16.22
+  },
+  {
+   "word": "Executive",
+   "start": 16.22,
+   "end": 16.78
+  },
+  {
+   "word": "Suite.",
+   "start": 16.78,
+   "end": 17.28
+  },
+  {
+   "word": "King",
+   "start": 18.58,
+   "end": 18.88
+  },
+  {
+   "word": "Bed,",
+   "start": 18.88,
+   "end": 19.34
+  },
+  {
+   "word": "private",
+   "start": 19.34,
+   "end": 19.7
+  },
+  {
+   "word": "balcony",
+   "start": 19.7,
+   "end": 20.16
+  },
+  {
+   "word": "with",
+   "start": 20.16,
+   "end": 20.34
+  },
+  {
+   "word": "ocean",
+   "start": 20.34,
+   "end": 20.7
+  },
+  {
+   "word": "view.",
+   "start": 20.7,
+   "end": 21.94
+  },
+  {
+   "word": "We",
+   "start": 21.94,
+   "end": 22.04
+  },
+  {
+   "word": "can",
+   "start": 22.04,
+   "end": 22.18
+  },
+  {
+   "word": "also",
+   "start": 22.18,
+   "end": 22.42
+  },
+  {
+   "word": "arrange",
+   "start": 22.42,
+   "end": 22.74
+  },
+  {
+   "word": "champagne",
+   "start": 22.74,
+   "end": 23.2
+  },
+  {
+   "word": "and",
+   "start": 23.2,
+   "end": 23.5
+  },
+  {
+   "word": "flowers",
+   "start": 23.5,
+   "end": 23.92
+  },
+  {
+   "word": "in",
+   "start": 23.92,
+   "end": 24.06
+  },
+  {
+   "word": "the",
+   "start": 24.06,
+   "end": 24.2
+  },
+  {
+   "word": "room",
+   "start": 24.2,
+   "end": 24.34
+  },
+  {
+   "word": "before",
+   "start": 24.34,
+   "end": 24.58
+  },
+  {
+   "word": "you",
+   "start": 24.58,
+   "end": 24.78
+  },
+  {
+   "word": "arrive.",
+   "start": 24.78,
+   "end": 25.2
+  },
+  {
+   "word": "The",
+   "start": 25.2,
+   "end": 26.42
+  },
+  {
+   "word": "Executive",
+   "start": 26.42,
+   "end": 26.9
+  },
+  {
+   "word": "Suite",
+   "start": 26.9,
+   "end": 27.18
+  },
+  {
+   "word": "is $200",
+   "start": 27.18,
+   "end": 27.98
+  },
+  {
+   "word": "per",
+   "start": 27.98,
+   "end": 28.44
+  },
+  {
+   "word": "night,",
+   "start": 28.44,
+   "end": 28.74
+  },
+  {
+   "word": "so",
+   "start": 28.74,
+   "end": 29.38
+  },
+  {
+   "word": "for",
+   "start": 29.38,
+   "end": 29.5
+  },
+  {
+   "word": "two",
+   "start": 29.5,
+   "end": 29.66
+  },
+  {
+   "word": "nights",
+   "start": 29.66,
+   "end": 29.96
+  },
+  {
+   "word": "that's $400.",
+   "start": 29.96,
+   "end": 31.14
+  },
+  {
+   "word": "Breakfast",
+   "start": 32.2,
+   "end": 32.68
+  },
+  {
+   "word": "is",
+   "start": 32.68,
+   "end": 32.92
+  },
+  {
+   "word": "included.",
+   "start": 32.92,
+   "end": 33.48
+  },
+  {
+   "word": "Would",
+   "start": 33.48,
+   "end": 33.92
+  },
+  {
+   "word": "you",
+   "start": 33.92,
+   "end": 34.02
+  },
+  {
+   "word": "like",
+   "start": 34.02,
+   "end": 34.22
+  },
+  {
+   "word": "me",
+   "start": 34.22,
+   "end": 34.32
+  },
+  {
+   "word": "to",
+   "start": 34.32,
+   "end": 34.44
+  },
+  {
+   "word": "add",
+   "start": 34.44,
+   "end": 34.56
+  },
+  {
+   "word": "the",
+   "start": 34.56,
+   "end": 34.74
+  },
+  {
+   "word": "champagne",
+   "start": 34.74,
+   "end": 35.1
+  },
+  {
+   "word": "and",
+   "start": 35.1,
+   "end": 35.28
+  },
+  {
+   "word": "flowers?",
+   "start": 35.28,
+   "end": 35.78
+  },
+  {
+   "word": "The",
+   "start": 35.7,
+   "end": 36.96
+  },
+  {
+   "word": "Anniversary",
+   "start": 36.96,
+   "end": 37.52
+  },
+  {
+   "word": "Package",
+   "start": 37.52,
+   "end": 38
+  },
+  {
+   "word": "is",
+   "start": 38,
+   "end": 38.12
+  },
+  {
+   "word": "an",
+   "start": 38.12,
+   "end": 38.26
+  },
+  {
+   "word": "additional $50.",
+   "start": 38.26,
+   "end": 39.56
+  },
+  {
+   "word": "It",
+   "start": 39.56,
+   "end": 40.06
+  },
+  {
+   "word": "includes",
+   "start": 40.06,
+   "end": 40.36
+  },
+  {
+   "word": "a",
+   "start": 40.36,
+   "end": 40.48
+  },
+  {
+   "word": "bottle",
+   "start": 40.48,
+   "end": 40.72
+  },
+  {
+   "word": "of",
+   "start": 40.72,
+   "end": 40.86
+  },
+  {
+   "word": "champagne,",
+   "start": 40.86,
+   "end": 41.76
+  },
+  {
+   "word": "fresh",
+   "start": 41.76,
+   "end": 42.12
+  },
+  {
+   "word": "flowers,",
+   "start": 42.12,
+   "end": 42.76
+  },
+  {
+   "word": "and",
+   "start": 42.76,
+   "end": 42.98
+  },
+  {
+   "word": "chocolates.",
+   "start": 42.98,
+   "end": 43.58
+  },
+  {
+   "word": "Total",
+   "start": 44.54,
+   "end": 45.04
+  },
+  {
+   "word": "would",
+   "start": 45.04,
+   "end": 45.24
+  },
+  {
+   "word": "be $450",
+   "start": 45.24,
+   "end": 46.4
+  },
+  {
+   "word": "for",
+   "start": 46.4,
+   "end": 46.88
+  },
+  {
+   "word": "the",
+   "start": 46.88,
+   "end": 47
+  },
+  {
+   "word": "weekend.",
+   "start": 47,
+   "end": 47.48
+  },
+  {
+   "word": "Perfect.",
+   "start": 48.76,
+   "end": 49.4
+  },
+  {
+   "word": "Let",
+   "start": 49.4,
+   "end": 49.62
+  },
+  {
+   "word": "me",
+   "start": 49.62,
+   "end": 49.7
+  },
+  {
+   "word": "take",
+   "start": 49.7,
+   "end": 49.88
+  },
+  {
+   "word": "your",
+   "start": 49.88,
+   "end": 49.98
+  },
+  {
+   "word": "details.",
+   "start": 49.98,
+   "end": 50.52
+  },
+  {
+   "word": "Your",
+   "start": 50.7,
+   "end": 51.58
+  },
+  {
+   "word": "full",
+   "start": 51.58,
+   "end": 51.8
+  },
+  {
+   "word": "name.",
+   "start": 51.8,
+   "end": 52.14
+  },
+  {
+   "word": "Thank",
+   "start": 53.2,
+   "end": 53.64
+  },
+  {
+   "word": "you,",
+   "start": 53.64,
+   "end": 53.9
+  },
+  {
+   "word": "David.",
+   "start": 53.9,
+   "end": 54.16
+  },
+  {
+   "word": "And",
+   "start": 54.16,
+   "end": 54.88
+  },
+  {
+   "word": "the",
+   "start": 54.88,
+   "end": 54.96
+  },
+  {
+   "word": "best",
+   "start": 54.96,
+   "end": 55.2
+  },
+  {
+   "word": "number",
+   "start": 55.2,
+   "end": 55.4
+  },
+  {
+   "word": "to",
+   "start": 55.4,
+   "end": 55.52
+  },
+  {
+   "word": "reach",
+   "start": 55.52,
+   "end": 55.78
+  },
+  {
+   "word": "you?",
+   "start": 55.78,
+   "end": 56.86
+  },
+  {
+   "word": "024-456-7890.",
+   "start": 56.86,
+   "end": 61.54
+  },
+  {
+   "word": "Correct?",
+   "start": 61.54,
+   "end": 62.64
+  },
+  {
+   "word": "And",
+   "start": 62.64,
+   "end": 63.56
+  },
+  {
+   "word": "an",
+   "start": 63.56,
+   "end": 63.68
+  },
+  {
+   "word": "email",
+   "start": 63.68,
+   "end": 63.9
+  },
+  {
+   "word": "for",
+   "start": 63.9,
+   "end": 64.1
+  },
+  {
+   "word": "the",
+   "start": 64.1,
+   "end": 64.2
+  },
+  {
+   "word": "confirmation?",
+   "start": 64.2,
+   "end": 65.14
+  },
+  {
+   "word": "Let",
+   "start": 65.14,
+   "end": 66.24
+  },
+  {
+   "word": "me",
+   "start": 66.24,
+   "end": 66.34
+  },
+  {
+   "word": "confirm.",
+   "start": 66.34,
+   "end": 66.86
+  },
+  {
+   "word": "Executive",
+   "start": 66.7,
+   "end": 67.86
+  },
+  {
+   "word": "Suite,",
+   "start": 67.86,
+   "end": 68.24
+  },
+  {
+   "word": "Friday",
+   "start": 68.24,
+   "end": 68.48
+  },
+  {
+   "word": "to",
+   "start": 68.48,
+   "end": 68.62
+  },
+  {
+   "word": "Sunday,",
+   "start": 68.62,
+   "end": 69.48
+  },
+  {
+   "word": "2",
+   "start": 69.48,
+   "end": 69.66
+  },
+  {
+   "word": "nights.",
+   "start": 69.66,
+   "end": 70.46
+  },
+  {
+   "word": "Anniversary",
+   "start": 70.46,
+   "end": 71.06
+  },
+  {
+   "word": "package",
+   "start": 71.06,
+   "end": 71.46
+  },
+  {
+   "word": "with",
+   "start": 71.46,
+   "end": 71.66
+  },
+  {
+   "word": "champagne",
+   "start": 71.66,
+   "end": 72.08
+  },
+  {
+   "word": "and",
+   "start": 72.08,
+   "end": 72.28
+  },
+  {
+   "word": "flowers.",
+   "start": 72.28,
+   "end": 73.5
+  },
+  {
+   "word": "Total $450.",
+   "start": 73.5,
+   "end": 75.98
+  },
+  {
+   "word": "Check-in",
+   "start": 75.98,
+   "end": 77.2
+  },
+  {
+   "word": "is",
+   "start": 77.2,
+   "end": 77.38
+  },
+  {
+   "word": "from",
+   "start": 77.38,
+   "end": 77.62
+  },
+  {
+   "word": "2",
+   "start": 77.62,
+   "end": 77.98
+  },
+  {
+   "word": "p.m.",
+   "start": 77.98,
+   "end": 78.44
+  },
+  {
+   "word": "Is",
+   "start": 78.44,
+   "end": 79
+  },
+  {
+   "word": "everything",
+   "start": 79,
+   "end": 79.26
+  },
+  {
+   "word": "correct?",
+   "start": 79.26,
+   "end": 79.88
+  },
+  {
+   "word": "You're",
+   "start": 80.2,
+   "end": 81.38
+  },
+  {
+   "word": "most",
+   "start": 81.38,
+   "end": 81.66
+  },
+  {
+   "word": "welcome,",
+   "start": 81.66,
+   "end": 82.04
+  },
+  {
+   "word": "David.",
+   "start": 82.04,
+   "end": 82.4
+  },
+  {
+   "word": "We'll",
+   "start": 82.4,
+   "end": 82.92
+  },
+  {
+   "word": "have",
+   "start": 82.92,
+   "end": 83.04
+  },
+  {
+   "word": "everything",
+   "start": 83.04,
+   "end": 83.52
+  },
+  {
+   "word": "ready",
+   "start": 83.52,
+   "end": 83.78
+  },
+  {
+   "word": "for",
+   "start": 83.78,
+   "end": 83.96
+  },
+  {
+   "word": "you",
+   "start": 83.96,
+   "end": 84.1
+  },
+  {
+   "word": "and",
+   "start": 84.1,
+   "end": 84.2
+  },
+  {
+   "word": "your",
+   "start": 84.2,
+   "end": 84.32
+  },
+  {
+   "word": "wife.",
+   "start": 84.32,
+   "end": 85.12
+  },
+  {
+   "word": "Enjoy",
+   "start": 85.12,
+   "end": 85.46
+  },
+  {
+   "word": "your",
+   "start": 85.46,
+   "end": 85.64
+  },
+  {
+   "word": "anniversary.",
+   "start": 85.64,
+   "end": 86.46
+  },
+  {
+   "word": "We'll",
+   "start": 86.46,
+   "end": 86.6
+  },
+  {
+   "word": "see",
+   "start": 86.6,
+   "end": 86.74
+  },
+  {
+   "word": "you",
+   "start": 86.74,
+   "end": 86.86
+  },
+  {
+   "word": "Friday.",
+   "start": 86.86,
+   "end": 87.46
+  },
+  {
+   "word": "Bye",
+   "start": 87.46,
+   "end": 88.06
+  },
+  {
+   "word": "now!",
+   "start": 88.06,
+   "end": 88.4
+  }
+ ],
+ "segments": [
+  {
+   "id": 0,
+   "seek": 0,
+   "start": 0,
+   "end": 4.46,
+   "text": " Hello? Adinkra Hotel, Kwame speaking. How can I help you today?",
+   "tokens": [
+    50365,
+    2425,
+    30,
+    316,
+    67,
+    475,
+    424,
+    20354,
+    11,
+    43432,
+    529,
+    4124,
+    13,
+    1012,
+    393,
+    286,
+    854,
+    291,
+    965,
+    30,
+    50588
+   ],
+   "temperature": 0,
+   "avg_logprob": -0.2565005,
+   "compression_ratio": 1.4417671,
+   "no_speech_prob": 0.017684937
+  },
+  {
+   "id": 1,
+   "seek": 0,
+   "start": 4.46,
+   "end": 11,
+   "text": " Ah, congratulations! Ten years, that's beautiful. Let me see what we can do.",
+   "tokens": [
+    50588,
+    2438,
+    11,
+    13568,
+    0,
+    9380,
+    924,
+    11,
+    300,
+    311,
+    2238,
+    13,
+    961,
+    385,
+    536,
+    437,
+    321,
+    393,
+    360,
+    13,
+    50915
+   ],
+   "temperature": 0,
+   "avg_logprob": -0.2565005,
+   "compression_ratio": 1.4417671,
+   "no_speech_prob": 0.017684937
+  },
+  {
+   "id": 2,
+   "seek": 0,
+   "start": 11,
+   "end": 17.4,
+   "text": " Are you looking at this weekend? I understand. For an anniversary, I'd recommend our Executive Suite.",
+   "tokens": [
+    50915,
+    2014,
+    291,
+    1237,
+    412,
+    341,
+    6711,
+    30,
+    286,
+    1223,
+    13,
+    1171,
+    364,
+    12962,
+    11,
+    286,
+    1116,
+    2748,
+    527,
+    20658,
+    36637,
+    13,
+    51235
+   ],
+   "temperature": 0,
+   "avg_logprob": -0.2565005,
+   "compression_ratio": 1.4417671,
+   "no_speech_prob": 0.017684937
+  },
+  {
+   "id": 3,
+   "seek": 0,
+   "start": 17.4,
+   "end": 25.199999,
+   "text": " King Bed, private balcony with ocean view. We can also arrange champagne and flowers in the room before you arrive.",
+   "tokens": [
+    51235,
+    3819,
+    19893,
+    11,
+    4551,
+    29468,
+    365,
+    7810,
+    1910,
+    13,
+    492,
+    393,
+    611,
+    9424,
+    33336,
+    293,
+    8085,
+    294,
+    264,
+    1808,
+    949,
+    291,
+    8881,
+    13,
+    51625
+   ],
+   "temperature": 0,
+   "avg_logprob": -0.2565005,
+   "compression_ratio": 1.4417671,
+   "no_speech_prob": 0.017684937
+  },
+  {
+   "id": 4,
+   "seek": 2520,
+   "start": 25.199999,
+   "end": 31.199999,
+   "text": " The Executive Suite is $200 per night, so for two nights that's $400.",
+   "tokens": [
+    50365,
+    440,
+    20658,
+    36637,
+    307,
+    1848,
+    7629,
+    680,
+    1818,
+    11,
+    370,
+    337,
+    732,
+    13249,
+    300,
+    311,
+    1848,
+    13741,
+    13,
+    50665
+   ],
+   "temperature": 0,
+   "avg_logprob": -0.13586938,
+   "compression_ratio": 1.4495798,
+   "no_speech_prob": 0.020721436
+  },
+  {
+   "id": 5,
+   "seek": 2520,
+   "start": 31.199999,
+   "end": 36.199997,
+   "text": " Breakfast is included. Would you like me to add the champagne and flowers?",
+   "tokens": [
+    50665,
+    45371,
+    307,
+    5556,
+    13,
+    6068,
+    291,
+    411,
+    385,
+    281,
+    909,
+    264,
+    33336,
+    293,
+    8085,
+    30,
+    50915
+   ],
+   "temperature": 0,
+   "avg_logprob": -0.13586938,
+   "compression_ratio": 1.4495798,
+   "no_speech_prob": 0.020721436
+  },
+  {
+   "id": 6,
+   "seek": 2520,
+   "start": 36.199997,
+   "end": 44.199997,
+   "text": " The Anniversary Package is an additional $50. It includes a bottle of champagne, fresh flowers, and chocolates.",
+   "tokens": [
+    50915,
+    440,
+    8860,
+    12078,
+    18466,
+    609,
+    307,
+    364,
+    4497,
+    1848,
+    2803,
+    13,
+    467,
+    5974,
+    257,
+    7817,
+    295,
+    33336,
+    11,
+    4451,
+    8085,
+    11,
+    293,
+    42018,
+    13,
+    51315
+   ],
+   "temperature": 0,
+   "avg_logprob": -0.13586938,
+   "compression_ratio": 1.4495798,
+   "no_speech_prob": 0.020721436
+  },
+  {
+   "id": 7,
+   "seek": 2520,
+   "start": 44.199997,
+   "end": 48.199997,
+   "text": " Total would be $450 for the weekend.",
+   "tokens": [
+    51315,
+    23170,
+    576,
+    312,
+    1848,
+    48957,
+    337,
+    264,
+    6711,
+    13,
+    51515
+   ],
+   "temperature": 0,
+   "avg_logprob": -0.13586938,
+   "compression_ratio": 1.4495798,
+   "no_speech_prob": 0.020721436
+  },
+  {
+   "id": 8,
+   "seek": 2520,
+   "start": 48.199997,
+   "end": 51.199997,
+   "text": " Perfect. Let me take your details.",
+   "tokens": [
+    51515,
+    10246,
+    13,
+    961,
+    385,
+    747,
+    428,
+    4365,
+    13,
+    51665
+   ],
+   "temperature": 0,
+   "avg_logprob": -0.13586938,
+   "compression_ratio": 1.4495798,
+   "no_speech_prob": 0.020721436
+  },
+  {
+   "id": 9,
+   "seek": 2520,
+   "start": 51.199997,
+   "end": 53.199997,
+   "text": " Your full name.",
+   "tokens": [
+    51665,
+    2260,
+    1577,
+    1315,
+    13,
+    51765
+   ],
+   "temperature": 0,
+   "avg_logprob": -0.13586938,
+   "compression_ratio": 1.4495798,
+   "no_speech_prob": 0.020721436
+  },
+  {
+   "id": 10,
+   "seek": 5320,
+   "start": 53.199997,
+   "end": 67.2,
+   "text": " Thank you, David. And the best number to reach you? 024-456-7890. Correct? And an email for the confirmation? Let me confirm.",
+   "tokens": [
+    50365,
+    1044,
+    291,
+    11,
+    4389,
+    13,
+    400,
+    264,
+    1151,
+    1230,
+    281,
+    2524,
+    291,
+    30,
+    1958,
+    7911,
+    12,
+    8465,
+    21,
+    12,
+    30693,
+    7771,
+    13,
+    12753,
+    30,
+    400,
+    364,
+    3796,
+    337,
+    264,
+    21871,
+    30,
+    961,
+    385,
+    9064,
+    13,
+    51065
+   ],
+   "temperature": 0,
+   "avg_logprob": -0.18121336,
+   "compression_ratio": 1.3113208,
+   "no_speech_prob": 0.0046539307
+  },
+  {
+   "id": 11,
+   "seek": 5320,
+   "start": 67.2,
+   "end": 80.2,
+   "text": " Executive Suite, Friday to Sunday, 2 nights. Anniversary package with champagne and flowers. Total $450. Check-in is from 2 p.m. Is everything correct?",
+   "tokens": [
+    51065,
+    20658,
+    36637,
+    11,
+    6984,
+    281,
+    7776,
+    11,
+    568,
+    13249,
+    13,
+    8860,
+    12078,
+    7372,
+    365,
+    33336,
+    293,
+    8085,
+    13,
+    23170,
+    1848,
+    48957,
+    13,
+    6881,
+    12,
+    259,
+    307,
+    490,
+    568,
+    280,
+    13,
+    76,
+    13,
+    1119,
+    1203,
+    3006,
+    30,
+    51715
+   ],
+   "temperature": 0,
+   "avg_logprob": -0.18121336,
+   "compression_ratio": 1.3113208,
+   "no_speech_prob": 0.0046539307
+  },
+  {
+   "id": 12,
+   "seek": 8020,
+   "start": 80.2,
+   "end": 88.2,
+   "text": " You're most welcome, David. We'll have everything ready for you and your wife. Enjoy your anniversary. We'll see you Friday. Bye now!",
+   "tokens": [
+    50365,
+    509,
+    434,
+    881,
+    2928,
+    11,
+    4389,
+    13,
+    492,
+    603,
+    362,
+    1203,
+    1919,
+    337,
+    291,
+    293,
+    428,
+    3836,
+    13,
+    15411,
+    428,
+    12962,
+    13,
+    492,
+    603,
+    536,
+    291,
+    6984,
+    13,
+    4621,
+    586,
+    0,
+    50765
+   ],
+   "temperature": 0,
+   "avg_logprob": -0.21110189,
+   "compression_ratio": 1.1964285,
+   "no_speech_prob": 0.026046753
+  }
+ ],
+ "x_groq": {
+  "id": "req_01m1e9195zeak8g0pctk8ygfnb"
+ }
+}

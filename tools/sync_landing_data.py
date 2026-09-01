@@ -106,7 +106,14 @@ def page_captions(html: str) -> tuple[str, int]:
     played = set(re.findall(r"assets/[A-Za-z0-9_./-]+\.mp3", html))
     subset = {path: track for path, track in everything.items() if path in played}
 
-    missing = sorted(played - set(subset))
+    # The two stitched conversations carry their own timings in
+    # assets/segments/conversations.json, written by
+    # tools/build_conversations.py, and are never in captions.json. Warning
+    # about them on every run would train the reader to ignore this warning,
+    # which is the only thing standing between a silently uncaptioned clip
+    # and production.
+    own_captions = {path for path in played if path.endswith("_full_conversation.mp3")}
+    missing = sorted(played - set(subset) - own_captions)
     for path in missing:
         print(f"  no captions for {path}", file=sys.stderr)
 

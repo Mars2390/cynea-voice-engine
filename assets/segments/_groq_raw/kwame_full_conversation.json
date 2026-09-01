@@ -1,0 +1,1302 @@
+{
+ "task": "transcribe",
+ "language": "English",
+ "duration": 128.564093586,
+ "text": " Hello? Adinkra Hotel, Kwame speaking. How can I help you today? Hi, Kwame. Good afternoon. I'm planning something special for my wife. Our 10th anniversary? I want to book a room for the weekend. Ah, congratulations. 10 years, that's beautiful. Let me see what we can do. Are you looking at this weekend? Yes, Friday to Sunday, two nights. I want something, you know, romantic, not just a standard room. That's... I understand. For an anniversary, I'd recommend our executive suite. King bed, private balcony with ocean view. We can also arrange champagne and flowers in the room before you arrive. That sounds perfect. How much is it? Yes, please. The Executive Suite is $200 per night, so for two nights that's $400. Breakfast is included. Would you like me to add the champagne and flowers? Yes please How much is that extra The Anniversary Package is an additional It includes a bottle of champagne fresh flowers and chocolates Total would be for the weekend That's fine. Let's do it. Perfect. Let me take your details. Your full name? David Osei. O-S-E-I. Thank you, David. And the best number to reach you? 024-456- 0244567890. Correct? And an email for the confirmation? Yes. That's right. david.osei at gmail.com. Let me confirm. Executive Suite Friday to Sunday, 2 nights. Anniversary package with champagne and flowers. Total $450. Check-in is from 2pm. Is everything correct? Perfect. Thank you, Kwame. You're most welcome, David. We'll have everything ready for you and your wife. Enjoy your anniversary. We'll see you Friday. Bye now. Thank you. Bye.",
+ "words": [
+  {
+   "word": "Hello?",
+   "start": 0,
+   "end": 0.98
+  },
+  {
+   "word": "Adinkra",
+   "start": 0.98,
+   "end": 1.74
+  },
+  {
+   "word": "Hotel,",
+   "start": 1.74,
+   "end": 2.66
+  },
+  {
+   "word": "Kwame",
+   "start": 2.66,
+   "end": 2.82
+  },
+  {
+   "word": "speaking.",
+   "start": 2.82,
+   "end": 3.38
+  },
+  {
+   "word": "How",
+   "start": 3.38,
+   "end": 3.62
+  },
+  {
+   "word": "can",
+   "start": 3.62,
+   "end": 3.72
+  },
+  {
+   "word": "I",
+   "start": 3.72,
+   "end": 3.8
+  },
+  {
+   "word": "help",
+   "start": 3.8,
+   "end": 3.92
+  },
+  {
+   "word": "you",
+   "start": 3.92,
+   "end": 4
+  },
+  {
+   "word": "today?",
+   "start": 4,
+   "end": 4.54
+  },
+  {
+   "word": "Hi,",
+   "start": 4.96,
+   "end": 5.24
+  },
+  {
+   "word": "Kwame.",
+   "start": 5.24,
+   "end": 5.78
+  },
+  {
+   "word": "Good",
+   "start": 5.78,
+   "end": 5.98
+  },
+  {
+   "word": "afternoon.",
+   "start": 5.98,
+   "end": 6.56
+  },
+  {
+   "word": "I'm",
+   "start": 6.56,
+   "end": 7.1
+  },
+  {
+   "word": "planning",
+   "start": 7.1,
+   "end": 7.38
+  },
+  {
+   "word": "something",
+   "start": 7.38,
+   "end": 7.66
+  },
+  {
+   "word": "special",
+   "start": 7.66,
+   "end": 8.06
+  },
+  {
+   "word": "for",
+   "start": 8.06,
+   "end": 8.22
+  },
+  {
+   "word": "my",
+   "start": 8.22,
+   "end": 8.38
+  },
+  {
+   "word": "wife.",
+   "start": 8.38,
+   "end": 8.86
+  },
+  {
+   "word": "Our",
+   "start": 8.86,
+   "end": 9.38
+  },
+  {
+   "word": "10th",
+   "start": 9.38,
+   "end": 9.7
+  },
+  {
+   "word": "anniversary?",
+   "start": 9.7,
+   "end": 10.5
+  },
+  {
+   "word": "I",
+   "start": 10.34,
+   "end": 11.06
+  },
+  {
+   "word": "want",
+   "start": 11.06,
+   "end": 11.18
+  },
+  {
+   "word": "to",
+   "start": 11.18,
+   "end": 11.32
+  },
+  {
+   "word": "book",
+   "start": 11.32,
+   "end": 11.4
+  },
+  {
+   "word": "a",
+   "start": 11.4,
+   "end": 11.54
+  },
+  {
+   "word": "room",
+   "start": 11.54,
+   "end": 11.66
+  },
+  {
+   "word": "for",
+   "start": 11.66,
+   "end": 11.82
+  },
+  {
+   "word": "the",
+   "start": 11.82,
+   "end": 11.9
+  },
+  {
+   "word": "weekend.",
+   "start": 11.9,
+   "end": 12.86
+  },
+  {
+   "word": "Ah,",
+   "start": 12.96,
+   "end": 13.36
+  },
+  {
+   "word": "congratulations.",
+   "start": 13.36,
+   "end": 14.94
+  },
+  {
+   "word": "10",
+   "start": 14.94,
+   "end": 15.52
+  },
+  {
+   "word": "years,",
+   "start": 15.52,
+   "end": 15.88
+  },
+  {
+   "word": "that's",
+   "start": 15.88,
+   "end": 16.16
+  },
+  {
+   "word": "beautiful.",
+   "start": 16.16,
+   "end": 17.06
+  },
+  {
+   "word": "Let",
+   "start": 17.06,
+   "end": 17.42
+  },
+  {
+   "word": "me",
+   "start": 17.42,
+   "end": 17.5
+  },
+  {
+   "word": "see",
+   "start": 17.5,
+   "end": 17.62
+  },
+  {
+   "word": "what",
+   "start": 17.62,
+   "end": 17.72
+  },
+  {
+   "word": "we",
+   "start": 17.72,
+   "end": 17.84
+  },
+  {
+   "word": "can",
+   "start": 17.84,
+   "end": 17.92
+  },
+  {
+   "word": "do.",
+   "start": 17.92,
+   "end": 18.66
+  },
+  {
+   "word": "Are",
+   "start": 18.66,
+   "end": 19.16
+  },
+  {
+   "word": "you",
+   "start": 19.16,
+   "end": 19.26
+  },
+  {
+   "word": "looking",
+   "start": 19.26,
+   "end": 19.46
+  },
+  {
+   "word": "at",
+   "start": 19.46,
+   "end": 19.6
+  },
+  {
+   "word": "this",
+   "start": 19.6,
+   "end": 19.74
+  },
+  {
+   "word": "weekend?",
+   "start": 19.74,
+   "end": 20.2
+  },
+  {
+   "word": "Yes,",
+   "start": 20.34,
+   "end": 23.1
+  },
+  {
+   "word": "Friday",
+   "start": 23.1,
+   "end": 23.3
+  },
+  {
+   "word": "to",
+   "start": 23.3,
+   "end": 23.6
+  },
+  {
+   "word": "Sunday,",
+   "start": 23.6,
+   "end": 24.06
+  },
+  {
+   "word": "two",
+   "start": 24.06,
+   "end": 24.84
+  },
+  {
+   "word": "nights.",
+   "start": 24.84,
+   "end": 25.22
+  },
+  {
+   "word": "I",
+   "start": 25.22,
+   "end": 25.42
+  },
+  {
+   "word": "want",
+   "start": 25.42,
+   "end": 25.6
+  },
+  {
+   "word": "something,",
+   "start": 25.6,
+   "end": 26.1
+  },
+  {
+   "word": "you",
+   "start": 26.1,
+   "end": 27.08
+  },
+  {
+   "word": "know,",
+   "start": 27.08,
+   "end": 27.28
+  },
+  {
+   "word": "romantic,",
+   "start": 27.28,
+   "end": 28.6
+  },
+  {
+   "word": "not",
+   "start": 28.6,
+   "end": 29.18
+  },
+  {
+   "word": "just",
+   "start": 29.18,
+   "end": 29.36
+  },
+  {
+   "word": "a",
+   "start": 29.36,
+   "end": 29.48
+  },
+  {
+   "word": "standard",
+   "start": 29.48,
+   "end": 29.8
+  },
+  {
+   "word": "room.",
+   "start": 29.8,
+   "end": 30.28
+  },
+  {
+   "word": "That's...",
+   "start": 30.28,
+   "end": 30.62
+  },
+  {
+   "word": "I",
+   "start": 29.84,
+   "end": 31.06
+  },
+  {
+   "word": "understand.",
+   "start": 31.06,
+   "end": 31.88
+  },
+  {
+   "word": "For",
+   "start": 31.88,
+   "end": 32.42
+  },
+  {
+   "word": "an",
+   "start": 32.42,
+   "end": 32.56
+  },
+  {
+   "word": "anniversary,",
+   "start": 32.56,
+   "end": 33.32
+  },
+  {
+   "word": "I'd",
+   "start": 33.32,
+   "end": 33.44
+  },
+  {
+   "word": "recommend",
+   "start": 33.44,
+   "end": 33.84
+  },
+  {
+   "word": "our",
+   "start": 33.84,
+   "end": 34.06
+  },
+  {
+   "word": "executive",
+   "start": 34.06,
+   "end": 34.6
+  },
+  {
+   "word": "suite.",
+   "start": 34.6,
+   "end": 35.16
+  },
+  {
+   "word": "King",
+   "start": 35.16,
+   "end": 36.7
+  },
+  {
+   "word": "bed,",
+   "start": 36.7,
+   "end": 37.12
+  },
+  {
+   "word": "private",
+   "start": 37.12,
+   "end": 37.52
+  },
+  {
+   "word": "balcony",
+   "start": 37.52,
+   "end": 37.94
+  },
+  {
+   "word": "with",
+   "start": 37.94,
+   "end": 38.16
+  },
+  {
+   "word": "ocean",
+   "start": 38.16,
+   "end": 38.48
+  },
+  {
+   "word": "view.",
+   "start": 38.48,
+   "end": 39.22
+  },
+  {
+   "word": "We",
+   "start": 39.22,
+   "end": 39.86
+  },
+  {
+   "word": "can",
+   "start": 39.86,
+   "end": 40
+  },
+  {
+   "word": "also",
+   "start": 40,
+   "end": 40.24
+  },
+  {
+   "word": "arrange",
+   "start": 40.24,
+   "end": 40.56
+  },
+  {
+   "word": "champagne",
+   "start": 40.56,
+   "end": 41.04
+  },
+  {
+   "word": "and",
+   "start": 41.04,
+   "end": 41.34
+  },
+  {
+   "word": "flowers",
+   "start": 41.34,
+   "end": 41.76
+  },
+  {
+   "word": "in",
+   "start": 41.76,
+   "end": 41.9
+  },
+  {
+   "word": "the",
+   "start": 41.9,
+   "end": 42.02
+  },
+  {
+   "word": "room",
+   "start": 42.02,
+   "end": 42.18
+  },
+  {
+   "word": "before",
+   "start": 42.18,
+   "end": 42.4
+  },
+  {
+   "word": "you",
+   "start": 42.4,
+   "end": 42.6
+  },
+  {
+   "word": "arrive.",
+   "start": 42.6,
+   "end": 43.82
+  },
+  {
+   "word": "That",
+   "start": 42.84,
+   "end": 43.6
+  },
+  {
+   "word": "sounds",
+   "start": 43.6,
+   "end": 43.84
+  },
+  {
+   "word": "perfect.",
+   "start": 43.84,
+   "end": 44.52
+  },
+  {
+   "word": "How",
+   "start": 44.52,
+   "end": 44.78
+  },
+  {
+   "word": "much",
+   "start": 44.78,
+   "end": 44.96
+  },
+  {
+   "word": "is",
+   "start": 44.96,
+   "end": 45.1
+  },
+  {
+   "word": "it?",
+   "start": 45.1,
+   "end": 45.4
+  },
+  {
+   "word": "Yes,",
+   "start": 45.4,
+   "end": 45.54
+  },
+  {
+   "word": "please.",
+   "start": 45.54,
+   "end": 46.04
+  },
+  {
+   "word": "The",
+   "start": 46.34,
+   "end": 47.28
+  },
+  {
+   "word": "Executive",
+   "start": 47.28,
+   "end": 47.74
+  },
+  {
+   "word": "Suite",
+   "start": 47.74,
+   "end": 48.06
+  },
+  {
+   "word": "is $200",
+   "start": 48.06,
+   "end": 48.84
+  },
+  {
+   "word": "per",
+   "start": 48.84,
+   "end": 49.3
+  },
+  {
+   "word": "night,",
+   "start": 49.3,
+   "end": 49.66
+  },
+  {
+   "word": "so",
+   "start": 49.66,
+   "end": 50.24
+  },
+  {
+   "word": "for",
+   "start": 50.24,
+   "end": 50.36
+  },
+  {
+   "word": "two",
+   "start": 50.36,
+   "end": 50.54
+  },
+  {
+   "word": "nights",
+   "start": 50.54,
+   "end": 50.84
+  },
+  {
+   "word": "that's $400.",
+   "start": 50.84,
+   "end": 52.02
+  },
+  {
+   "word": "Breakfast",
+   "start": 53.08,
+   "end": 53.54
+  },
+  {
+   "word": "is",
+   "start": 53.54,
+   "end": 53.78
+  },
+  {
+   "word": "included.",
+   "start": 53.78,
+   "end": 54.44
+  },
+  {
+   "word": "Would",
+   "start": 54.44,
+   "end": 54.78
+  },
+  {
+   "word": "you",
+   "start": 54.78,
+   "end": 54.9
+  },
+  {
+   "word": "like",
+   "start": 54.9,
+   "end": 55.1
+  },
+  {
+   "word": "me",
+   "start": 55.1,
+   "end": 55.18
+  },
+  {
+   "word": "to",
+   "start": 55.18,
+   "end": 55.32
+  },
+  {
+   "word": "add",
+   "start": 55.32,
+   "end": 55.44
+  },
+  {
+   "word": "the",
+   "start": 55.44,
+   "end": 55.6
+  },
+  {
+   "word": "champagne",
+   "start": 55.6,
+   "end": 55.98
+  },
+  {
+   "word": "and",
+   "start": 55.98,
+   "end": 56.14
+  },
+  {
+   "word": "flowers?",
+   "start": 56.14,
+   "end": 56.68
+  },
+  {
+   "word": "Yes",
+   "start": 57.06,
+   "end": 57.3
+  },
+  {
+   "word": "please.",
+   "start": 57.3,
+   "end": 57.76
+  },
+  {
+   "word": "How",
+   "start": 57.76,
+   "end": 58.18
+  },
+  {
+   "word": "much",
+   "start": 58.18,
+   "end": 58.32
+  },
+  {
+   "word": "is",
+   "start": 58.32,
+   "end": 58.42
+  },
+  {
+   "word": "that",
+   "start": 58.42,
+   "end": 58.56
+  },
+  {
+   "word": "extra?",
+   "start": 58.56,
+   "end": 59.38
+  },
+  {
+   "word": "The",
+   "start": 58.84,
+   "end": 60.78
+  },
+  {
+   "word": "Anniversary",
+   "start": 60.78,
+   "end": 61.34
+  },
+  {
+   "word": "Package",
+   "start": 61.34,
+   "end": 61.84
+  },
+  {
+   "word": "is",
+   "start": 61.84,
+   "end": 61.96
+  },
+  {
+   "word": "an",
+   "start": 61.96,
+   "end": 62.1
+  },
+  {
+   "word": "additional $50.",
+   "start": 62.1,
+   "end": 63.42
+  },
+  {
+   "word": "It",
+   "start": 63.42,
+   "end": 63.9
+  },
+  {
+   "word": "includes",
+   "start": 63.9,
+   "end": 64.22
+  },
+  {
+   "word": "a",
+   "start": 64.22,
+   "end": 64.32
+  },
+  {
+   "word": "bottle",
+   "start": 64.32203,
+   "end": 64.562035
+  },
+  {
+   "word": "of",
+   "start": 64.562035,
+   "end": 64.702034
+  },
+  {
+   "word": "champagne,",
+   "start": 64.702034,
+   "end": 65.66203
+  },
+  {
+   "word": "fresh",
+   "start": 65.66203,
+   "end": 65.96203
+  },
+  {
+   "word": "flowers,",
+   "start": 65.96203,
+   "end": 66.62203
+  },
+  {
+   "word": "and",
+   "start": 66.62203,
+   "end": 66.82203
+  },
+  {
+   "word": "chocolates.",
+   "start": 66.82203,
+   "end": 68.08203
+  },
+  {
+   "word": "Total",
+   "start": 68.08203,
+   "end": 68.86203
+  },
+  {
+   "word": "would",
+   "start": 68.86203,
+   "end": 69.08203
+  },
+  {
+   "word": "be $450",
+   "start": 69.08203,
+   "end": 70.242035
+  },
+  {
+   "word": "for",
+   "start": 70.242035,
+   "end": 70.72203
+  },
+  {
+   "word": "the",
+   "start": 70.72203,
+   "end": 70.82203
+  },
+  {
+   "word": "weekend.",
+   "start": 70.82203,
+   "end": 71.602036
+  },
+  {
+   "word": "That's",
+   "start": 71.602036,
+   "end": 72.32203
+  },
+  {
+   "word": "fine.",
+   "start": 72.32203,
+   "end": 73.242035
+  },
+  {
+   "word": "Let's",
+   "start": 73.242035,
+   "end": 73.602036
+  },
+  {
+   "word": "do",
+   "start": 73.602036,
+   "end": 73.702034
+  },
+  {
+   "word": "it.",
+   "start": 73.702034,
+   "end": 74.12203
+  },
+  {
+   "word": "Perfect.",
+   "start": 73.78203,
+   "end": 75.32204
+  },
+  {
+   "word": "Let",
+   "start": 75.32204,
+   "end": 75.462036
+  },
+  {
+   "word": "me",
+   "start": 75.462036,
+   "end": 75.52203
+  },
+  {
+   "word": "take",
+   "start": 75.52203,
+   "end": 75.702034
+  },
+  {
+   "word": "your",
+   "start": 75.702034,
+   "end": 75.80203
+  },
+  {
+   "word": "details.",
+   "start": 75.80203,
+   "end": 76.80203
+  },
+  {
+   "word": "Your",
+   "start": 76.80203,
+   "end": 77.40203
+  },
+  {
+   "word": "full",
+   "start": 77.40203,
+   "end": 77.64203
+  },
+  {
+   "word": "name?",
+   "start": 77.64203,
+   "end": 77.98203
+  },
+  {
+   "word": "David",
+   "start": 78.40203,
+   "end": 79.30203
+  },
+  {
+   "word": "Osei.",
+   "start": 79.30203,
+   "end": 80.08203
+  },
+  {
+   "word": "O-S-E-I.",
+   "start": 80.08203,
+   "end": 81.562035
+  },
+  {
+   "word": "Thank",
+   "start": 82.04203,
+   "end": 82.42203
+  },
+  {
+   "word": "you,",
+   "start": 82.42203,
+   "end": 82.562035
+  },
+  {
+   "word": "David.",
+   "start": 82.562035,
+   "end": 83.32204
+  },
+  {
+   "word": "And",
+   "start": 83.32204,
+   "end": 83.66203
+  },
+  {
+   "word": "the",
+   "start": 83.66203,
+   "end": 83.742035
+  },
+  {
+   "word": "best",
+   "start": 83.742035,
+   "end": 83.962036
+  },
+  {
+   "word": "number",
+   "start": 83.962036,
+   "end": 84.18203
+  },
+  {
+   "word": "to",
+   "start": 84.18203,
+   "end": 84.30203
+  },
+  {
+   "word": "reach",
+   "start": 84.30203,
+   "end": 84.54203
+  },
+  {
+   "word": "you?",
+   "start": 84.54203,
+   "end": 85.12203
+  },
+  {
+   "word": "024-456-",
+   "start": 85.16203,
+   "end": 87.702034
+  },
+  {
+   "word": "0244567890.",
+   "start": 87.28203,
+   "end": 92.56203
+  },
+  {
+   "word": "Correct?",
+   "start": 92.56203,
+   "end": 94.04203
+  },
+  {
+   "word": "And",
+   "start": 94.04203,
+   "end": 94.66203
+  },
+  {
+   "word": "an",
+   "start": 94.66203,
+   "end": 94.76203
+  },
+  {
+   "word": "email",
+   "start": 94.76203,
+   "end": 94.98203
+  },
+  {
+   "word": "for",
+   "start": 94.98203,
+   "end": 95.20203
+  },
+  {
+   "word": "the",
+   "start": 95.20203,
+   "end": 95.28203
+  },
+  {
+   "word": "confirmation?",
+   "start": 95.28203,
+   "end": 96.40203
+  },
+  {
+   "word": "Yes.",
+   "start": 96.382034,
+   "end": 97.86203
+  },
+  {
+   "word": "That's",
+   "start": 97.86203,
+   "end": 98.28203
+  },
+  {
+   "word": "right.",
+   "start": 98.28203,
+   "end": 98.62203
+  },
+  {
+   "word": "david.osei",
+   "start": 98.62203,
+   "end": 99.58203
+  },
+  {
+   "word": "at",
+   "start": 99.58203,
+   "end": 99.78203
+  },
+  {
+   "word": "gmail.com.",
+   "start": 99.78203,
+   "end": 100.742035
+  },
+  {
+   "word": "Let",
+   "start": 101.94203,
+   "end": 102.26203
+  },
+  {
+   "word": "me",
+   "start": 102.26203,
+   "end": 102.36203
+  },
+  {
+   "word": "confirm.",
+   "start": 102.36203,
+   "end": 103.34203
+  },
+  {
+   "word": "Executive",
+   "start": 103.34203,
+   "end": 103.882034
+  },
+  {
+   "word": "Suite",
+   "start": 103.882034,
+   "end": 104.18204
+  },
+  {
+   "word": "Friday",
+   "start": 104.18204,
+   "end": 104.44203
+  },
+  {
+   "word": "to",
+   "start": 104.44203,
+   "end": 104.64203
+  },
+  {
+   "word": "Sunday,",
+   "start": 104.64203,
+   "end": 105.50203
+  },
+  {
+   "word": "2",
+   "start": 105.50203,
+   "end": 105.68204
+  },
+  {
+   "word": "nights.",
+   "start": 105.68204,
+   "end": 106.52203
+  },
+  {
+   "word": "Anniversary",
+   "start": 106.52203,
+   "end": 107.02203
+  },
+  {
+   "word": "package",
+   "start": 107.02203,
+   "end": 107.44203
+  },
+  {
+   "word": "with",
+   "start": 107.44203,
+   "end": 107.68204
+  },
+  {
+   "word": "champagne",
+   "start": 107.68204,
+   "end": 108.04203
+  },
+  {
+   "word": "and",
+   "start": 108.04203,
+   "end": 108.28203
+  },
+  {
+   "word": "flowers.",
+   "start": 108.28203,
+   "end": 109.40203
+  },
+  {
+   "word": "Total $450.",
+   "start": 109.40203,
+   "end": 111.98203
+  },
+  {
+   "word": "Check-in",
+   "start": 111.98203,
+   "end": 113.22203
+  },
+  {
+   "word": "is",
+   "start": 113.22203,
+   "end": 113.40203
+  },
+  {
+   "word": "from",
+   "start": 113.40203,
+   "end": 113.62203
+  },
+  {
+   "word": "2pm.",
+   "start": 113.62203,
+   "end": 114.48203
+  },
+  {
+   "word": "Is",
+   "start": 114.48203,
+   "end": 115.04203
+  },
+  {
+   "word": "everything",
+   "start": 115.04203,
+   "end": 115.28203
+  },
+  {
+   "word": "correct?",
+   "start": 115.28203,
+   "end": 115.742035
+  },
+  {
+   "word": "Perfect.",
+   "start": 116.28203,
+   "end": 116.80203
+  },
+  {
+   "word": "Thank",
+   "start": 116.80203,
+   "end": 117.64203
+  },
+  {
+   "word": "you,",
+   "start": 117.64203,
+   "end": 117.80203
+  },
+  {
+   "word": "Kwame.",
+   "start": 117.80203,
+   "end": 118.32204
+  },
+  {
+   "word": "You're",
+   "start": 119.84203,
+   "end": 119.962036
+  },
+  {
+   "word": "most",
+   "start": 119.962036,
+   "end": 120.242035
+  },
+  {
+   "word": "welcome,",
+   "start": 120.242035,
+   "end": 120.602036
+  },
+  {
+   "word": "David.",
+   "start": 120.602036,
+   "end": 120.94203
+  },
+  {
+   "word": "We'll",
+   "start": 120.94203,
+   "end": 121.48203
+  },
+  {
+   "word": "have",
+   "start": 121.48203,
+   "end": 121.62203
+  },
+  {
+   "word": "everything",
+   "start": 121.62203,
+   "end": 122.102036
+  },
+  {
+   "word": "ready",
+   "start": 122.102036,
+   "end": 122.36203
+  },
+  {
+   "word": "for",
+   "start": 122.36203,
+   "end": 122.54203
+  },
+  {
+   "word": "you",
+   "start": 122.54203,
+   "end": 122.68204
+  },
+  {
+   "word": "and",
+   "start": 122.68204,
+   "end": 122.78203
+  },
+  {
+   "word": "your",
+   "start": 122.78203,
+   "end": 122.90203
+  },
+  {
+   "word": "wife.",
+   "start": 122.90203,
+   "end": 123.72203
+  },
+  {
+   "word": "Enjoy",
+   "start": 123.78203,
+   "end": 124.06203
+  },
+  {
+   "word": "your",
+   "start": 124.06203,
+   "end": 124.242035
+  },
+  {
+   "word": "anniversary.",
+   "start": 124.242035,
+   "end": 124.92203
+  },
+  {
+   "word": "We'll",
+   "start": 124.92203,
+   "end": 125.18204
+  },
+  {
+   "word": "see",
+   "start": 125.18204,
+   "end": 125.32204
+  },
+  {
+   "word": "you",
+   "start": 125.32204,
+   "end": 125.44203
+  },
+  {
+   "word": "Friday.",
+   "start": 125.44203,
+   "end": 126.462036
+  },
+  {
+   "word": "Bye",
+   "start": 126.462036,
+   "end": 126.622025
+  },
+  {
+   "word": "now.",
+   "start": 126.622025,
+   "end": 126.90204
+  },
+  {
+   "word": "Thank",
+   "start": 127.482025,
+   "end": 127.66203
+  },
+  {
+   "word": "you.",
+   "start": 127.66203,
+   "end": 127.962036
+  },
+  {
+   "word": "Bye.",
+   "start": 127.962036,
+   "end": 128.98203
+  }
+ ],
+ "segments": null,
+ "x_groq": {
+  "id": "req_01m1e9nd5ve62sfv3n1y908v33"
+ }
+}

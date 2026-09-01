@@ -28,3 +28,12 @@ assets/world.mp4
 # transcript set and the cached Groq responses are build inputs.
 assets/segments/captions.json
 assets/segments/_groq_raw/
+
+# The four raw takes. These are the input to tools/build_conversations.py —
+# one speaker each, recorded alone — and the page only ever serves what that
+# stitches out of them (assets/*_full_conversation.mp3). Kept on disk so the
+# conversations can be re-cut; 3.2 MB that no visitor would ever fetch.
+assets/kwame_agent.mp3
+assets/kwame_caller.mp3
+assets/amina_agent.mp3
+assets/amina_caller.mp3

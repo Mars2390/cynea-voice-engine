@@ -1,0 +1,546 @@
+{
+ "task": "transcribe",
+ "language": "English",
+ "duration": 39.288188928,
+ "text": " Hi, Kwame. Good afternoon. I'm planning something special for my wife. Our 10th anniversary? I want to book a room for the weekend. Yes. Friday to Sunday. Two nights. I want something, you know, romantic. Not just a standard room. That sounds perfect. How much is it? Yes, please. How much is that extra? That's fine. Let's do it. D-O-S-E-I. 0244567890. Yes, that's right, david.osei at gmail.com. Perfect. Thank you, Kwame. Thank you. Bye.",
+ "words": [
+  {
+   "word": "Hi,",
+   "start": 0,
+   "end": 0.36
+  },
+  {
+   "word": "Kwame.",
+   "start": 0.36,
+   "end": 0.96
+  },
+  {
+   "word": "Good",
+   "start": 0.96,
+   "end": 1.12
+  },
+  {
+   "word": "afternoon.",
+   "start": 1.12,
+   "end": 1.64
+  },
+  {
+   "word": "I'm",
+   "start": 1.64,
+   "end": 2.24
+  },
+  {
+   "word": "planning",
+   "start": 2.24,
+   "end": 2.52
+  },
+  {
+   "word": "something",
+   "start": 2.52,
+   "end": 2.8
+  },
+  {
+   "word": "special",
+   "start": 2.8,
+   "end": 3.2
+  },
+  {
+   "word": "for",
+   "start": 3.2,
+   "end": 3.36
+  },
+  {
+   "word": "my",
+   "start": 3.36,
+   "end": 3.5
+  },
+  {
+   "word": "wife.",
+   "start": 3.5,
+   "end": 4.02
+  },
+  {
+   "word": "Our",
+   "start": 4.02,
+   "end": 4.52
+  },
+  {
+   "word": "10th",
+   "start": 4.52,
+   "end": 4.84
+  },
+  {
+   "word": "anniversary?",
+   "start": 4.84,
+   "end": 5.66
+  },
+  {
+   "word": "I",
+   "start": 5.66,
+   "end": 6.18
+  },
+  {
+   "word": "want",
+   "start": 6.18,
+   "end": 6.32
+  },
+  {
+   "word": "to",
+   "start": 6.32,
+   "end": 6.42
+  },
+  {
+   "word": "book",
+   "start": 6.42,
+   "end": 6.54
+  },
+  {
+   "word": "a",
+   "start": 6.54,
+   "end": 6.68
+  },
+  {
+   "word": "room",
+   "start": 6.68,
+   "end": 6.8
+  },
+  {
+   "word": "for",
+   "start": 6.8,
+   "end": 6.94
+  },
+  {
+   "word": "the",
+   "start": 6.94,
+   "end": 7.04
+  },
+  {
+   "word": "weekend.",
+   "start": 7.04,
+   "end": 7.6
+  },
+  {
+   "word": "Yes.",
+   "start": 7.6,
+   "end": 8.84
+  },
+  {
+   "word": "Friday",
+   "start": 8.84,
+   "end": 10.16
+  },
+  {
+   "word": "to",
+   "start": 10.16,
+   "end": 10.4
+  },
+  {
+   "word": "Sunday.",
+   "start": 10.4,
+   "end": 10.9
+  },
+  {
+   "word": "Two",
+   "start": 10.9,
+   "end": 11.64
+  },
+  {
+   "word": "nights.",
+   "start": 11.64,
+   "end": 12.08
+  },
+  {
+   "word": "I",
+   "start": 12.08,
+   "end": 12.24
+  },
+  {
+   "word": "want",
+   "start": 12.24,
+   "end": 12.42
+  },
+  {
+   "word": "something,",
+   "start": 12.42,
+   "end": 12.84
+  },
+  {
+   "word": "you",
+   "start": 12.84,
+   "end": 13.9
+  },
+  {
+   "word": "know,",
+   "start": 13.9,
+   "end": 14.1
+  },
+  {
+   "word": "romantic.",
+   "start": 14.1,
+   "end": 15.48
+  },
+  {
+   "word": "Not",
+   "start": 15.48,
+   "end": 16
+  },
+  {
+   "word": "just",
+   "start": 16,
+   "end": 16.2
+  },
+  {
+   "word": "a",
+   "start": 16.2,
+   "end": 16.32
+  },
+  {
+   "word": "standard",
+   "start": 16.32,
+   "end": 16.66
+  },
+  {
+   "word": "room.",
+   "start": 16.66,
+   "end": 17
+  },
+  {
+   "word": "That",
+   "start": 17,
+   "end": 17.12
+  },
+  {
+   "word": "sounds",
+   "start": 17.12,
+   "end": 17.34
+  },
+  {
+   "word": "perfect.",
+   "start": 17.34,
+   "end": 17.96
+  },
+  {
+   "word": "How",
+   "start": 17.96,
+   "end": 18.28
+  },
+  {
+   "word": "much",
+   "start": 18.28,
+   "end": 18.48
+  },
+  {
+   "word": "is",
+   "start": 18.48,
+   "end": 18.6
+  },
+  {
+   "word": "it?",
+   "start": 18.6,
+   "end": 18.86
+  },
+  {
+   "word": "Yes,",
+   "start": 18.86,
+   "end": 19
+  },
+  {
+   "word": "please.",
+   "start": 19,
+   "end": 19.68
+  },
+  {
+   "word": "How",
+   "start": 19.68,
+   "end": 19.86
+  },
+  {
+   "word": "much",
+   "start": 19.86,
+   "end": 20.02
+  },
+  {
+   "word": "is",
+   "start": 20.02,
+   "end": 20.14
+  },
+  {
+   "word": "that",
+   "start": 20.14,
+   "end": 20.26
+  },
+  {
+   "word": "extra?",
+   "start": 20.26,
+   "end": 20.7
+  },
+  {
+   "word": "That's",
+   "start": 20.7,
+   "end": 21.24
+  },
+  {
+   "word": "fine.",
+   "start": 21.24,
+   "end": 21.58
+  },
+  {
+   "word": "Let's",
+   "start": 21.58,
+   "end": 22.54
+  },
+  {
+   "word": "do",
+   "start": 22.54,
+   "end": 22.6
+  },
+  {
+   "word": "it.",
+   "start": 22.6,
+   "end": 22.74
+  },
+  {
+   "word": "D-O-S-E-I.",
+   "start": 22.74,
+   "end": 26.66
+  },
+  {
+   "word": "0244567890.",
+   "start": 26.66,
+   "end": 30.98
+  },
+  {
+   "word": "Yes,",
+   "start": 30.98,
+   "end": 32.5
+  },
+  {
+   "word": "that's",
+   "start": 32.5,
+   "end": 32.68
+  },
+  {
+   "word": "right,",
+   "start": 32.68,
+   "end": 33.02
+  },
+  {
+   "word": "david.osei",
+   "start": 33.02,
+   "end": 34
+  },
+  {
+   "word": "at",
+   "start": 34,
+   "end": 34.1
+  },
+  {
+   "word": "gmail.com.",
+   "start": 34.1,
+   "end": 35.94
+  },
+  {
+   "word": "Perfect.",
+   "start": 35.94,
+   "end": 36.96
+  },
+  {
+   "word": "Thank",
+   "start": 36.96,
+   "end": 37.28
+  },
+  {
+   "word": "you,",
+   "start": 37.28,
+   "end": 37.42
+  },
+  {
+   "word": "Kwame.",
+   "start": 37.42,
+   "end": 37.96
+  },
+  {
+   "word": "Thank",
+   "start": 37.96,
+   "end": 38.12
+  },
+  {
+   "word": "you.",
+   "start": 38.12,
+   "end": 38.58
+  },
+  {
+   "word": "Bye.",
+   "start": 38.58,
+   "end": 39.46
+  }
+ ],
+ "segments": [
+  {
+   "id": 0,
+   "seek": 0,
+   "start": 0,
+   "end": 22.74,
+   "text": " Hi, Kwame. Good afternoon. I'm planning something special for my wife. Our 10th anniversary? I want to book a room for the weekend. Yes. Friday to Sunday. Two nights. I want something, you know, romantic. Not just a standard room. That sounds perfect. How much is it? Yes, please. How much is that extra? That's fine. Let's do it.",
+   "tokens": [
+    50365,
+    2421,
+    11,
+    591,
+    86,
+    529,
+    13,
+    2205,
+    6499,
+    13,
+    286,
+    478,
+    5038,
+    746,
+    2121,
+    337,
+    452,
+    3836,
+    13,
+    2621,
+    1266,
+    392,
+    12962,
+    30,
+    286,
+    528,
+    281,
+    1446,
+    257,
+    1808,
+    337,
+    264,
+    6711,
+    13,
+    1079,
+    13,
+    6984,
+    281,
+    7776,
+    13,
+    4453,
+    13249,
+    13,
+    286,
+    528,
+    746,
+    11,
+    291,
+    458,
+    11,
+    13590,
+    13,
+    1726,
+    445,
+    257,
+    3832,
+    1808,
+    13,
+    663,
+    3263,
+    2176,
+    13,
+    1012,
+    709,
+    307,
+    309,
+    30,
+    1079,
+    11,
+    1767,
+    13,
+    1012,
+    709,
+    307,
+    300,
+    2857,
+    30,
+    663,
+    311,
+    2489,
+    13,
+    961,
+    311,
+    360,
+    309,
+    13,
+    51502
+   ],
+   "temperature": 0,
+   "avg_logprob": -0.14017928,
+   "compression_ratio": 1.4776785,
+   "no_speech_prob": 0.1274414
+  },
+  {
+   "id": 1,
+   "seek": 2274,
+   "start": 22.74,
+   "end": 38.98,
+   "text": " D-O-S-E-I. 0244567890. Yes, that's right, david.osei at gmail.com. Perfect. Thank you, Kwame. Thank you. Bye.",
+   "tokens": [
+    50365,
+    413,
+    12,
+    46,
+    12,
+    50,
+    12,
+    36,
+    12,
+    40,
+    13,
+    1958,
+    7911,
+    8465,
+    22452,
+    23,
+    7771,
+    13,
+    1079,
+    11,
+    300,
+    311,
+    558,
+    11,
+    11753,
+    327,
+    13,
+    541,
+    72,
+    412,
+    290,
+    11799,
+    13,
+    1112,
+    13,
+    10246,
+    13,
+    1044,
+    291,
+    11,
+    591,
+    86,
+    529,
+    13,
+    1044,
+    291,
+    13,
+    4621,
+    13,
+    51177
+   ],
+   "temperature": 0,
+   "avg_logprob": -0.3344649,
+   "compression_ratio": 1.0091743,
+   "no_speech_prob": 0.027832031
+  }
+ ],
+ "x_groq": {
+  "id": "req_01m1e91ev0ehevdek5xspc05z2"
+ }
+}

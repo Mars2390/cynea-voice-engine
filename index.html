@@ -583,13 +583,98 @@ button,input,select{font:inherit;color:inherit}
 .agent-time{font-size:11px;color:var(--muted);font-variant-numeric:tabular-nums;min-width:62px;text-align:right}
 
 /* ═══ 5. HIGHLIGHTS ═════════════════════════════════════════════════ */
-.hl-photo{border-radius:var(--r-block);overflow:hidden;margin-top:54px;aspect-ratio:16/9;max-height:560px}
-.hl-photo img{width:100%;height:100%;object-fit:cover}
-.hl-rows{margin-top:64px;border-top:1px solid var(--line)}
-.hl-row{display:grid;grid-template-columns:.9fr 1.1fr;gap:32px;padding:34px 0;border-bottom:1px solid var(--line);align-items:baseline}
-.hl-row h3{font-size:20px;font-weight:500;letter-spacing:-.4px}
-.hl-row .val{font-size:15px;color:var(--muted)}
-.hl-row .val b{color:var(--ink);font-weight:500}
+/* ══ SPEC LIST ═════════════════════════════════════════════════════
+   The claims section. Two rules shape it:
+
+   1. Every figure on it is one we can point at in the repo — the 700/800ms
+      turn-taking windows, the nine-voice roster, the four recordings. The
+      section it replaced led with a ~600ms latency number that exists in
+      no constant, no benchmark and no telephony path, which is the kind of
+      thing that only has to be caught once.
+   2. Each row draws its own mechanism instead of an ornament beside it. A
+      dot next to the words "turn taking" asks to be believed; a timeline
+      with the gap marked on it shows the thing working. That is the whole
+      argument for the layout, so the diagrams carry no information the
+      sentence beside them does not already state — they are evidence for
+      sighted readers and skipped entirely by assistive tech. */
+.spec{display:grid;grid-template-columns:.8fr 1.2fr;gap:72px;align-items:start;margin-top:56px}
+.spec-aside{position:sticky;top:104px}
+.spec-photo{border-radius:var(--r-block);overflow:hidden;aspect-ratio:4/3}
+.spec-photo img{width:100%;height:100%;object-fit:cover}
+.spec-aside p{margin-top:22px;font-size:15px;color:var(--muted);max-width:34ch}
+
+.spec-list{border-top:1px solid var(--line)}
+.spec-row{display:grid;grid-template-columns:auto 1fr;gap:22px;
+  padding:32px 0;border-bottom:1px solid var(--line)}
+.spec-n{font-size:12px;font-weight:600;color:var(--faint);
+  font-variant-numeric:tabular-nums;padding-top:5px;letter-spacing:.06em}
+.spec-row h3{font-size:19px;font-weight:500;letter-spacing:-.4px}
+.spec-row p{margin-top:8px;font-size:15px;color:var(--muted);max-width:46ch}
+.spec-row p b{color:var(--ink);font-weight:500;font-variant-numeric:tabular-nums}
+.spec-link{display:inline-block;margin-top:12px;font-size:13.5px;font-weight:500;
+  color:var(--coral-deep);border-bottom:1px solid rgba(226,74,46,.3);padding-bottom:1px}
+.spec-link:hover{border-bottom-color:var(--coral-deep)}
+
+/* the drawn part of each row */
+.spec-demo{margin-top:20px;background:var(--card-2);border:1px solid var(--line);
+  border-radius:14px;padding:18px 20px}
+
+/* 01 — a waveform, the same idiom the agent cards use when playing */
+.demo-wave{display:flex;align-items:flex-end;gap:4px;height:44px}
+.demo-wave i{flex:1;border-radius:3px;background:linear-gradient(180deg,var(--coral),var(--coral-deep));
+  height:22%;transform-origin:bottom;animation:specWave 1.5s ease-in-out infinite}
+@keyframes specWave{0%,100%{height:22%}50%{height:var(--h,70%)}}
+
+/* 02 — the roster, with the African locales carrying the accent */
+.demo-locales{display:flex;flex-wrap:wrap;gap:7px}
+.demo-locales li{font-size:12px;font-weight:500;padding:5px 10px;border-radius:999px;
+  border:1px solid var(--line);color:var(--muted);background:var(--card);
+  font-variant-numeric:tabular-nums}
+.demo-locales li.af{border-color:rgba(255,107,74,.45);color:var(--coral-deep);
+  background:rgba(255,107,74,.07)}
+
+/* 03 — two speech tracks with the grace window drawn between them */
+/* One two-column grid for the whole diagram, so the grace marker can line
+   up under the exact point on the caller's track where speech stops. */
+.demo-turn{display:grid;grid-template-columns:54px 1fr;gap:9px 12px;align-items:center;
+  font-size:11px;color:var(--faint)}
+.demo-turn .lbl{font-weight:500;color:var(--muted)}
+.demo-turn .bar{height:10px;border-radius:5px;background:var(--line);position:relative;overflow:hidden}
+/* Both turns stay drawn and the highlight moves between them. An earlier
+   version grew each bar from zero, which left the agent's track empty for
+   most of the loop — the diagram read as broken rather than as waiting. */
+.demo-turn .bar > i{position:absolute;top:0;bottom:0;border-radius:5px;display:block}
+.demo-turn .trk-caller > i{left:0;width:56%;background:var(--coral);
+  animation:specSaid 4.4s ease-in-out infinite}
+.demo-turn .trk-agent > i{left:72%;right:0;background:var(--indigo);
+  animation:specReply 4.4s ease-in-out infinite}
+.demo-turn .gap{grid-column:2;display:flex;align-items:center;gap:6px;
+  margin-left:56%;color:var(--muted);font-weight:500;white-space:nowrap}
+.demo-turn .gap::before{content:"";width:16%;min-width:22px;height:1px;background:var(--faint);opacity:.5}
+@keyframes specSaid{0%,4%{opacity:.22}12%,46%{opacity:1}56%,100%{opacity:.22}}
+@keyframes specReply{0%,54%{opacity:.22}64%,92%{opacity:1}100%{opacity:.22}}
+
+/* 04 — where the audio goes, and where it does not */
+.demo-path{display:flex;align-items:center;gap:12px;flex-wrap:wrap;font-size:12px}
+.demo-path .node{padding:8px 12px;border-radius:10px;border:1px solid var(--line);
+  background:var(--card);color:var(--ink);font-weight:500}
+.demo-path .node small{display:block;font-size:10.5px;color:var(--faint);font-weight:400;margin-top:2px}
+.demo-path .arrow{color:var(--faint)}
+.demo-path .out{border-style:dashed;color:var(--faint);background:transparent;
+  text-decoration:line-through;text-decoration-color:var(--coral)}
+
+@media(max-width:900px){
+  .spec{grid-template-columns:1fr;gap:40px}
+  .spec-aside{position:static}
+  .spec-photo{aspect-ratio:16/9}
+  .spec-row{grid-template-columns:1fr;gap:0}
+  .spec-n{padding-top:0;margin-bottom:6px}
+  .demo-turn .gap{font-size:10px}
+}
+@media(prefers-reduced-motion:reduce){
+  .demo-wave i,.demo-turn .bar > i{animation:none}
+  .demo-turn .bar > i{opacity:1}
+}
 @media(max-width:760px){.hl-row{grid-template-columns:1fr;gap:8px;padding:26px 0}}
 
 /* ═══ 6. PRODUCT SCREENSHOTS ════════════════════════════════════════ */
@@ -1284,36 +1369,108 @@ addEventListener('DOMContentLoaded', function(){
 <section class="sec wrap" id="highlights">
   <div class="rv">
     <p class="kicker">Highlights</p>
-    <h2 class="h-sec" style="margin-top:14px;max-width:20ch">Human-standard AI voice agents, out of the box</h2>
+    <h2 class="h-sec" style="margin-top:14px;max-width:16ch">Four claims, and the receipts for each</h2>
+    <p class="lede" style="margin-top:18px;max-width:52ch">Every number below is a constant you can open in the
+      repository or a recording you can play on this page. Where something is a design target rather than a
+      measurement, it says so.</p>
   </div>
 
-  <div class="hl-photo swap">
-    <picture>
-      <source srcset="assets/hl-callcenter.webp" type="image/webp">
-      <img src="assets/hl-callcenter.jpg" alt="An agent taking calls in a contact centre" width="1600" height="900" loading="lazy" decoding="async">
-    </picture>
-  </div>
+  <div class="spec">
+    <aside class="spec-aside rv">
+      <div class="spec-photo">
+        <picture>
+          <source srcset="assets/hl-callcenter.webp" type="image/webp">
+          <img src="assets/hl-callcenter.jpg" alt="An agent taking calls in a contact centre"
+               width="1600" height="900" loading="lazy" decoding="async">
+        </picture>
+      </div>
+      <p>Voice vendors tend to lead with a latency figure and a benchmark nobody can reproduce. We would rather
+        show you the four things that are actually true today, and say plainly what is still ahead.</p>
+    </aside>
 
-  <div class="hl-rows rv">
-    <div class="hl-row">
-      <h3>Lowest Latency</h3>
-      <p class="val"><b>~600&thinsp;ms</b> target response time, streamed token-by-token so the reply starts before the sentence is finished.</p>
-    </div>
-    <div class="hl-row">
-      <h3>Ultra Realistic Voices</h3>
-      <p class="val"><b>9 voices</b>, four of them native African accents — Nigerian and South African, male and female.</p>
-    </div>
-    <div class="hl-row">
-      <h3>Turn Taking</h3>
-      <p class="val">Waits a <b>700&thinsp;ms</b> grace period after you stop speaking, and backchannels at <b>800&thinsp;ms</b> — so it knows when to stop and when to listen.</p>
-    </div>
+    <ol class="spec-list stg">
+      <li class="spec-row">
+        <span class="spec-n">01</span>
+        <div>
+          <h3>The voices are real people</h3>
+          <p>Kwame, Amina, Kofi and Maya are <b>four</b> recordings of human beings, not synthesis dressed up as
+            one. Every clip on this page is a slice of tape somebody actually spoke.</p>
+          <a class="spec-link" href="#agents">Hear all four &rarr;</a>
+          <div class="spec-demo" aria-hidden="true">
+            <div class="demo-wave">
+              <i style="--h:54%"></i><i style="--h:88%;animation-delay:-.15s"></i>
+              <i style="--h:36%;animation-delay:-.5s"></i><i style="--h:72%;animation-delay:-.25s"></i>
+              <i style="--h:96%;animation-delay:-.7s"></i><i style="--h:44%;animation-delay:-.4s"></i>
+              <i style="--h:80%;animation-delay:-.9s"></i><i style="--h:60%;animation-delay:-.1s"></i>
+              <i style="--h:92%;animation-delay:-.6s"></i><i style="--h:40%;animation-delay:-.35s"></i>
+              <i style="--h:68%;animation-delay:-.8s"></i><i style="--h:50%;animation-delay:-.2s"></i>
+            </div>
+          </div>
+        </div>
+      </li>
+
+      <li class="spec-row">
+        <span class="spec-n">02</span>
+        <div>
+          <h3>Nine synthetic voices when you need words we never recorded</h3>
+          <p><b>Four</b> of the nine are African locales — two Nigerian, two South African — alongside British and
+            American. They run on edge-tts, which costs nothing per word.</p>
+          <div class="spec-demo" aria-hidden="true">
+            <ul class="demo-locales">
+              <li class="af">en-NG Ezinne</li><li class="af">en-NG Abeo</li>
+              <li class="af">en-ZA Leah</li><li class="af">en-ZA Luke</li>
+              <li>en-GB Ryan</li><li>en-GB Sonia</li><li>en-GB Libby</li>
+              <li>en-US Eric</li><li>en-US Aria</li>
+            </ul>
+          </div>
+        </div>
+      </li>
+
+      <li class="spec-row">
+        <span class="spec-n">03</span>
+        <div>
+          <h3>Turn-taking with the windows written down</h3>
+          <p>It waits <b>700&thinsp;ms</b> after you stop before it answers, offers a backchannel once a mid-sentence
+            pause passes <b>800&thinsp;ms</b>, and only treats you as interrupting at <b>3</b> words — so a stray
+            &ldquo;mhm&rdquo; never cuts it off.</p>
+          <div class="spec-demo" aria-hidden="true">
+            <div class="demo-turn">
+              <span class="lbl">Caller</span>
+              <div class="bar trk-caller"><i></i></div>
+              <span></span>
+              <div class="gap">700&thinsp;ms grace</div>
+              <span class="lbl">Agent</span>
+              <div class="bar trk-agent"><i></i></div>
+            </div>
+          </div>
+        </div>
+      </li>
+
+      <li class="spec-row">
+        <span class="spec-n">04</span>
+        <div>
+          <h3>Call audio can stay on your own machines</h3>
+          <p>Whisper and edge-tts both run locally, so recordings never have to cross a vendor boundary to be
+            understood or answered. The model that writes the replies is the one part you choose.</p>
+          <div class="spec-demo" aria-hidden="true">
+            <div class="demo-path">
+              <span class="node">Caller</span>
+              <span class="arrow">&rarr;</span>
+              <span class="node">Your infrastructure<small>Whisper &middot; edge-tts</small></span>
+              <span class="arrow">&rarr;</span>
+              <span class="node out">Vendor audio cloud</span>
+            </div>
+          </div>
+        </div>
+      </li>
+    </ol>
   </div>
 </section>
 
 <!-- ═══ 6. PRODUCT SCREENSHOTS ═══════════════════════════════════════ -->
 <section class="sec wrap">
   <div class="rv">
-    <p class="kicker">Highlights</p>
+    <p class="kicker">Product</p>
     <h2 class="h-sec" style="margin-top:14px;max-width:20ch">Effortless to use, highly configurable</h2>
   </div>
 

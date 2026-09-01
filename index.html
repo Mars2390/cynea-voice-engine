@@ -364,10 +364,18 @@ button,input,select{font:inherit;color:inherit}
 }
 .glass{
   width:min(372px,88%);aspect-ratio:1;border-radius:50%;
-  background:linear-gradient(150deg,rgba(255,255,255,.64),rgba(255,107,74,.18) 48%,rgba(255,255,255,.34));
   border:1px solid rgba(255,255,255,.72);
   -webkit-backdrop-filter:blur(20px) saturate(150%);backdrop-filter:blur(20px) saturate(150%);
   box-shadow:0 40px 90px rgba(0,118,164,.20),inset 0 1px 0 rgba(255,255,255,.95);
+  position:relative;
+}
+/* The turning half. It carries the gradient and none of the filter, so
+   the frost behind it is rasterised once rather than once a frame. The
+   gradient lives here and only here — leaving a copy on .glass as well
+   painted it twice and washed the orb out. */
+.glass::after{
+  content:"";position:absolute;inset:0;border-radius:50%;
+  background:linear-gradient(150deg,rgba(255,255,255,.64),rgba(255,107,74,.18) 48%,rgba(255,255,255,.34));
   animation:glassTurn 34s linear infinite;
 }
 .stage-ring{
@@ -383,7 +391,7 @@ button,input,select{font:inherit;color:inherit}
 /* mid-call — the one moment the page is allowed to be cinematic */
 .callzone.is-playing .stage-glow{opacity:1;animation:glowBreathe 2.8s ease-in-out infinite}
 .callzone.is-playing .stage-rays{opacity:.46;animation:glassTurn 48s linear infinite}
-.callzone.is-playing .glass{animation:glassLive 16s linear infinite}
+.callzone.is-playing .glass::after{animation:glassLive 16s linear infinite}
 .callzone.is-playing .stage-ring{animation:stageRing 3.3s ease-out infinite}
 .callzone.is-playing .stage-ring.r2{animation-delay:1.1s}
 .callzone.is-playing .stage-ring.r3{animation-delay:2.2s}
@@ -1009,80 +1017,96 @@ button,input,select{font:inherit;color:inherit}
    block and the script that pairs with it and the page renders exactly
    as it did before.
 
-   Four rules hold the whole thing together.
+   ── the rule that governs all of it ──────────────────────────────
+   NOTHING writes a custom property to :root, ever.
 
-   1. Only transform and opacity are ever written per frame. Nothing
-      here can cause layout or paint while you scroll — the two
-      exceptions, a clip-path on a 30px rail and opacity on five fixed
-      layers, are compositor work.
-   2. Every scroll-driven value is a *position*, not a *trigger*. Scroll
-      back up and the page runs backwards, at your speed, exactly. That
-      is what makes it worth scrolling twice.
-   3. The tint budget is 3.4%, and tools/check_contrast.py is what set
-      it. The travelling ground never darkens the page ground by more
-      than one climate layer, because the layers cross-fade as a
-      partition rather than stacking. At 4% the worst-case sample — body
-      copy in the security section, which already carries a photographic
-      wash of its own — moved from 4.64:1 to 4.56:1: still passing, and
-      still a fifth of the headroom this palette has, spent on something
-      nobody would have noticed. At 3.4% it costs 0.04, and the check still reads 4.60:1.
-   4. Reduced motion gets the finished page, not a broken one: every
-      scrubbed value is forced to its end state and the engine never
-      starts.
+   The first version of this file did, and it is worth writing down why
+   it was wrong, because the code reads as if it should have been the
+   cheap option. Setting one variable on the root and letting CSS calc()
+   do the arithmetic looks like moving work off the main thread. It is
+   the opposite. A custom property on :root is inherited, so changing it
+   invalidates the computed style of every element in the document —
+   measured here at 9.9ms per write for a property that nothing on the
+   page even reads, and 12.9ms for --p, which several things did. Three
+   such writes a frame plus a rail whose ninety ticks each resolved a
+   calc() off --amp came to about 28ms of style recalc per frame on a
+   fast desktop, which is a locked-up tab on anything slower.
+
+   So the arithmetic happens in JavaScript and the results are written
+   straight to the handful of elements that need them — transform,
+   opacity, clip-path, nothing else. The same frame now costs about
+   0.05ms. The numbers above are reproducible: the probe is in the
+   commit message.
+
+   ── the other three rules ────────────────────────────────────────
+   1. Every scroll-driven value is a *position*, not a *trigger*. Scroll
+      back up and the page runs backwards, at your speed, exactly.
+   2. The tint budget is 3.4%, and tools/check_contrast.py set it. The
+      travelling ground never darkens the page ground by more than one
+      climate, because the climates cross-fade as a partition rather
+      than stacking. The worst-case sample — body copy in the security
+      section, which already carries a photographic wash of its own —
+      reads 4.60:1 against a 4.64:1 baseline.
+   3. Reduced motion gets the finished page, not a broken one, and the
+      engine never starts.
    ═══════════════════════════════════════════════════════════════════ */
+
+/* ── the two budgets ───────────────────────────────────────────────
+   `lite` is the low-power tier. It is set before first paint from the
+   device's own hints, and the engine can demote a machine into it later
+   if it watches frames arrive late. Everything expensive enough to be
+   worth a branch is branched here rather than scattered through the
+   file: blur, backdrop-filter, blend modes, video, and the number of
+   layers that exist at all.
+
+   It is a real fallback, not a stub. A lite machine still gets the
+   travelling ground, the words arriving, the sheet over the hero, the
+   depth on the cards and the lit row. What it loses is the work you
+   cannot see: four blur passes, a blend mode over video, and half the
+   parallax. */
 
 /* ── the travelling ground ─────────────────────────────────────────
    One fixed sky behind the entire document. Sections have no ground of
    their own, so what sits under every word on this page is a single
-   surface whose colour moves as you descend: dusk at the hero, dawn
-   through the demo, noon over the agents, one cool step at the
-   channels, ember for the close. The seams between sections stop
-   existing because there is nothing on either side of them to seam.
+   surface whose colour moves as you descend — dusk at the hero, warmth
+   through the middle of the page, ember for the close. The seams
+   between sections stop existing because there is nothing on either
+   side of them to seam.
 
-   Layers cross-fade as a partition — their opacities always sum to one
-   — so the tint at any point is one climate's worth and never two
-   stacked. That is the whole reason the 4% budget holds. */
+   Three layers on a full machine, two on a lite one, and only ever two
+   of them non-zero at a time: their opacities are a partition of one,
+   which is the invariant the contrast budget rests on. Each is a static
+   raster promoted once — the only thing that ever changes is opacity,
+   and only while you are actually crossing between two climates. Most
+   frames write nothing here at all.
+
+   These deliberately do not move. A parallax on a full-viewport layer
+   is the most expensive pixel-for-pixel thing a page can ask for and,
+   on a soft radial gradient with no edges in it, very nearly invisible.
+   The drift went; the travel stayed. */
 .field{position:fixed;inset:0;z-index:-3;pointer-events:none;overflow:hidden}
-.fx{position:absolute;inset:-14%;opacity:0;will-change:opacity,transform}
-
-/* Each climate is two soft radials placed off the reading column, so
-   most of the peak tint falls in the margins and the text column sees
-   less than the budget rather than all of it. The parallax is pure CSS
-   off the shared --p: the sky drifts without costing a frame. */
+.fx{position:absolute;inset:0;opacity:0;will-change:opacity}
 .f-dusk{
   background:
     radial-gradient(62% 48% at 14% 8%,rgba(123,79,212,.034),transparent 70%),
-    radial-gradient(54% 44% at 92% 30%,rgba(27,32,80,.026),transparent 72%);
-  transform:translate3d(0,calc(var(--p,0) * -120px),0);
+    radial-gradient(54% 44% at 92% 30%,rgba(27,32,80,.026),transparent 72%),
+    radial-gradient(50% 40% at 78% 88%,rgba(249,179,190,.026),transparent 74%);
 }
-.f-dawn{
+.f-warm{
   background:
-    radial-gradient(60% 50% at 88% 14%,rgba(249,179,190,.034),transparent 72%),
-    radial-gradient(56% 46% at 8% 62%,rgba(251,211,194,.032),transparent 74%);
-  transform:translate3d(0,calc(var(--p,0) * -190px),0);
-}
-.f-noon{
-  background:
-    radial-gradient(58% 46% at 16% 24%,rgba(242,160,61,.032),transparent 70%),
-    radial-gradient(62% 52% at 94% 74%,rgba(255,107,74,.026),transparent 74%);
-  transform:translate3d(0,calc(var(--p,0) * -260px),0);
-}
-.f-cool{
-  background:
-    radial-gradient(60% 48% at 86% 20%,rgba(79,209,197,.032),transparent 72%),
-    radial-gradient(54% 44% at 10% 76%,rgba(242,160,61,.026),transparent 74%);
-  transform:translate3d(0,calc(var(--p,0) * -330px),0);
+    radial-gradient(58% 46% at 16% 20%,rgba(242,160,61,.032),transparent 70%),
+    radial-gradient(60% 50% at 90% 40%,rgba(249,179,190,.034),transparent 72%),
+    radial-gradient(56% 46% at 30% 86%,rgba(79,209,197,.026),transparent 74%);
 }
 .f-ember{
   background:
     radial-gradient(64% 50% at 20% 18%,rgba(255,107,74,.034),transparent 72%),
     radial-gradient(58% 48% at 90% 80%,rgba(224,48,143,.024),transparent 74%);
-  transform:translate3d(0,calc(var(--p,0) * -400px),0);
 }
 /* While a recording is playing the ground leans half a step warmer.
-   The page is listening too. */
-.is-live .f-ember,.is-live .f-noon{filter:saturate(1.4)}
-@media(prefers-reduced-motion:reduce){.fx{transform:none !important}}
+   A filter on a layer that is otherwise never touched costs one raster,
+   once, on a state that changes about as often as a person clicks. */
+.is-live .f-warm,.is-live .f-ember{filter:saturate(1.4)}
 
 /* ── the voice rail ────────────────────────────────────────────────
    A spine running the height of the window, in the gutter left of
@@ -1090,69 +1114,75 @@ button,input,select{font:inherit;color:inherit}
    it is a waveform, and the thing it is a waveform of is you.
 
    Amplitude tracks scroll velocity. Sit still and it flatlines to a
-   column of dots; move and it speaks; stop and it settles with the
-   weight of something physical rather than the snap of a value being
-   set. The travelled part carries the accent, a node rides the
-   boundary, and when a real recording is playing the rail takes its
-   amplitude from the audio instead of from you.
+   hairline; move and it speaks; stop and it settles with the weight of
+   something physical rather than the snap of a value being set. The
+   travelled part carries the accent, a node rides the boundary, and
+   when a real recording is playing the rail takes its amplitude from
+   the audio instead of from you.
 
-   Cost per frame: two custom properties on one element. Every tick's
-   width is a calc off --amp and its own baked --k, so the compositor
-   does the other ninety multiplications. */
+   The ticks were ninety-odd elements once, each resolving its width
+   from a calc() off a shared variable — 4ms a frame to change one
+   number. They are now a repeating background tile on a single element,
+   and amplitude is one scaleX on it. Same waveform, same behaviour,
+   four style writes a frame across the whole rail. */
 .rail{
   position:fixed;left:calc(var(--gutter) + 10px);top:0;bottom:0;width:30px;
   z-index:40;pointer-events:none;display:none;
-  --amp:0;
 }
-/* The spine. Without a continuous line behind them the ticks read as a
-   dashed border rather than as one thing with a voice; with it, the
-   quiet state is a hairline and the loud state is that same hairline
-   speaking. Both halves are clipped by the same --p as the ticks, so
-   the line and its waveform can never disagree about where you are. */
-.rail::before,.rail::after{content:"";position:absolute;left:0;top:0;bottom:0;width:1px}
-.rail::before{background:rgba(23,26,46,.13)}
-.rail::after{background:var(--coral);clip-path:inset(0 0 calc((1 - var(--p,0)) * 100%) 0)}
 /* Narrower than this the gutter is holding the bleed blocks' rounded
-   corners and there is no room for a rail that is not touching them. */
+   corners and there is no room for a rail that is not touching them.
+   A lite machine does not get one at all: it is the least load-bearing
+   thing on the page and the only one that costs something every frame. */
 @media(min-width:1280px){.rail{display:block}}
-.rail-col{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:center;gap:6px}
-.rail-col i{
-  display:block;height:2px;width:24px;border-radius:1px;
-  background:currentColor;transform-origin:left center;
-  transform:scaleX(calc(.10 + var(--amp) * var(--k,.5)));
+.lite .rail{display:none}
+
+.rail-line{position:absolute;left:0;top:0;bottom:0;width:1px;background:rgba(23,26,46,.13)}
+.rail-wave{
+  position:absolute;left:0;top:0;bottom:0;width:24px;
+  transform-origin:left center;transform:scaleX(.1);
+  will-change:transform;
+  /* Twenty-four ticks of unrepeating length, so the rail reads as a
+     recorded waveform rather than a row of equal bars. Baked at build
+     time into one tile rather than measured per frame. */
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='192'%3E%3Cg fill='%23171A2E' fill-opacity='.16'%3E%3Crect y='0' width='14' height='2' rx='1'/%3E%3Crect y='8' width='21' height='2' rx='1'/%3E%3Crect y='16' width='9' height='2' rx='1'/%3E%3Crect y='24' width='17' height='2' rx='1'/%3E%3Crect y='32' width='24' height='2' rx='1'/%3E%3Crect y='40' width='11' height='2' rx='1'/%3E%3Crect y='48' width='19' height='2' rx='1'/%3E%3Crect y='56' width='7' height='2' rx='1'/%3E%3Crect y='64' width='15' height='2' rx='1'/%3E%3Crect y='72' width='22' height='2' rx='1'/%3E%3Crect y='80' width='10' height='2' rx='1'/%3E%3Crect y='88' width='18' height='2' rx='1'/%3E%3Crect y='96' width='13' height='2' rx='1'/%3E%3Crect y='104' width='23' height='2' rx='1'/%3E%3Crect y='112' width='8' height='2' rx='1'/%3E%3Crect y='120' width='16' height='2' rx='1'/%3E%3Crect y='128' width='20' height='2' rx='1'/%3E%3Crect y='136' width='12' height='2' rx='1'/%3E%3Crect y='144' width='6' height='2' rx='1'/%3E%3Crect y='152' width='19' height='2' rx='1'/%3E%3Crect y='160' width='14' height='2' rx='1'/%3E%3Crect y='168' width='22' height='2' rx='1'/%3E%3Crect y='176' width='9' height='2' rx='1'/%3E%3Crect y='184' width='17' height='2' rx='1'/%3E%3C/g%3E%3C/svg%3E");
+  background-repeat:repeat-y;background-size:24px 192px;
 }
-.rail-track{color:rgba(23,26,46,.16)}
-/* The travelled half. clip-path rather than a height, so the ticks keep
-   their proportions instead of being squashed as the boundary moves. */
-.rail-fill{
-  color:var(--coral);
-  clip-path:inset(0 0 calc((1 - var(--p,0)) * 100%) 0);
+/* The travelled part is the same two elements in the accent, in a
+   wrapper that is clipped to where you have got to. Clipping the
+   wrapper rather than each half means one clip-path write a frame
+   instead of two, and the line and its waveform cannot disagree about
+   where you are. */
+.rail-lit{position:absolute;inset:0;clip-path:inset(0 0 100% 0)}
+.rail-lit .rail-line{background:var(--coral)}
+.rail-lit .rail-wave{
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='192'%3E%3Cg fill='%23FF6B4A'%3E%3Crect y='0' width='14' height='2' rx='1'/%3E%3Crect y='8' width='21' height='2' rx='1'/%3E%3Crect y='16' width='9' height='2' rx='1'/%3E%3Crect y='24' width='17' height='2' rx='1'/%3E%3Crect y='32' width='24' height='2' rx='1'/%3E%3Crect y='40' width='11' height='2' rx='1'/%3E%3Crect y='48' width='19' height='2' rx='1'/%3E%3Crect y='56' width='7' height='2' rx='1'/%3E%3Crect y='64' width='15' height='2' rx='1'/%3E%3Crect y='72' width='22' height='2' rx='1'/%3E%3Crect y='80' width='10' height='2' rx='1'/%3E%3Crect y='88' width='18' height='2' rx='1'/%3E%3Crect y='96' width='13' height='2' rx='1'/%3E%3Crect y='104' width='23' height='2' rx='1'/%3E%3Crect y='112' width='8' height='2' rx='1'/%3E%3Crect y='120' width='16' height='2' rx='1'/%3E%3Crect y='128' width='20' height='2' rx='1'/%3E%3Crect y='136' width='12' height='2' rx='1'/%3E%3Crect y='144' width='6' height='2' rx='1'/%3E%3Crect y='152' width='19' height='2' rx='1'/%3E%3Crect y='160' width='14' height='2' rx='1'/%3E%3Crect y='168' width='22' height='2' rx='1'/%3E%3Crect y='176' width='9' height='2' rx='1'/%3E%3Crect y='184' width='17' height='2' rx='1'/%3E%3C/g%3E%3C/svg%3E");
 }
 .rail-node{
   position:absolute;left:-2px;top:0;width:7px;height:7px;border-radius:50%;
   background:var(--coral);box-shadow:0 0 0 3px rgba(255,107,74,.16);
-  transform:translate3d(0,calc(var(--p,0) * (100vh - 7px)),0);
+  will-change:transform;
 }
 .is-live .rail-node{box-shadow:0 0 0 4px rgba(255,107,74,.22),0 0 18px 4px rgba(255,107,74,.45)}
-.is-live .rail-fill i{
-  animation:railSpeak 1s ease-in-out infinite;
-  animation-delay:calc(var(--k,.5) * -1.4s);
-}
-@keyframes railSpeak{
-  0%,100%{transform:scaleX(calc(.10 + var(--amp) * var(--k,.5)))}
-  50%{transform:scaleX(calc(.34 + var(--amp) * var(--k,.5) * 1.4))}
-}
+/* While audio is playing the waveform is the recording's, not yours. A
+   running animation outranks the inline transform the engine writes, so
+   this takes the rail over for as long as the clip lasts and hands it
+   back untouched — and it runs on the compositor, costing no frames. */
+.is-live .rail-lit .rail-wave{animation:railSpeak 1s ease-in-out infinite}
+.is-live .rail-wave{animation:railSpeak 1s ease-in-out infinite;animation-delay:-.1s}
+@keyframes railSpeak{0%,100%{transform:scaleX(.20)}50%{transform:scaleX(.66)}}
 @media(prefers-reduced-motion:reduce){.rail{display:none}}
 
 /* ── the reading line under the nav ────────────────────────────────
    The same journey, for every width the rail cannot serve. It carries
    the page's own colour arc — coral through amber to iris, the order
-   the ground travels in. */
-.nav::after{
-  content:"";position:absolute;left:0;right:0;bottom:-1px;height:2px;
+   the ground travels in. A real element rather than a ::after, because
+   a pseudo-element can only be driven from a variable, and a variable
+   is what all of this was too expensive for. */
+.nav-line{
+  position:absolute;left:0;right:0;bottom:-1px;height:2px;
   background:linear-gradient(90deg,var(--coral),var(--amber) 42%,var(--magenta) 74%,var(--violet));
-  transform-origin:left center;transform:scaleX(var(--p,0));
-  opacity:.85;
+  transform-origin:left center;transform:scaleX(0);
+  will-change:transform;opacity:.85;
 }
 
 /* ── words that arrive as you reach them ───────────────────────────
@@ -1161,17 +1191,17 @@ button,input,select{font:inherit;color:inherit}
    the sentence assembles as you come down and takes itself apart as you
    go back up, at whatever speed you choose. Nothing here fires once:
    there is nothing to miss, and nothing to replay that is not simply
-   there again. */
+   there again.
+
+   The engine writes transform and opacity onto each word directly. It
+   used to write one custom property and let the two declarations below
+   resolve it; on twenty-eight leaf elements that was four times the
+   cost for no gain, because a leaf has nothing to inherit to. */
 .wsp{display:inline-block;overflow:hidden;vertical-align:bottom;
      padding-bottom:.14em;margin-bottom:-.14em}
-.wsp>i{
-  display:inline-block;font-style:inherit;
-  transform:translate3d(0,calc((1 - var(--t,1)) * 100%),0)
-            translate3d(0,calc((1 - var(--t,1)) * .58em),0);
-  opacity:var(--t,1);
-}
+.wsp>i{display:inline-block;font-style:inherit}
 /* The hero cannot wait for a scroll it has not had yet, so its line
-   arrives on a clock instead — the same shape, at load. */
+   arrives on a clock instead — the same rise, at load. */
 .hero-display .wsp>i{
   transform:translate3d(0,100%,0) translate3d(0,.58em,0);opacity:0;
   animation:wordUp .9s cubic-bezier(.16,.84,.44,1) both;
@@ -1187,7 +1217,8 @@ button,input,select{font:inherit;color:inherit}
    the hero. It is the only place on the page where one section
    physically overlaps another, which is what makes the whole thing read
    as layered rather than stacked. One instance is a gesture; five would
-   be a tic. */
+   be a tic. It is pure geometry and costs nothing to run, so it is the
+   same on every machine. */
 .statement:not(.statement-2){
   position:relative;z-index:2;
   margin-top:-38px;border-radius:34px 34px 0 0;
@@ -1196,23 +1227,21 @@ button,input,select{font:inherit;color:inherit}
 @media(max-width:760px){
   .statement:not(.statement-2){margin-top:-24px;border-radius:22px 22px 0 0}
 }
-
-/* The second statement, the trust cards and the FAQ all sat on their own
-   opaque cream. They give it up so the travelling ground runs behind them
-   unbroken — the sheet over the hero is the only opaque plane left. */
+/* The second statement gives up its opaque cream so the travelling
+   ground runs behind it unbroken. The sheet over the hero is the only
+   opaque plane left. */
 .statement-2{background:transparent}
-
-/* The hero sinks while the sheet comes over it: the content inside
-   travels slower than the frame around it, so leaving the hero feels
-   like a camera pulling back off a face rather than a block scrolling
-   out of the way. */
-.hero-layer{will-change:transform}
 
 /* ── depth ─────────────────────────────────────────────────────────
    Cards, photographs and devices move at their own rates through the
    viewport. The spread is small — front and back are about 40px apart
    over a full screen of travel — but it is the difference between
-   looking at a page and looking into one. */
+   looking at a page and looking into one.
+
+   will-change is added when a layer comes on screen and taken off when
+   it leaves, so a promoted layer exists for the seconds it is being
+   animated and not for the length of the session. That is the whole
+   reason the memory footprint stays flat on a long page. */
 .mo-live{will-change:transform}
 .slides{perspective:1800px}
 .slide-card{transform-style:preserve-3d}
@@ -1229,26 +1258,60 @@ button,input,select{font:inherit;color:inherit}
 .spec-row .spec-demo{transition:border-color .45s ease,background .45s ease}
 .spec-row.lit .spec-demo{border-color:rgba(255,107,74,.34);background:var(--card)}
 
-/* ── momentum ──────────────────────────────────────────────────────
-   --vel is 0 when the page is still and 1 when it is moving fast. The
-   only things allowed to read it are the ones that would have weight if
-   they were real: the display type leans into the direction of travel,
-   and the glass orb in the demo stretches a hair. Two percent, at the
-   very most. If you can name the effect, it is too strong. */
-.stmt,.foot-serif{
-  transform:translate3d(0,calc(var(--vel,0) * var(--dir,1) * -7px),0)
-            scaleY(calc(1 + var(--vel,0) * .018));
-  transform-origin:center top;
-}
-@media(prefers-reduced-motion:reduce){
-  .stmt,.foot-serif{transform:none}
+/* ── nothing animates in a section you cannot see ──────────────────
+   Infinite CSS animations keep running when they are scrolled away, and
+   two on this page are expensive enough to matter: the glass orb, whose
+   every frame re-blurs what is behind it, and the voice mark, which is
+   thirty-nine separately animated SVG lines. An observer marks the
+   sections that are actually on screen; everything else holds its last
+   frame and costs nothing.
+
+   `.asleep` rather than `:not(.awake)` so that if the observer never
+   runs — no IntersectionObserver, script stripped — the page animates
+   exactly as it did before rather than freezing solid. */
+.asleep .glass,.asleep .glass::after,.asleep .stage-rays,
+.asleep .stage-glow,.asleep .stage-ring,.asleep .pill-orb::after,
+.asleep .vmark line,.asleep .ph-wave i,.asleep .wave i{
+  animation-play-state:paused !important;
 }
 
+/* ── momentum ──────────────────────────────────────────────────────
+   The display type leans a little into the direction of travel, and
+   settles when you stop. Two percent, at the very most: if you can name
+   the effect it is too strong. Written directly onto the three blocks
+   that use it — this was the second of the three per-frame writes to
+   :root, and the cheapest to simply stop doing that way. */
+@media(prefers-reduced-motion:reduce){
+  .stmt,.foot-serif{transform:none !important}
+}
+
+/* ═══ THE LITE TIER ═════════════════════════════════════════════════
+   Set before first paint from the device's hints, and again by the
+   engine if it sees frames arriving late. Everything here is a cost you
+   cannot see paid to keep the ones you can. */
+
+/* Four filter passes over four large photographs, re-applied whenever
+   the layer they sit on moves. The colour grade is a cheap matrix and
+   stays; the blur is the multi-pass one and goes. */
+.lite .secbg img{filter:saturate(.55) brightness(1.3) sepia(.25) !important;transform:none !important}
+/* A blend mode over a playing video composites the whole frame twice. */
+.lite .hero-vid{mix-blend-mode:normal;opacity:.22}
+/* A sticky bar with a backdrop-filter re-blurs the width of the window
+   on every scrolled frame. A little more opacity reads almost the same
+   and reads it for free. */
+.lite .nav{backdrop-filter:none;-webkit-backdrop-filter:none;background:rgba(245,241,234,.95)}
+.lite .hero-pill,.lite .news-pill{backdrop-filter:none;-webkit-backdrop-filter:none}
+.lite .glass{-webkit-backdrop-filter:none;backdrop-filter:none}
+.lite .glass::after{background:linear-gradient(150deg,rgba(255,255,255,.80),rgba(255,107,74,.20) 48%,rgba(255,255,255,.52))}
+.lite .stage-wash{filter:blur(14px)}
+.lite .slides{perspective:none}
+.lite .slide-card{transform:none !important}
+
 /* ── mobile ────────────────────────────────────────────────────────
-   Everything above survives except the rail and the deepest parallax. A
-   phone gets the travelling ground, the words arriving, the sheet over
-   the hero and the lit row — the parts that are about the story — and
-   none of the parts that are about a pointer. */
+   Everything survives except the rail and the deepest parallax. A phone
+   gets the travelling ground, the words arriving, the sheet over the
+   hero and the lit row — the parts that are about the story — and none
+   of the parts that are about a pointer. */
 @media(max-width:860px){
   .slides{perspective:none}
   .slide-card{transform:none !important}
@@ -1256,11 +1319,28 @@ button,input,select{font:inherit;color:inherit}
 </style>
 
 <script>
-/* Video gate, part 1 of 2 — runs before paint so mobile never flashes an
-   empty <video>. Part 2 (bottom of page) attaches the sources. */
-if(!window.matchMedia('(min-width:760px)').matches){
-  document.documentElement.className+=' no-video';
-}
+/* ── tier + video gate, part 1 of 2 ─────────────────────────────────
+   Both run before paint: the video gate so mobile never flashes an
+   empty <video> (part 2, at the bottom, attaches the sources), and the
+   tier so a low-powered machine never paints a blur it is about to
+   have taken away from it.
+
+   The hints are a first guess and a deliberately blunt one. deviceMemory
+   is capped at 8 by every browser that reports it, so it tells you a
+   machine is small and never that it is large; hardwareConcurrency is
+   the better signal of the two. `update:slow` catches e-ink and similar.
+   A machine these miss is caught afterwards by the watchdog in the
+   engine, which measures frames instead of asking. */
+(function(){
+  var m = window.matchMedia, cls = '';
+  var slow = (navigator.deviceMemory && navigator.deviceMemory <= 4)
+          || (navigator.hardwareConcurrency && navigator.hardwareConcurrency <= 4)
+          || m('(max-width:860px)').matches
+          || m('(update:slow)').matches;
+  if(slow) cls += ' lite';
+  if(slow || !m('(min-width:760px)').matches) cls += ' no-video';
+  if(cls) document.documentElement.className += cls;
+})();
 </script>
 
 <!-- ═══ ANALYTICS ══════════════════════════════════════════════════════
@@ -2190,7 +2270,11 @@ addEventListener('DOMContentLoaded', function(){
   }
 
   function sync(){
-    if(!desktop.matches){ document.documentElement.classList.add('no-video'); return; }
+    /* A lite machine never attaches a source, so the clips are never
+       fetched or decoded there — the same saving mobile already got. */
+    if(!desktop.matches || document.documentElement.classList.contains('lite')){
+      document.documentElement.classList.add('no-video'); return;
+    }
     document.documentElement.classList.remove('no-video');
 
     var lazy=[];
@@ -2790,18 +2874,38 @@ addEventListener('DOMContentLoaded', function(){
 /* ── THE JOURNEY ────────────────────────────────────────────────────
    One engine for every scroll-driven thing on the page.
 
-   There is exactly one rAF loop and one scroll listener. Each frame runs
-   in two halves: every live layer is measured, then every live layer is
-   written. Nothing reads geometry after a write, so the browser is never
-   asked to lay the page out mid-frame — which is the one thing that
-   separates this from being a slideshow.
+   ── the budget ───────────────────────────────────────────────────
+   A frame is allowed to write transform, opacity and clip-path, to a
+   list of elements that are on screen, at 30fps. That is all. It costs
+   about 0.05ms.
 
-   Layers are gated by an IntersectionObserver: off-screen work is not
-   deferred, it does not happen. A frame in the middle of this page
-   touches about a dozen elements.
+   What it must never do — and what the first version of this file did
+   on every frame — is set a custom property on :root. That invalidates
+   the computed style of all thousand elements in the document whether
+   or not any of them reads it: 9.9ms for a variable nothing consumes,
+   12.9ms for the one the sky and the rail were built on. Three of those
+   a frame, plus ninety rail ticks each resolving a calc() off a shared
+   --amp, was roughly 28ms of style recalc per frame on a fast desktop
+   and a locked tab on anything less. All of that arithmetic now happens
+   here and lands directly on the elements that need it.
 
-   The loop sleeps. It wakes on scroll, runs while there is velocity left
-   to decay, and stops, so a page sitting still costs nothing.
+   ── how it stays cheap ───────────────────────────────────────────
+   · One rAF loop and one scroll listener for the whole page.
+   · The loop is capped at 30fps (25 on the lite tier). Native scrolling
+     is untouched and stays as smooth as the display; it is the parallax
+     that updates every other frame, which is not a thing you can see.
+   · Each frame reads every live layer's geometry, then writes every
+     live layer. Nothing reads after a write, so the browser is never
+     asked to lay the page out mid-frame.
+   · An IntersectionObserver with a 200px buffer decides what is live.
+     Off-screen elements are not written to and give back their
+     will-change, so a promoted layer exists for the seconds it is
+     moving rather than for the length of the session.
+   · The loop sleeps: it wakes on scroll, runs while there is velocity
+     left to settle, and stops. A hidden tab stops it immediately.
+   · A machine that reports as low-powered starts on the lite tier, and
+     one that turns out to be slower than it claimed is moved there by
+     the watchdog below.
 
    All of it is additive and independent of the audio, caption and chat
    controllers above. If this block throws, is stripped, or never runs,
@@ -2809,7 +2913,8 @@ addEventListener('DOMContentLoaded', function(){
 (function(){
   var root  = document.documentElement,
       still = matchMedia('(prefers-reduced-motion:reduce)'),
-      wide  = matchMedia('(min-width:900px)');
+      wide  = matchMedia('(min-width:900px)'),
+      lite  = root.classList.contains('lite');
 
   function clamp(v){ return v < 0 ? 0 : v > 1 ? 1 : v; }
   function ease(t){ return t * t * (3 - 2 * t); }        /* smoothstep */
@@ -2818,7 +2923,8 @@ addEventListener('DOMContentLoaded', function(){
      A layer is an element, the last measurement of where it is, and a
      function that writes to it. `write` is called with the element's
      progress through the viewport: 0 the moment it enters from below,
-     1 as it leaves past the top. */
+     1 as it leaves past the top. A layer marked `opt` is one the lite
+     tier does without. */
   var layers = [], live = [], io = null;
 
   if('IntersectionObserver' in window){
@@ -2830,16 +2936,21 @@ addEventListener('DOMContentLoaded', function(){
         if(entry.isIntersecting){
           if(at < 0){ live.push(layer); entry.target.classList.add('mo-live'); }
         }else if(at >= 0){
-          live.splice(at, 1); entry.target.classList.remove('mo-live');
+          live.splice(at, 1);
+          /* Give the layer back. It keeps the transform it stopped at —
+             which is the right one for where it now sits — but stops
+             being a composited layer until it is needed again. */
+          entry.target.classList.remove('mo-live');
         }
       });
       wake();
-    },{rootMargin:'25% 0px 25% 0px'});
+    },{rootMargin:'200px 0px 200px 0px'});
   }
 
-  function on(el, write){
+  function on(el, write, opt){
     if(!el) return;
-    var layer = {el:el, write:write, top:0, h:0};
+    if(opt && lite) return;
+    var layer = {el:el, write:write, top:0, h:0, opt:!!opt};
     el.__mo = layer;
     layers.push(layer);
     if(io) io.observe(el); else live.push(layer);
@@ -2848,94 +2959,168 @@ addEventListener('DOMContentLoaded', function(){
 
   /* ── the clock ───────────────────────────────────────────────────── */
   var lastY = scrollY, vel = 0, dir = 1, idle = 0, running = false,
-      lastP = -1, lastVel = -1, lastAmp = -1, rail = null;
+      lastRun = 0, lastP = -1, lastVel = -1, lastAmp = -1;
+
+  function budget(){ return lite ? 40 : 32; }   /* 25fps / 30fps */
 
   function wake(){
     idle = 0;
-    if(running) return;
+    if(running || document.hidden) return;
     running = true;
     requestAnimationFrame(frame);
   }
 
   function paint(list, vh){
     var i;
-    for(i = 0; i < list.length; i++){
+    for(i = 0; i < list.length; i++){                 /* read */
       var box = list[i].el.getBoundingClientRect();
       list[i].top = box.top; list[i].h = box.height;
     }
-    for(i = 0; i < list.length; i++){
+    for(i = 0; i < list.length; i++){                 /* write */
       list[i].write(clamp((vh - list[i].top) / (vh + list[i].h)), vel, dir, vh);
     }
   }
 
-  function frame(){
+  function frame(now){
+    if(document.hidden){ running = false; return; }
+
+    /* The reschedule is at the *end*, after the stop condition has been
+       tested. Asking for the next frame up here instead — which is what
+       this did first — means setting running=false never actually stops
+       anything, because a frame is already booked and will book another.
+       An idle loop is cheap per frame and still wrong: it is a wakeup
+       every 16ms for the life of the tab. */
+    if(now - lastRun < budget()){                     /* the 30fps cap */
+      requestAnimationFrame(frame);
+      return;
+    }
+    lastRun = now;
+
     var y  = scrollY,
         dy = y - lastY,
         vh = innerHeight;
     lastY = y;
 
     /* Velocity rises fast and settles slowly, which is what gives the
-       rail its weight — a real needle overshoots and comes back, it does
-       not step to a number. */
+       rail its weight — a real needle overshoots and comes back, it
+       does not step to a number. The last three percent of the decay is
+       below the width of a tick, so it is dropped rather than idled
+       through for another half-second. */
     var target = Math.min(1, Math.abs(dy) / 55);
     vel += (target - vel) * (target > vel ? .5 : .075);
-    if(vel < .0015) vel = 0;
+    if(!dy && vel < .03) vel = 0;
+
     if(dy) dir = dy > 0 ? 1 : -1;
 
-    /* page progress, shared by the rail, the nav line and the sky */
     var span = root.scrollHeight - vh,
         p    = span > 0 ? clamp(y / span) : 0;
 
-    if(Math.abs(p - lastP) > .0008){
-      root.style.setProperty('--p', p.toFixed(4));
-      sky(p);
-      lastP = p;
-    }
-    if(Math.abs(vel - lastVel) > .004){
-      root.style.setProperty('--vel', vel.toFixed(3));
-      root.style.setProperty('--dir', String(dir));
-      lastVel = vel;
-    }
-    /* The rail lags the page a little further still, so it keeps
-       speaking for a beat after you stop. */
-    var amp = Math.min(1, vel * 1.25);
-    if(rail && Math.abs(amp - lastAmp) > .006){
-      rail.style.setProperty('--amp', amp.toFixed(3));
-      lastAmp = amp;
-    }
+    if(Math.abs(p - lastP) > .0008){ sky(p); spine(p, vh); lastP = p; }
+    if(Math.abs(vel - lastVel) > .006){ amp(vel); lastVel = vel; }
 
     paint(live, vh);
 
     if(!dy && !vel) idle++; else idle = 0;
-    if(idle > 6){ running = false; return; }
+    if(idle > 6){ running = false; return; }          /* ~200ms after you stop */
     requestAnimationFrame(frame);
   }
 
   addEventListener('scroll', wake, {passive:true});
   addEventListener('resize', function(){ lastP = lastVel = lastAmp = -1; wake(); });
+  /* A hidden tab does no work at all: the loop returns on its next
+     frame and nothing reschedules it until the tab is looked at again. */
+  addEventListener('visibilitychange', function(){ if(!document.hidden) wake(); });
+
+  /* ── the watchdog ────────────────────────────────────────────────
+     Device hints are a guess; this is a measurement. It watches for
+     long tasks — the browser's own name for the main thread being
+     blocked for 50ms or more, which is exactly the symptom being fixed
+     here — and if three of them land while the page is being scrolled,
+     the machine is slower than it claimed and moves to the lite tier
+     for the rest of the session.
+
+     A long task is the right signal because it measures the freeze
+     itself. The first version of this timed the gaps between animation
+     frames, which sounds equivalent and is not: frame cadence also
+     depends on the display, on power saving and on whether there is a
+     display at all, so it called a perfectly healthy machine slow and
+     could not be trusted either way.
+
+     Load is not evidence — parsing and first video decode are long
+     tasks on every machine — so nothing counts until the page has
+     settled and the reader has actually started moving. It only ever
+     demotes, so it cannot oscillate, and it stops watching once it has
+     decided.
+
+     Firefox and Safari do not report long tasks. There the device hints
+     stand on their own, which is why they are set conservatively. */
+  var judged = lite;
+  function watch(){}                       /* kept: the loop calls it */
+  if(!judged && window.PerformanceObserver){
+    try{
+      var strikes = 0, armed = false;
+      setTimeout(function(){ armed = true; }, 2500);
+      new PerformanceObserver(function(list){
+        if(judged || !armed || !vel) return;
+        strikes += list.getEntries().length;
+        if(strikes >= 3){ judged = true; demote(); }
+      }).observe({entryTypes:['longtask']});
+    }catch(e){}                            /* unsupported: hints stand */
+  }
+
+  function demote(){
+    if(lite) return;
+    lite = true;
+    root.classList.add('lite');
+    if(rail && rail.parentNode) rail.parentNode.removeChild(rail);
+    rail = null;
+    [].slice.call(document.querySelectorAll('video[data-loaded]')).forEach(function(v){
+      try{ v.pause(); }catch(e){}
+      v.style.transform = '';
+    });
+    /* Hand back everything the lite tier does without, transform and
+       promotion included, so the page settles rather than freezing at
+       whatever offsets it happened to be holding. */
+    layers.filter(function(l){ return l.opt; }).forEach(function(l){
+      l.el.style.transform = '';
+      l.el.classList.remove('mo-live');
+      if(io) io.unobserve(l.el);
+      var a = layers.indexOf(l); if(a >= 0) layers.splice(a, 1);
+      var b = live.indexOf(l);   if(b >= 0) live.splice(b, 1);
+    });
+    trim();                                   /* drop the third sky layer */
+  }
 
   /* ── the sky ─────────────────────────────────────────────────────
-     Five climates, cross-faded as a partition of one: whatever the
-     scroll position, the layers' opacities add to exactly 1. That is the
-     invariant the contrast budget rests on — no point on this page ever
-     carries two tints stacked. */
-  var sky = function(){};
+     Three climates on a full machine, two on a lite one, cross-faded as
+     a partition of one: whatever the scroll position, the layers'
+     opacities add to exactly 1. That is the invariant the contrast
+     budget rests on — no point on this page ever carries two tints
+     stacked.
+
+     These are static rasters. Nothing about them moves, and opacity is
+     only written while you are actually crossing between two climates,
+     so most frames write nothing here at all. */
+  var sky = function(){}, trim = function(){};
   (function(){
-    var wrap = document.createElement('div');
+    var wrap  = document.createElement('div'),
+        names = lite ? ['f-dusk','f-ember'] : ['f-dusk','f-warm','f-ember'],
+        stops = lite ? [0, .70]            : [0, .46, .92];
     wrap.className = 'field';
     wrap.setAttribute('aria-hidden','true');
-    var stops = [0, .25, .5, .72, .92],
-        cells = ['f-dusk','f-dawn','f-noon','f-cool','f-ember'].map(function(n){
-          var s = document.createElement('span');
-          s.className = 'fx ' + n;
-          wrap.appendChild(s);
-          return s;
-        });
+
+    var cells = names.map(function(n){
+      var s = document.createElement('span');
+      s.className = 'fx ' + n;
+      wrap.appendChild(s);
+      return s;
+    });
     document.body.insertBefore(wrap, document.body.firstChild);
 
     var shown = [];
     sky = function(p){
-      var op = [0,0,0,0,0], k;
+      var op = [], k;
+      for(k = 0; k < cells.length; k++) op[k] = 0;
       if(p <= stops[0]) op[0] = 1;
       else if(p >= stops[stops.length - 1]) op[op.length - 1] = 1;
       else for(k = 0; k < stops.length - 1; k++){
@@ -2951,47 +3136,69 @@ addEventListener('DOMContentLoaded', function(){
         shown[k] = op[k];
       }
     };
+
+    /* Demotion mid-session: the middle climate goes and the two that
+       are left keep the same arc. */
+    trim = function(){
+      if(cells.length < 3) return;
+      wrap.removeChild(cells[1]);
+      cells.splice(1, 1);
+      stops = [0, .70];
+      shown = [];
+      lastP = -1;
+    };
+
     sky(0);
   })();
 
   /* ── the rail ────────────────────────────────────────────────────
-     Ticks are built, not written. Each is given a fixed --k once, and
-     its width for the rest of the session is a calc off that and the
-     single --amp the loop sets. Two style writes drive ninety bars. */
-  if(!still.matches){
+     Five elements, built once. The ticks are a repeating background
+     tile rather than ninety nodes, so amplitude is one scaleX and the
+     travelled part is one clip-path on the wrapper holding both accent
+     halves. Four style writes a frame for the whole thing. */
+  var rail = null, railWaves = null, railLit = null, railNode = null;
+  var spine = function(){}, amp = function(){};
+  if(!still.matches && !lite){
     rail = document.createElement('div');
     rail.className = 'rail';
     rail.setAttribute('aria-hidden','true');
-
-    var track = document.createElement('div'), fill = document.createElement('div'),
-        node  = document.createElement('span');
-    track.className = 'rail-col rail-track';
-    fill.className  = 'rail-col rail-fill';
-    node.className  = 'rail-node';
-
-    var build = function(){
-      var n = Math.max(24, Math.ceil(innerHeight / 8));
-      [track, fill].forEach(function(col){
-        col.innerHTML = '';
-        for(var i = 0; i < n; i++){
-          var tick = document.createElement('i');
-          /* A fixed, unrepeating profile, so the rail reads as a
-             recorded waveform and not a row of equal bars. */
-          var k = .22 + .78 * Math.abs(Math.sin(i * 1.7) * .6 + Math.sin(i * .43) * .4);
-          tick.style.setProperty('--k', k.toFixed(3));
-          col.appendChild(tick);
-        }
-      });
-    };
-    build();
-    rail.appendChild(track); rail.appendChild(fill); rail.appendChild(node);
+    rail.innerHTML =
+      '<span class="rail-line"></span><span class="rail-wave"></span>' +
+      '<div class="rail-lit"><span class="rail-line"></span><span class="rail-wave"></span></div>' +
+      '<span class="rail-node"></span>';
     document.body.appendChild(rail);
 
-    var rebuild;
-    addEventListener('resize', function(){
-      clearTimeout(rebuild); rebuild = setTimeout(build, 220);
-    });
+    railWaves = [].slice.call(rail.querySelectorAll('.rail-wave'));
+    railLit   = rail.querySelector('.rail-lit');
+    railNode  = rail.querySelector('.rail-node');
+
+    spine = function(p, vh){
+      if(!rail) return;
+      railLit.style.clipPath = 'inset(0 0 ' + ((1 - p) * 100).toFixed(2) + '% 0)';
+      railNode.style.transform = 'translate3d(0,' + (p * (vh - 7)).toFixed(1) + 'px,0)';
+    };
+    amp = function(v){
+      if(!rail) return;
+      var s = (.10 + Math.min(1, v * 1.25) * .9).toFixed(3);
+      railWaves[0].style.transform = 'scaleX(' + s + ')';
+      railWaves[1].style.transform = 'scaleX(' + s + ')';
+    };
   }
+
+  /* ── the reading line under the nav ──────────────────────────────── */
+  (function(){
+    var nav = document.getElementById('nav');
+    if(!nav) return;
+    var line = document.createElement('i');
+    line.className = 'nav-line';
+    line.setAttribute('aria-hidden','true');
+    nav.appendChild(line);
+    var railSpine = spine;
+    spine = function(p, vh){
+      line.style.transform = 'scaleX(' + p.toFixed(4) + ')';
+      railSpine(p, vh);
+    };
+  })();
 
   /* Whenever a real recording is playing, the page knows: the rail takes
      its amplitude from the audio instead of from you, the node lights,
@@ -3013,9 +3220,23 @@ addEventListener('DOMContentLoaded', function(){
     });
   })();
 
-  /* The sky and the rail are the parts of this that are colour and
-     position rather than motion, so they stay. Everything past here is
-     movement, and movement is what was asked not to happen. */
+  /* ── nothing animates in a section you cannot see ────────────────
+     Two of this page's infinite animations are expensive: the glass orb,
+     whose every frame re-blurs what is behind it, and the voice mark,
+     which is thirty-nine separately animated SVG lines. Both used to run
+     for the whole session. Now they run while their section is on
+     screen. */
+  if(io){
+    var sleeper = new IntersectionObserver(function(entries){
+      entries.forEach(function(e){ e.target.classList.toggle('asleep', !e.isIntersecting); });
+    },{rootMargin:'150px 0px 150px 0px'});
+    [].slice.call(document.querySelectorAll('#top,.statement,#try-demo,#agents'))
+      .forEach(function(s){ sleeper.observe(s); });
+  }
+
+  /* The sky, the rail and the reading line are position and colour
+     rather than motion, so they stay. Everything past here is movement,
+     and movement is what was asked not to happen. */
   if(still.matches){ wake(); return; }
 
   /* ═══ registrations ═══════════════════════════════════════════════ */
@@ -3025,7 +3246,11 @@ addEventListener('DOMContentLoaded', function(){
      frame travels at the speed of the page and everything inside it
      lags, so the hero holds your eye a beat longer than the scroll says
      it should — and the statement below arrives over the top of it like
-     a sheet of paper laid down on a photograph. */
+     a sheet of paper laid down on a photograph.
+
+     The video is the one plane the lite tier leaves alone: transforming
+     a playing video is the expensive half of this, and the three text
+     planes carry the effect on their own. */
   (function(){
     var hero = document.querySelector('#top .hero');
     if(!hero) return;
@@ -3033,16 +3258,17 @@ addEventListener('DOMContentLoaded', function(){
         eye  = hero.querySelector('.hero-eyebrow'),
         mid  = hero.querySelector('.hero-mid'),
         foot = hero.querySelector('.hero-foot');
-    [eye, mid, foot, vid].forEach(function(el){ if(el) el.classList.add('hero-layer'); });
 
     on(hero, function(){
-      var gone = clamp(-this.top / Math.max(1, this.h)),   /* screens travelled off the top */
+      var gone = clamp(-this.top / Math.max(1, this.h)),
           lift = gone * this.h;
       if(eye)  eye.style.transform  = 'translate3d(0,' + (lift * .22).toFixed(1) + 'px,0)';
       if(mid)  mid.style.transform  = 'translate3d(0,' + (lift * .40).toFixed(1) + 'px,0)';
       if(foot) foot.style.transform = 'translate3d(0,' + (lift * .28).toFixed(1) + 'px,0)';
-      if(vid)  vid.style.transform  = 'translate3d(0,' + (lift * .12).toFixed(1) + 'px,0) scale(' +
-                                      (1 + gone * .10).toFixed(3) + ')';
+      if(vid && !lite){
+        vid.style.transform = 'translate3d(0,' + (lift * .12).toFixed(1) + 'px,0) scale(' +
+                              (1 + gone * .10).toFixed(3) + ')';
+      }
     });
   })();
 
@@ -3057,9 +3283,8 @@ addEventListener('DOMContentLoaded', function(){
     (function walk(node){
       [].slice.call(node.childNodes).forEach(function(kid){
         if(kid.nodeType === 3){
-          var parts = kid.nodeValue.split(/(\s+)/);
           var frag = document.createDocumentFragment();
-          parts.forEach(function(part){
+          kid.nodeValue.split(/(\s+)/).forEach(function(part){
             if(!part) return;
             if(/^\s+$/.test(part)){ frag.appendChild(document.createTextNode(part)); return; }
             var box  = document.createElement('span'),
@@ -3083,7 +3308,11 @@ addEventListener('DOMContentLoaded', function(){
   /* ── the display type assembles as you reach it ──────────────────
      Each word's own progress is the block's progress minus its place in
      the line, so the sentence lands left to right — and comes apart the
-     same way in reverse, at whatever speed you go back up. */
+     same way in reverse, at whatever speed you go back up.
+
+     transform and opacity are written straight onto each word. A word
+     is a leaf with nothing to inherit to, so the custom property this
+     used to set bought nothing and cost four times as much. */
   function scrub(block, opts){
     var words = split(block);
     if(!words.length) return;
@@ -3094,9 +3323,17 @@ addEventListener('DOMContentLoaded', function(){
         step   = spread / Math.max(1, words.length - 1),
         shown  = [];
 
+    function place(el, t){
+      if(t >= .999){ el.style.transform = ''; el.style.opacity = ''; return; }
+      var away = 1 - t;
+      el.style.transform = 'translate3d(0,' + (away * 100).toFixed(2) + '%,0)' +
+                           ' translate3d(0,' + (away * .58).toFixed(3) + 'em,0)';
+      el.style.opacity = t.toFixed(3);
+    }
+
     /* Start closed. Otherwise a block sitting past the observer's reach
        renders finished, then resets the instant you arrive at it. */
-    words.forEach(function(w){ w.style.setProperty('--t','0'); });
+    words.forEach(function(w){ place(w, 0); });
 
     /* Two entrances on one element read as a stutter, so the wrapper's
        own reveal stands down and the words become the reveal. */
@@ -3109,7 +3346,7 @@ addEventListener('DOMContentLoaded', function(){
       for(var i = 0; i < words.length; i++){
         var w = ease(clamp((t - i * step) / (1 - spread)));
         if(Math.abs(w - (shown[i] || 0)) < .004) continue;
-        words[i].style.setProperty('--t', w.toFixed(3));
+        place(words[i], w);
         shown[i] = w;
       }
     });
@@ -3129,43 +3366,61 @@ addEventListener('DOMContentLoaded', function(){
     if(h) split(h).forEach(function(w, i){ w.style.setProperty('--i', String(i)); });
   })();
 
+  /* ── momentum ────────────────────────────────────────────────────
+     The display type leans a little into the direction of travel and
+     settles when you stop. Two percent at the very most: if you can
+     name the effect, it is too strong. */
+  [].slice.call(document.querySelectorAll('.stmt,.foot-serif')).forEach(function(el){
+    var was = -1;
+    on(el, function(p, v, d){
+      if(Math.abs(v - was) < .01) return;
+      was = v;
+      el.style.transform = 'translate3d(0,' + (v * d * -7).toFixed(2) + 'px,0)' +
+                           ' scaleY(' + (1 + v * .018).toFixed(4) + ')';
+    }, true);
+  });
+
   /* ── depth ───────────────────────────────────────────────────────
      Photographs drift inside their frames; agent portraits sit at four
      different distances and the trust cards at three. Every travelling
      image is scaled past its frame by more than it can ever travel, so
      no edge can scroll into view — the same rule the section
-     photography follows. The whole spread is under 25px. */
-  function drift(el, dist, scale){
+     photography follows. The whole spread is under 25px.
+
+     The two photographs are the effect; the cards are the garnish, so
+     the cards are what a lite machine goes without. */
+  function drift(el, dist, scale, opt){
     if(!el) return;
     on(el, function(p){
       el.style.transform = 'translate3d(0,' + ((p * 2 - 1) * -dist).toFixed(1) + 'px,0)' +
                            (scale ? ' scale(' + scale + ')' : '');
-    });
+    }, opt);
   }
 
   drift(document.querySelector('.stmt-tile img'), 11, 1.24);
   drift(document.querySelector('.spec-photo img'), 16, 1.18);
   [].slice.call(document.querySelectorAll('.agent-figure')).forEach(function(el, i){
-    drift(el, 5 + (i % 4) * 3);
+    drift(el, 5 + (i % 4) * 3, 0, true);
   });
   if(wide.matches){
     [].slice.call(document.querySelectorAll('.scard')).forEach(function(el, i){
-      drift(el, 6 + (i % 3) * 7);
+      drift(el, 6 + (i % 3) * 7, 0, true);
     });
   }
 
   /* ── the screenshot lies back, then stands up ────────────────────
      The product shot enters tilted away from you and comes flat as it
      reaches the middle of the screen, the way a real object does when
-     you walk past it. Pointer widths only: a phone is already holding
-     the thing at arm's length. */
-  if(wide.matches){
+     you walk past it. Pointer widths only, and not on a lite machine:
+     a 3D transform on a large screenshot is the most expensive layer
+     here and the easiest one to do without. */
+  if(wide.matches && !lite){
     [].slice.call(document.querySelectorAll('.slide-card')).forEach(function(card){
       on(card, function(p){
         var c = p * 2 - 1;                     /* -1 below, 0 centred, +1 above */
         card.style.transform = 'translate3d(0,' + (c * -14).toFixed(1) + 'px,0) rotateX(' +
                                (c * -4.2).toFixed(2) + 'deg)';
-      });
+      }, true);
     });
   }
 
@@ -3182,10 +3437,10 @@ addEventListener('DOMContentLoaded', function(){
   })();
 
   /* ── the lit row ─────────────────────────────────────────────────
-     Whichever claim is crossing the middle of the screen is the one that
-     is alive; the other three hold still. A narrow band through the
-     centre of the viewport decides it, so it is genuinely the row you
-     are reading. */
+     Whichever claim is crossing the middle of the screen is the one
+     that is alive; the other three hold still. A narrow band through
+     the centre of the viewport decides it, so it is genuinely the row
+     you are reading. */
   (function(){
     var rows = [].slice.call(document.querySelectorAll('.spec-row'));
     if(!rows.length || !io) return;

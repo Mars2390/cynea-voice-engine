@@ -164,6 +164,18 @@ app.add_middleware(
 )
 
 
+# ── the browser call demo ───────────────────────────────────────────────
+# Registered here rather than in its own app so it shares this one's CORS
+# and lifespan. Guarded: the socket needs the voice providers, and a
+# deployment without them should still serve agents and the dashboard
+# rather than fail to import.
+try:
+    from cynea import voice_ws
+    voice_ws.register(app)
+except Exception as _exc:                                  # pragma: no cover
+    log.warning("live voice demo unavailable: %s", _exc)
+
+
 @app.exception_handler(db.DatabaseNotConfigured)
 async def _db_not_configured(request: Request, exc: db.DatabaseNotConfigured):
     return JSONResponse(

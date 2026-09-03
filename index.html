@@ -611,6 +611,35 @@ section[id],header[id],footer[id]{scroll-margin-top:76px}
 .pill input:checked+span{background:var(--navy);color:#fff;box-shadow:none}
 .pill input:focus-visible+span{outline:2px solid var(--accent);outline-offset:3px}
 
+/* ── the browser call, offered inside the demo panel ────────────────
+   Styled as a live thing rather than another button: the orb is the same
+   gradient as the favicon and the hero pill, so it reads as the product
+   rather than as a link to a page about it. */
+.browser-call{
+  display:flex;align-items:center;gap:14px;
+  padding:16px 18px;border-radius:14px;
+  background:var(--card);border:1px solid rgba(255,107,74,.42);
+  box-shadow:0 14px 34px -22px rgba(226,74,46,.55);
+  transition:border-color .22s ease,box-shadow .22s ease,transform .22s ease;
+}
+.browser-call:hover{
+  border-color:var(--coral);transform:translateY(-2px);
+  box-shadow:0 20px 44px -22px rgba(226,74,46,.7);
+}
+.bc-orb{
+  width:38px;height:38px;border-radius:50%;flex-shrink:0;position:relative;
+  background:radial-gradient(120% 120% at 32% 26%,#FFC9AE,#FF6B4A 46%,#E24A2E 100%);
+}
+.bc-orb::after{
+  content:"";position:absolute;inset:-5px;border-radius:50%;
+  border:1px solid rgba(255,107,74,.5);animation:ring 2.6s ease-out infinite;
+}
+.bc-copy{flex:1;min-width:0}
+.bc-copy b{display:block;font-size:14px;font-weight:600;letter-spacing:-.2px}
+.bc-copy small{display:block;font-size:12.5px;color:var(--muted);margin-top:2px}
+.bc-go{color:var(--coral-deep);font-size:17px;flex-shrink:0}
+@media(prefers-reduced-motion:reduce){.bc-orb::after{animation:none}}
+
 .panel-b p{margin-bottom:38px}
 .field{position:relative;margin-bottom:6px}
 .field label{display:block;font-size:12px;text-transform:uppercase;letter-spacing:-.16px;color:var(--muted);margin-bottom:2px}
@@ -1517,7 +1546,15 @@ section[id],header[id],footer[id]{scroll-margin-top:76px}
    is the most expensive pixel-for-pixel thing a page can ask for and,
    on a soft radial gradient with no edges in it, very nearly invisible.
    The drift went; the travel stayed. */
-.field{position:fixed;inset:0;z-index:-3;pointer-events:none;overflow:hidden}
+/* Named .sky, not .field. It used to be .field, which is also the class
+   the demo form puts on each of its inputs — and this rule sits later in
+   the stylesheet, so it won. Every form field on the page was resolving
+   to position:fixed, inset:0, z-index:-3, pointer-events:none: the Use
+   case, Name and Phone number inputs were invisible and unclickable,
+   which is the whole reason the demo panel looked like a button with a
+   gap above it. A generic class name on a full-screen fixed layer is a
+   trap; this one is specific. */
+.sky{position:fixed;inset:0;z-index:-3;pointer-events:none;overflow:hidden}
 .fx{position:absolute;inset:0;opacity:0;will-change:opacity}
 .f-dusk{
   background:
@@ -1858,6 +1895,7 @@ addEventListener('DOMContentLoaded', function(){
     <a class="logo" href="#top">CYNEA <span>voice</span></a>
     <div class="nav-links" id="nav-links">
       <a href="#try-demo">Live demo</a>
+      <a href="live-call.html">Live call</a>
       <a href="#agents">Agents</a>
       <a href="#highlights">Product</a>
       <a href="#channels">Channels</a>
@@ -2040,9 +2078,21 @@ addEventListener('DOMContentLoaded', function(){
 
     <!-- RIGHT: request-a-call form -->
     <div class="panel panel-b">
-      <p class="lede">
-        Receive a live call from Amina and hear how our AI voice agent handles
-        real conversations.
+      <!-- The browser call is offered first because it is the one that
+           actually happens. The form below it needs a verified caller ID
+           and a carrier account; this needs a microphone. -->
+      <a class="browser-call" href="live-call.html">
+        <span class="bc-orb" aria-hidden="true"></span>
+        <span class="bc-copy">
+          <b>Talk to Kwame now, in this tab</b>
+          <small>Your microphone, no phone number. Answers when you stop speaking.</small>
+        </span>
+        <span class="bc-go" aria-hidden="true">&rarr;</span>
+      </a>
+
+      <p class="lede" style="margin-top:26px">
+        Or leave a number and receive a call from Amina when outbound
+        calling goes live.
       </p>
 
       <!-- Submitting shows a message and sends nothing. Outbound demo
@@ -4104,7 +4154,7 @@ addEventListener('DOMContentLoaded', function(){
     var wrap  = document.createElement('div'),
         names = lite ? ['f-dusk','f-ember'] : ['f-dusk','f-warm','f-ember'],
         stops = lite ? [0, .70]            : [0, .46, .92];
-    wrap.className = 'field';
+    wrap.className = 'sky';
     wrap.setAttribute('aria-hidden','true');
 
     var cells = names.map(function(n){

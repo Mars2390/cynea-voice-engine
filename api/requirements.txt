@@ -1,17 +1,16 @@
 # Dependencies for the deployed control plane ONLY.
 #
 # The root requirements.txt is the development and container set: it also
-# carries numpy, scipy, pydub, edge-tts and elevenlabs for the voice stack.
-# None of that is imported by cynea/api.py — verified by loading the module
-# and checking sys.modules — so installing it here would add hundreds of
-# megabytes to a function that never calls it, and pay for it on every
-# cold start.
+# carries numpy, scipy, pydub and elevenlabs. None of that is imported by
+# cynea/api.py or cynea/voice_ws.py — verified by loading both and checking
+# sys.modules — so installing it here would add hundreds of megabytes to a
+# function that never calls it, and pay for it on every cold start.
 #
 # If a route ever needs the engine, move that route to its own function
 # rather than making this one heavy.
 
 fastapi==0.115.6
-uvicorn==0.34.0
+uvicorn[standard]==0.34.0
 pydantic[email]==2.10.4
 bcrypt==4.0.1
 SQLAlchemy==2.0.36
@@ -19,3 +18,11 @@ psycopg2-binary==2.9.10
 greenlet==3.5.3
 python-dotenv==1.0.1
 httpx==0.28.1
+
+# The browser call demo (cynea/voice_ws.py). Each of these is an HTTP or
+# WebSocket client rather than an audio library: transcription and the
+# model are Groq over httpx, speech is Edge TTS over a socket to
+# Microsoft, and the browser sends PCM the engine already understands.
+# So the demo adds a socket, not a codec.
+edge-tts==7.2.8
+websockets==16.0

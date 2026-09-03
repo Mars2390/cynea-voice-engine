@@ -1,0 +1,239 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Live call — Cynea</title>
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="assets/favicon.ico" sizes="48x48 32x32 16x16">
+<link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+<link rel="mask-icon" href="assets/favicon.svg" color="#FF6B4A">
+<meta name="description" content="Talk to a Cynea voice agent in your browser. No phone number needed.">
+<meta name="theme-color" content="#FBF8F5" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#171A2E" media="(prefers-color-scheme: dark)">
+<meta name="robots" content="noindex">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600&family=Instrument+Serif&display=swap" rel="stylesheet">
+
+<style>
+/* Tokens lifted from index.html so this page is the same product, not a
+   lookalike. Only what this page uses is repeated. */
+:root{
+  --bg:#FBF8F5; --card:#FFFFFF; --card-2:#F7F2ED; --line:#E9E1D8;
+  --ink:#171A2E; --muted:#6E6B7C; --faint:#9B98A6;
+  --coral:#FF6B4A; --coral-deep:#E24A2E; --amber:#F2A03D;
+  --navy:#1B2050; --violet:#7B4FD4; --ok:#2E9E6B; --bad:#D9455F;
+  --sans:'Inter Tight',system-ui,-apple-system,'Segoe UI',sans-serif;
+  --serif:'Instrument Serif',Georgia,serif;
+}
+*,*::before,*::after{box-sizing:border-box}
+[hidden]{display:none!important}
+body{
+  margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans);
+  font-size:16px;line-height:1.5;-webkit-font-smoothing:antialiased;
+}
+a{color:inherit;text-decoration:none}
+:focus-visible{outline:2px solid var(--coral);outline-offset:3px;border-radius:6px}
+
+.nav{
+  display:flex;align-items:center;gap:16px;height:60px;
+  max-width:1100px;margin-inline:auto;padding-inline:24px;
+}
+.logo{font-size:17px;font-weight:600;letter-spacing:-.4px}
+.logo span{font-family:var(--serif);font-weight:400}
+.nav .back{margin-left:auto;font-size:13px;color:var(--muted)}
+.nav .back:hover{color:var(--ink)}
+
+.wrap{max-width:1100px;margin-inline:auto;padding:clamp(28px,4vw,56px) 24px 80px}
+.head{max-width:56ch}
+.kicker{
+  font-size:12px;text-transform:uppercase;letter-spacing:.08em;
+  font-weight:500;color:var(--coral-deep);
+}
+h1{
+  font-family:var(--serif);font-weight:400;letter-spacing:-1px;line-height:1.02;
+  font-size:clamp(32px,5vw,52px);margin:12px 0 0;
+}
+.lede{margin-top:14px;color:var(--muted);font-size:clamp(15px,1vw+13px,18px)}
+
+/* ── the call card ──────────────────────────────────────────────────── */
+.call{
+  margin-top:clamp(28px,3vw,40px);
+  display:grid;grid-template-columns:1fr;gap:16px;
+}
+@media(min-width:901px){.call{grid-template-columns:minmax(0,380px) minmax(0,1fr)}}
+
+.panel{
+  background:var(--card);border:1px solid var(--line);border-radius:16px;
+  padding:clamp(22px,2vw,30px);position:relative;overflow:hidden;
+}
+.stage{display:flex;flex-direction:column;align-items:center;text-align:center}
+
+/* the orb, same gradient as the favicon and the hero pill */
+.orb{
+  width:clamp(116px,16vw,152px);aspect-ratio:1;border-radius:50%;position:relative;
+  background:radial-gradient(120% 120% at 32% 26%,#FFC9AE,#FF6B4A 46%,#E24A2E 100%);
+  display:grid;place-items:center;
+  box-shadow:0 20px 46px -18px rgba(226,74,46,.55);
+}
+.orb::after{
+  content:"";position:absolute;inset:-8px;border-radius:50%;
+  border:1px solid rgba(255,107,74,.45);opacity:0;
+}
+.lc-live .orb::after{animation:ring 2.4s ease-out infinite}
+@keyframes ring{0%{transform:scale(.9);opacity:.8}100%{transform:scale(1.45);opacity:0}}
+
+/* level meter — five bars, the same mark the favicon carries */
+#call-meter{display:flex;align-items:center;gap:5px;height:52%}
+#call-meter i{
+  width:6px;height:100%;border-radius:3px;background:rgba(255,255,255,.94);
+  transform:scaleY(.18);transform-origin:center;
+  transition:transform .09s linear;
+}
+
+.who{margin-top:18px;font-size:19px;font-weight:600;letter-spacing:-.3px}
+.role{font-size:13px;color:var(--muted);margin-top:2px}
+
+.status{
+  display:flex;align-items:center;justify-content:center;gap:8px;margin-top:18px;
+  font-size:11.5px;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);
+}
+.lc-dot{width:7px;height:7px;border-radius:50%;background:var(--faint);flex-shrink:0}
+.lc-dot.live{background:var(--ok)}
+.lc-dot.hearing{background:var(--coral);animation:beat 1s ease-in-out infinite}
+.lc-dot.thinking{background:var(--amber);animation:beat 1.4s ease-in-out infinite}
+.lc-dot.speaking{background:var(--violet);animation:beat .9s ease-in-out infinite}
+.lc-dot.bad{background:var(--bad)}
+@keyframes beat{0%,100%{transform:scale(1)}50%{transform:scale(1.5)}}
+#call-timer{font-variant-numeric:tabular-nums;color:var(--faint)}
+
+.btns{display:flex;flex-wrap:wrap;gap:9px;justify-content:center;margin-top:22px}
+.btn{
+  display:inline-flex;align-items:center;gap:8px;height:40px;padding:0 20px;
+  border:0;border-radius:999px;cursor:pointer;font:inherit;font-size:14px;
+  font-weight:500;transition:box-shadow .18s,opacity .18s;
+}
+.btn-go{background:#1B7F4F;color:#fff}
+.btn-go:hover{box-shadow:inset 0 0 0 1px rgba(255,255,255,.42)}
+.btn-go:disabled{opacity:.5;cursor:default}
+.btn-end{background:transparent;color:var(--ink);box-shadow:inset 0 0 0 1px var(--line)}
+.btn-end:hover{box-shadow:inset 0 0 0 1px var(--ink)}
+.hint{margin-top:14px;font-size:12.5px;color:var(--faint);max-width:30ch}
+
+/* ── transcript ─────────────────────────────────────────────────────── */
+.tape-panel{display:flex;flex-direction:column;padding:0;overflow:hidden}
+.tape-head{
+  display:flex;align-items:center;justify-content:space-between;gap:12px;
+  padding:16px 20px;border-bottom:1px solid var(--line);background:var(--card-2);
+}
+.tape-head b{font-size:13px;font-weight:600}
+.tape-head small{font-size:11.5px;color:var(--muted)}
+#call-tape{
+  flex:1;min-height:clamp(300px,44vh,460px);max-height:60vh;overflow-y:auto;
+  padding:20px;display:flex;flex-direction:column;gap:12px;
+  background:linear-gradient(168deg,#1B2050 0%,#171A2E 58%,#241C3A 100%);
+  scrollbar-width:thin;scrollbar-color:rgba(255,255,255,.22) transparent;
+}
+#call-tape::-webkit-scrollbar{width:5px}
+#call-tape::-webkit-scrollbar-thumb{background:rgba(255,255,255,.22);border-radius:3px}
+.lc-empty{margin:auto;text-align:center;font-size:13.5px;color:rgba(255,255,255,.5);max-width:28ch}
+.lc-line{margin:0;max-width:82%;font-size:14.5px;line-height:1.5}
+.lc-line b{
+  display:block;font-size:10px;font-weight:600;text-transform:uppercase;
+  letter-spacing:.08em;margin-bottom:3px;
+}
+.lc-agent{align-self:flex-start;color:#fff}
+.lc-agent b{color:#FF9C7F}
+.lc-you{align-self:flex-end;text-align:right;color:rgba(255,255,255,.84)}
+.lc-you b{color:rgba(255,255,255,.5)}
+.lc-note{
+  margin:0;align-self:center;text-align:center;font-size:12px;
+  color:rgba(255,255,255,.46);max-width:36ch;
+}
+.lc-note.lc-bad{color:#FFB4A8}
+
+.notes{margin-top:28px;display:grid;gap:14px;grid-template-columns:1fr}
+@media(min-width:761px){.notes{grid-template-columns:1fr 1fr 1fr}}
+.note{border-top:1px solid var(--line);padding-top:14px}
+.note h3{font-size:13px;font-weight:600;margin:0 0 5px}
+.note p{margin:0;font-size:13.5px;color:var(--muted)}
+
+@media(prefers-reduced-motion:reduce){
+  .orb::after,.lc-dot{animation:none!important}
+  #call-meter i{transition:none}
+}
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <a class="logo" href="index.html">CYNEA <span>voice</span></a>
+  <a class="back" href="index.html">&larr; Back to site</a>
+</nav>
+
+<main class="wrap">
+  <header class="head">
+    <p class="kicker">Live call</p>
+    <h1>Talk to Kwame in your browser.</h1>
+    <p class="lede">Your microphone, our agent, no phone number. This runs the same
+      engine a real call does — transcription, model and speech — and answers when
+      you stop speaking.</p>
+  </header>
+
+  <section class="call">
+    <div class="panel stage" id="call-card">
+      <div class="orb">
+        <div id="call-meter" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div>
+      </div>
+
+      <p class="who" id="call-agent">Kwame</p>
+      <p class="role">Hotel Receptionist · Adinkra Hotel, Accra</p>
+
+      <p class="status">
+        <span class="lc-dot" id="call-dot" aria-hidden="true"></span>
+        <span id="call-state">Ready</span>
+        <span id="call-timer">0:00</span>
+      </p>
+
+      <div class="btns">
+        <button class="btn btn-go" id="call-start" type="button">Start call</button>
+        <button class="btn btn-end" id="call-stop" type="button" hidden>End call</button>
+      </div>
+      <p class="hint" id="call-hint">Press start and allow the microphone.</p>
+    </div>
+
+    <div class="panel tape-panel">
+      <div class="tape-head">
+        <b>Transcript</b>
+        <small>Live, as it is spoken</small>
+      </div>
+      <div id="call-tape" role="log" aria-live="polite">
+        <p class="lc-empty">Start the call and say hello.</p>
+      </div>
+    </div>
+  </section>
+
+  <div class="notes">
+    <div class="note">
+      <h3>What is actually running</h3>
+      <p>Whisper on Groq for transcription, Groq for the reply, Edge TTS for speech.
+        The same providers a phone call would use.</p>
+    </div>
+    <div class="note">
+      <h3>When it answers</h3>
+      <p>Your browser measures the room, then treats about a second of quiet as the
+        end of your turn. No button to hold.</p>
+    </div>
+    <div class="note">
+      <h3>What is kept</h3>
+      <p>Nothing. The demo runs without a workspace, so no call row, transcript or
+        recording is written.</p>
+    </div>
+  </div>
+</main>
+
+<script src="assets/live-call.js"></script>
+</body>
+</html>

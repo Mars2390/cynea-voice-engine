@@ -1,6 +1,6 @@
 /* Cynea — browser call client.
  *
- * Microphone in, Kwame out, over one WebSocket. Pairs with
+ * Microphone in, Maya out, over one WebSocket. Pairs with
  * cynea/voice_ws.py; the wire contract is documented there.
  *
  * The audio contract
@@ -65,7 +65,7 @@
                     location.protocol === 'file:';
       base = local ? 'ws://127.0.0.1:8000' : `${proto}//${location.host}/api`;
     }
-    const agent = new URLSearchParams(location.search).get('agent') || 'kwame';
+    const agent = new URLSearchParams(location.search).get('agent') || 'maya';
     return `${base}/voice?agent=${encodeURIComponent(agent)}`;
   }
 

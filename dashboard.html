@@ -1536,7 +1536,19 @@ ovl.addEventListener('click',closeSide);
    substitutes numbers for the ones it could not fetch.
    ═══════════════════════════════════════════════════════════════════ */
 var API = {
-  base: (localStorage.getItem('cynea_api') || 'http://127.0.0.1:8000').replace(/\/$/, ''),
+  base: (function(){
+    /* Deployed, the API is /api on this same origin — same-origin means no
+       CORS preflight and no hard-coded hostname to rot. Opened from a file
+       or a static server on localhost there is no /api to talk to, so fall
+       back to a locally-run uvicorn. Set localStorage.cynea_api to override
+       either, which is what you want when pointing a local console at a
+       deployed API. */
+    var override = localStorage.getItem('cynea_api');
+    if (override) return override.replace(/\/$/, '');
+    var h = location.hostname;
+    var local = (h === 'localhost' || h === '127.0.0.1' || h === '' || location.protocol === 'file:');
+    return local ? 'http://127.0.0.1:8000' : '/api';
+  })(),
   token: localStorage.getItem('cynea_token') || '',
   live: false,
 

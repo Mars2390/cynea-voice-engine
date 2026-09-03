@@ -1,4 +1,15 @@
 {
+  "$schema": "https://openapi.vercel.sh/vercel.json",
   "cleanUrls": true,
-  "trailingSlash": false
+  "trailingSlash": false,
+  "functions": {
+    "api/index.py": {
+      "memory": 1024,
+      "maxDuration": 30,
+      "excludeFiles": "{assets/**,tools/**,tests/**,examples/**,cynea_africa/dashboard/preview.py,**/*.mp3,**/*.mp4,**/*.jpg,**/*.webp,**/*.png}"
+    }
+  },
+  "rewrites": [
+    { "source": "/api/(.*)", "destination": "/api/index" }
+  ]
 }

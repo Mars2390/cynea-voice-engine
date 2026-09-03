@@ -125,14 +125,42 @@ app = FastAPI(
     lifespan=lifespan,
 )
 
-# The console is a static file that may be served from anywhere during
-# development. Tighten this to the real origin before production.
+# ----------------------------------------------------------------------
+# CORS
+# ----------------------------------------------------------------------
+# The default used to be "*", which is the one setting that must not be a
+# default: `allow_credentials=True` with a wildcard origin means any site a
+# logged-in user visits can call this API with their bearer token attached.
+# Browsers reject that combination outright, so the practical effect was a
+# console that worked locally and failed the moment it had a real origin.
+#
+# The default below covers the two places the console actually runs — a
+# laptop and a Vercel deployment — and CORS_ORIGINS overrides it with a
+# comma-separated list once there is a custom domain.
+DEFAULT_ORIGINS = [
+    "http://localhost:3000",
+    "http://localhost:5173",
+    "http://localhost:8000",
+    "http://localhost:8080",
+    "http://127.0.0.1:3000",
+    "http://127.0.0.1:5173",
+    "http://127.0.0.1:8000",
+    "http://127.0.0.1:8080",
+]
+
+_origins_env = os.getenv("CORS_ORIGINS", "").strip()
+_allow_origins = ([o.strip() for o in _origins_env.split(",") if o.strip()]
+                  if _origins_env else DEFAULT_ORIGINS)
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=os.getenv("CORS_ORIGINS", "*").split(","),
+    allow_origins=_allow_origins,
+    # Every *.vercel.app preview and the production domain, without having
+    # to list a deployment hash that changes on every push.
+    allow_origin_regex=r"https://([a-z0-9-]+\.)*vercel\.app|https://([a-z0-9-]+\.)*cynea\.ai",
     allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
+    allow_methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    allow_headers=["Authorization", "Content-Type"],
 )
 
 

@@ -1,12 +1,29 @@
 .git
 .env
-*.py
-cynea/
-cynea_africa/
+
+# cynea/ and *.py are NOT excluded any more: api/index.py imports the
+# FastAPI app out of cynea/, so the package has to ship with the build.
+# Excluding them is what left the API unreachable while the marketing site
+# deployed fine — the console fell back to localhost and nobody outside
+# this machine could sign in.
+#
+# cynea_africa/ ships too, and must: cynea/agent_loader.py imports the four
+# persona modules out of it, and those imports are wrapped in try/except so
+# a missing package does not raise — it just leaves _PERSONAS empty, and
+# then every POST /agents is rejected with "Unknown persona 'kwame'".
+# A silent failure is the reason this is spelled out rather than trimmed.
+#
+# The one piece that genuinely stays behind is the dashboard preview: 5,560
+# lines of hardcoded sample callers that nothing on the server imports.
+cynea_africa/dashboard/preview.py
 local_setup/
 tests/
 examples/
+tools/
 node_modules/
+compress_videos.py
+optimize_images.py
+test_elevenlabs.py
 
 # Orphan heavy assets — no longer referenced in any HTML.
 # Kept on disk for archival but excluded from the Vercel build.

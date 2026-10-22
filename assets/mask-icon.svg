@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="14 2 30 52">
+  <!-- Safari pinned-tab mask: the Prism mark alone, one colour, no tile.
+       Safari fills the silhouette with the link's color attribute. -->
+  <g transform="translate(2,2)">
+    <path d="M28 2 L38 2 L40 4 L40 9 L34 15 L34 37 L40 43 L40 48 L38 50 L28 50 L18 43 L14 30 L14 22 L18 9 Z" fill="none" stroke="#000" stroke-width="2.8" stroke-linejoin="bevel"/>
+    <circle cx="26" cy="26" r="2.5" fill="#000"/>
+  </g>
+</svg>

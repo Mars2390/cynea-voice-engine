@@ -7,26 +7,28 @@
 <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
 <link rel="icon" href="assets/favicon.ico" sizes="48x48 32x32 16x16">
 <link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
-<link rel="mask-icon" href="assets/favicon.svg" color="#FF6B4A">
+<link rel="mask-icon" href="assets/mask-icon.svg" color="#00D4FF">
 <meta name="description" content="Talk to Maya in your browser. No phone number needed.">
-<meta name="theme-color" content="#FBF8F5" media="(prefers-color-scheme: light)">
-<meta name="theme-color" content="#171A2E" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" content="#050505">
 <meta name="robots" content="noindex">
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600&family=Instrument+Serif&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@500;600;700;800&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 
 <style>
-/* Tokens lifted from index.html so this page is the same product, not a
-   lookalike. Only what this page uses is repeated. */
+/* Official Cynea brand: dark ground, one cyan accent. Legacy token names
+   are kept and repointed so every rule below reads the same. */
 :root{
-  --bg:#FBF8F5; --card:#FFFFFF; --card-2:#F7F2ED; --line:#E9E1D8;
-  --ink:#171A2E; --muted:#6E6B7C; --faint:#9B98A6;
-  --coral:#FF6B4A; --coral-deep:#E24A2E; --amber:#F2A03D;
-  --navy:#1B2050; --violet:#7B4FD4; --ok:#2E9E6B; --bad:#D9455F;
-  --sans:'Inter Tight',system-ui,-apple-system,'Segoe UI',sans-serif;
-  --serif:'Instrument Serif',Georgia,serif;
+  color-scheme:dark;
+  --bg:#050505; --bg-2:#0E0E0E; --bg-3:#161616; --card:#111111; --card-2:#161616; --line:#1E1E1E;
+  --ink:#F5F5F5; --muted:#8A8A8A; --faint:#6B6B6B;
+  --cyan:#00D4FF; --cyan-hover:#00B8E6; --cyan-dark:#0088AA;
+  --coral:#00D4FF; --coral-deep:#00B8E6;
+  --ok:#3DD68C; --bad:#FF6B6B;
+  --sans:'DM Sans',system-ui,-apple-system,'Segoe UI',sans-serif;
+  --display:'Syne',system-ui,sans-serif;
+  --serif:var(--display);
 }
 *,*::before,*::after{box-sizing:border-box}
 [hidden]{display:none!important}
@@ -35,28 +37,30 @@ body{
   font-size:16px;line-height:1.5;-webkit-font-smoothing:antialiased;
 }
 a{color:inherit;text-decoration:none}
-:focus-visible{outline:2px solid var(--coral);outline-offset:3px;border-radius:6px}
+:focus-visible{outline:2px solid var(--cyan);outline-offset:3px;border-radius:6px}
 
 .nav{
-  display:flex;align-items:center;gap:16px;height:60px;
+  display:flex;align-items:center;gap:16px;height:64px;
   max-width:1100px;margin-inline:auto;padding-inline:24px;
 }
-.logo{font-size:17px;font-weight:600;letter-spacing:-.4px}
-.logo span{font-family:var(--serif);font-weight:400}
+/* Prism lockup */
+.logo{display:inline-flex;align-items:center;gap:9px;color:var(--ink)}
+.logo .prism{color:var(--cyan);width:13px;height:22px;flex-shrink:0}
+.logo b{font-family:var(--display);font-weight:700;font-size:19px;letter-spacing:-.01em;line-height:1}
 .nav .back{margin-left:auto;font-size:13px;color:var(--muted)}
 .nav .back:hover{color:var(--ink)}
 
 .wrap{max-width:1100px;margin-inline:auto;padding:clamp(28px,4vw,56px) 24px 80px}
-.head{max-width:56ch}
+.head{max-width:62ch}
 .kicker{
-  font-size:12px;text-transform:uppercase;letter-spacing:.08em;
-  font-weight:500;color:var(--coral-deep);
+  font-size:12px;text-transform:uppercase;letter-spacing:.1em;
+  font-weight:600;color:var(--cyan);margin:0;
 }
 h1{
-  font-family:var(--serif);font-weight:400;letter-spacing:-1px;line-height:1.02;
-  font-size:clamp(32px,5vw,52px);margin:12px 0 0;
+  font-family:var(--display);font-weight:700;letter-spacing:-.02em;line-height:1.06;
+  font-size:clamp(28px,4.2vw,44px);margin:12px 0 0;
 }
-.lede{margin-top:14px;color:var(--muted);font-size:clamp(15px,1vw+13px,18px)}
+.lede{margin-top:16px;color:var(--muted);font-size:clamp(15px,1vw+13px,18px)}
 
 /* ── the call card ──────────────────────────────────────────────────── */
 .call{
@@ -70,17 +74,23 @@ h1{
   padding:clamp(22px,2vw,30px);position:relative;overflow:hidden;
 }
 .stage{display:flex;flex-direction:column;align-items:center;text-align:center}
+.stage::before{
+  content:"";position:absolute;top:0;left:0;right:0;height:1px;pointer-events:none;
+  background:linear-gradient(90deg,transparent,rgba(0,212,255,.55),transparent);
+}
 
-/* the orb, same gradient as the favicon and the hero pill */
+/* the orb, in the brand cyan family */
 .orb{
   width:clamp(116px,16vw,152px);aspect-ratio:1;border-radius:50%;position:relative;
-  background:radial-gradient(120% 120% at 32% 26%,#FFC9AE,#FF6B4A 46%,#E24A2E 100%);
+  background:
+    radial-gradient(70% 70% at 30% 24%,rgba(255,255,255,.34),transparent 62%),
+    radial-gradient(120% 120% at 32% 26%,#00D4FF,#00B8E6 46%,#0088AA 100%);
   display:grid;place-items:center;
-  box-shadow:0 20px 46px -18px rgba(226,74,46,.55);
+  box-shadow:0 20px 56px -16px rgba(0,212,255,.45),0 0 0 1px rgba(0,212,255,.18);
 }
 .orb::after{
   content:"";position:absolute;inset:-8px;border-radius:50%;
-  border:1px solid rgba(255,107,74,.45);opacity:0;
+  border:1px solid rgba(0,212,255,.45);opacity:0;
 }
 .lc-live .orb::after{animation:ring 2.4s ease-out infinite}
 @keyframes ring{0%{transform:scale(.9);opacity:.8}100%{transform:scale(1.45);opacity:0}}
@@ -88,76 +98,78 @@ h1{
 /* level meter — five bars, the same mark the favicon carries */
 #call-meter{display:flex;align-items:center;gap:5px;height:52%}
 #call-meter i{
-  width:6px;height:100%;border-radius:3px;background:rgba(255,255,255,.94);
+  width:6px;height:100%;border-radius:3px;background:rgba(5,5,5,.86);
   transform:scaleY(.18);transform-origin:center;
   transition:transform .09s linear;
 }
 
-.who{margin-top:18px;font-size:19px;font-weight:600;letter-spacing:-.3px}
-.role{font-size:13px;color:var(--muted);margin-top:2px}
+.who{margin:18px 0 0;font-family:var(--display);font-size:20px;font-weight:700;letter-spacing:-.01em}
+.role{font-size:13px;color:var(--muted);margin:4px 0 0}
 
 .status{
-  display:flex;align-items:center;justify-content:center;gap:8px;margin-top:18px;
-  font-size:11.5px;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);
+  display:flex;align-items:center;justify-content:center;gap:8px;margin-top:16px;
+  font-size:11.5px;text-transform:uppercase;letter-spacing:.08em;font-weight:600;color:var(--muted);
 }
 .lc-dot{width:7px;height:7px;border-radius:50%;background:var(--faint);flex-shrink:0}
 .lc-dot.live{background:var(--ok)}
-.lc-dot.hearing{background:var(--coral);animation:beat 1s ease-in-out infinite}
-.lc-dot.thinking{background:var(--amber);animation:beat 1.4s ease-in-out infinite}
-.lc-dot.speaking{background:var(--violet);animation:beat .9s ease-in-out infinite}
+.lc-dot.hearing{background:var(--ink);animation:beat 1s ease-in-out infinite}
+.lc-dot.thinking{background:var(--cyan-dark);animation:beat 1.4s ease-in-out infinite}
+.lc-dot.speaking{background:var(--cyan);box-shadow:0 0 8px rgba(0,212,255,.6);animation:beat .9s ease-in-out infinite}
 .lc-dot.bad{background:var(--bad)}
 @keyframes beat{0%,100%{transform:scale(1)}50%{transform:scale(1.5)}}
-#call-timer{font-variant-numeric:tabular-nums;color:var(--faint)}
+#call-timer{font-variant-numeric:tabular-nums;color:var(--muted)}
 
-.btns{display:flex;flex-wrap:wrap;gap:9px;justify-content:center;margin-top:22px}
+.btns{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-top:24px}
 .btn{
   display:inline-flex;align-items:center;gap:8px;height:40px;padding:0 20px;
   border:0;border-radius:999px;cursor:pointer;font:inherit;font-size:14px;
-  font-weight:500;transition:box-shadow .18s,opacity .18s;
+  font-weight:600;transition:box-shadow .18s,opacity .18s,background .18s;
 }
-.btn-go{background:#1B7F4F;color:#fff}
-.btn-go:hover{box-shadow:inset 0 0 0 1px rgba(255,255,255,.42)}
+.btn-go{background:var(--cyan);color:#050505}
+.btn-go:hover{background:var(--cyan-hover);box-shadow:0 8px 24px rgba(0,212,255,.22)}
 .btn-go:disabled{opacity:.5;cursor:default}
-.btn-end{background:transparent;color:var(--ink);box-shadow:inset 0 0 0 1px var(--line)}
-.btn-end:hover{box-shadow:inset 0 0 0 1px var(--ink)}
-.hint{margin-top:14px;font-size:12.5px;color:var(--faint);max-width:30ch}
+.btn-end{background:var(--bg-3);color:var(--ink);box-shadow:inset 0 0 0 1px var(--line)}
+.btn-end:hover{box-shadow:inset 0 0 0 1px var(--bad);color:var(--bad)}
+.hint{margin:16px 0 0;font-size:12.5px;color:var(--muted);max-width:30ch}
 
 /* ── transcript ─────────────────────────────────────────────────────── */
 .tape-panel{display:flex;flex-direction:column;padding:0;overflow:hidden}
 .tape-head{
   display:flex;align-items:center;justify-content:space-between;gap:12px;
-  padding:16px 20px;border-bottom:1px solid var(--line);background:var(--card-2);
+  padding:16px 20px;border-bottom:1px solid var(--line);background:var(--bg-2);
 }
 .tape-head b{font-size:13px;font-weight:600}
 .tape-head small{font-size:11.5px;color:var(--muted)}
 #call-tape{
   flex:1;min-height:clamp(300px,44vh,460px);max-height:60vh;overflow-y:auto;
   padding:20px;display:flex;flex-direction:column;gap:12px;
-  background:linear-gradient(168deg,#1B2050 0%,#171A2E 58%,#241C3A 100%);
+  background:
+    radial-gradient(120% 90% at 70% 0%,rgba(0,212,255,.07),transparent 60%),
+    linear-gradient(180deg,#0E0E0E 0%,#050505 100%);
   scrollbar-width:thin;scrollbar-color:rgba(255,255,255,.22) transparent;
 }
 #call-tape::-webkit-scrollbar{width:5px}
 #call-tape::-webkit-scrollbar-thumb{background:rgba(255,255,255,.22);border-radius:3px}
-.lc-empty{margin:auto;text-align:center;font-size:13.5px;color:rgba(255,255,255,.5);max-width:28ch}
+.lc-empty{margin:auto;text-align:center;font-size:13.5px;color:var(--muted);max-width:28ch}
 .lc-line{margin:0;max-width:82%;font-size:14.5px;line-height:1.5}
 .lc-line b{
   display:block;font-size:10px;font-weight:600;text-transform:uppercase;
-  letter-spacing:.08em;margin-bottom:3px;
+  letter-spacing:.08em;margin-bottom:4px;
 }
-.lc-agent{align-self:flex-start;color:#fff}
-.lc-agent b{color:#FF9C7F}
-.lc-you{align-self:flex-end;text-align:right;color:rgba(255,255,255,.84)}
-.lc-you b{color:rgba(255,255,255,.5)}
+.lc-agent{align-self:flex-start;color:var(--ink)}
+.lc-agent b{color:var(--cyan)}
+.lc-you{align-self:flex-end;text-align:right;color:rgba(245,245,245,.84)}
+.lc-you b{color:var(--muted)}
 .lc-note{
   margin:0;align-self:center;text-align:center;font-size:12px;
-  color:rgba(255,255,255,.46);max-width:36ch;
+  color:var(--muted);max-width:36ch;
 }
-.lc-note.lc-bad{color:#FFB4A8}
+.lc-note.lc-bad{color:var(--bad)}
 
-.notes{margin-top:28px;display:grid;gap:14px;grid-template-columns:1fr}
+.notes{margin-top:32px;display:grid;gap:16px;grid-template-columns:1fr}
 @media(min-width:761px){.notes{grid-template-columns:1fr 1fr 1fr}}
-.note{border-top:1px solid var(--line);padding-top:14px}
-.note h3{font-size:13px;font-weight:600;margin:0 0 5px}
+.note{border-top:1px solid var(--line);padding-top:16px}
+.note h3{font-family:var(--display);font-size:14px;font-weight:600;letter-spacing:-.005em;margin:0 0 6px}
 .note p{margin:0;font-size:13.5px;color:var(--muted)}
 
 @media(prefers-reduced-motion:reduce){
@@ -169,7 +181,7 @@ h1{
 <body>
 
 <nav class="nav">
-  <a class="logo" href="index.html">CYNEA <span>voice</span></a>
+  <a class="logo" href="index.html" aria-label="Cynea"><svg class="prism" viewBox="14 2 30 52" width="15" height="26" aria-hidden="true" focusable="false"><g transform="translate(2,2)"><path d="M28 2 L38 2 L40 4 L40 9 L34 15 L34 37 L40 43 L40 48 L38 50 L28 50 L18 43 L14 30 L14 22 L18 9 Z" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linejoin="bevel"/><path d="M22 12 L34 6 L34 15 L27 23 Z" fill="currentColor" fill-opacity=".18"/><path d="M22 40 L34 46 L34 37 L27 29 Z" fill="currentColor" fill-opacity=".09"/><circle cx="26" cy="26" r="2.5" fill="currentColor"/></g></svg><b>Cynea</b></a>
   <a class="back" href="index.html">&larr; Back to site</a>
 </nav>
 

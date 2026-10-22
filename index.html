@@ -3,29 +3,27 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Cynea — AI Voice Agents for Africa</title>
-<!-- Brand icons. Generated from one design by tools/make_brand_icons.py —
-     the bar heights are the amplitude envelope of Kwame's greeting, the
-     same recording the voice mark in the statement banner is drawn from.
+<title>Cynea — AI Voice Agents That Feel Human</title>
+<!-- Brand icons: the Prism mark (faceted geometric C) in cyan on near-black.
      favicon.svg is the master; the .ico carries 16/32/48 drawn separately
-     at each size, because a 48px mark scaled down to 16 is a coral smudge. -->
+     at each size, because a 48px mark scaled down to 16 is a smudge. -->
 <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
 <link rel="icon" href="assets/favicon.ico" sizes="48x48 32x32 16x16">
 <link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
-<link rel="mask-icon" href="assets/favicon.svg" color="#FF6B4A">
+<link rel="mask-icon" href="assets/mask-icon.svg" color="#00D4FF">
 
-<meta name="description" content="AI receptionist and voice agents for Africa. Answer calls 24/7 in any language, any accent — for hotels, banks, restaurants and clinics.">
-<meta name="theme-color" content="#FBF8F5" media="(prefers-color-scheme: light)">
-<meta name="theme-color" content="#171A2E" media="(prefers-color-scheme: dark)">
+<meta name="description" content="AI receptionist and voice agents with real recorded human voices. Answer calls 24/7, in the accents your callers speak — for hotels, banks, restaurants and clinics.">
+<meta name="theme-color" content="#050505">
+<meta name="color-scheme" content="dark">
 <link rel="canonical" href="https://cynea.ai/">
 
 <meta property="og:type" content="website">
-<meta property="og:title" content="Cynea — AI Voice Agents for Africa">
-<meta property="og:description" content="Deploy human-like voice agents that answer calls 24/7 across Africa — any language, any accent.">
+<meta property="og:title" content="Cynea — AI Voice Agents That Feel Human">
+<meta property="og:description" content="Deploy human-like voice agents that answer calls 24/7, built on real recorded human voices.">
 <meta property="og:image" content="https://cynea.ai/assets/og-image.jpg">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
-<meta property="og:image:alt" content="Cynea — Voice AI for Africa">
+<meta property="og:image:alt" content="Cynea — Voice AI that feels human">
 <meta property="og:url" content="https://cynea.ai/">
 <meta property="og:site_name" content="Cynea">
 <meta name="twitter:image" content="https://cynea.ai/assets/og-image.jpg">
@@ -33,7 +31,7 @@
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@500;600;700;800&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 
 <noscript><style>
 /* Every .rv/.stg block starts at opacity 0 and is revealed by script. With
@@ -45,52 +43,64 @@
 <style>
 /* ═══════════════════════════════════════════════════════════════════
    CYNEA — design tokens
-   Retell's structural discipline, Cynea's warm cream identity.
+   The official dark brand: near-black ground, one cyan accent, Syne for
+   display and DM Sans for everything else. The warmth lives in the
+   content — real people, real voices — not in the palette.
    ═══════════════════════════════════════════════════════════════════ */
 :root{
-  /* ── palette sampled from the reference imagery ───────────────────
-     Warm side: rolled coral paper, orange ink in water, café amber,
-     tulle. Cool side: dusk gradient, pink/teal sky. Deep side: the
-     navy top of the dusk gradient. Structure and restraint follow
-     Retell — near-white page, one dark block, saturated gradients
-     reserved for full-bleed sections. ───────────────────────────── */
+  color-scheme:dark;
 
-  /* neutrals — warm near-white, not grey */
-  --bg:#FBF8F5;          /* page ground   (ink-in-water cream)       */
-  --bg-2:#F4EFE9;        /* recessed band                            */
-  --card:#FFFFFF;        /* primary card                             */
-  --card-2:#F7F2ED;      /* secondary card                           */
-  --line:#E9E1D8;        /* hairline                                 */
-  --ink:#171A2E;         /* text — deep dusk indigo, not black       */
-  --muted:#6E6B7C;       /* secondary text                           */
-  --faint:#9B98A6;       /* tertiary text                            */
+  /* ── brand palette (exact) ─────────────────────────────────────── */
+  --c-bg:#050505;        /* page ground                              */
+  --c-bg-2:#0E0E0E;      /* recessed bands, nav                      */
+  --c-bg-3:#161616;      /* inputs, hover rows, secondary cards      */
+  --c-card:#111111;      /* cards / panels                           */
+  --cyan:#00D4FF;        /* the accent: buttons, links, focus, logo  */
+  --cyan-hover:#00B8E6;
+  --cyan-dark:#0088AA;   /* cyan on light grounds; deep gradient stop */
+  --c-text:#F5F5F5;
+  --c-text-2:#8A8A8A;    /* 5.9:1 on #050505, 5.2:1 on #161616       */
+  --c-border:#1E1E1E;
 
-  /* brand */
-  --coral:#FF6B4A;       /* primary accent  (rolled paper)           */
-  --coral-deep:#E24A2E;
-  --amber:#F2A03D;       /* secondary accent (café light, tulle)     */
-  --blush:#F9B3BE;       /* soft pink       (sky, dusk)              */
-  --peach:#FBD3C2;
-  --teal:#4FD1C5;        /* cool counterweight (sky)                 */
-  --violet:#7B4FD4;      /* rare accent     (light rays, satin)      */
-  --magenta:#E0308F;
-  --navy:#1B2050;        /* the one dark block (dusk gradient top)   */
-  --indigo:#3A3F8F;      /* secondary CTA                            */
+  /* ── the old names, repointed so every existing rule resolves ──── */
+  --bg:var(--c-bg);
+  --bg-2:var(--c-bg-2);
+  --card:var(--c-card);
+  --card-2:var(--c-bg-3);
+  --line:var(--c-border);
+  --ink:var(--c-text);
+  --muted:var(--c-text-2);
+  --faint:#6B6B6B;       /* incidental labels only, never body copy  */
+
+  /* every former accent collapses into the cyan family */
+  --coral:var(--cyan);
+  --coral-deep:var(--cyan-hover);
+  --amber:var(--cyan-hover);
+  --blush:var(--cyan);
+  --peach:var(--cyan-hover);
+  --teal:var(--cyan);
+  --violet:var(--cyan-dark);  /* the caller's side of a call            */
+  --magenta:var(--cyan-hover);
+  --navy:var(--cyan);    /* the old dark primary is the cyan primary */
+  --indigo:var(--cyan-dark);
+  --on-cyan:#050505;     /* text on a cyan surface                   */
 
   /* aliases kept so existing rules keep resolving */
-  --accent:var(--coral);
+  --accent:var(--cyan);
+  --accent-ink:var(--cyan-hover);
   --blue:var(--indigo);
 
-  /* status */
-  --ok:#2E9E6B;          /* green brushstrokes                       */
-  --warn:#D9902B;
-  --bad:#D9455F;         /* crimson in the chiffon                   */
+  /* status — functional, not brand */
+  --ok:#3DD68C;
+  --warn:#F5B544;
+  --bad:#FF6B6B;
 
-  /* gradients — the Retell move: saturated, full-bleed, sparing */
-  --grad-dusk:linear-gradient(142deg,#1B2050 0%,#4A3A7E 34%,#B8437E 66%,#FF8A5C 100%);
-  --grad-warm:linear-gradient(140deg,#FF6B4A 0%,#F2A03D 54%,#F9B3BE 100%);
-  --grad-dawn:linear-gradient(135deg,#F9B3BE 0%,#FBD3C2 46%,#4FD1C5 100%);
-  --grad-iris:linear-gradient(150deg,#7B4FD4 0%,#E0308F 58%,#FF8A5C 100%);
+  /* gradients — light falling on near-black, never a coloured block */
+  --grad-dusk:radial-gradient(120% 90% at 70% 0%,rgba(0,212,255,.16),transparent 60%),
+              linear-gradient(180deg,#0E0E0E 0%,#050505 100%);
+  --grad-warm:linear-gradient(135deg,#00D4FF 0%,#0088AA 100%);
+  --grad-dawn:linear-gradient(135deg,#00B8E6 0%,#0088AA 100%);
+  --grad-iris:linear-gradient(150deg,#0088AA 0%,#00D4FF 100%);
 
   --gutter:8px;          /* full-bleed blocks inset this far from the edge */
   --r-card:16px;
@@ -115,8 +125,9 @@
      sat in 1200 — the same page measured two different ways. */
   --col:calc(var(--maxw) - 48px);
 
-  --sans:'Inter Tight',system-ui,-apple-system,'Segoe UI',sans-serif;
-  --serif:'Instrument Serif',Georgia,'Times New Roman',serif;
+  --display:'Syne',system-ui,sans-serif;
+  --sans:'DM Sans',system-ui,-apple-system,'Segoe UI',sans-serif;
+  --serif:var(--display);   /* legacy name; every use now reads --display */
 }
 
 *,*::before,*::after{box-sizing:border-box}
@@ -150,12 +161,12 @@ section[id],header[id],footer[id]{scroll-margin-top:76px}
 .sec-sm{padding-block:calc(var(--pad) * .64);position:relative}
 
 /* ══ SECTION PHOTOGRAPHY ═══════════════════════════════════════════
-   A photograph washed back to a texture behind four otherwise flat
+   A photograph pulled back into the dark behind four otherwise flat
    sections, so the scroll reads as one continuous surface rather than
-   a stack of cream panels. Rules it follows:
+   a stack of black panels. Rules it follows:
 
-   - The photo never competes. It sits at 10-12% opacity, softened, and
-     under a tinted wash, so contrast against body copy is untouched.
+   - The photo never competes. It is neutrally graded (no colour cast),
+     darkened, softened and kept at low opacity, so body copy keeps AA.
    - It carries no meaning. Decorative, aria-hidden, and the page is
      complete without it — these are not illustrations of anything.
    - It has no edges. Each layer fades to the page ground at its top and
@@ -173,14 +184,13 @@ section[id],header[id],footer[id]{scroll-margin-top:76px}
 }
 .secbg.in{opacity:1}
 
-/* The wash darkens the ground these sections' text sits on by about 12 of
-   255. --muted starts at 4.89:1 against the bare page, so that is enough to
-   put body copy under the 4.5:1 AA line. Rather than make the photography
-   invisible, the two secondary text colours step down inside these four
-   sections only — measured back to 4.64:1 and 3.23:1 against the darkest
-   ground any of them actually renders. tools/check_contrast.py enforces it.
-   Elsewhere on the page the palette is untouched. */
-.has-bg{--muted:#5E5B6A;--faint:#777385}
+/* On a dark page the photograph lifts the ground rather than darkening
+   it, so the worst case is the brightest patch behind the text. --muted
+   is 5.9:1 on bare #050505; the two secondary text colours step up a
+   little inside these four sections only, which keeps body copy clear of
+   AA over the lightest ground any of them renders. tools/check_contrast.py
+   enforces it. Elsewhere on the page the palette is untouched. */
+.has-bg{--muted:#9A9A9A;--faint:#7A7A7A}
 /* Taller than the frame by a fixed 60px top and bottom, which is more
    than the parallax ever shifts it — so no edge can scroll into view,
    whatever height the section ends up. */
@@ -188,16 +198,16 @@ section[id],header[id],footer[id]{scroll-margin-top:76px}
   position:absolute;left:0;right:0;top:-60px;
   width:100%;height:calc(100% + 120px);
   object-fit:cover;
-  filter:blur(var(--blur,2px)) saturate(.55) brightness(1.3) sepia(.25);
-  opacity:var(--o,.10);
+  filter:blur(var(--blur,2px)) grayscale(.2) saturate(.8) brightness(.6);
+  opacity:var(--o,.22);
   will-change:transform;
 }
 /* The wash, then the fade to the page ground at both ends. */
 .secbg::after{
   content:"";position:absolute;inset:0;
   background:
-    linear-gradient(180deg,var(--bg) 0%,rgba(251,248,245,0) 24%,
-                    rgba(251,248,245,0) 76%,var(--bg) 100%),
+    linear-gradient(180deg,var(--bg) 0%,rgba(5,5,5,0) 24%,
+                    rgba(5,5,5,0) 76%,var(--bg) 100%),
     var(--wash,transparent);
 }
 
@@ -205,8 +215,8 @@ section[id],header[id],footer[id]{scroll-margin-top:76px}
    the expensive part, and a fixed layer is what a small screen wants
    anyway. Slightly lighter, because the text sits closer to it. */
 @media(max-width:900px){
-  .secbg img{transform:none !important;filter:blur(1px) saturate(.55) brightness(1.3) sepia(.25);
-    opacity:calc(var(--o,.10) * .85)}
+  .secbg img{transform:none !important;filter:blur(1px) grayscale(.2) saturate(.8) brightness(.6);
+    opacity:calc(var(--o,.22) * .85)}
 }
 @media(prefers-reduced-motion:reduce){
   .secbg{transition:none}
@@ -216,12 +226,17 @@ section[id],header[id],footer[id]{scroll-margin-top:76px}
 
 /* ── type scale ────────────────────────────────────────────────────── */
 .display{
-  font-family:var(--serif);font-weight:400;
-  line-height:.95;letter-spacing:-1.5px;
+  font-family:var(--display);font-weight:700;
+  line-height:1.04;letter-spacing:-.02em;
 }
+/* Syne sets roughly a third wider than the serif it replaced, so a heading
+   that used to fit its measure now spills one word onto a line of its own.
+   Balancing the lines fixes that at every width without hand-placed breaks. */
+.display,.h-sec,.cta-card h2,.call-title,.spec-row h3{text-wrap:balance}
+.lede,.acc-panel p,.spec-row p,.call-sub{text-wrap:pretty}
 .kicker{
-  font-size:clamp(12px,.1vw + 11.6px,13px);text-transform:uppercase;letter-spacing:-.16px;
-  font-weight:500;color:var(--muted);
+  font-size:clamp(12px,.1vw + 11.6px,13px);text-transform:uppercase;letter-spacing:.1em;
+  font-weight:600;color:var(--muted);
 }
 .lede{font-size:clamp(15px,.29vw + 13.9px,18px);line-height:1.45;color:var(--muted)}
 
@@ -236,7 +251,7 @@ section[id],header[id],footer[id]{scroll-margin-top:76px}
    .h-sec in particular resolved to its 34px floor everywhere from 390 to
    773px, so the entire tablet range wore the phone's section headings
    under near-desktop statement banners. */
-.h-sec{font-family:var(--serif);font-weight:400;font-size:clamp(32px,2.6vw + 22px,52px);line-height:1;letter-spacing:-1px}
+.h-sec{font-family:var(--display);font-weight:700;font-size:clamp(28px,2.2vw + 19.4px,44px);line-height:1.06;letter-spacing:-.02em}
 
 /* ── buttons: 32px tall, 6px radius, 12px type, inset ring on hover ── */
 .btn{
@@ -246,18 +261,17 @@ section[id],header[id],footer[id]{scroll-margin-top:76px}
   border:0;cursor:pointer;white-space:nowrap;
   transition:box-shadow .18s ease;
 }
-.btn-navy{background:var(--navy);color:#fff}
-.btn-navy:hover{box-shadow:inset 0 0 0 1px rgba(255,255,255,.38)}
-.btn-blue{background:var(--blue);color:#fff}
-.btn-blue:hover{box-shadow:inset 0 0 0 1px rgba(255,255,255,.42)}
+/* One primary: cyan with near-black type. The old navy, dark and light
+   buttons all become it, since on a dark page a "dark" button is no
+   button at all. .btn-blue was the secondary CTA and is now the line
+   button's filled sibling. */
+.btn{transition:box-shadow .18s ease,background-color .18s ease}
+.btn-navy,.btn-dark,.btn-light{background:var(--cyan);color:var(--on-cyan);font-weight:600}
+.btn-navy:hover,.btn-dark:hover,.btn-light:hover{background:var(--cyan-hover)}
+.btn-blue{background:var(--card-2);color:var(--ink);box-shadow:inset 0 0 0 1px var(--line)}
+.btn-blue:hover{box-shadow:inset 0 0 0 1px var(--cyan)}
 .btn-line{background:transparent;color:var(--ink);box-shadow:inset 0 0 0 1px var(--line)}
-.btn-line:hover{box-shadow:inset 0 0 0 1px var(--ink)}
-.btn-light{background:#fff;color:var(--ink)}
-.btn-light:hover{box-shadow:inset 0 0 0 1px rgba(14,18,27,.34)}
-/* The chat's Send button asks for .btn-dark, which was never declared —
-   so it rendered as bare ink-on-nothing at every width. */
-.btn-dark{background:var(--ink);color:#fff}
-.btn-dark:hover{box-shadow:inset 0 0 0 1px rgba(255,255,255,.38)}
+.btn-line:hover{box-shadow:inset 0 0 0 1px var(--cyan)}
 
 /* ── one reveal animation. That is the whole motion budget. ────────── */
 .rv{opacity:0;transform:translateY(16px) scale(.98);transition:opacity .6s cubic-bezier(.16,.84,.44,1),transform .6s cubic-bezier(.16,.84,.44,1)}
@@ -278,11 +292,14 @@ section[id],header[id],footer[id]{scroll-margin-top:76px}
 .swap.in{opacity:1;transform:none}
 
 /* ═══ NAV ═══════════════════════════════════════════════════════════ */
-.nav{position:sticky;top:0;z-index:60;background:rgba(245,241,234,.82);backdrop-filter:blur(12px);border-bottom:1px solid transparent;transition:border-color .2s}
+.nav{position:sticky;top:0;z-index:60;background:rgba(14,14,14,.78);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);border-bottom:1px solid transparent;transition:border-color .2s}
 .nav.stuck{border-bottom-color:var(--line)}
 .nav-in{display:flex;align-items:center;gap:28px;height:60px;max-width:var(--maxw);margin-inline:auto;padding-inline:24px}
-.logo{font-size:17px;font-weight:600;letter-spacing:-.4px}
-.logo span{font-family:var(--serif);font-weight:400}
+/* The Prism lockup: mark in cyan, wordmark in Syne. The mark stands about
+   1.3x the wordmark's cap height. */
+.logo{display:inline-flex;align-items:center;gap:9px;flex-shrink:0;color:var(--ink)}
+.logo .prism{display:block;width:auto;height:18px;color:var(--cyan);flex-shrink:0}
+.logo-word{font-family:var(--display);font-size:19px;font-weight:700;letter-spacing:-.01em;line-height:1}
 .nav-links{display:flex;gap:22px;margin-left:auto}
 .nav-links a{font-size:13px;color:var(--muted);transition:color .18s}
 .nav-links a:hover{color:var(--ink)}
@@ -305,7 +322,7 @@ section[id],header[id],footer[id]{scroll-margin-top:76px}
     background:transparent;border:0;cursor:pointer;
     box-shadow:inset 0 0 0 1px var(--line);transition:box-shadow .18s;
   }
-  .nav-burger:hover{box-shadow:inset 0 0 0 1px var(--ink)}
+  .nav-burger:hover{box-shadow:inset 0 0 0 1px var(--cyan)}
   .nav-burger span{
     display:block;width:14px;height:1.5px;background:var(--ink);border-radius:1px;
     transition:transform .26s cubic-bezier(.2,.8,.2,1);
@@ -315,7 +332,7 @@ section[id],header[id],footer[id]{scroll-margin-top:76px}
 
   .nav-links{
     display:grid;position:absolute;left:0;right:0;top:100%;margin:0;gap:0;
-    background:rgba(245,241,234,.97);
+    background:var(--bg-2);   /* opaque: white display type ghosts through any alpha on black */
     -webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);
     border-bottom:1px solid transparent;
     padding:0 24px;max-height:0;overflow:hidden;visibility:hidden;
@@ -334,7 +351,7 @@ section[id],header[id],footer[id]{scroll-margin-top:76px}
   }
   .nav-links a:last-child{border-bottom:0}
 }
-.lite .nav-links{-webkit-backdrop-filter:none;backdrop-filter:none;background:rgba(245,241,234,.99)}
+.lite .nav-links{-webkit-backdrop-filter:none;backdrop-filter:none;background:var(--bg-2)}
 @media(prefers-reduced-motion:reduce){
   .nav-links{transition:none}
   .nav-burger span{transition:none}
@@ -348,25 +365,31 @@ section[id],header[id],footer[id]{scroll-margin-top:76px}
 .hero{
   min-height:min(860px,88vh);display:flex;flex-direction:column;
   padding:clamp(24px,2.4vw + 14.6px,38px) clamp(20px,2.6vw + 9.9px,38px) clamp(24px,1.7vw + 17.4px,34px);
-  color:#fff;background:var(--grad-dusk);
+  color:var(--ink);background:var(--grad-dusk);
 }
-.hero-vid{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0;opacity:.30;mix-blend-mode:luminosity}
+.hero-vid{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0;opacity:.42;mix-blend-mode:luminosity}
 .hero-scrim{position:absolute;inset:0;z-index:1;pointer-events:none;
-  background:linear-gradient(180deg,rgba(23,26,46,.40) 0%,rgba(23,26,46,.12) 40%,rgba(23,26,46,.58) 100%)}
+  background:radial-gradient(90% 70% at 70% 0%,rgba(0,212,255,.10),transparent 62%),
+             linear-gradient(180deg,rgba(5,5,5,.46) 0%,rgba(5,5,5,.18) 40%,rgba(5,5,5,.72) 100%)}
 /* lift the content above the video — but never the video or scrim itself,
    which are absolutely positioned and would drop into flow if matched */
 .hero>*:not(.hero-vid):not(.hero-scrim){position:relative;z-index:2}
+/* The first statement overlaps the hero by 38px (24px under 900), so the
+   hero's own bottom padding carries that overlap — otherwise the last line
+   of the hero copy sits under the sheet's edge and its shadow. */
+header.bleed .hero{padding-bottom:calc(clamp(24px,1.7vw + 17.4px,34px) + 38px)}
+@media(max-width:900px){header.bleed .hero{padding-bottom:calc(clamp(24px,1.7vw + 17.4px,34px) + 24px)}}
 .hero-eyebrow{
   text-align:center;font-size:clamp(13px,.29vw + 11.9px,16px);text-transform:uppercase;
-  letter-spacing:-.16px;font-weight:500;color:rgba(255,255,255,.92);
+  letter-spacing:.1em;font-weight:600;color:rgba(245,245,245,.92);
 }
 .hero-mid{flex:1;display:grid;place-items:center;padding-block:clamp(40px,1.5vw + 34.1px,56px)}
 /* The cap was 75px, reached at 1104px wide and held from there to 1920,
    so the hero line stopped growing a third of the way through the range
    it has to cover. */
 .hero-display{
-  color:#fff;text-align:center;max-width:13ch;
-  font-size:clamp(40px,4.2vw + 23.6px,88px);
+  color:var(--ink);text-align:center;max-width:16ch;font-weight:800;line-height:1.02;
+  font-size:clamp(34px,3.5vw + 20.4px,72px);
 }
 /* On the column, like everything else. At 1920 this used to spread the
    body copy and the pill to opposite ends of an 1828px bar with 1300px
@@ -376,24 +399,25 @@ section[id],header[id],footer[id]{scroll-margin-top:76px}
   gap:clamp(22px,1vw + 18.1px,32px);flex-wrap:wrap;
   width:100%;max-width:var(--col);margin-inline:auto;
 }
-.hero-body{font-size:clamp(13.5px,.14vw + 13px,15px);line-height:1.5;max-width:44ch;color:rgba(255,255,255,.86)}
+.hero-body{font-size:clamp(13.5px,.14vw + 13px,15px);line-height:1.5;max-width:44ch;color:rgba(245,245,245,.86)}
 .hero-pill{
   display:inline-flex;align-items:center;gap:12px;flex-shrink:0;
-  background:rgba(23,26,46,.46);backdrop-filter:blur(10px);
-  border:1px solid rgba(255,255,255,.16);
-  border-radius:999px;padding:8px 18px 8px 8px;color:#fff;
+  background:rgba(5,5,5,.52);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);
+  border:1px solid rgba(255,255,255,.14);
+  border-radius:999px;padding:8px 18px 8px 8px;color:var(--ink);
   transition:border-color .2s;
 }
-.hero-pill:hover{border-color:rgba(255,255,255,.44)}
+.hero-pill:hover{border-color:rgba(0,212,255,.6)}
 .hero-pill b{font-size:13px;font-weight:500;letter-spacing:-.16px}
-.hero-pill small{display:block;font-size:11px;color:rgba(255,255,255,.6)}
+.hero-pill small{display:block;font-size:11px;color:rgba(245,245,245,.66)}
 .pill-orb{
   width:38px;height:38px;border-radius:50%;flex-shrink:0;position:relative;
-  background:radial-gradient(120% 120% at 32% 26%,#FFC9AE,#FF6B4A 46%,#E24A2E 100%);
+  background:radial-gradient(120% 120% at 32% 26%,rgba(255,255,255,.75),#00D4FF 46%,#0088AA 100%);
+  box-shadow:0 0 18px rgba(0,212,255,.35);
 }
 .pill-orb::after{
   content:"";position:absolute;inset:-5px;border-radius:50%;
-  border:1px solid rgba(255,107,74,.5);animation:ring 2.6s ease-out infinite;
+  border:1px solid rgba(0,212,255,.5);animation:ring 2.6s ease-out infinite;
 }
 @keyframes ring{0%{transform:scale(.86);opacity:.9}100%{transform:scale(1.5);opacity:0}}
 /* The foot stacks only once the two halves genuinely cannot sit side by
@@ -414,12 +438,12 @@ section[id],header[id],footer[id]{scroll-margin-top:76px}
    began 160px left of every other section's — the page looked like two
    layouts spliced together. */
 .stmt{
-  font-family:var(--serif);font-weight:400;line-height:.92;letter-spacing:-1.5px;
+  font-family:var(--display);font-weight:700;line-height:1.02;letter-spacing:-.02em;
   display:flex;flex-direction:column;align-items:flex-start;gap:.04em;
   width:100%;max-width:var(--col);margin-inline:auto;
 }
-.stmt-1{font-size:clamp(42px,8vw,90px)}
-.stmt-2{font-size:clamp(44px,8.6vw,100px)}
+.stmt-1{font-size:clamp(32px,6.4vw,74px)}
+.stmt-2{font-size:clamp(36px,7vw,82px)}
 /* The indent ladder is in em, so it already scales with the type. What
    it needed was a middle: it went straight from the phone's tight
    stagger to the full one at 761px, which is the width where the line
@@ -463,18 +487,19 @@ section[id],header[id],footer[id]{scroll-margin-top:76px}
   .vmark line{animation:none;opacity:.3}
   .vmark line.lead{animation:none;opacity:1}
 }
-/* warm photo tile set between the words of statement 2 */
+/* photo tile set between the words of statement 2 */
 .stmt-tile{
   width:clamp(96px,15vw,190px);aspect-ratio:14/9;border-radius:12px;
   overflow:hidden;flex-shrink:0;position:relative;
-  box-shadow:0 12px 40px rgba(14,18,27,.14);
+  box-shadow:0 12px 40px rgba(0,0,0,.55),0 0 0 1px var(--line);
 }
 .stmt-tile img{width:100%;height:100%;object-fit:cover}
-.stmt-tile::after{content:"";position:absolute;inset:0;background:linear-gradient(140deg,rgba(255,107,74,.16),rgba(255,168,92,.20))}
+.stmt-tile img{filter:grayscale(.2) brightness(.85)}
+.stmt-tile::after{content:"";position:absolute;inset:0;background:linear-gradient(140deg,rgba(0,212,255,.14),rgba(5,5,5,.22))}
 
 /* ═══ 2. LIVE DEMO ══════════════════════════════════════════════════ */
 .demo-head{text-align:center;margin-bottom:clamp(44px,1.9vw + 36.6px,64px)}
-.demo-head .display{font-size:clamp(40px,6.6vw,80px)}
+.demo-head .display{font-size:clamp(34px,5.4vw,66px)}
 .demo-grid{display:grid;grid-template-columns:1fr;gap:16px;align-items:stretch}
 @media(min-width:901px){.demo-grid{grid-template-columns:1fr 1fr}}
 .panel{
@@ -495,26 +520,26 @@ section[id],header[id],footer[id]{scroll-margin-top:76px}
 /* the colour the glass has to refract — without this the frost reads flat */
 .stage-wash{
   width:min(430px,96%);aspect-ratio:1;border-radius:50%;
-  background:radial-gradient(58% 58% at 34% 30%,rgba(255,107,74,.46),transparent 70%),
-             radial-gradient(52% 52% at 70% 72%,rgba(255,170,96,.36),transparent 72%);
+  background:radial-gradient(58% 58% at 34% 30%,rgba(0,212,255,.30),transparent 70%),
+             radial-gradient(52% 52% at 70% 72%,rgba(0,136,170,.34),transparent 72%);
   filter:blur(30px);
 }
 .stage-glow{
   width:min(470px,104%);aspect-ratio:1;border-radius:50%;
-  background:radial-gradient(closest-side,rgba(255,107,74,.40),transparent 74%);
+  background:radial-gradient(closest-side,rgba(0,212,255,.30),transparent 74%);
   opacity:.34;transition:opacity .7s ease;
 }
 .stage-rays{
   width:min(520px,112%);aspect-ratio:1;border-radius:50%;opacity:0;transition:opacity .9s ease;
-  background:repeating-conic-gradient(from 0deg,rgba(255,107,74,.30) 0deg 1.4deg,transparent 1.4deg 15deg);
+  background:repeating-conic-gradient(from 0deg,rgba(0,212,255,.26) 0deg 1.4deg,transparent 1.4deg 15deg);
   -webkit-mask-image:radial-gradient(closest-side,transparent 36%,#000 54%,transparent 78%);
           mask-image:radial-gradient(closest-side,transparent 36%,#000 54%,transparent 78%);
 }
 .glass{
   width:min(372px,88%);aspect-ratio:1;border-radius:50%;
-  border:1px solid rgba(255,255,255,.72);
+  border:1px solid rgba(255,255,255,.14);
   -webkit-backdrop-filter:blur(20px) saturate(150%);backdrop-filter:blur(20px) saturate(150%);
-  box-shadow:0 40px 90px rgba(0,118,164,.20),inset 0 1px 0 rgba(255,255,255,.95);
+  box-shadow:0 40px 90px rgba(0,0,0,.55),0 0 60px rgba(0,212,255,.08),inset 0 1px 0 rgba(255,255,255,.16);
   position:relative;
 }
 /* The turning half. It carries the gradient and none of the filter, so
@@ -523,12 +548,12 @@ section[id],header[id],footer[id]{scroll-margin-top:76px}
    painted it twice and washed the orb out. */
 .glass::after{
   content:"";position:absolute;inset:0;border-radius:50%;
-  background:linear-gradient(150deg,rgba(255,255,255,.64),rgba(255,107,74,.18) 48%,rgba(255,255,255,.34));
+  background:linear-gradient(150deg,rgba(255,255,255,.12),rgba(0,212,255,.14) 48%,rgba(255,255,255,.05));
   animation:glassTurn 34s linear infinite;
 }
 .stage-ring{
   width:min(330px,80%);aspect-ratio:1;border-radius:50%;
-  border:1px solid rgba(255,107,74,.55);opacity:0;transform:scale(.62);
+  border:1px solid rgba(0,212,255,.55);opacity:0;transform:scale(.62);
 }
 @keyframes glassTurn{to{transform:rotate(360deg)}}
 @keyframes glassLive{0%{transform:rotate(0) scale(1)}50%{transform:rotate(180deg) scale(1.04)}100%{transform:rotate(360deg) scale(1)}}
@@ -552,14 +577,14 @@ section[id],header[id],footer[id]{scroll-margin-top:76px}
 .phone.phone-live{
   position:relative;z-index:3;width:min(212px,max(178px,52%));aspect-ratio:9/15.4;margin:0;
   padding:16px 14px 14px;border-radius:34px;
-  box-shadow:0 44px 90px rgba(14,18,27,.34);
+  box-shadow:0 44px 90px rgba(0,0,0,.6);
 }
 .phone.phone-live::before{width:74px;height:18px;top:11px}
 .ph-banner{
   display:flex;align-items:center;justify-content:center;gap:7px;margin-top:22px;
-  font-size:10px;letter-spacing:.06em;text-transform:uppercase;color:rgba(255,255,255,.74);
+  font-size:10px;letter-spacing:.06em;text-transform:uppercase;color:rgba(245,245,245,.74);
 }
-.ph-banner .dot{width:6px;height:6px;border-radius:50%;background:#22A565;animation:beat 1.6s ease-in-out infinite}
+.ph-banner .dot{width:6px;height:6px;border-radius:50%;background:var(--ok);animation:beat 1.6s ease-in-out infinite}
 .ph-live{display:none}
 .callzone.is-playing .ph-banner .dot{background:var(--accent)}
 .callzone.is-playing .ph-ring{display:none}
@@ -570,7 +595,7 @@ section[id],header[id],footer[id]{scroll-margin-top:76px}
 }
 .ph-caller img{width:100%;height:100%;object-fit:cover;display:block}
 .phone-live .ph-call{margin-top:13px}
-.phone-live .who{font-size:21px}
+.phone-live .who{font-size:18px}
 .ph-wave{display:flex;align-items:flex-end;justify-content:center;gap:3px;height:24px;margin-top:16px}
 .ph-wave i{width:3px;border-radius:2px;background:rgba(255,255,255,.26);transition:background .3s}
 .ph-wave i:nth-child(1){height:5px}
@@ -607,42 +632,43 @@ section[id],header[id],footer[id]{scroll-margin-top:76px}
   box-shadow:inset 0 0 0 1px var(--line);color:var(--muted);
   cursor:pointer;transition:box-shadow .18s,color .18s,background .18s;
 }
-.pill:hover span{box-shadow:inset 0 0 0 1px var(--ink);color:var(--ink)}
-.pill input:checked+span{background:var(--navy);color:#fff;box-shadow:none}
+.pill:hover span{box-shadow:inset 0 0 0 1px var(--cyan);color:var(--ink)}
+.pill input:checked+span{background:var(--cyan);color:var(--on-cyan);font-weight:600;box-shadow:none}
 .pill input:focus-visible+span{outline:2px solid var(--accent);outline-offset:3px}
 
 /* ── the browser call, offered inside the demo panel ────────────────
    Styled as a live thing rather than another button: the orb is the same
-   gradient as the favicon and the hero pill, so it reads as the product
+   cyan as the logo and the hero pill, so it reads as the product
    rather than as a link to a page about it. */
 .browser-call{
   display:flex;align-items:center;gap:14px;
   padding:16px 18px;border-radius:14px;
-  background:var(--card);border:1px solid rgba(255,107,74,.42);
-  box-shadow:0 14px 34px -22px rgba(226,74,46,.55);
+  background:var(--card-2);border:1px solid rgba(0,212,255,.36);
+  box-shadow:0 14px 34px -22px rgba(0,212,255,.45);
   transition:border-color .22s ease,box-shadow .22s ease,transform .22s ease;
 }
 .browser-call:hover{
-  border-color:var(--coral);transform:translateY(-2px);
-  box-shadow:0 20px 44px -22px rgba(226,74,46,.7);
+  border-color:var(--cyan);transform:translateY(-2px);
+  box-shadow:0 20px 44px -22px rgba(0,212,255,.6);
 }
 .bc-orb{
   width:38px;height:38px;border-radius:50%;flex-shrink:0;position:relative;
-  background:radial-gradient(120% 120% at 32% 26%,#FFC9AE,#FF6B4A 46%,#E24A2E 100%);
+  background:radial-gradient(120% 120% at 32% 26%,rgba(255,255,255,.75),#00D4FF 46%,#0088AA 100%);
+  box-shadow:0 0 18px rgba(0,212,255,.3);
 }
 .bc-orb::after{
   content:"";position:absolute;inset:-5px;border-radius:50%;
-  border:1px solid rgba(255,107,74,.5);animation:ring 2.6s ease-out infinite;
+  border:1px solid rgba(0,212,255,.5);animation:ring 2.6s ease-out infinite;
 }
 .bc-copy{flex:1;min-width:0}
 .bc-copy b{display:block;font-size:14px;font-weight:600;letter-spacing:-.2px}
 .bc-copy small{display:block;font-size:12.5px;color:var(--muted);margin-top:2px}
-.bc-go{color:var(--coral-deep);font-size:17px;flex-shrink:0}
+.bc-go{color:var(--cyan);font-size:17px;flex-shrink:0}
 @media(prefers-reduced-motion:reduce){.bc-orb::after{animation:none}}
 
 .panel-b p{margin-bottom:38px}
 .field{position:relative;margin-bottom:6px}
-.field label{display:block;font-size:12px;text-transform:uppercase;letter-spacing:-.16px;color:var(--muted);margin-bottom:2px}
+.field label{display:block;font-size:12px;text-transform:uppercase;letter-spacing:.08em;font-weight:600;color:var(--muted);margin-bottom:2px}
 .field input,.field select{
   width:100%;height:48px;background:transparent;border:0;
   border-bottom:1px solid var(--line);border-radius:0;
@@ -650,12 +676,13 @@ section[id],header[id],footer[id]{scroll-margin-top:76px}
   transition:border-color .2s;
 }
 .field select{cursor:pointer}
-.field input::placeholder{color:#9AA7B1}
-.field input:focus,.field select:focus{outline:0;border-bottom-color:var(--ink)}
+.field select option{background:var(--card);color:var(--ink)}
+.field input::placeholder{color:var(--muted)}
+.field input:focus,.field select:focus{outline:0;border-bottom-color:var(--cyan)}
 .field-arrow{position:absolute;right:2px;bottom:17px;pointer-events:none;color:var(--muted)}
 .demo-submit{margin-top:30px;display:flex;align-items:center;gap:14px;flex-wrap:wrap}
 .demo-note{font-size:12px;color:var(--muted);letter-spacing:-.16px}
-.demo-msg{margin-top:16px;font-size:13px;color:var(--ink);background:#fff;border:1px solid var(--line);border-radius:10px;padding:12px 14px;display:none}
+.demo-msg{margin-top:16px;font-size:13px;color:var(--ink);background:var(--card);border:1px solid var(--line);border-radius:10px;padding:12px 14px;display:none}
 .demo-msg.show{display:block}
 
 /* ── scripted chat demo: keyword -> pre-cut human recording ────────── */
@@ -671,8 +698,8 @@ section[id],header[id],footer[id]{scroll-margin-top:76px}
   font-size:12px;letter-spacing:-.16px;color:var(--muted);background:transparent;
   box-shadow:inset 0 0 0 1px var(--line);transition:box-shadow .18s,color .18s,background .18s;
 }
-.chat-tab:hover{box-shadow:inset 0 0 0 1px var(--ink);color:var(--ink)}
-.chat-tab[aria-selected="true"]{background:var(--ink);color:#fff;box-shadow:none}
+.chat-tab:hover{box-shadow:inset 0 0 0 1px var(--cyan);color:var(--ink)}
+.chat-tab[aria-selected="true"]{background:var(--cyan);color:var(--on-cyan);font-weight:600;box-shadow:none}
 .chat-log{
   min-height:150px;max-height:330px;overflow-y:auto;display:flex;flex-direction:column;gap:10px;
   padding:18px;border-radius:12px;background:var(--card-2);
@@ -680,27 +707,28 @@ section[id],header[id],footer[id]{scroll-margin-top:76px}
 .chat-empty{margin:auto;font-size:13px;color:var(--faint);text-align:center}
 .bub{max-width:78%;padding:10px 14px;border-radius:14px;font-size:14px;line-height:1.45;animation:bubIn .32s cubic-bezier(.16,.84,.44,1) both}
 @keyframes bubIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
-.bub.me{align-self:flex-end;background:var(--ink);color:#fff;border-bottom-right-radius:5px}
+.bub.me{align-self:flex-end;background:var(--cyan);color:var(--on-cyan);border-bottom-right-radius:5px}
 .bub.them{align-self:flex-start;background:var(--card);border:1px solid var(--line);border-bottom-left-radius:5px}
 .bub .meta{display:flex;align-items:center;gap:7px;margin-top:7px;font-size:11px;color:var(--muted)}
 .bub .tag{padding:1px 7px;border-radius:999px;background:var(--card-2);border:1px solid var(--line)}
-.bub.miss .tag{background:#FDF1E3;border-color:#F0D8B4;color:#8A5A12}
-.bub .replay{background:none;border:0;padding:0;cursor:pointer;color:var(--coral);font:inherit;font-size:11px}
+.bub.miss .tag{background:rgba(245,181,68,.12);border-color:rgba(245,181,68,.32);color:var(--warn)}
+.bub .replay{background:none;border:0;padding:0;cursor:pointer;color:var(--cyan);font:inherit;font-size:11px}
 .bub .replay:hover{text-decoration:underline}
-.bub.on{box-shadow:0 0 0 2px var(--coral)}
+.bub.on{box-shadow:0 0 0 2px var(--cyan)}
 .chat-form{display:flex;gap:9px;margin-top:14px}
 .chat-form input{
   flex:1;height:38px;padding:0 14px;border-radius:var(--r-btn);
-  border:1px solid var(--line);background:var(--card);color:var(--ink);font-size:14px;
+  border:1px solid var(--line);background:var(--card-2);color:var(--ink);font-size:14px;
 }
-.chat-form input:focus{outline:2px solid var(--coral);outline-offset:-1px;border-color:transparent}
+.chat-form input::placeholder{color:var(--muted)}
+.chat-form input:focus{outline:2px solid var(--cyan);outline-offset:-1px;border-color:transparent}
 .chat-chips{display:flex;flex-wrap:wrap;gap:7px;margin-top:12px}
 .chat-chip{
   border:0;cursor:pointer;font-size:11.5px;color:var(--muted);background:transparent;
   padding:5px 11px;border-radius:999px;box-shadow:inset 0 0 0 1px var(--line);
   transition:box-shadow .18s,color .18s;
 }
-.chat-chip:hover{box-shadow:inset 0 0 0 1px var(--coral);color:var(--ink)}
+.chat-chip:hover{box-shadow:inset 0 0 0 1px var(--cyan);color:var(--ink)}
 @media(max-width:560px){.bub{max-width:88%}}
 
 /* ═══ 3. TESTIMONIALS (placeholder) ═════════════════════════════════ */
@@ -753,7 +781,7 @@ section[id],header[id],footer[id]{scroll-margin-top:76px}
 .agent-figure.no-photo .agent-orb{inset:0;opacity:.92}
 .agent.is-playing .agent-figure.no-photo .agent-orb{opacity:1}
 .ph-caller.no-photo picture{display:none}
-.ph-caller.no-photo{background:linear-gradient(140deg,#F9B3BE,#D4457E)}
+.ph-caller.no-photo{background:linear-gradient(140deg,#00D4FF,#0088AA)}
 @keyframes orbPulse{0%,100%{transform:scale(1)}50%{transform:scale(1.07)}}
 
 .agent h3{font-size:clamp(17px,.29vw + 15.9px,20px);font-weight:600;letter-spacing:-.4px}
@@ -785,10 +813,10 @@ section[id],header[id],footer[id]{scroll-margin-top:76px}
   cursor:pointer;padding:0;font-size:12px;font-weight:500;letter-spacing:-.16px;color:var(--ink);
 }
 .pp{
-  width:32px;height:32px;border-radius:50%;background:var(--navy);color:#fff;
-  display:grid;place-items:center;flex-shrink:0;transition:box-shadow .18s;
+  width:32px;height:32px;border-radius:50%;background:var(--cyan);color:var(--on-cyan);
+  display:grid;place-items:center;flex-shrink:0;transition:box-shadow .18s,background-color .18s;
 }
-.agent-play:hover .pp{box-shadow:inset 0 0 0 1px rgba(255,255,255,.42)}
+.agent-play:hover .pp{background:var(--cyan-hover);box-shadow:0 0 0 4px rgba(0,212,255,.14)}
 .i-pause{display:none}
 .agent.is-playing .i-play{display:none}
 .agent.is-playing .i-pause{display:block}
@@ -825,15 +853,15 @@ section[id],header[id],footer[id]{scroll-margin-top:76px}
   padding:clamp(22px,.95vw + 18.3px,30px);
   transition:border-color .45s ease,box-shadow .45s ease;
 }
-/* The warm wash that comes up when the call connects. One gradient, one
+/* The cyan wash that comes up when the call connects. One gradient, one
    opacity — it costs a raster once and nothing per frame. */
 .call::before{
   content:"";position:absolute;inset:0;z-index:0;pointer-events:none;
-  background:radial-gradient(122% 80% at 50% -14%,rgba(255,107,74,.17),transparent 64%);
+  background:radial-gradient(122% 80% at 50% -14%,rgba(0,212,255,.12),transparent 64%);
   opacity:0;transition:opacity .6s ease;
 }
 .call>*{position:relative;z-index:1}
-.call.on{border-color:rgba(255,107,74,.45);box-shadow:0 26px 60px -32px rgba(226,74,46,.55)}
+.call.on{border-color:rgba(0,212,255,.42);box-shadow:0 26px 60px -32px rgba(0,212,255,.4)}
 .call.on::before{opacity:1}
 
 /* ── who is on the call ── */
@@ -853,8 +881,8 @@ section[id],header[id],footer[id]{scroll-margin-top:76px}
    rather than a stock face, which would be inventing a person. */
 .call-mono{
   width:52px;height:52px;border-radius:50%;display:grid;place-items:center;position:relative;z-index:1;
-  font-size:15px;font-weight:600;letter-spacing:-.4px;color:#fff;
-  background:linear-gradient(150deg,#4A3A7E,#1B2050);
+  font-size:15px;font-weight:600;letter-spacing:-.4px;color:var(--ink);
+  background:var(--card-2);box-shadow:inset 0 0 0 1px var(--line);
   transition:box-shadow .4s ease;
 }
 .call-figure .halo{
@@ -864,8 +892,8 @@ section[id],header[id],footer[id]{scroll-margin-top:76px}
 /* Only the side that is talking moves. */
 .call.talk-agent .s-agent .halo,
 .call.talk-caller .s-caller .halo{animation:ring 2.1s ease-out infinite}
-.call.talk-agent .s-agent img{box-shadow:0 0 0 3px var(--card),0 0 20px 2px rgba(255,107,74,.5)}
-.call.talk-caller .s-caller .call-mono{box-shadow:0 0 0 3px var(--card),0 0 20px 2px rgba(123,79,212,.45)}
+.call.talk-agent .s-agent img{box-shadow:0 0 0 3px var(--card),0 0 20px 2px rgba(0,212,255,.5)}
+.call.talk-caller .s-caller .call-mono{box-shadow:inset 0 0 0 1px var(--line),0 0 0 3px var(--card),0 0 20px 2px rgba(0,136,170,.6)}
 .s-agent{--side:var(--coral)}
 .s-caller{--side:var(--violet)}
 
@@ -884,7 +912,7 @@ section[id],header[id],footer[id]{scroll-margin-top:76px}
 .call-link i:nth-child(7){animation-delay:-.2s;animation-duration:.9s}
 
 /* ── the transcript ──────────────────────────────────────────────────
-   Dark, so it reads as the one lit surface in a cream page, and fixed
+   Recessed below the card, so it reads as a screen set into it, and fixed
    height so a two-minute call does not make a two-metre card. It scrolls
    itself to whoever is speaking.
 
@@ -894,7 +922,8 @@ section[id],header[id],footer[id]{scroll-margin-top:76px}
    animates is a nicety; the transcript is the content. ── */
 .call-tape{
   position:relative;border-radius:12px;overflow:hidden;
-  background:linear-gradient(168deg,#1B2050 0%,#171A2E 58%,#241C3A 100%);
+  background:linear-gradient(168deg,#0A0A0A 0%,#070707 100%);
+  box-shadow:inset 0 0 0 1px var(--line);
   padding:16px 16px 18px;
   height:clamp(190px,20vw,236px);
   overflow-y:auto;scrollbar-width:thin;
@@ -911,17 +940,17 @@ section[id],header[id],footer[id]{scroll-margin-top:76px}
 }
 .call-tape::-webkit-scrollbar{width:5px}
 .call-tape::-webkit-scrollbar-thumb{background:rgba(255,255,255,.22);border-radius:3px}
-.call-idle{margin:auto;text-align:center;font-size:12.5px;color:rgba(255,255,255,.5);max-width:24ch}
+.call-idle{margin:auto;text-align:center;font-size:12.5px;color:var(--muted);max-width:24ch}
 
 .ct{max-width:86%;font-size:13px;line-height:1.5;letter-spacing:-.1px}
 .ct b{
   display:block;font-size:10px;font-weight:600;text-transform:uppercase;
   letter-spacing:.07em;margin-bottom:3px;
 }
-.ct-agent{align-self:flex-start;color:#fff}
-.ct-agent b{color:#FF9C7F}
-.ct-caller{align-self:flex-end;text-align:right;color:rgba(255,255,255,.82)}
-.ct-caller b{color:rgba(255,255,255,.52)}
+.ct-agent{align-self:flex-start;color:var(--ink)}
+.ct-agent b{color:var(--cyan)}
+.ct-caller{align-self:flex-end;text-align:right;color:rgba(245,245,245,.82)}
+.ct-caller b{color:var(--muted)}
 /* Every turn is in the DOM from the start — painting them during
    playback would mean a layout mid-call — but a turn is not shown until
    it is reached, so the tape fills as the call goes rather than opening
@@ -942,7 +971,7 @@ section[id],header[id],footer[id]{scroll-margin-top:76px}
 /* the caret that makes it read as typing rather than fading */
 .ct.now .ct-cursor{
   display:inline-block;width:1px;height:1em;margin-left:2px;vertical-align:-.14em;
-  background:var(--coral);animation:ctBlink 1.05s steps(1) infinite;
+  background:var(--cyan);animation:ctBlink 1.05s steps(1) infinite;
 }
 .ct-cursor{display:none}
 @keyframes ctBlink{0%,49%{opacity:1}50%,100%{opacity:0}}
@@ -951,7 +980,7 @@ section[id],header[id],footer[id]{scroll-margin-top:76px}
 .call-meter{display:flex;align-items:center;gap:12px;margin-top:16px}
 .call-bar{flex:1;height:3px;border-radius:2px;background:var(--line);overflow:hidden}
 .call-bar i{display:block;height:100%;width:0;border-radius:2px;
-  background:linear-gradient(90deg,var(--coral),var(--amber));transition:width .12s linear}
+  background:linear-gradient(90deg,var(--cyan-dark),var(--cyan));transition:width .12s linear}
 .call-clock{font-size:11.5px;color:var(--muted);font-variant-numeric:tabular-nums;min-width:76px;text-align:right}
 
 .call-state{display:flex;align-items:center;gap:7px;font-size:11px;letter-spacing:.05em;
@@ -963,18 +992,18 @@ section[id],header[id],footer[id]{scroll-margin-top:76px}
 .call-btns{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px}
 .call-answer{
   display:inline-flex;align-items:center;gap:8px;height:36px;padding:0 16px;
-  border:0;border-radius:999px;cursor:pointer;background:#1B7F4F;color:#fff;
-  font-size:12.5px;font-weight:500;letter-spacing:-.16px;
+  border:0;border-radius:999px;cursor:pointer;background:var(--cyan);color:var(--on-cyan);
+  font-size:12.5px;font-weight:600;letter-spacing:-.16px;
   transition:box-shadow .18s,background .18s;
 }
-.call-answer:hover{box-shadow:inset 0 0 0 1px rgba(255,255,255,.4)}
+.call-answer:hover{background:var(--cyan-hover)}
 .call-ghost{
   display:inline-flex;align-items:center;gap:7px;height:36px;padding:0 15px;
   border:0;border-radius:999px;cursor:pointer;background:transparent;color:var(--ink);
   box-shadow:inset 0 0 0 1px var(--line);font-size:12.5px;font-weight:500;letter-spacing:-.16px;
   transition:box-shadow .18s;
 }
-.call-ghost:hover{box-shadow:inset 0 0 0 1px var(--ink)}
+.call-ghost:hover{box-shadow:inset 0 0 0 1px var(--cyan)}
 
 /* ── the transcript in full, for anyone the animation does not serve ── */
 /* The written-out conversation, present for assistive tech, crawlers and
@@ -1035,8 +1064,8 @@ section[id],header[id],footer[id]{scroll-margin-top:76px}
 .spec-row p{margin-top:8px;font-size:clamp(14.5px,.24vw + 13.6px,17px);color:var(--muted);max-width:46ch}
 .spec-row p b{color:var(--ink);font-weight:500;font-variant-numeric:tabular-nums}
 .spec-link{display:inline-block;margin-top:12px;font-size:13.5px;font-weight:500;
-  color:var(--coral-deep);border-bottom:1px solid rgba(226,74,46,.3);padding-bottom:1px}
-.spec-link:hover{border-bottom-color:var(--coral-deep)}
+  color:var(--cyan);border-bottom:1px solid rgba(0,212,255,.3);padding-bottom:1px}
+.spec-link:hover{color:var(--cyan-hover);border-bottom-color:var(--cyan-hover)}
 
 /* the drawn part of each row */
 .spec-demo{margin-top:20px;background:var(--card-2);border:1px solid var(--line);
@@ -1044,7 +1073,7 @@ section[id],header[id],footer[id]{scroll-margin-top:76px}
 
 /* 01 — a waveform, the same idiom the agent cards use when playing */
 .demo-wave{display:flex;align-items:flex-end;gap:4px;height:44px}
-.demo-wave i{flex:1;border-radius:3px;background:linear-gradient(180deg,var(--coral),var(--coral-deep));
+.demo-wave i{flex:1;border-radius:3px;background:linear-gradient(180deg,var(--cyan),var(--cyan-dark));
   height:22%;transform-origin:bottom;animation:specWave 1.5s ease-in-out infinite}
 @keyframes specWave{0%,100%{height:22%}50%{height:var(--h,70%)}}
 
@@ -1053,8 +1082,8 @@ section[id],header[id],footer[id]{scroll-margin-top:76px}
 .demo-locales li{font-size:12px;font-weight:500;padding:5px 10px;border-radius:999px;
   border:1px solid var(--line);color:var(--muted);background:var(--card);
   font-variant-numeric:tabular-nums}
-.demo-locales li.af{border-color:rgba(255,107,74,.45);color:var(--coral-deep);
-  background:rgba(255,107,74,.07)}
+.demo-locales li.af{border-color:rgba(0,212,255,.42);color:var(--cyan);
+  background:rgba(0,212,255,.07)}
 
 /* 03 — two speech tracks with the grace window drawn between them */
 /* One two-column grid for the whole diagram, so the grace marker can line
@@ -1067,9 +1096,9 @@ section[id],header[id],footer[id]{scroll-margin-top:76px}
    version grew each bar from zero, which left the agent's track empty for
    most of the loop — the diagram read as broken rather than as waiting. */
 .demo-turn .bar > i{position:absolute;top:0;bottom:0;border-radius:5px;display:block}
-.demo-turn .trk-caller > i{left:0;width:56%;background:var(--coral);
+.demo-turn .trk-caller > i{left:0;width:56%;background:var(--cyan);
   animation:specSaid 4.4s ease-in-out infinite}
-.demo-turn .trk-agent > i{left:72%;right:0;background:var(--indigo);
+.demo-turn .trk-agent > i{left:72%;right:0;background:var(--cyan-dark);
   animation:specReply 4.4s ease-in-out infinite}
 .demo-turn .gap{grid-column:2;display:flex;align-items:center;gap:6px;
   margin-left:56%;color:var(--muted);font-weight:500;white-space:nowrap}
@@ -1084,7 +1113,7 @@ section[id],header[id],footer[id]{scroll-margin-top:76px}
 .demo-path .node small{display:block;font-size:10.5px;color:var(--faint);font-weight:400;margin-top:2px}
 .demo-path .arrow{color:var(--faint)}
 .demo-path .out{border-style:dashed;color:var(--faint);background:transparent;
-  text-decoration:line-through;text-decoration-color:var(--coral)}
+  text-decoration:line-through;text-decoration-color:var(--bad)}
 
 /* The row's own two-column form (number beside the claim) needs less
    room than the section split, so it holds down to the small breakpoint
@@ -1108,12 +1137,13 @@ section[id],header[id],footer[id]{scroll-margin-top:76px}
 .slide.on{display:block}
 .slide-card{
   border-radius:var(--r-block);padding:clamp(22px,2.1vw + 13.8px,44px) clamp(22px,2.1vw + 13.8px,44px) 0;overflow:hidden;
-  background:linear-gradient(150deg,#FDEFE9 0%,#F3EEE6 52%,#FBEFE4 100%);
+  background:radial-gradient(90% 70% at 50% 0%,rgba(0,212,255,.10),transparent 64%),
+             linear-gradient(180deg,#111111 0%,#0E0E0E 100%);
   border:1px solid var(--line);
 }
 .slide-card img{
-  width:100%;max-width:1100px;margin-inline:auto;border-radius:12px 12px 0 0;
-  box-shadow:0 -2px 0 var(--line),0 26px 60px rgba(14,18,27,.16);
+  width:100%;height:auto;max-width:1100px;margin-inline:auto;border-radius:12px 12px 0 0;
+  box-shadow:0 0 0 1px var(--line),0 26px 60px rgba(0,0,0,.6);
 }
 .slide-meta{display:flex;align-items:center;justify-content:space-between;gap:20px;margin-top:26px}
 .slide-meta h3{font-size:clamp(17.5px,.29vw + 16.4px,20.5px);font-weight:500;letter-spacing:-.4px}
@@ -1121,7 +1151,7 @@ section[id],header[id],footer[id]{scroll-margin-top:76px}
 .slide-nav{display:flex;align-items:center;gap:10px;flex-shrink:0}
 .slide-count{font-size:12px;color:var(--muted);letter-spacing:-.16px;font-variant-numeric:tabular-nums;min-width:44px;text-align:center}
 .sq{width:32px;height:32px;border-radius:var(--r-btn);background:transparent;box-shadow:inset 0 0 0 1px var(--line);display:grid;place-items:center;cursor:pointer;transition:box-shadow .18s}
-.sq:hover{box-shadow:inset 0 0 0 1px var(--ink)}
+.sq:hover{box-shadow:inset 0 0 0 1px var(--cyan)}
 .sq[disabled]{opacity:.34;cursor:default}
 .sq[disabled]:hover{box-shadow:inset 0 0 0 1px var(--line)}
 
@@ -1141,8 +1171,8 @@ section[id],header[id],footer[id]{scroll-margin-top:76px}
   padding-bottom:calc(var(--casc-max) * var(--casc-step));
 }
 /* ── channel cards ─────────────────────────────────────────────────
-   Hovering one card is treated as choosing it: that card rises, warms to
-   its own channel tint and lights its badge, while the other three step
+   Hovering one card is treated as choosing it: that card rises, lights
+   to its own channel tint and lights its badge, while the other three step
    back. Dimming the siblings is what makes it read as focus rather than
    as a card that merely wiggled — and with only four cards in the cascade
    the whole group stays legible while it happens.
@@ -1178,16 +1208,16 @@ section[id],header[id],footer[id]{scroll-margin-top:76px}
   background:var(--card);opacity:1;transform:translateY(calc(var(--casc-y) - 8px)) scale(1);
   border-color:var(--c,var(--coral));
   border-color:color-mix(in srgb,var(--c,var(--coral)) 42%,var(--line));
-  box-shadow:0 26px 54px -22px rgba(22,22,22,.16),0 4px 14px rgba(22,22,22,.05);
-  box-shadow:0 26px 54px -22px color-mix(in srgb,var(--c,var(--coral)) 55%,transparent),
-             0 4px 14px rgba(22,22,22,.05);
+  box-shadow:0 26px 54px -22px rgba(0,212,255,.3),0 4px 14px rgba(0,0,0,.4);
+  box-shadow:0 26px 54px -22px color-mix(in srgb,var(--c,var(--coral)) 45%,transparent),
+             0 4px 14px rgba(0,0,0,.4);
 }
 .cascade .casc:hover::after{opacity:.16}
 .casc .badge{transition:background .38s ease,color .3s ease,box-shadow .38s ease,
              transform .38s cubic-bezier(.2,.8,.2,1)}
 .cascade .casc:hover .badge{
   background:linear-gradient(140deg,var(--c,var(--coral)),var(--c2,var(--coral-deep)));
-  color:#fff;box-shadow:0 8px 20px -8px var(--c,var(--coral));
+  color:var(--on-cyan);box-shadow:0 8px 20px -8px var(--c,var(--coral));
   transform:translateY(-2px) rotate(-6deg);
 }
 /* No pointer, no cascade: this is decoration, so on touch it simply does
@@ -1213,7 +1243,7 @@ section[id],header[id],footer[id]{scroll-margin-top:76px}
   .cascade .casc:nth-child(3){--casc-i:2}
   .cascade .casc:nth-child(4){--casc-i:3}
 }
-.badge{width:clamp(42px,.38vw + 40.5px,46px);aspect-ratio:1;border-radius:50%;background:#fff;box-shadow:inset 0 0 0 1px var(--line);display:grid;place-items:center;margin-bottom:22px;color:var(--ink);flex-shrink:0}
+.badge{width:clamp(42px,.38vw + 40.5px,46px);aspect-ratio:1;border-radius:50%;background:var(--card-2);box-shadow:inset 0 0 0 1px var(--line);display:grid;place-items:center;margin-bottom:22px;color:var(--ink);flex-shrink:0}
 .casc h3{font-size:clamp(16px,.29vw + 14.9px,19px);font-weight:500;letter-spacing:-.4px;margin-bottom:7px}
 .casc p{font-size:clamp(13.5px,.14vw + 13px,15px);color:var(--muted)}
 
@@ -1227,18 +1257,19 @@ section[id],header[id],footer[id]{scroll-margin-top:76px}
 }
 .phone{
   width:min(290px,84%);aspect-ratio:9/19;margin-inline:auto;border-radius:42px;
-  background:linear-gradient(165deg,#10151F,#00122E 62%);
+  background:radial-gradient(90% 50% at 50% 0%,rgba(0,212,255,.10),transparent 70%),
+             linear-gradient(165deg,#161616,#0A0A0A 62%);
   border:1px solid rgba(255,255,255,.1);position:relative;overflow:hidden;
-  box-shadow:0 34px 80px rgba(14,18,27,.30);
-  padding:26px 20px;display:flex;flex-direction:column;color:#fff;
+  box-shadow:0 34px 80px rgba(0,0,0,.6);
+  padding:26px 20px;display:flex;flex-direction:column;color:var(--ink);
 }
 .phone::before{content:"";position:absolute;top:14px;left:50%;transform:translateX(-50%);width:88px;height:22px;border-radius:999px;background:rgba(0,0,0,.55)}
 .ph-time{text-align:center;font-size:44px;font-weight:400;letter-spacing:-1.5px;margin-top:40px;font-family:var(--sans)}
-.ph-date{text-align:center;font-size:12px;color:rgba(255,255,255,.6);letter-spacing:-.16px;margin-top:2px}
+.ph-date{text-align:center;font-size:12px;color:rgba(245,245,245,.62);letter-spacing:-.16px;margin-top:2px}
 .ph-call{margin-top:auto;text-align:center}
-.ph-call .lbl{font-size:11px;text-transform:uppercase;letter-spacing:-.16px;color:rgba(255,255,255,.62)}
-.ph-call .who{font-family:var(--serif);font-size:27px;margin-top:5px;letter-spacing:-.5px}
-.ph-call .sub{font-size:11px;color:rgba(255,255,255,.5);margin-top:3px}
+.ph-call .lbl{font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:rgba(245,245,245,.62)}
+.ph-call .who{font-family:var(--display);font-weight:700;font-size:22px;margin-top:5px;letter-spacing:-.02em;line-height:1.1}
+.ph-call .sub{font-size:11px;color:rgba(245,245,245,.56);margin-top:3px}
 .ph-btns{display:flex;justify-content:space-between;padding:0 22px;margin:30px 0 14px}
 .ph-btn{width:56px;height:56px;border-radius:50%;display:grid;place-items:center;color:#fff}
 .ph-btn.no{background:#E5484D}
@@ -1291,24 +1322,30 @@ section[id],header[id],footer[id]{scroll-margin-top:76px}
 .faq .acc-panel p{font-size:clamp(14.5px,.24vw + 13.6px,17px)}
 
 /* ═══ 11. FINAL CTA ═════════════════════════════════════════════════ */
-.cta-block{min-height:clamp(400px,52vh,560px);display:grid;place-items:center;padding:clamp(72px,3.6vw + 57.9px,110px) 24px;background:var(--grad-warm)}
+.cta-block{min-height:clamp(400px,52vh,560px);display:grid;place-items:center;padding:clamp(72px,3.6vw + 57.9px,110px) 24px;
+  background:radial-gradient(80% 90% at 50% 110%,rgba(0,212,255,.24),transparent 62%),
+             radial-gradient(60% 60% at 15% 0%,rgba(0,136,170,.16),transparent 70%),#0E0E0E;
+  box-shadow:inset 0 0 0 1px var(--line);border-radius:inherit}
 .cta-block .hero-vid{z-index:0}
-.cta-scrim{position:absolute;inset:0;z-index:1;background:linear-gradient(180deg,rgba(23,26,46,.30),rgba(23,26,46,.52))}
+.cta-block .hero-vid{mix-blend-mode:luminosity;opacity:.28}
+.cta-scrim{position:absolute;inset:0;z-index:1;background:linear-gradient(180deg,rgba(5,5,5,.40),rgba(5,5,5,.62))}
 .cta-card{
   position:relative;z-index:2;background:var(--card);border-radius:var(--r-block);
+  border:1px solid var(--line);
   padding:clamp(40px,1.71vw + 33.3px,58px) clamp(26px,2.67vw + 15.6px,54px);
   max-width:620px;text-align:center;
-  box-shadow:0 30px 80px rgba(0,8,22,.28);
+  box-shadow:0 30px 80px rgba(0,0,0,.6),0 0 80px rgba(0,212,255,.06);
 }
-.cta-card h2{font-family:var(--serif);font-weight:400;font-size:clamp(30px,4vw,46px);line-height:1;letter-spacing:-1.2px}
+.cta-card h2{font-family:var(--display);font-weight:700;font-size:clamp(26px,3.3vw,38px);line-height:1.06;letter-spacing:-.02em}
 .cta-card p{margin:16px 0 30px;color:var(--muted);font-size:clamp(14.5px,.24vw + 13.6px,17px)}
 .cta-row{display:flex;gap:9px;justify-content:center;flex-wrap:wrap}
 
 
 /* ═══ 12. FOOTER ════════════════════════════════════════════════════ */
 .foot{
-  background:var(--grad-iris);
-  color:#fff;margin-block:var(--gutter) var(--gutter);
+  background:radial-gradient(70% 60% at 85% 0%,rgba(0,212,255,.10),transparent 64%),var(--bg-2);
+  border:1px solid var(--line);
+  color:var(--ink);margin-block:var(--gutter) var(--gutter);
   border-radius:var(--r-block);
   padding:clamp(64px,2.29vw + 55.1px,88px) clamp(24px,2.29vw + 15.1px,48px) 34px;
 }
@@ -1319,36 +1356,37 @@ section[id],header[id],footer[id]{scroll-margin-top:76px}
 .foot-top,.foot-cols,.foot-base{width:100%;max-width:var(--col);margin-inline:auto}
 .foot-top{display:grid;grid-template-columns:1fr;gap:48px;align-items:start}
 @media(min-width:901px){.foot-top{grid-template-columns:.85fr 1.15fr;gap:clamp(48px,1.2vw + 37.2px,56px)}}
-.news label{display:block;font-size:12px;text-transform:uppercase;letter-spacing:-.16px;color:rgba(255,255,255,.6);margin-bottom:14px}
+.news label{display:block;font-size:12px;text-transform:uppercase;letter-spacing:.08em;font-weight:600;color:var(--muted);margin-bottom:14px}
 .news-pill{
   display:flex;align-items:center;gap:8px;padding:6px 6px 6px 18px;
-  background:rgba(255,255,255,.09);border:1px solid rgba(255,255,255,.17);
-  border-radius:999px;backdrop-filter:blur(10px);max-width:390px;
+  background:var(--card-2);border:1px solid var(--line);
+  border-radius:999px;max-width:390px;
 }
-.news-pill input{flex:1;min-width:0;background:transparent;border:0;height:32px;font-size:13px;color:#fff}
-.news-pill input::placeholder{color:rgba(255,255,255,.46)}
+.news-pill input{flex:1;min-width:0;background:transparent;border:0;height:32px;font-size:13px;color:var(--ink)}
+.news-pill input::placeholder{color:var(--muted)}
+.news-pill:focus-within{border-color:rgba(0,212,255,.5)}
 .news-pill input:focus{outline:0}
-.news-msg{font-size:12px;color:rgba(255,255,255,.66);margin-top:12px;min-height:16px}
+.news-msg{font-size:12px;color:var(--muted);margin-top:12px;min-height:16px}
 .foot-serif{
-  font-family:var(--serif);font-weight:400;line-height:.92;letter-spacing:-1.5px;
-  font-size:clamp(38px,6.4vw,76px);color:#fff;
+  font-family:var(--display);font-weight:700;line-height:1.02;letter-spacing:-.02em;
+  font-size:clamp(32px,5.2vw,62px);color:var(--ink);
 }
 .foot-serif .row:nth-child(2){margin-left:.8em}
 .foot-serif .row:nth-child(3){margin-left:.3em}
 .foot-serif .row:nth-child(4){margin-left:1.5em}
-.foot-cols{display:grid;grid-template-columns:1fr 1fr;gap:34px;margin-top:60px;padding-top:44px;border-top:1px solid rgba(255,255,255,.14)}
+.foot-cols{display:grid;grid-template-columns:1fr 1fr;gap:34px;margin-top:60px;padding-top:44px;border-top:1px solid var(--line)}
 @media(min-width:901px){.foot-cols{grid-template-columns:repeat(4,1fr);gap:32px;margin-top:88px}}
-.foot-cols h4{font-size:12px;text-transform:uppercase;letter-spacing:-.16px;font-weight:500;color:rgba(255,255,255,.54);margin-bottom:16px}
-.foot-cols a{display:block;font-size:clamp(13.5px,.14vw + 13px,15px);color:rgba(255,255,255,.86);padding:5px 0;transition:color .18s}
-.foot-cols a:hover{color:#fff}
-.foot-base{display:flex;justify-content:space-between;align-items:center;gap:18px;flex-wrap:wrap;margin-top:52px;padding-top:24px;border-top:1px solid rgba(255,255,255,.14);font-size:clamp(12px,.1vw + 11.6px,13px);color:rgba(255,255,255,.54);letter-spacing:-.16px}
+.foot-cols h4{font-size:12px;text-transform:uppercase;letter-spacing:.08em;font-weight:600;color:var(--muted);margin-bottom:16px}
+.foot-cols a{display:block;font-size:clamp(13.5px,.14vw + 13px,15px);color:rgba(245,245,245,.86);padding:5px 0;transition:color .18s}
+.foot-cols a:hover{color:var(--cyan)}
+.foot-base{display:flex;justify-content:space-between;align-items:center;gap:18px;flex-wrap:wrap;margin-top:52px;padding-top:24px;border-top:1px solid var(--line);font-size:clamp(12px,.1vw + 11.6px,13px);color:var(--muted);letter-spacing:-.16px}
 .foot-social{display:flex;gap:8px}
-.foot-social a{width:32px;height:32px;border-radius:50%;display:grid;place-items:center;box-shadow:inset 0 0 0 1px rgba(255,255,255,.2);color:#fff;transition:box-shadow .18s}
-.foot-social a:hover{box-shadow:inset 0 0 0 1px rgba(255,255,255,.6)}
+.foot-social a{width:32px;height:32px;border-radius:50%;display:grid;place-items:center;box-shadow:inset 0 0 0 1px var(--line);color:var(--ink);transition:box-shadow .18s,color .18s}
+.foot-social a:hover{box-shadow:inset 0 0 0 1px var(--cyan);color:var(--cyan)}
 
 
 /* ── mobile / no-JS: videos are never given a src, so nothing is
-      fetched. This only hides the empty elements so the navy ground
+      fetched. This only hides the empty elements so the dark ground
       and gradients underneath read cleanly. ─────────────────────────── */
 .no-video .hero-vid{display:none}
 
@@ -1426,7 +1464,7 @@ section[id],header[id],footer[id]{scroll-margin-top:76px}
 }
 .cap-w.in{opacity:1; transform:none; filter:none; will-change:auto}
 /* the word being spoken right now */
-.cap-w.now{color:var(--tint,var(--coral))}
+.cap-w.now{color:var(--tint,var(--cyan))}
 
 /* ── surface: inside the phone ── */
 /* The phone is a fixed aspect ratio and .ph-btns sits on an auto margin,
@@ -1434,7 +1472,7 @@ section[id],header[id],footer[id]{scroll-margin-top:76px}
 .cap-phone{
   margin:0 6px;
   line-height:1.4; letter-spacing:-.01em;
-  color:#EDE9F4; text-align:left;
+  color:rgba(245,245,245,.88); text-align:left;
 }
 .cap-phone.on{height:38px; margin-top:10px}
 /* This used to be display:none below 560px, because the device resolved
@@ -1442,7 +1480,7 @@ section[id],header[id],footer[id]{scroll-margin-top:76px}
    so the transcript runs on a phone exactly as it does on a laptop —
    which is the one thing this page is actually demonstrating. */
 .cap-phone{font-size:clamp(11px,.1vw + 10.6px,12px)}
-.cap-phone .cap-w.now{color:#fff; text-shadow:0 0 14px rgba(255,255,255,.35)}
+.cap-phone .cap-w.now{color:#fff; text-shadow:0 0 14px rgba(0,212,255,.45)}
 
 /* ── surface: under an agent card ── */
 .cap-card{
@@ -1530,8 +1568,8 @@ section[id],header[id],footer[id]{scroll-margin-top:76px}
 /* ── the travelling ground ─────────────────────────────────────────
    One fixed sky behind the entire document. Sections have no ground of
    their own, so what sits under every word on this page is a single
-   surface whose colour moves as you descend — dusk at the hero, warmth
-   through the middle of the page, ember for the close. The seams
+   surface whose light moves as you descend — a cool glow at the hero,
+   a deeper one through the middle of the page, a last lift for the close. The seams
    between sections stop existing because there is nothing on either
    side of them to seam.
 
@@ -1558,22 +1596,22 @@ section[id],header[id],footer[id]{scroll-margin-top:76px}
 .fx{position:absolute;inset:0;opacity:0;will-change:opacity}
 .f-dusk{
   background:
-    radial-gradient(62% 48% at 14% 8%,rgba(123,79,212,.034),transparent 70%),
-    radial-gradient(54% 44% at 92% 30%,rgba(27,32,80,.026),transparent 72%),
-    radial-gradient(50% 40% at 78% 88%,rgba(249,179,190,.026),transparent 74%);
+    radial-gradient(62% 48% at 14% 8%,rgba(0,212,255,.034),transparent 70%),
+    radial-gradient(54% 44% at 92% 30%,rgba(0,136,170,.03),transparent 72%),
+    radial-gradient(50% 40% at 78% 88%,rgba(0,184,230,.026),transparent 74%);
 }
 .f-warm{
   background:
-    radial-gradient(58% 46% at 16% 20%,rgba(242,160,61,.032),transparent 70%),
-    radial-gradient(60% 50% at 90% 40%,rgba(249,179,190,.034),transparent 72%),
-    radial-gradient(56% 46% at 30% 86%,rgba(79,209,197,.026),transparent 74%);
+    radial-gradient(58% 46% at 16% 20%,rgba(0,184,230,.032),transparent 70%),
+    radial-gradient(60% 50% at 90% 40%,rgba(0,212,255,.03),transparent 72%),
+    radial-gradient(56% 46% at 30% 86%,rgba(0,136,170,.03),transparent 74%);
 }
 .f-ember{
   background:
-    radial-gradient(64% 50% at 20% 18%,rgba(255,107,74,.034),transparent 72%),
-    radial-gradient(58% 48% at 90% 80%,rgba(224,48,143,.024),transparent 74%);
+    radial-gradient(64% 50% at 20% 18%,rgba(0,212,255,.036),transparent 72%),
+    radial-gradient(58% 48% at 90% 80%,rgba(0,136,170,.03),transparent 74%);
 }
-/* While a recording is playing the ground leans half a step warmer.
+/* While a recording is playing the ground leans half a step brighter.
    A filter on a layer that is otherwise never touched costs one raster,
    once, on a state that changes about as often as a person clicks. */
 .is-live .f-warm,.is-live .f-ember{filter:saturate(1.4)}
@@ -1610,7 +1648,7 @@ section[id],header[id],footer[id]{scroll-margin-top:76px}
    reading line under the nav, which carries the same journey. */
 @media(min-width:1280px){.rail{display:block}}
 
-.rail-line{position:absolute;left:0;top:0;bottom:0;width:1px;background:rgba(23,26,46,.13)}
+.rail-line{position:absolute;left:0;top:0;bottom:0;width:1px;background:rgba(245,245,245,.10)}
 .rail-wave{
   position:absolute;left:0;top:0;bottom:0;width:24px;
   transform-origin:left center;transform:scaleX(.1);
@@ -1618,7 +1656,7 @@ section[id],header[id],footer[id]{scroll-margin-top:76px}
   /* Twenty-four ticks of unrepeating length, so the rail reads as a
      recorded waveform rather than a row of equal bars. Baked at build
      time into one tile rather than measured per frame. */
-  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='192'%3E%3Cg fill='%23171A2E' fill-opacity='.16'%3E%3Crect y='0' width='14' height='2' rx='1'/%3E%3Crect y='8' width='21' height='2' rx='1'/%3E%3Crect y='16' width='9' height='2' rx='1'/%3E%3Crect y='24' width='17' height='2' rx='1'/%3E%3Crect y='32' width='24' height='2' rx='1'/%3E%3Crect y='40' width='11' height='2' rx='1'/%3E%3Crect y='48' width='19' height='2' rx='1'/%3E%3Crect y='56' width='7' height='2' rx='1'/%3E%3Crect y='64' width='15' height='2' rx='1'/%3E%3Crect y='72' width='22' height='2' rx='1'/%3E%3Crect y='80' width='10' height='2' rx='1'/%3E%3Crect y='88' width='18' height='2' rx='1'/%3E%3Crect y='96' width='13' height='2' rx='1'/%3E%3Crect y='104' width='23' height='2' rx='1'/%3E%3Crect y='112' width='8' height='2' rx='1'/%3E%3Crect y='120' width='16' height='2' rx='1'/%3E%3Crect y='128' width='20' height='2' rx='1'/%3E%3Crect y='136' width='12' height='2' rx='1'/%3E%3Crect y='144' width='6' height='2' rx='1'/%3E%3Crect y='152' width='19' height='2' rx='1'/%3E%3Crect y='160' width='14' height='2' rx='1'/%3E%3Crect y='168' width='22' height='2' rx='1'/%3E%3Crect y='176' width='9' height='2' rx='1'/%3E%3Crect y='184' width='17' height='2' rx='1'/%3E%3C/g%3E%3C/svg%3E");
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='192'%3E%3Cg fill='%23F5F5F5' fill-opacity='.14'%3E%3Crect y='0' width='14' height='2' rx='1'/%3E%3Crect y='8' width='21' height='2' rx='1'/%3E%3Crect y='16' width='9' height='2' rx='1'/%3E%3Crect y='24' width='17' height='2' rx='1'/%3E%3Crect y='32' width='24' height='2' rx='1'/%3E%3Crect y='40' width='11' height='2' rx='1'/%3E%3Crect y='48' width='19' height='2' rx='1'/%3E%3Crect y='56' width='7' height='2' rx='1'/%3E%3Crect y='64' width='15' height='2' rx='1'/%3E%3Crect y='72' width='22' height='2' rx='1'/%3E%3Crect y='80' width='10' height='2' rx='1'/%3E%3Crect y='88' width='18' height='2' rx='1'/%3E%3Crect y='96' width='13' height='2' rx='1'/%3E%3Crect y='104' width='23' height='2' rx='1'/%3E%3Crect y='112' width='8' height='2' rx='1'/%3E%3Crect y='120' width='16' height='2' rx='1'/%3E%3Crect y='128' width='20' height='2' rx='1'/%3E%3Crect y='136' width='12' height='2' rx='1'/%3E%3Crect y='144' width='6' height='2' rx='1'/%3E%3Crect y='152' width='19' height='2' rx='1'/%3E%3Crect y='160' width='14' height='2' rx='1'/%3E%3Crect y='168' width='22' height='2' rx='1'/%3E%3Crect y='176' width='9' height='2' rx='1'/%3E%3Crect y='184' width='17' height='2' rx='1'/%3E%3C/g%3E%3C/svg%3E");
   background-repeat:repeat-y;background-size:24px 192px;
 }
 /* The travelled part is the same two elements in the accent, in a
@@ -1627,16 +1665,16 @@ section[id],header[id],footer[id]{scroll-margin-top:76px}
    instead of two, and the line and its waveform cannot disagree about
    where you are. */
 .rail-lit{position:absolute;inset:0;clip-path:inset(0 0 100% 0)}
-.rail-lit .rail-line{background:var(--coral)}
+.rail-lit .rail-line{background:var(--cyan)}
 .rail-lit .rail-wave{
-  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='192'%3E%3Cg fill='%23FF6B4A'%3E%3Crect y='0' width='14' height='2' rx='1'/%3E%3Crect y='8' width='21' height='2' rx='1'/%3E%3Crect y='16' width='9' height='2' rx='1'/%3E%3Crect y='24' width='17' height='2' rx='1'/%3E%3Crect y='32' width='24' height='2' rx='1'/%3E%3Crect y='40' width='11' height='2' rx='1'/%3E%3Crect y='48' width='19' height='2' rx='1'/%3E%3Crect y='56' width='7' height='2' rx='1'/%3E%3Crect y='64' width='15' height='2' rx='1'/%3E%3Crect y='72' width='22' height='2' rx='1'/%3E%3Crect y='80' width='10' height='2' rx='1'/%3E%3Crect y='88' width='18' height='2' rx='1'/%3E%3Crect y='96' width='13' height='2' rx='1'/%3E%3Crect y='104' width='23' height='2' rx='1'/%3E%3Crect y='112' width='8' height='2' rx='1'/%3E%3Crect y='120' width='16' height='2' rx='1'/%3E%3Crect y='128' width='20' height='2' rx='1'/%3E%3Crect y='136' width='12' height='2' rx='1'/%3E%3Crect y='144' width='6' height='2' rx='1'/%3E%3Crect y='152' width='19' height='2' rx='1'/%3E%3Crect y='160' width='14' height='2' rx='1'/%3E%3Crect y='168' width='22' height='2' rx='1'/%3E%3Crect y='176' width='9' height='2' rx='1'/%3E%3Crect y='184' width='17' height='2' rx='1'/%3E%3C/g%3E%3C/svg%3E");
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='192'%3E%3Cg fill='%2300D4FF'%3E%3Crect y='0' width='14' height='2' rx='1'/%3E%3Crect y='8' width='21' height='2' rx='1'/%3E%3Crect y='16' width='9' height='2' rx='1'/%3E%3Crect y='24' width='17' height='2' rx='1'/%3E%3Crect y='32' width='24' height='2' rx='1'/%3E%3Crect y='40' width='11' height='2' rx='1'/%3E%3Crect y='48' width='19' height='2' rx='1'/%3E%3Crect y='56' width='7' height='2' rx='1'/%3E%3Crect y='64' width='15' height='2' rx='1'/%3E%3Crect y='72' width='22' height='2' rx='1'/%3E%3Crect y='80' width='10' height='2' rx='1'/%3E%3Crect y='88' width='18' height='2' rx='1'/%3E%3Crect y='96' width='13' height='2' rx='1'/%3E%3Crect y='104' width='23' height='2' rx='1'/%3E%3Crect y='112' width='8' height='2' rx='1'/%3E%3Crect y='120' width='16' height='2' rx='1'/%3E%3Crect y='128' width='20' height='2' rx='1'/%3E%3Crect y='136' width='12' height='2' rx='1'/%3E%3Crect y='144' width='6' height='2' rx='1'/%3E%3Crect y='152' width='19' height='2' rx='1'/%3E%3Crect y='160' width='14' height='2' rx='1'/%3E%3Crect y='168' width='22' height='2' rx='1'/%3E%3Crect y='176' width='9' height='2' rx='1'/%3E%3Crect y='184' width='17' height='2' rx='1'/%3E%3C/g%3E%3C/svg%3E");
 }
 .rail-node{
   position:absolute;left:-2px;top:0;width:7px;height:7px;border-radius:50%;
-  background:var(--coral);box-shadow:0 0 0 3px rgba(255,107,74,.16);
+  background:var(--cyan);box-shadow:0 0 0 3px rgba(0,212,255,.16);
   will-change:transform;
 }
-.is-live .rail-node{box-shadow:0 0 0 4px rgba(255,107,74,.22),0 0 18px 4px rgba(255,107,74,.45)}
+.is-live .rail-node{box-shadow:0 0 0 4px rgba(0,212,255,.22),0 0 18px 4px rgba(0,212,255,.45)}
 /* While audio is playing the waveform is the recording's, not yours. A
    running animation outranks the inline transform the engine writes, so
    this takes the rail over for as long as the clip lasts and hands it
@@ -1648,13 +1686,12 @@ section[id],header[id],footer[id]{scroll-margin-top:76px}
 
 /* ── the reading line under the nav ────────────────────────────────
    The same journey, for every width the rail cannot serve. It carries
-   the page's own colour arc — coral through amber to iris, the order
-   the ground travels in. A real element rather than a ::after, because
+   the page's own light — deep cyan rising to the bright accent. A real element rather than a ::after, because
    a pseudo-element can only be driven from a variable, and a variable
    is what all of this was too expensive for. */
 .nav-line{
   position:absolute;left:0;right:0;bottom:-1px;height:2px;
-  background:linear-gradient(90deg,var(--coral),var(--amber) 42%,var(--magenta) 74%,var(--violet));
+  background:linear-gradient(90deg,var(--cyan-dark),var(--cyan) 60%,var(--cyan-hover));
   transform-origin:left center;transform:scaleX(0);
   will-change:transform;opacity:.85;
 }
@@ -1693,7 +1730,7 @@ section[id],header[id],footer[id]{scroll-margin-top:76px}
 }
 
 /* ── planes, not panels ────────────────────────────────────────────
-   The first statement is a sheet of paper sliding up over the dusk of
+   The first statement is a dark sheet sliding up over the glow of
    the hero. It is the only place on the page where one section
    physically overlaps another, which is what makes the whole thing read
    as layered rather than stacked. One instance is a gesture; five would
@@ -1702,14 +1739,15 @@ section[id],header[id],footer[id]{scroll-margin-top:76px}
 .statement:not(.statement-2){
   position:relative;z-index:2;
   margin-top:-38px;border-radius:34px 34px 0 0;
-  box-shadow:0 -34px 70px -30px rgba(23,26,46,.34);
+  background:linear-gradient(180deg,var(--card) 0%,var(--card) 55%,var(--bg) 100%);
+  box-shadow:0 -1px 0 var(--line),0 -34px 70px -30px rgba(0,0,0,.5);
 }
 /* The overlap and the corner scale with the block radius they belong
    to, rather than stepping at one width. */
 @media(max-width:900px){
   .statement:not(.statement-2){margin-top:-24px;border-radius:22px 22px 0 0}
 }
-/* The second statement gives up its opaque cream so the travelling
+/* The second statement gives up its opaque ground so the travelling
    ground runs behind it unbroken. The sheet over the hero is the only
    opaque plane left. */
 .statement-2{background:transparent}
@@ -1734,11 +1772,11 @@ section[id],header[id],footer[id]{scroll-margin-top:76px}
    and turned out to be a design one — four diagrams moving at once is
    noise, and one moving is attention. */
 .spec-row .spec-n{transition:color .45s ease,transform .45s cubic-bezier(.2,.8,.2,1)}
-.spec-row.lit .spec-n{color:var(--coral-deep);transform:translateX(3px)}
+.spec-row.lit .spec-n{color:var(--cyan);transform:translateX(3px)}
 .spec-row:not(.lit) .demo-wave i,
 .spec-row:not(.lit) .demo-turn .bar > i{animation-play-state:paused}
 .spec-row .spec-demo{transition:border-color .45s ease,background .45s ease}
-.spec-row.lit .spec-demo{border-color:rgba(255,107,74,.34);background:var(--card)}
+.spec-row.lit .spec-demo{border-color:rgba(0,212,255,.34);background:var(--card)}
 
 /* ── nothing animates in a section you cannot see ──────────────────
    Infinite CSS animations keep running when they are scrolled away, and
@@ -1775,7 +1813,7 @@ section[id],header[id],footer[id]{scroll-margin-top:76px}
 /* Four filter passes over four large photographs, re-applied whenever
    the layer they sit on moves. The colour grade is a cheap matrix and
    stays; the blur is the multi-pass one and goes. */
-.lite .secbg img{filter:saturate(.55) brightness(1.3) sepia(.25) !important;transform:none !important}
+.lite .secbg img{filter:grayscale(.2) saturate(.8) brightness(.6) !important;transform:none !important}
 /* A blend mode over a playing video composites the whole frame twice.
    Luminosity at .30 and plain compositing at .24 land close enough that
    the hero reads the same either way. */
@@ -1783,19 +1821,19 @@ section[id],header[id],footer[id]{scroll-margin-top:76px}
 /* A sticky bar with a backdrop-filter re-blurs the width of the window
    on every scrolled frame. A little more opacity reads almost the same
    and reads it for free. */
-.lite .nav{backdrop-filter:none;-webkit-backdrop-filter:none;background:rgba(245,241,234,.95)}
+.lite .nav{backdrop-filter:none;-webkit-backdrop-filter:none;background:rgba(14,14,14,.95)}
 .lite .hero-pill,.lite .news-pill{backdrop-filter:none;-webkit-backdrop-filter:none}
 /* The frost is the expensive layer and the one most worth keeping the
    look of. Rather than removing it and leaving a bare ring, the lite
-   tier paints the result: a translucent white ground plus the same
+   tier paints the result: a faint translucent ground plus the same
    gradient at a heavier mix reads as the same orb at a glance, and
    costs one raster instead of a re-blur per frame. The two tiers should
    differ in what they cost, not in what they look like. */
 .lite .glass{
   -webkit-backdrop-filter:none;backdrop-filter:none;
-  background:radial-gradient(72% 72% at 32% 26%,rgba(255,255,255,.62),rgba(255,255,255,.34) 62%,rgba(255,255,255,.20));
+  background:radial-gradient(72% 72% at 32% 26%,rgba(255,255,255,.12),rgba(255,255,255,.06) 62%,rgba(255,255,255,.03));
 }
-.lite .glass::after{background:linear-gradient(150deg,rgba(255,255,255,.80),rgba(255,107,74,.20) 48%,rgba(255,255,255,.52))}
+.lite .glass::after{background:linear-gradient(150deg,rgba(255,255,255,.14),rgba(0,212,255,.16) 48%,rgba(255,255,255,.06))}
 .lite .stage-wash{filter:blur(14px)}
 .lite .slides{perspective:none}
 .lite .slide-card{transform:none !important}
@@ -1892,7 +1930,7 @@ addEventListener('DOMContentLoaded', function(){
 <!-- ═══ NAV ══════════════════════════════════════════════════════════ -->
 <nav class="nav" id="nav">
   <div class="nav-in">
-    <a class="logo" href="#top">CYNEA <span>voice</span></a>
+    <a class="logo" href="#top" aria-label="Cynea"><svg class="prism" viewBox="14 2 30 52" width="15" height="26" aria-hidden="true" focusable="false"><g transform="translate(2,2)"><path d="M28 2 L38 2 L40 4 L40 9 L34 15 L34 37 L40 43 L40 48 L38 50 L28 50 L18 43 L14 30 L14 22 L18 9 Z" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linejoin="bevel"/><path d="M22 12 L34 6 L34 15 L27 23 Z" fill="currentColor" fill-opacity=".18"/><path d="M22 40 L34 46 L34 37 L27 29 Z" fill="currentColor" fill-opacity=".09"/><circle cx="26" cy="26" r="2.5" fill="currentColor"/></g></svg><span class="logo-word" aria-hidden="true">Cynea</span></a>
     <div class="nav-links" id="nav-links">
       <a href="#try-demo">Live demo</a>
       <a href="live-call.html">Live call</a>
@@ -1920,16 +1958,16 @@ addEventListener('DOMContentLoaded', function(){
            aria-hidden="true" data-src="assets/Hero-bg%201.mp4" data-eager></video>
     <div class="hero-scrim" aria-hidden="true"></div>
 
-    <h1 class="hero-eyebrow">AI voice agents for African businesses</h1>
+    <h1 class="hero-eyebrow">AI voice agents for every business</h1>
 
     <div class="hero-mid">
-      <h2 class="display hero-display">Voice AI built for Africa.</h2>
+      <h2 class="display hero-display">Voice AI that feels human.</h2>
     </div>
 
     <div class="hero-foot">
       <p class="hero-body">
-        Deploy human-like voice agents that answer calls 24/7 across Africa.
-        For hotels, banks, restaurants, and clinics — in any language, any accent.
+        Deploy human-like voice agents that answer every call, day or night.
+        For hotels, banks, restaurants, and clinics — in the accents your callers speak.
       </p>
       <a class="hero-pill" href="#try-demo">
         <span class="pill-orb" aria-hidden="true"></span>
@@ -1945,7 +1983,7 @@ addEventListener('DOMContentLoaded', function(){
 <!-- ═══ 1. STATEMENT BANNER ══════════════════════════════════════════ -->
 <section class="statement">
   <h2 class="stmt stmt-1 rv">
-    <span class="row">Built</span>
+    <span class="row">Real</span>
     <span class="row">
       <!-- Kwame's greeting, drawn. See tools/make_voicemark.py. -->
       <svg class="vmark" viewBox="0 0 100 100" aria-hidden="true" focusable="false">
@@ -1990,9 +2028,9 @@ addEventListener('DOMContentLoaded', function(){
           <line x1="42.9" y1="28.1" x2="36.7" y2="9.1" style="--d:1.71s"/>
           <line x1="46.4" y1="27.3" x2="44.9" y2="17.6" style="--d:1.75s"/>
       </svg>
-      in Nairobi,
+      people.
     </span>
-    <span class="row">answered by people.</span>
+    <span class="row">Real voices.</span>
   </h2>
 </section>
 
@@ -2035,7 +2073,7 @@ addEventListener('DOMContentLoaded', function(){
 
             <div class="ph-call">
               <div class="who">Amina</div>
-              <div class="sub">Bank Support · Nairobi</div>
+              <div class="sub">Bank Support · Cynea Bank</div>
             </div>
 
             <div class="ph-wave" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
@@ -2168,7 +2206,7 @@ addEventListener('DOMContentLoaded', function(){
 <!-- ═══ 3. TESTIMONIALS (placeholder) ════════════════════════════════ -->
 <section class="sec-sm wrap">
   <div class="rv" style="text-align:center">
-    <h2 class="display" style="font-size:clamp(34px,5vw,62px)">Proven Impact,<br>Real Conversations</h2>
+    <h2 class="display" style="font-size:clamp(30px,4.2vw,52px)">Proven Impact,<br>Real Conversations</h2>
   </div>
   <!-- Replace with real, attributable customer quotes only. -->
   <div class="tm-placeholder rv">
@@ -2195,8 +2233,8 @@ addEventListener('DOMContentLoaded', function(){
 
 <!-- ═══ 4b. MEET YOUR VOICE AGENTS ═══════════════════════════════════ -->
 <section class="sec wrap has-bg" id="agents">
-  <!-- Amber. The warm end of the palette, picking up from the dusk hero. -->
-  <div class="secbg" aria-hidden="true" style="--o:.10;--wash:linear-gradient(165deg,rgba(242,160,61,.13),rgba(251,211,194,.08) 55%,rgba(255,107,74,.05))">
+  <!-- Neutral photo, a breath of cyan light from the top left. -->
+  <div class="secbg" aria-hidden="true" style="--o:.22;--wash:linear-gradient(165deg,rgba(0,212,255,.06),transparent 60%)">
     <picture>
       <source srcset="assets/tile-hotel.webp" type="image/webp">
       <img src="assets/tile-hotel.jpg" alt="" width="560" height="360"
@@ -2211,7 +2249,7 @@ addEventListener('DOMContentLoaded', function(){
 
   <div class="agent-grid stg">
     <article class="agent" data-agent
-             style="--tint:#FF6B4A;--tint-2:#E24A2E;--glow:rgba(255,107,74,.50)">
+             style="--tint:#00D4FF;--tint-2:#0088AA;--glow:rgba(0,212,255,.50)">
       <div class="agent-figure">
         <span class="agent-orb" aria-hidden="true"></span>
         <span class="agent-ring" aria-hidden="true"></span>
@@ -2224,7 +2262,7 @@ addEventListener('DOMContentLoaded', function(){
       </div>
       <h3>Kwame</h3>
       <p class="agent-role">Hotel Receptionist</p>
-      <p class="agent-place">Ghana</p>
+      <p class="agent-place">Warm and direct</p>
       <div class="wave" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i></div>
       <button class="agent-play" type="button" aria-label="Hear Kwame's demo"
               data-audio="assets/kwame_card_demo.mp3" data-dur="0:20" data-status="#t-kwame">
@@ -2241,7 +2279,7 @@ addEventListener('DOMContentLoaded', function(){
       <div class="cap cap-card" data-cap aria-hidden="true"></div>
     </article>
     <article class="agent" data-agent
-             style="--tint:#F9B3BE;--tint-2:#D4457E;--glow:rgba(212,69,126,.46)">
+             style="--tint:#00B8E6;--tint-2:#0088AA;--glow:rgba(0,184,230,.46)">
       <div class="agent-figure">
         <span class="agent-orb" aria-hidden="true"></span>
         <span class="agent-ring" aria-hidden="true"></span>
@@ -2254,7 +2292,7 @@ addEventListener('DOMContentLoaded', function(){
       </div>
       <h3>Amina</h3>
       <p class="agent-role">Bank Support</p>
-      <p class="agent-place">Kenya</p>
+      <p class="agent-place">Fast and professional</p>
       <div class="wave" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i></div>
       <button class="agent-play" type="button" aria-label="Hear Amina's demo"
               data-audio="assets/amina_card_demo.mp3" data-dur="0:20" data-status="#t-amina">
@@ -2271,7 +2309,7 @@ addEventListener('DOMContentLoaded', function(){
       <div class="cap cap-card" data-cap aria-hidden="true"></div>
     </article>
     <article class="agent" data-agent
-             style="--tint:#8FE6DD;--tint-2:#1F9D93;--glow:rgba(31,157,147,.44)">
+             style="--tint:#00D4FF;--tint-2:#00B8E6;--glow:rgba(0,212,255,.44)">
       <div class="agent-figure">
         <span class="agent-orb" aria-hidden="true"></span>
         <span class="agent-ring" aria-hidden="true"></span>
@@ -2284,7 +2322,7 @@ addEventListener('DOMContentLoaded', function(){
       </div>
       <h3>Kofi</h3>
       <p class="agent-role">Restaurant Orders</p>
-      <p class="agent-place">Ghana</p>
+      <p class="agent-place">Energetic and friendly</p>
       <div class="wave" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i></div>
       <button class="agent-play" type="button" aria-label="Hear Kofi's demo"
               data-audio="assets/kofi_card_demo.mp3" data-dur="0:20" data-status="#t-kofi">
@@ -2301,7 +2339,7 @@ addEventListener('DOMContentLoaded', function(){
       <div class="cap cap-card" data-cap aria-hidden="true"></div>
     </article>
     <article class="agent" data-agent
-             style="--tint:#F7CE9A;--tint-2:#C77518;--glow:rgba(199,117,24,.44)">
+             style="--tint:#00B8E6;--tint-2:#00D4FF;--glow:rgba(0,184,230,.44)">
       <div class="agent-figure">
         <span class="agent-orb" aria-hidden="true"></span>
         <span class="agent-ring" aria-hidden="true"></span>
@@ -2314,7 +2352,7 @@ addEventListener('DOMContentLoaded', function(){
       </div>
       <h3>Maya</h3>
       <p class="agent-role">Bookings & Scheduling</p>
-      <p class="agent-place">Pan-African</p>
+      <p class="agent-place">Warm and efficient</p>
       <div class="wave" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i></div>
       <button class="agent-play" type="button" aria-label="Hear Maya's demo"
               data-audio="assets/maya_card_demo.mp3" data-dur="0:20" data-status="#t-maya">
@@ -2366,7 +2404,7 @@ addEventListener('DOMContentLoaded', function(){
             <img src="assets/avatar-kwame.jpg" alt="" width="52" height="52" loading="lazy" decoding="async">
           </picture>
           </div>
-          <span><b>Kwame</b><small>Hotel Receptionist<br>Adinkra Hotel · Accra</small></span>
+          <span><b>Kwame</b><small>Hotel Receptionist<br>Adinkra Hotel</small></span>
         </div>
         <div class="call-link" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
         <div class="call-side s-caller">
@@ -2374,7 +2412,7 @@ addEventListener('DOMContentLoaded', function(){
             <span class="halo" aria-hidden="true"></span>
             <span class="call-mono" aria-hidden="true">DO</span>
           </div>
-          <span><b>David Osei</b><small>Guest<br>Calling from Accra</small></span>
+          <span><b>David Osei</b><small>Guest<br>Planning an anniversary</small></span>
         </div>
       </div>
 
@@ -2444,7 +2482,7 @@ addEventListener('DOMContentLoaded', function(){
             <img src="assets/avatar-amina.jpg" alt="" width="52" height="52" loading="lazy" decoding="async">
           </picture>
           </div>
-          <span><b>Amina</b><small>Bank Support<br>Cynea Bank · Nairobi</small></span>
+          <span><b>Amina</b><small>Bank Support<br>Cynea Bank</small></span>
         </div>
         <div class="call-link" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
         <div class="call-side s-caller">
@@ -2454,7 +2492,7 @@ addEventListener('DOMContentLoaded', function(){
               <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="9" r="3.4"/><path d="M4.8 20a7.2 7.2 0 0 1 14.4 0"/></svg>
             </span>
           </div>
-          <span><b>Caller</b><small>Customer<br>Calling from Nairobi</small></span>
+          <span><b>Caller</b><small>Customer<br>Chasing a stuck transfer</small></span>
         </div>
       </div>
 
@@ -2551,8 +2589,8 @@ addEventListener('DOMContentLoaded', function(){
         <span class="spec-n">02</span>
         <div>
           <h3>Nine synthetic voices when you need words we never recorded</h3>
-          <p><b>Four</b> of the nine are African locales — two Nigerian, two South African — alongside British and
-            American. They run on edge-tts, which costs nothing per word.</p>
+          <p>Nine voices across a <b>range of English accents</b>, so you can match the voice to the people
+            calling. They run on edge-tts, which costs nothing per word.</p>
           <div class="spec-demo" aria-hidden="true">
             <ul class="demo-locales">
               <li class="af">en-NG Ezinne</li><li class="af">en-NG Abeo</li>
@@ -2655,8 +2693,8 @@ addEventListener('DOMContentLoaded', function(){
 
 <!-- ═══ 7. OMNI-CHANNEL ══════════════════════════════════════════════ -->
 <section class="sec wrap has-bg" id="channels">
-  <!-- Teal. The one cool step in the descent, so the warmth reads as a choice. -->
-  <div class="secbg" aria-hidden="true" style="--o:.09;--wash:linear-gradient(165deg,rgba(242,160,61,.12),rgba(79,209,197,.06) 60%,transparent)">
+  <!-- Neutral photo, cyan light from the far side. -->
+  <div class="secbg" aria-hidden="true" style="--o:.2;--wash:linear-gradient(195deg,rgba(0,212,255,.05),transparent 60%)">
     <picture>
       <source srcset="assets/tile-restaurant.webp" type="image/webp">
       <img src="assets/tile-restaurant.jpg" alt="" width="560" height="360"
@@ -2669,28 +2707,28 @@ addEventListener('DOMContentLoaded', function(){
   </div>
 
   <div class="cascade rv">
-    <div class="casc" style="--c:#FF6B4A;--c2:#E24A2E">
+    <div class="casc" style="--c:#00D4FF;--c2:#0088AA">
       <span class="badge" aria-hidden="true">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6.5 3h-3v3a14.5 14.5 0 0 0 14.5 14.5h3v-3l-4-1.5-2 2A11.5 11.5 0 0 1 9 9.5l2-2z"/></svg>
       </span>
       <h3>Voice Calls</h3>
       <p>Inbound and outbound over SIP or a local number.</p>
     </div>
-    <div class="casc" style="--c:#4FD1C5;--c2:#1F9D93">
+    <div class="casc" style="--c:#00B8E6;--c2:#0088AA">
       <span class="badge" aria-hidden="true">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.5 8.5 0 0 1-12.6 7.4L3 20.5l1.7-5.2A8.5 8.5 0 1 1 21 11.5z"/></svg>
       </span>
       <h3>WhatsApp</h3>
-      <p>The same agent, answering on the channel Africa actually uses.</p>
+      <p>The same agent, answering on the channel your customers already use.</p>
     </div>
-    <div class="casc" style="--c:#F2A03D;--c2:#D9902B">
+    <div class="casc" style="--c:#00D4FF;--c2:#00B8E6">
       <span class="badge" aria-hidden="true">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6.5h18v11H8l-5 3.5z"/></svg>
       </span>
       <h3>SMS</h3>
       <p>Confirmations, reminders and fallbacks when a call drops.</p>
     </div>
-    <div class="casc" style="--c:#7B4FD4;--c2:#3A3F8F">
+    <div class="casc" style="--c:#0088AA;--c2:#00D4FF">
       <span class="badge" aria-hidden="true">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 7l-5 5 5 5M15 7l5 5-5 5"/></svg>
       </span>
@@ -2714,7 +2752,7 @@ addEventListener('DOMContentLoaded', function(){
       <div class="ph-call">
         <div class="lbl">Incoming call</div>
         <div class="who">Adinkra Hotel</div>
-        <div class="sub">Accra, Ghana · mobile</div>
+        <div class="sub">Local number · mobile</div>
         <div class="ph-btns">
           <span class="ph-btn no" aria-hidden="true">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" transform="rotate(135)"><path d="M6.5 3h-3v3a14.5 14.5 0 0 0 14.5 14.5h3v-3l-4-1.5-2 2A11.5 11.5 0 0 1 9 9.5l2-2z"/></svg>
@@ -2728,8 +2766,8 @@ addEventListener('DOMContentLoaded', function(){
 
     <div class="rv" data-acc>
       <div class="acc-item">
-        <button class="acc-btn" aria-expanded="true">African Phone Numbers<span class="acc-ico" aria-hidden="true"></span></button>
-        <div class="acc-panel"><p>Provision local numbers through Africa's Talking in <b>seven countries</b> — Kenya, Nigeria, Ghana, South Africa, Uganda, Tanzania and Rwanda.</p></div>
+        <button class="acc-btn" aria-expanded="true">Local Phone Numbers<span class="acc-ico" aria-hidden="true"></span></button>
+        <div class="acc-panel"><p>Provision local numbers in <b>seven countries</b> today, so callers dial an ordinary local number at ordinary local rates.</p></div>
       </div>
       <div class="acc-item">
         <button class="acc-btn" aria-expanded="false">SIP Trunking<span class="acc-ico" aria-hidden="true"></span></button>
@@ -2749,8 +2787,8 @@ addEventListener('DOMContentLoaded', function(){
 
 <!-- ═══ 9. SECURITY ══════════════════════════════════════════════════ -->
 <section class="sec wrap has-bg">
-  <!-- Amber over dusk indigo — the trust section, weighted a little deeper. -->
-  <div class="secbg" aria-hidden="true" style="--o:.09;--wash:linear-gradient(165deg,rgba(242,160,61,.11),rgba(27,32,80,.06) 70%,transparent)">
+  <!-- Neutral photo — the trust section, weighted a little deeper. -->
+  <div class="secbg" aria-hidden="true" style="--o:.18;--wash:linear-gradient(165deg,rgba(0,136,170,.06),transparent 70%)">
     <picture>
       <source srcset="assets/tile-banking.webp" type="image/webp">
       <img src="assets/tile-banking.jpg" alt="" width="560" height="360"
@@ -2774,7 +2812,7 @@ addEventListener('DOMContentLoaded', function(){
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8.5"/><circle cx="12" cy="12" r="3"/></svg>
       </span>
       <h3>Call Recording</h3>
-      <p>Agents announce recording on the opening turn and honour opt-outs, per Kenya ODPC 2024 and EU AI Act Article 50.</p>
+      <p>Agents announce recording on the opening turn and honour opt-outs, built for AI-disclosure and data-protection rules.</p>
     </div>
     <div class="scard">
       <span class="badge" aria-hidden="true">
@@ -2788,8 +2826,8 @@ addEventListener('DOMContentLoaded', function(){
 
 <!-- ═══ 10. FAQ ══════════════════════════════════════════════════════ -->
 <section class="sec wrap has-bg" id="faq">
-  <!-- Blush, warming back up so the coral CTA below lands as an arrival. -->
-  <div class="secbg" aria-hidden="true" style="--o:.09;--blur:9px;--wash:linear-gradient(165deg,rgba(249,179,190,.13),rgba(255,107,74,.06) 60%,transparent)">
+  <!-- Neutral photo, the cyan rising again so the CTA below lands as an arrival. -->
+  <div class="secbg" aria-hidden="true" style="--o:.2;--blur:9px;--wash:linear-gradient(165deg,rgba(0,212,255,.06),transparent 60%)">
     <picture>
       <source srcset="assets/tile-clinic.webp" type="image/webp">
       <img src="assets/tile-clinic.jpg" alt="" width="560" height="360"
@@ -2803,23 +2841,23 @@ addEventListener('DOMContentLoaded', function(){
 
   <div class="faq rv" data-acc>
     <div class="acc-item">
-      <button class="acc-btn" aria-expanded="true">What is an AI receptionist, and how does one work in Kenya?<span class="acc-ico" aria-hidden="true"></span></button>
-      <div class="acc-panel"><p>An AI receptionist answers your business line the way a trained front-desk person would — it greets the caller, understands what they want in natural speech, and either resolves it or routes it. In Kenya it runs on a local number provisioned through Africa's Talking, so callers dial an ordinary Kenyan number and pay ordinary local rates.</p></div>
+      <button class="acc-btn" aria-expanded="true">What is an AI receptionist, and how does it work?<span class="acc-ico" aria-hidden="true"></span></button>
+      <div class="acc-panel"><p>An AI receptionist answers your business line the way a trained front-desk person would — it greets the caller, understands what they want in natural speech, and either resolves it or routes it. It runs on a local number, so callers dial an ordinary number and pay ordinary local rates.</p></div>
     </div>
     <div class="acc-item">
-      <button class="acc-btn" aria-expanded="false">Can the voice agent speak Swahili?<span class="acc-ico" aria-hidden="true"></span></button>
-      <div class="acc-panel"><p>Transcription handles Swahili through Whisper. On the speech side we ship nine voices today, four of them native African accents (Nigerian and South African). A dedicated Swahili TTS voice is on the roadmap rather than in the product — we would rather say that plainly than let you discover it on a live call.</p></div>
+      <button class="acc-btn" aria-expanded="false">Which languages can the voice agent speak?<span class="acc-ico" aria-hidden="true"></span></button>
+      <div class="acc-panel"><p>Transcription runs on Whisper, which handles many languages and accents. On the speech side we ship nine English voices today, across a range of accents. Speech in languages beyond English is on the roadmap rather than in the product — we would rather say that plainly than let you discover it on a live call.</p></div>
     </div>
     <div class="acc-item">
-      <button class="acc-btn" aria-expanded="false">Which African countries can Cynea place and receive calls in?<span class="acc-ico" aria-hidden="true"></span></button>
-      <div class="acc-panel"><p>Seven, via Africa's Talking: Kenya, Nigeria, Ghana, South Africa, Uganda, Tanzania and Rwanda. Anywhere else, bring your own carrier over SIP.</p></div>
+      <button class="acc-btn" aria-expanded="false">Where can Cynea place and receive calls?<span class="acc-ico" aria-hidden="true"></span></button>
+      <div class="acc-panel"><p>On local numbers in seven countries today — book a call and we will tell you whether yours is one of them. Anywhere else, bring your own carrier over SIP.</p></div>
     </div>
     <div class="acc-item">
-      <button class="acc-btn" aria-expanded="false">How do I set up automated call answering in Nairobi?<span class="acc-ico" aria-hidden="true"></span></button>
-      <div class="acc-panel"><p>Three steps: provision a Nairobi number (or forward your existing one), pick a persona and edit its prompt, then point the SIP endpoint at Cynea. The agent configuration is a single Python module per persona, so a developer can have a first version answering within a day.</p></div>
+      <button class="acc-btn" aria-expanded="false">How do I set up automated call answering?<span class="acc-ico" aria-hidden="true"></span></button>
+      <div class="acc-panel"><p>Three steps: provision a local number (or forward your existing one), pick a persona and edit its prompt, then point the SIP endpoint at Cynea. The agent configuration is a single Python module per persona, so a developer can have a first version answering within a day.</p></div>
     </div>
     <div class="acc-item">
-      <button class="acc-btn" aria-expanded="false">What does an AI call center in Africa cost?<span class="acc-ico" aria-hidden="true"></span></button>
+      <button class="acc-btn" aria-expanded="false">What does an AI call center cost?<span class="acc-ico" aria-hidden="true"></span></button>
       <div class="acc-panel"><p>Pricing is not published yet — we are still onboarding our first customers and would rather quote you honestly than post a number we will have to change. Book a call and we will walk through your volumes. <em>(Placeholder: replace with real pricing once it is set.)</em></p></div>
     </div>
     <div class="acc-item">
@@ -2832,19 +2870,19 @@ addEventListener('DOMContentLoaded', function(){
     </div>
     <div class="acc-item">
       <button class="acc-btn" aria-expanded="false">Does the agent tell callers it is an AI?<span class="acc-ico" aria-hidden="true"></span></button>
-      <div class="acc-panel"><p>Yes — once, on the opening turn, in its own register, and again any time a caller asks directly. It does not repeat a robotic disclaimer, because that is itself a tell. This is the disclosed-but-natural default and it ships that way for California SB 1001, EU AI Act Article 50 and Kenya ODPC 2024.</p></div>
+      <div class="acc-panel"><p>Yes — once, on the opening turn, in its own register, and again any time a caller asks directly. It does not repeat a robotic disclaimer, because that is itself a tell. This is the disclosed-but-natural default and it ships that way to meet AI-disclosure and data-protection rules.</p></div>
     </div>
     <div class="acc-item">
-      <button class="acc-btn" aria-expanded="false">Can it handle Twi, Nigerian Pidgin or Sheng?<span class="acc-ico" aria-hidden="true"></span></button>
-      <div class="acc-panel"><p>Whisper transcribes code-switched speech well, and the personas are written to expect it — Kwame is a Ghanaian hotelier, not a generic assistant. Full Twi and Pidgin synthesis is roadmap, not shipped.</p></div>
+      <button class="acc-btn" aria-expanded="false">Can it handle mixed languages and local dialects?<span class="acc-ico" aria-hidden="true"></span></button>
+      <div class="acc-panel"><p>Whisper transcribes code-switched speech well, and the personas are written to expect it — each one is a specific person with their own way of speaking, not a generic assistant. Speaking those dialects back is roadmap, not shipped.</p></div>
     </div>
     <div class="acc-item">
       <button class="acc-btn" aria-expanded="false">What happens when the AI cannot help?<span class="acc-ico" aria-hidden="true"></span></button>
       <div class="acc-panel"><p>It escalates. The engine watches for complaints and repeated repair attempts, then hands the call to a person with the full transcript, so the caller never has to start over.</p></div>
     </div>
     <div class="acc-item">
-      <button class="acc-btn" aria-expanded="false">Is call data stored outside Africa?<span class="acc-ico" aria-hidden="true"></span></button>
-      <div class="acc-panel"><p>It does not have to be. Whisper and Edge TTS can both run locally, which means audio never leaves your stack. If you choose a hosted provider instead, that provider's residency terms apply and we will tell you which.</p></div>
+      <button class="acc-btn" aria-expanded="false">Where is call data stored?<span class="acc-ico" aria-hidden="true"></span></button>
+      <div class="acc-panel"><p>It can stay on your own infrastructure. Whisper and Edge TTS can both run locally, which means audio never leaves your stack. If you choose a hosted provider instead, that provider's residency terms apply and we will tell you which.</p></div>
     </div>
     <div class="acc-item">
       <button class="acc-btn" aria-expanded="false">Can it run outbound campaigns?<span class="acc-ico" aria-hidden="true"></span></button>
@@ -2891,11 +2929,11 @@ addEventListener('DOMContentLoaded', function(){
       <p class="news-msg" id="news-msg" role="status"></p>
     </div>
 
-    <div class="foot-serif" aria-label="Built in Nairobi, human by design">
-      <div class="row">Built</div>
-      <div class="row">in Nairobi,</div>
-      <div class="row">human by</div>
-      <div class="row">design</div>
+    <div class="foot-serif" aria-label="Real people. Real voices.">
+      <div class="row">Real</div>
+      <div class="row">people.</div>
+      <div class="row">Real</div>
+      <div class="row">voices.</div>
     </div>
   </div>
 
@@ -2931,7 +2969,7 @@ addEventListener('DOMContentLoaded', function(){
   </div>
 
   <div class="foot-base">
-    <span>© 2026 Cynea AI · Built in Nairobi 🇰🇪</span>
+    <span>© 2026 Cynea AI · Made with real voices</span>
     <!-- These accounts do not exist yet, so the links are inert. -->
     <div class="foot-social">
       <a href="#" aria-label="X (placeholder — no account yet)"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M18.2 2h3.4l-7.4 8.5L23 22h-6.8l-5.3-7-6.1 7H1.4l7.9-9.1L1 2h7l4.8 6.4zm-1.2 18h1.9L7.1 4H5z"/></svg></a>
@@ -4540,20 +4578,19 @@ addEventListener('DOMContentLoaded', function(){
       "@type":"Organization",
       "name":"Cynea",
       "url":"https://cynea.ai/",
-      "description":"AI voice agents for African businesses.",
-      "areaServed":["Kenya","Nigeria","Ghana","South Africa","Uganda","Tanzania","Rwanda"]
+      "description":"AI voice agents for every business, speaking with real recorded human voices."
     },
     {
       "@type":"FAQPage",
       "mainEntity":[
-        {"@type":"Question","name":"What is an AI receptionist, and how does one work in Kenya?","acceptedAnswer":{"@type":"Answer","text":"An AI receptionist answers your business line the way a trained front-desk person would. In Kenya it runs on a local number provisioned through Africa's Talking, so callers dial an ordinary Kenyan number at ordinary local rates."}},
-        {"@type":"Question","name":"Can the voice agent speak Swahili?","acceptedAnswer":{"@type":"Answer","text":"Transcription handles Swahili through Whisper. Nine voices ship today, four of them native African accents. A dedicated Swahili TTS voice is on the roadmap rather than in the product."}},
-        {"@type":"Question","name":"Which African countries can Cynea place and receive calls in?","acceptedAnswer":{"@type":"Answer","text":"Seven, via Africa's Talking: Kenya, Nigeria, Ghana, South Africa, Uganda, Tanzania and Rwanda. Anywhere else, bring your own carrier over SIP."}},
-        {"@type":"Question","name":"How do I set up automated call answering in Nairobi?","acceptedAnswer":{"@type":"Answer","text":"Provision a Nairobi number or forward your existing one, pick a persona and edit its prompt, then point the SIP endpoint at Cynea."}},
+        {"@type":"Question","name":"What is an AI receptionist, and how does it work?","acceptedAnswer":{"@type":"Answer","text":"An AI receptionist answers your business line the way a trained front-desk person would. It runs on a local number, so callers dial an ordinary number at ordinary local rates."}},
+        {"@type":"Question","name":"Which languages can the voice agent speak?","acceptedAnswer":{"@type":"Answer","text":"Transcription runs on Whisper, which handles many languages and accents. Nine English voices ship today, across a range of accents. Speech in languages beyond English is on the roadmap rather than in the product."}},
+        {"@type":"Question","name":"Where can Cynea place and receive calls?","acceptedAnswer":{"@type":"Answer","text":"On local numbers in seven countries today. Anywhere else, bring your own carrier over SIP."}},
+        {"@type":"Question","name":"How do I set up automated call answering?","acceptedAnswer":{"@type":"Answer","text":"Provision a local number or forward your existing one, pick a persona and edit its prompt, then point the SIP endpoint at Cynea."}},
         {"@type":"Question","name":"How fast does the agent respond?","acceptedAnswer":{"@type":"Answer","text":"The design target is roughly 600ms to first audio, streaming LLM tokens straight into the synthesiser. Turn-taking adds a 700ms grace period after you stop speaking."}},
-        {"@type":"Question","name":"Does the agent tell callers it is an AI?","acceptedAnswer":{"@type":"Answer","text":"Yes, once on the opening turn and again whenever a caller asks directly, for California SB 1001, EU AI Act Article 50 and Kenya ODPC 2024."}},
+        {"@type":"Question","name":"Does the agent tell callers it is an AI?","acceptedAnswer":{"@type":"Answer","text":"Yes, once on the opening turn and again whenever a caller asks directly, to meet AI-disclosure and data-protection rules."}},
         {"@type":"Question","name":"What happens when the AI cannot help?","acceptedAnswer":{"@type":"Answer","text":"It escalates, handing the call to a person with the full transcript attached so the caller never has to start over."}},
-        {"@type":"Question","name":"Is call data stored outside Africa?","acceptedAnswer":{"@type":"Answer","text":"It does not have to be. Whisper and Edge TTS can both run locally, so audio never leaves your stack."}}
+        {"@type":"Question","name":"Where is call data stored?","acceptedAnswer":{"@type":"Answer","text":"It can stay on your own infrastructure. Whisper and Edge TTS can both run locally, so audio never leaves your stack."}}
       ]
     }
   ]

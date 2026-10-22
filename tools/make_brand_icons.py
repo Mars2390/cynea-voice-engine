@@ -1,48 +1,63 @@
 #!/usr/bin/env python3
-"""Generate the Cynea favicon, touch icon and social card from one design.
+"""Generate the Cynea favicon, touch icon and social card from one mark.
 
     python tools/make_brand_icons.py
 
 Writes:
     assets/favicon.svg            vector master
-    assets/favicon.ico            16 / 32 / 48, each tuned for its size
+    assets/favicon.ico            16 / 32 / 48, each drawn at its own size
     assets/apple-touch-icon.png   180x180
     assets/og-image.jpg           1200x630
 
-Where the mark comes from
--------------------------
-Not a generic waveform. The bar heights are the amplitude envelope of
-Kwame's greeting, measured by tools/make_voicemark.py — the same recording
-and the same measurement the voice mark in the statement banner uses. The
-banner mark takes 40 buckets because it has a whole line of type to fill;
-this takes 5, because five bars is what survives a 16px browser tab.
+The mark: "The Prism"
+---------------------
+A faceted geometric C. One closed outline (stroke 2.8, bevel joins), two
+translucent facets cut into the upper and lower arms (18% and 9% cyan),
+and a solid dot in the bowl. The path data below is the canonical copy
+from the sister repo (cynea-ai, components/brand-mark.tsx); the pages
+inline the same paths. Cyan #00D4FF on the brand dark #050505.
 
-So the icon and the on-page mark are the same sentence at two resolutions,
-and re-running make_voicemark.py against a different clip changes both.
+Everything here is drawn from MARK_* below, so the SVG, the three ICO
+frames, the touch icon and the social card cannot drift apart.
 
-Why five and not seven
-----------------------
-A 16px favicon has about 13px of drawing area once the circle's edge is
-accounted for. Seven bars leaves each one a single pixel wide with single
-pixel gaps, which anti-aliases into a grey smear. Five bars at 2px with
-1px gaps fills 14px and stays legible. The envelope is sampled at 5 rather
-than decimated from 40, so each bar is a real measurement of a fifth of
-the greeting rather than one tick that happened to survive.
+Centring
+--------
+The outline is mirror-symmetric about y=26, so vertical centring is
+exact. Horizontally the bounding box misleads: the spine and both arm
+returns stack three strokes on the right, so the ink's centroid sits to
+the right of the box centre (about 28.0 against 27.0) and a box-centred
+mark looks pushed right. The mark is placed halfway between its box
+centre and its measured ink centroid; fully ink-centred over-corrects.
 
-Colour
-------
-The orb is the page's own `.pill-orb` gradient, lifted exactly:
-radial-gradient(120% 120% at 32% 26%, #FFC9AE, #FF6B4A 46%, #E24A2E 100%).
-Reusing it means the favicon and the hero's live-call pill are the same
-object, which is the sort of thing nobody consciously notices and
-everybody feels.
+Small sizes are not the large mark shrunk
+-----------------------------------------
+At 16px the canonical 2.8 stroke is about 0.6px wide and the 9%/18%
+facets are a fraction of one grey level; scaled down they smear into a
+cyan haze. So each ICO frame has its own tuning (TUNING): a relatively
+heavier stroke, the facets dropped at 16px, a dot snapped to the pixel
+grid, and the outline's span chosen so the long vertical spine and the
+top and bottom edges land on whole pixels. favicon.svg carries the same idea as a media query, because
+Chrome prefers the SVG to the ICO and would otherwise draw the hairline
+version in the tab.
 
-Needs ffmpeg on PATH (for the envelope) and Pillow. No downloads.
+Engineering
+-----------
+Shapes are rasterised at SS times the final size and box-reduced, which is
+exact area coverage — no ringing, which matters for cyan on near-black.
+The ICO is written by hand so each frame keeps its own drawing (Pillow's
+encoder would resample one image to every size). The social card's glow
+is computed in float and dithered, because an 8-bit radial ramp this dark
+bands visibly.
+
+Fonts: Syne 700 (wordmark) and DM Sans (tagline), variable TTFs vendored
+in tools/fonts/ with their OFL licences. Needs Pillow and numpy. Nothing
+is downloaded at runtime.
 """
 
 from __future__ import annotations
 
-import importlib.util
+import functools
+import io
 import math
 import pathlib
 import struct
@@ -57,147 +72,196 @@ except ImportError:  # pragma: no cover
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent
 ASSETS = ROOT / "assets"
-CLIP = ASSETS / "segments" / "kwame" / "greeting.mp3"
+FONT_DIR = ROOT / "tools" / "fonts"
 
 # ── brand ────────────────────────────────────────────────────────────────
-CORAL_LIGHT = (255, 201, 174)   # #FFC9AE  the orb's highlight
-CORAL = (255, 107, 74)          # #FF6B4A  --coral
-CORAL_DEEP = (226, 74, 46)      # #E24A2E  --coral-deep
-NAVY = (27, 32, 80)             # #1B2050  --navy
-INK = (23, 26, 46)              # #171A2E  --ink
-DUSK = [                        # --grad-dusk, 142deg
-    (0.00, (27, 32, 80)),       # #1B2050
-    (0.34, (74, 58, 126)),      # #4A3A7E
-    (0.66, (184, 67, 126)),     # #B8437E
-    (1.00, (255, 138, 92)),     # #FF8A5C
-]
+CYAN = (0, 212, 255)        # #00D4FF  the mark
+BG = (5, 5, 5)              # #050505  brand dark
+TEXT = (245, 245, 245)      # #F5F5F5  wordmark
+MUTED = (138, 138, 138)     # #8A8A8A  tagline
+TILE_RADIUS = 0.22          # rounded-square corner, fraction of the side
 
-SS = 8            # supersample factor; everything is drawn big and reduced
-BARS = 5
+# ── the mark, canonical (path coordinates, before the reference's
+#    translate(2,2), which only positions it in its own viewBox) ──────────
+MARK_OUTLINE = [(28, 2), (38, 2), (40, 4), (40, 9), (34, 15), (34, 37),
+                (40, 43), (40, 48), (38, 50), (28, 50), (18, 43), (14, 30),
+                (14, 22), (18, 9)]
+MARK_FACETS = [([(22, 12), (34, 6), (34, 15), (27, 23)], 0.18),
+               ([(22, 40), (34, 46), (34, 37), (27, 29)], 0.09)]
+MARK_DOT = (26, 26, 2.5)    # cx, cy, r
+MARK_STROKE = 2.8
+SPINE_X = 34                # the long inner vertical; snapped at small sizes
+TOP_Y, BOTTOM_Y = 2, 50     # outline extremes; MID_Y is the mirror axis
+MID_Y = (TOP_Y + BOTTOM_Y) / 2
+SPAN = BOTTOM_Y - TOP_Y     # 48 units between the top and bottom edges
 
-FONT_DIR = pathlib.Path("C:/Windows/Fonts")
-FONTS = {
-    "wordmark": ["seguisb.ttf", "segoeuib.ttf", "arialbd.ttf"],
-    "body":     ["segoeui.ttf", "arial.ttf"],
-    "serif":    ["georgiai.ttf", "georgia.ttf"],
+SS = 16                     # supersample factor
+
+
+def _svg_d(points) -> str:
+    return "M" + " L".join(f"{x:g} {y:g}" for x, y in points) + " Z"
+
+
+# ── geometry ─────────────────────────────────────────────────────────────
+
+def stroke_polygons(points, w):
+    """A closed polyline stroked with bevel joins, as a union of polygons.
+
+    Pillow has no stroked paths with joins, so the stroke is built the way
+    a renderer builds it: one quad per segment, plus the bevel triangle at
+    each vertex on the outside of the turn (the inside is already covered
+    by the overlapping quads). Bevel corners are w/2 from the vertex, so
+    the stroked bounding box is just the path's box grown by w/2.
+    """
+    h = w / 2
+    n = len(points)
+    normals = []
+    for i in range(n):
+        (x0, y0), (x1, y1) = points[i], points[(i + 1) % n]
+        L = math.hypot(x1 - x0, y1 - y0)
+        normals.append(((y0 - y1) / L * h, (x1 - x0) / L * h))
+    polys = []
+    for i in range(n):
+        (x0, y0), (x1, y1) = points[i], points[(i + 1) % n]
+        nx, ny = normals[i]
+        polys.append([(x0 + nx, y0 + ny), (x1 + nx, y1 + ny),
+                      (x1 - nx, y1 - ny), (x0 - nx, y0 - ny)])
+    for i in range(n):
+        vx, vy = points[i]
+        (ax, ay), (bx, by) = normals[i - 1], normals[i]
+        for s in (1, -1):
+            polys.append([(vx, vy), (vx + s * ax, vy + s * ay),
+                          (vx + s * bx, vy + s * by)])
+    return polys
+
+
+def ink_centroid_x() -> float:
+    """Horizontal centre of the mark's ink, opacity-weighted, measured."""
+    k = 20                                   # px per unit, measurement only
+    img = render_layer(64 * k, 64 * k, k, 0, 0, stroke=MARK_STROKE,
+                       facets=True, ss=1)
+    a = np.asarray(img.getchannel("A"), np.float64)
+    xs = np.arange(a.shape[1]) + 0.5
+    return float((a.sum(axis=0) * xs).sum() / a.sum() / k)
+
+
+@functools.lru_cache(maxsize=None)
+def optical_centre_x() -> float:
+    box = (min(x for x, _ in MARK_OUTLINE) + max(x for x, _ in MARK_OUTLINE)) / 2
+    return (box + ink_centroid_x()) / 2
+
+
+# ── rasterising ──────────────────────────────────────────────────────────
+
+def render_layer(W, H, s, tx, ty, *, stroke, facets, dot=MARK_DOT,
+                 ss=SS, color=CYAN):
+    """The mark alone, RGBA at W x H. Mark unit (x, y) -> (tx + s*x, ty + s*y).
+
+    Pillow fills polygons inclusive of both edges; drawing at `ss` times
+    the size with a half-subpixel shift makes that a symmetric 1/ss bloat,
+    i.e. nothing at the reduced size.
+    """
+
+    def P(pts):
+        return [((tx + s * x) * ss - 0.5, (ty + s * y) * ss - 0.5) for x, y in pts]
+
+    def layer_from(mask, opacity):
+        if opacity < 1:
+            mask = mask.point(lambda v: round(v * opacity))
+        lay = Image.new("RGBA", mask.size, (*color, 0))
+        lay.putalpha(mask)
+        return lay
+
+    big = Image.new("RGBA", (W * ss, H * ss), (*color, 0))
+
+    m = Image.new("L", big.size, 0)
+    d = ImageDraw.Draw(m)
+    for poly in stroke_polygons(MARK_OUTLINE, stroke):
+        d.polygon(P(poly), fill=255)
+    big.alpha_composite(layer_from(m, 1.0))
+
+    if facets:
+        for pts, op in MARK_FACETS:
+            m = Image.new("L", big.size, 0)
+            ImageDraw.Draw(m).polygon(P(pts), fill=255)
+            big.alpha_composite(layer_from(m, op))
+
+    if dot:
+        cx, cy, r = dot
+        m = Image.new("L", big.size, 0)
+        (x0, y0), (x1, y1) = P([(cx - r, cy - r), (cx + r, cy + r)])
+        ImageDraw.Draw(m).ellipse([x0, y0, x1, y1], fill=255)
+        big.alpha_composite(layer_from(m, 1.0))
+
+    return big.reduce(ss) if ss > 1 else big
+
+
+def tile(size, *, radius=TILE_RADIUS, bg=BG):
+    """The rounded #050505 square (or full-bleed when radius is 0)."""
+    n = size * SS
+    big = Image.new("RGBA", (n, n), (*bg, 0))   # transparent corners keep bg rgb
+    ImageDraw.Draw(big).rounded_rectangle(
+        [0, 0, n - 1, n - 1], radius=radius * n, fill=(*bg, 255))
+    return big.reduce(SS)
+
+
+def placement(size, span_px, stroke_px, cx_mark, *, snap):
+    """Scale and offset that put the mark in a size x size box.
+
+    span_px is the distance between the top and bottom outline centrelines.
+    With snap, the spine's left edge and the top edge land on whole pixels
+    (pick span_px + stroke_px even and the bottom edge follows).
+    """
+    s = span_px / SPAN
+    tx = size / 2 - s * cx_mark
+    ty = size / 2 - s * MID_Y
+    if snap:
+        left = tx + s * SPINE_X - stroke_px / 2
+        tx += round(left) - left
+        top = ty + s * TOP_Y - stroke_px / 2
+        ty += round(top) - top
+    return s, tx, ty
+
+
+def icon(size, *, span_px, stroke_px, facets, dot_px=None,
+         radius=TILE_RADIUS, snap=False, cx_mark=None):
+    """The mark on its tile at `size`. dot_px, when given, makes the dot
+    that many pixels across with its centre snapped to the pixel grid — at
+    16px an unsnapped 1.3px dot straddles four pixels and reads as a smudge.
+    dot_px=0 drops the dot."""
+    cx_mark = optical_centre_x() if cx_mark is None else cx_mark
+    s, tx, ty = placement(size, span_px, stroke_px, cx_mark, snap=snap)
+    dot = MARK_DOT
+    if dot_px == 0:
+        dot = None
+    elif dot_px:
+        cx, cy, _ = MARK_DOT
+        half = 0 if dot_px % 2 == 0 else 0.5            # odd: centre on a pixel
+        px = round(tx + s * cx - half) + half
+        py = round(ty + s * cy - half) + half
+        dot = ((px - tx) / s, (py - ty) / s, dot_px / 2 / s)
+    img = tile(size, radius=radius)
+    img.alpha_composite(render_layer(size, size, s, tx, ty, stroke=stroke_px / s,
+                                     facets=facets, dot=dot))
+    return img
+
+
+# Per-frame tuning for the ICO, chosen by rendering candidates and
+# comparing them enlarged. The mark's stroked height is ~80% of every frame.
+#   16: 1px stroke (canonical would be 0.65px, a grey hairline). span 12
+#       puts the spine, the short left edge and the top edge all on whole
+#       pixels (20 units = exactly 5px). No facets: at 16px they are under
+#       one grey level. The dot is a snapped 2x2 block; unsnapped it
+#       straddles four pixels and fuses with the stroke.
+#   32: 2px stroke, facets back (the 18% one reads clearly, the 9% one
+#       faintly), a snapped 3px dot.
+#   48: 2px stroke, close to canonical (2.1px) and crisp where 2.4 left a
+#       half-lit row along the bottom edge; 4px dot.
+TUNING = {
+    16: dict(span_px=12, stroke_px=1, facets=False, dot_px=2),
+    32: dict(span_px=24, stroke_px=2, facets=True, dot_px=3),
+    48: dict(span_px=36, stroke_px=2, facets=True, dot_px=4),
 }
-
-
-def font(role: str, size: int) -> ImageFont.FreeTypeFont:
-    for name in FONTS[role]:
-        p = FONT_DIR / name
-        if p.exists():
-            return ImageFont.truetype(str(p), size)
-    return ImageFont.load_default()
-
-
-def envelope(buckets: int) -> list[float]:
-    """Reuse the voice mark's own measurement rather than reimplementing it."""
-    spec = importlib.util.spec_from_file_location(
-        "make_voicemark", ROOT / "tools" / "make_voicemark.py")
-    mv = importlib.util.module_from_spec(spec)
-    spec.loader.exec_module(mv)
-    return mv.envelope(CLIP, buckets)
-
-
-# ── the orb ──────────────────────────────────────────────────────────────
-
-def orb(size: int) -> Image.Image:
-    """The coral gradient disc, RGBA, antialiased.
-
-    Built as a numpy field rather than concentric ellipses: a radial
-    gradient drawn as 200 stacked circles bands visibly at 180px, and the
-    banding is exactly the sort of thing that makes an icon look cheap at
-    the one size people see it large.
-    """
-    n = size * SS
-    y, x = np.mgrid[0:n, 0:n].astype(np.float32)
-    # Highlight at 32% / 26%, extent 120% of the box — the CSS, verbatim.
-    cx, cy, extent = 0.32 * n, 0.26 * n, 1.20 * n
-    t = np.clip(np.sqrt((x - cx) ** 2 + (y - cy) ** 2) / extent, 0.0, 1.0)
-
-    rgb = np.zeros((n, n, 3), np.float32)
-    stops = [(0.0, CORAL_LIGHT), (0.46, CORAL), (1.0, CORAL_DEEP)]
-    for (t0, c0), (t1, c1) in zip(stops, stops[1:]):
-        m = (t >= t0) & (t <= t1)
-        f = ((t - t0) / (t1 - t0))[m][:, None]
-        rgb[m] = np.array(c0, np.float32) * (1 - f) + np.array(c1, np.float32) * f
-
-    img = Image.fromarray(rgb.astype(np.uint8), "RGB").convert("RGBA")
-    mask = Image.new("L", (n, n), 0)
-    ImageDraw.Draw(mask).ellipse([0, 0, n - 1, n - 1], fill=255)
-    img.putalpha(mask)
-    return img.resize((size, size), Image.LANCZOS)
-
-
-def geometry(env: list[float], *, inset: float, weight: float) -> list[tuple]:
-    """Bar positions and sizes in a 0..100 square. One source of truth.
-
-    Two things shape this beyond the raw envelope, and both are the
-    difference between a waveform and a barcode.
-
-    **The circle constrains the bars.** A bar at horizontal distance dx
-    from the centre can only be as tall as the chord there, so the outer
-    bars are shorter whatever the audio says. Without this the bars run
-    straight to the disc's edge and the mark reads as vertical stripes in
-    a circle rather than a waveform inside one.
-
-    **The envelope is contrast-stretched.** Kwame's five buckets span
-    0.52..1.00 — a real measurement, and far too flat to read at any size:
-    mapped directly, every bar lands within 15% of its neighbour. The
-    stretch preserves the ordering and the relative gaps and spends the
-    full height on them. The shape is still his sentence; it is his
-    sentence with the contrast turned up.
-    """
-    lo, hi = min(env), max(env)
-    span = (hi - lo) or 1.0
-    stretched = [(v - lo) / span for v in env]
-
-    group = 100 * (1 - 2 * inset)
-    pitch = group / len(env)
-    w = pitch * weight
-    r = 50.0
-
-    out = []
-    for i, v in enumerate(stretched):
-        cx = 100 * inset + pitch * (i + 0.5)
-        # The chord at this bar's outer edge, less a margin so the cap
-        # never kisses the circle.
-        dx = abs(cx - 50) + w / 2
-        chord = 2 * math.sqrt(max(0.0, r * r - dx * dx))
-        h_env = 100 * (0.30 + 0.52 * v)          # what the audio asks for
-        h = min(h_env, chord * 0.80)             # what the circle allows
-        h = max(h, w * 1.02)                     # never shorter than round
-        out.append((cx, w, h))
-    return out
-
-
-def bars(size: int, env: list[float], *, inset: float, weight: float,
-         color=(255, 255, 255, 255)) -> Image.Image:
-    """The white bars, centred, rounded caps.
-
-    `inset` and `weight` are passed rather than derived because the small
-    sizes need proportionally thicker bars and less padding than the large
-    ones — a 16px icon scaled straight down from 180px reads as grey fuzz.
-    """
-    n = size * SS
-    layer = Image.new("RGBA", (n, n), (0, 0, 0, 0))
-    d = ImageDraw.Draw(layer)
-    k = n / 100.0
-
-    for cx, w, h in geometry(env, inset=inset, weight=weight):
-        d.rounded_rectangle(
-            [(cx - w / 2) * k, (50 - h / 2) * k, (cx + w / 2) * k, (50 + h / 2) * k],
-            radius=w / 2 * k, fill=color)
-
-    return layer.resize((size, size), Image.LANCZOS)
-
-
-def icon(size: int, *, inset: float, weight: float, env: list[float]) -> Image.Image:
-    """Orb plus bars, composited at final size."""
-    base = orb(size)
-    base.alpha_composite(bars(size, env, inset=inset, weight=weight))
-    return base
 
 
 # ── ICO, written by hand ─────────────────────────────────────────────────
@@ -206,13 +270,10 @@ def write_ico(path: pathlib.Path, images: list[Image.Image]) -> None:
     """A multi-size ICO whose entries are independently drawn.
 
     Pillow's ICO writer resamples one image to every requested size, which
-    would undo the per-size tuning above — the 16px entry would be the
-    180px art shrunk, which is the exact thing that does not work. The
-    container format is a 6-byte header and a 16-byte record per image, so
-    writing it directly is cheaper than fighting the encoder. PNG payloads
-    are valid in ICO and every browser in use reads them.
+    would undo the per-size tuning. The container is a 6-byte header and a
+    16-byte record per image; PNG payloads are valid in ICO and every
+    browser in use reads them.
     """
-    import io
     blobs = []
     for im in images:
         buf = io.BytesIO()
@@ -231,158 +292,175 @@ def write_ico(path: pathlib.Path, images: list[Image.Image]) -> None:
     path.write_bytes(header + directory + payload)
 
 
+# ── fonts ────────────────────────────────────────────────────────────────
+
+def font(name: str, size: float, **axes) -> ImageFont.FreeTypeFont:
+    """A vendored variable font with its axes set by name, e.g. wght=700."""
+    path = FONT_DIR / name
+    if not path.exists():
+        sys.exit(f"missing {path} — the brand fonts are vendored in tools/fonts/")
+    f = ImageFont.truetype(str(path), size)
+    names = {"wght": b"Weight", "opsz": b"Optical size"}
+    values = []
+    for ax in f.get_variation_axes():
+        key = next((k for k, v in names.items() if v == ax["name"]), None)
+        v = axes.get(key, ax["default"])
+        values.append(min(max(v, ax["minimum"]), ax["maximum"]))
+    f.set_variation_by_axes(values)
+    return f
+
+
+def syne(size, wght=700):
+    return font("Syne[wght].ttf", size, wght=wght)
+
+
+def dm_sans(size, wght=400):
+    # Browsers set opsz to the CSS px size (font-optical-sizing: auto).
+    return font("DMSans[opsz,wght].ttf", size, wght=wght, opsz=size)
+
+
+def tracked_width(d, text, fnt, track):
+    return d.textlength(text, font=fnt) + track * (len(text) - 1)
+
+
+def draw_tracked(d, x, baseline, text, fnt, fill, track):
+    """Letter-spacing for Pillow. Each glyph goes at the advance of the
+    prefix before it, so the font's kerning survives the tracking."""
+    for i, ch in enumerate(text):
+        d.text((x + d.textlength(text[:i], font=fnt) + track * i, baseline),
+               ch, font=fnt, fill=fill, anchor="ls")
+
+
 # ── social card ──────────────────────────────────────────────────────────
 
-def dusk_field(w: int, h: int) -> Image.Image:
-    """The hero's own 142-degree dusk gradient."""
-    y, x = np.mgrid[0:h, 0:w].astype(np.float32)
-    a = math.radians(142 - 90)
-    t = (x * math.cos(a) + y * math.sin(a))
-    t = (t - t.min()) / (t.max() - t.min())
-
-    rgb = np.zeros((h, w, 3), np.float32)
-    for (t0, c0), (t1, c1) in zip(DUSK, DUSK[1:]):
-        m = (t >= t0) & (t <= t1)
-        f = ((t - t0) / (t1 - t0))[m][:, None]
-        rgb[m] = np.array(c0, np.float32) * (1 - f) + np.array(c1, np.float32) * f
-    rgb[t < DUSK[0][0]] = DUSK[0][1]
-    rgb[t > DUSK[-1][0]] = DUSK[-1][1]
-    return Image.fromarray(rgb.astype(np.uint8), "RGB")
+def glow(W, H, cx, cy, rx, ry, peak) -> Image.Image:
+    """#050505 with a soft cyan radial bloom, computed in float, dithered."""
+    y, x = np.mgrid[0:H, 0:W].astype(np.float32)
+    r2 = ((x - cx) / rx) ** 2 + ((y - cy) / ry) ** 2
+    a = peak * np.exp(-r2 * 2.2)                       # gaussian falloff
+    rgb = np.array(BG, np.float32) * (1 - a[..., None]) \
+        + np.array(CYAN, np.float32) * a[..., None]
+    rng = np.random.default_rng(7)                     # fixed: reproducible
+    rgb += rng.uniform(-0.5, 0.5, rgb.shape).astype(np.float32)
+    return Image.fromarray(np.clip(np.round(rgb), 0, 255).astype(np.uint8))
 
 
-def og_image(env5: list[float], env40: list[float]) -> Image.Image:
+def og_image() -> Image.Image:
     W, H = 1200, 630
-    img = dusk_field(W, H).convert("RGBA")
+    word_px = 150
+    f_word = syne(word_px, 700)
+    f_tag = dm_sans(38, 400)
+    probe = ImageDraw.Draw(Image.new("RGB", (1, 1)))
 
-    # The scrim leans left rather than lying flat across the whole canvas.
-    # A uniform ink wash protects the type and takes the gradient with it —
-    # the dusk ramp ends in the brand's coral, and flattening that to brown
-    # throws away the one thing that makes the card recognisably Cynea. Type
-    # sits in the left two-fifths, so that is where the cover is needed.
-    gx = np.linspace(0.62, 0.06, W, dtype=np.float32)[None, :]
-    alpha = (np.repeat(gx, H, axis=0) * 255).astype(np.uint8)
-    wash = Image.new("RGBA", (W, H), (*INK, 255))
-    wash.putalpha(Image.fromarray(alpha, "L"))
-    img = Image.alpha_composite(img, wash)
+    # Lockup proportions from the brand spec: mark height ~1.3x the
+    # wordmark's cap height, tracking -0.01em.
+    cap = -f_word.getbbox("H", anchor="ls")[1]
+    mark_h = 1.3 * cap
+    track = -0.01 * word_px
+    stroke_u = MARK_STROKE
+    s = mark_h / (SPAN + stroke_u)
+    xmin = min(x for x, _ in MARK_OUTLINE) - stroke_u / 2
+    xmax = max(x for x, _ in MARK_OUTLINE) + stroke_u / 2
+    mark_w = (xmax - xmin) * s
+
+    word = "Cynea"
+    word_ink_l = f_word.getbbox(word, anchor="ls")[0]   # C's side bearing
+    word_w = tracked_width(probe, word, f_word, track) - word_ink_l
+    gap = 0.30 * word_px
+    lock_w = mark_w + gap + word_w
+
+    tag = "Voice AI that feels human."
+    tag_w = probe.textlength(tag, font=f_tag)
+
+    # Block: lockup over tagline, centred, sitting a touch above the middle.
+    tag_gap = 64
+    tag_asc = -f_tag.getbbox("V", anchor="ls")[1]
+    block_h = cap + tag_gap + tag_asc
+    top = (H - block_h) / 2 - 12
+    baseline = top + cap
+    left = (W - lock_w) / 2
+
+    mark_cy = baseline - cap / 2
+    img = glow(W, H, cx=W / 2, cy=mark_cy + 20, rx=560, ry=330, peak=0.11).convert("RGBA")
+
+    # The mark, drawn at card resolution: its box left edge at `left`.
+    # Rendered into its own small box (supersampling the whole card would
+    # be a 19200px canvas) and pasted at an integer offset; the fractional
+    # part of the position stays in the layer's own transform.
+    tx = left - s * xmin
+    ty = mark_cy - s * MID_Y
+    ox, oy = int(tx + s * xmin) - 2, int(ty + s * (TOP_Y - stroke_u)) - 2
+    bw, bh = int(mark_w) + 6, int(mark_h) + 6
+    img.alpha_composite(render_layer(bw, bh, s, tx - ox, ty - oy, stroke=stroke_u,
+                                     facets=True), (ox, oy))
+
     d = ImageDraw.Draw(img)
-
-    f_kick = font("body", 23)
-    f_word = font("wordmark", 132)
-    f_sub = font("body", 40)
-    f_foot = font("body", 23)
-
-    def tracked(x, y, text, fnt, fill, track):
-        """Pillow has no letter-spacing, and the logo is set tight."""
-        for ch in text:
-            d.text((x, y), ch, font=fnt, fill=fill)
-            x += d.textlength(ch, font=fnt) + track
-        return x
-
-    L = 88                      # left margin, shared by every row
-    mark_px = 116
-
-    # One block, optically centred: mark and kicker on a line, the wordmark
-    # under them, then the two lines of copy.
-    top = 116
-    img.alpha_composite(icon(mark_px, inset=0.15, weight=0.44, env=env5), (L, top))
-    d.text((L + mark_px + 26, top + 40), "AI VOICE AGENTS", font=f_kick,
-           fill=(255, 255, 255, 165))
-
-    word_y = top + mark_px + 30
-    tracked(L - 6, word_y, "CYNEA", f_word, (255, 255, 255, 255), 3.0)
-
-    d.text((L, word_y + 164), "Voice AI for Africa", font=f_sub,
-           fill=(255, 255, 255, 232))
-    d.text((L, word_y + 224), "Any language. Any accent. 24/7.", font=f_foot,
-           fill=(255, 255, 255, 158))
-
-    # The full 40-tick envelope along the foot: the same sentence the five
-    # bars above reduce, at the resolution this canvas can afford. It runs
-    # the full width so it reads as a floor the card stands on rather than
-    # a stripe parked at the bottom.
-    # Sized and placed to clear the last line of type by ~60px: at the
-    # previous amplitude the bars ran straight through it.
-    base_y, amp, left, right = H - 44, 32, 0, W
-    pitch = (right - left) / len(env40)
-    for i, v in enumerate(env40):
-        bh = max(4.0, amp * (0.14 + 0.86 * v))
-        cx = left + pitch * (i + 0.5)
-        bw = max(3.0, pitch * 0.30)
-        # Fade toward the warm side so the bars never fight the gradient.
-        a_ = int(96 - 44 * (cx / W))
-        d.rounded_rectangle(
-            [cx - bw / 2, base_y - bh / 2, cx + bw / 2, base_y + bh / 2],
-            radius=bw / 2, fill=(255, 255, 255, a_))
-
+    draw_tracked(d, left + mark_w + gap - word_ink_l, baseline, word, f_word,
+                 (*TEXT, 255), track)
+    d.text(((W - tag_w) / 2, baseline + tag_gap + tag_asc), tag, font=f_tag,
+           fill=(*MUTED, 255), anchor="ls")
     return img.convert("RGB")
 
 
 # ── the vector master ────────────────────────────────────────────────────
 
-def svg(env: list[float]) -> str:
-    ticks = [
-        f'  <rect x="{cx - w/2:.2f}" y="{50 - h/2:.2f}" width="{w:.2f}" '
-        f'height="{h:.2f}" rx="{w/2:.2f}" fill="#fff"/>'
-        for cx, w, h in geometry(env, inset=0.15, weight=0.44)
-    ]
-    return f"""<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"
-     width="100" height="100" role="img" aria-label="Cynea">
+def svg() -> str:
+    # 100-unit tile; the mark's stroked height is 72% of it.
+    span_u = 72 / (SPAN + MARK_STROKE) * SPAN
+    s = span_u / SPAN
+    cx = optical_centre_x()
+    tx, ty = 50 - s * cx, 50 - s * MID_Y
+    facets = "\n".join(
+        f'    <path class="facet" d="{_svg_d(p)}" fill="#00D4FF" fill-opacity="{op:g}"/>'
+        for p, op in MARK_FACETS)
+    dx, dy, r = MARK_DOT
+    return f"""<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100" height="100" role="img" aria-label="Cynea">
   <title>Cynea</title>
-  <!-- The bar heights are the amplitude envelope of Kwame's greeting,
-       measured by tools/make_voicemark.py — the same recording the voice
-       mark in the statement banner is drawn from, sampled at five buckets
-       instead of forty so it survives a 16px browser tab. Heights are
-       clipped to the circle's chord and contrast-stretched; see geometry()
-       for why both are necessary.
-       Regenerate with: python tools/make_brand_icons.py -->
-  <defs>
-    <radialGradient id="c" cx="32%" cy="26%" r="120%">
-      <stop offset="0" stop-color="#FFC9AE"/>
-      <stop offset=".46" stop-color="#FF6B4A"/>
-      <stop offset="1" stop-color="#E24A2E"/>
-    </radialGradient>
-  </defs>
-  <circle cx="50" cy="50" r="50" fill="url(#c)"/>
-{chr(10).join(ticks)}
+  <!-- The Prism: Cynea's faceted C, cyan on the brand dark.
+       Generated by tools/make_brand_icons.py — edit the mark there.
+       Rendered at tab size (Chrome uses this file over the .ico) the
+       2.8 stroke is a hairline and the faint facets smear, so small
+       renders get a heavier stroke, and the tiniest lose the facets,
+       as the ICO frames do. -->
+  <style>
+    @media (max-width: 40px) {{ .outline {{ stroke-width: 4px; }} }}
+    @media (max-width: 24px) {{
+      .outline {{ stroke-width: 5px; }}
+      .facet {{ display: none; }}
+    }}
+  </style>
+  <rect width="100" height="100" rx="{100 * TILE_RADIUS:g}" fill="#050505"/>
+  <g transform="translate({tx:.3f} {ty:.3f}) scale({s:.4f})">
+    <path class="outline" d="{_svg_d(MARK_OUTLINE)}" fill="none" stroke="#00D4FF" stroke-width="{MARK_STROKE:g}" stroke-linejoin="bevel"/>
+{facets}
+    <circle cx="{dx:g}" cy="{dy:g}" r="{r:g}" fill="#00D4FF"/>
+  </g>
 </svg>
 """
 
 
 def main() -> int:
-    if not CLIP.exists():
-        sys.exit(f"missing {CLIP} — the mark is derived from it")
-
-    env5 = envelope(BARS)
-    env40 = envelope(40)
-    print("  envelope  " + " ".join(f"{v:.2f}" for v in env5) + "   (Kwame, 5 buckets)")
-
     ASSETS.mkdir(exist_ok=True)
+    print(f"  optical centre x = {optical_centre_x():.2f} (box 27.00)")
 
-    (ASSETS / "favicon.svg").write_text(svg(env5), encoding="utf-8")
+    (ASSETS / "favicon.svg").write_text(svg(), encoding="utf-8")
     print("  favicon.svg")
 
-    # Small sizes get thicker bars and less padding, or they disappear.
-    # 16px is not 48px scaled down: at a browser-tab size the bars have to
-    # be proportionally much fatter and the padding much smaller or the
-    # whole mark anti-aliases into a plain coral dot. Compared against a
-    # 3-bar reduction at the same size, which read as a pause glyph —
-    # Kwame's 3-bucket envelope is 0.97/0.85/1.00, too flat to say voice.
-    tuning = {16: (0.06, 0.60), 32: (0.11, 0.50), 48: (0.14, 0.45)}
     write_ico(ASSETS / "favicon.ico",
-              [icon(s, inset=i, weight=w, env=env5) for s, (i, w) in tuning.items()])
+              [icon(size, snap=True, **t) for size, t in TUNING.items()])
     print("  favicon.ico          16 + 32 + 48, each drawn at its own size")
 
-    # iOS masks to a rounded square and composites on white, so the icon is
-    # full-bleed: a transparent circle would sit on a white card.
-    touch = Image.new("RGBA", (180, 180), (*INK, 255))
-    disc = icon(148, inset=0.15, weight=0.44, env=env5)
-    touch.alpha_composite(disc, (16, 16))
+    # iOS masks to its own rounded square, so the touch icon is full-bleed;
+    # the mark's stroked height is 60% of the tile.
+    stroke_px = 6
+    touch = icon(180, span_px=108 - stroke_px, stroke_px=stroke_px,
+                 facets=True, radius=0, snap=True)
     touch.convert("RGB").save(ASSETS / "apple-touch-icon.png", optimize=True)
-    print("  apple-touch-icon.png 180x180, coral disc on dusk ink")
+    print("  apple-touch-icon.png 180x180, full-bleed")
 
-    og = og_image(env5, env40)
-    og.save(ASSETS / "og-image.jpg", quality=90, optimize=True, progressive=True)
-    print(f"  og-image.jpg         1200x630")
+    og_image().save(ASSETS / "og-image.jpg", quality=92, optimize=True,
+                    progressive=True, subsampling=0)
+    print("  og-image.jpg         1200x630")
     return 0
 
 

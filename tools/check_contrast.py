@@ -4,15 +4,16 @@
     python tools/check_contrast.py            # exits non-zero on a WCAG failure
     python tools/check_contrast.py --verbose  # per-sample detail
 
-Washing a photograph behind a section darkens the ground the body copy sits
-on. The effect is meant to be felt and not seen, which means it must not cost
-readability — so this samples the actual rendered background inside each
-section that has a `.secbg`, at points where text really sits, and checks the
-palette's text colours against the darkest sample.
+Putting a photograph behind a section changes the ground the body copy sits
+on. On the dark brand the photo *lifts* that ground towards the text colour,
+so the effect must not cost readability — this samples the actual rendered
+background inside each section that has a `.secbg`, at points where text
+really sits, and checks each of the palette's text colours against the sample
+it contrasts with least (the brightest patch, for light text on near-black).
 
 The bar is WCAG AA: 4.5:1 for body text, 3:1 for large text. `--faint` is
-reported for information only: it sits at 2.67:1 on the bare page ground and
-is used for incidental labels, so the photography is not what breaks it.
+reported for information only: it is used for incidental labels, never for
+body copy.
 """
 
 from __future__ import annotations
@@ -25,8 +26,8 @@ import sys
 ROOT = pathlib.Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT / "tools"))
 
-# The palette, straight from :root in index.html.
-TEXT = {"ink": (0x17, 0x1A, 0x2E), "muted": (0x6E, 0x6B, 0x7C), "faint": (0x9B, 0x98, 0xA6)}
+# The palette, straight from :root in index.html (the dark Cynea brand).
+TEXT = {"ink": (0xF5, 0xF5, 0xF5), "muted": (0x8A, 0x8A, 0x8A), "faint": (0x6B, 0x6B, 0x6B)}
 FLOOR = {"ink": 4.5, "muted": 4.5}          # faint is reported, not enforced
 
 
@@ -95,7 +96,7 @@ def main() -> int:
             page.wait_for_timeout(1200)
 
             # Only bare ground counts. A screenshot's darkest pixel is a glyph
-            # or the navy button, neither of which says anything about the
+            # or a filled button, neither of which says anything about the
             # background text sits on — so the page is asked which points are
             # actually unoccupied, and only those are sampled. Cards paint
             # their own opaque background and are excluded for the same reason.
@@ -121,11 +122,14 @@ def main() -> int:
             shot = page.screenshot(clip={"x": 0, "y": probe["top"], "width": 1440, "height": height})
             image = Image.open(io.BytesIO(shot)).convert("RGB")
 
-            darkest = min(
-                (image.getpixel((x, int(y - probe["top"])))
-                 for x, y in probe["points"]
-                 if 0 <= x < image.width and 0 <= y - probe["top"] < image.height),
-                key=luminance)
+            samples = [image.getpixel((x, int(y - probe["top"])))
+                       for x, y in probe["points"]
+                       if 0 <= x < image.width and 0 <= y - probe["top"] < image.height]
+            # The extreme grounds in both directions. Which one is the worst
+            # case depends on the text: dark text loses on the darkest patch,
+            # light text on the brightest.
+            darkest = min(samples, key=luminance)
+            brightest = max(samples, key=luminance)
 
             # Read the colours this section actually resolves, rather than the
             # ones :root declares — a section may narrow the palette for
@@ -144,13 +148,14 @@ def main() -> int:
                 colours[label] = parse(live.get(label, "")) or fallback
 
             for label, colour in colours.items():
-                value = contrast(colour, darkest)
+                ground = min((darkest, brightest), key=lambda g: contrast(colour, g))
+                value = contrast(colour, ground)
                 if label not in worst or value < worst[label][0]:
-                    worst[label] = (value, name, darkest)
+                    worst[label] = (value, name, ground)
             if args.verbose:
-                print(f"  {name:10} darkest ground {darkest}  "
+                print(f"  {name:10} ground {darkest}..{brightest}  "
                       f"muted {rgb_hex(colours['muted'])} "
-                      f"{contrast(colours['muted'], darkest):.2f}:1")
+                      f"{min(contrast(colours['muted'], g) for g in (darkest, brightest)):.2f}:1")
 
         browser.close()
     httpd.shutdown()
@@ -162,7 +167,7 @@ def main() -> int:
         state = "reported only" if need is None else ("PASS" if value >= need else "FAIL")
         if need and value < need:
             failed.append(f"{label} {value:.2f}:1 in {where} (needs {need})")
-        print(f"  {label:6} {value:5.2f}:1  darkest ground {ground} in {where}   {state}")
+        print(f"  {label:6} {value:5.2f}:1  worst ground {ground} in {where}   {state}")
 
     if failed:
         print("\nFAILED: " + "; ".join(failed))

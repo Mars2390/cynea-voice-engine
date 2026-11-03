@@ -48,7 +48,15 @@ from cynea.models import AudioChunk, Transcription
 
 log = logging.getLogger("cynea.stt.groq")
 
-_ENDPOINT = "https://api.groq.com/openai/v1/audio/transcriptions"
+_DEFAULT_BASE = "https://api.groq.com/openai/v1"
+_ENDPOINT = f"{_DEFAULT_BASE}/audio/transcriptions"
+
+
+def _endpoint() -> str:
+    """Honour GROQ_BASE_URL, as the LLM adapter does, so one variable moves both."""
+    return f"{os.getenv('GROQ_BASE_URL', _DEFAULT_BASE).rstrip('/')}/audio/transcriptions"
+
+
 _DEFAULT_MODEL = "whisper-large-v3"
 _TIMEOUT_S = 30.0
 
@@ -212,7 +220,7 @@ class GroqSTT:
         try:
             async with httpx.AsyncClient(timeout=_TIMEOUT_S) as client:
                 r = await client.post(
-                    _ENDPOINT,
+                    _endpoint(),
                     headers={"Authorization": f"Bearer {self._require_key()}"},
                     files={"file": ("utterance.wav", io.BytesIO(wav), "audio/wav")},
                     data=data,

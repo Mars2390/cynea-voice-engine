@@ -194,6 +194,26 @@ class ConversationHistory:
         self._sanitize_tool_messages(msgs)
         return [m for m in msgs if not m.get("exclude_from_llm")]
 
+    # ====================================================================
+    # Persistence — for transports that do not keep the engine in memory
+    # ====================================================================
+
+    def snapshot(self) -> list:
+        """The committed log minus the system prompt, as plain dicts.
+
+        The system prompt is left out on purpose: it belongs to the agent
+        config, and restoring it from storage would pin a call to whatever
+        prompt was live when it started.
+        """
+        return [copy.deepcopy(m) for m in self._committed if m.get("role") != "system"]
+
+    def restore(self, messages: list) -> None:
+        """Replace the log with a snapshot(), keeping the current system prompt."""
+        system = [m for m in self._committed if m.get("role") == "system"][:1]
+        self._committed = system + [copy.deepcopy(m) for m in messages
+                                    if m.get("role") != "system"]
+        self._sync_interim()
+
     @property
     def messages(self) -> list:
         """Read-only access to the committed list (no copy — callers must

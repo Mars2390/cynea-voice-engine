@@ -1,0 +1,48 @@
+# Cynea live call — the browser voice socket on Cloudflare.
+# Deploy from this directory with:  pywrangler deploy
+name = "cynea-voice"
+main = "src/main.py"
+account_id = "de7a1526080d248448165ee50fa5ee56"
+compatibility_date = "2026-10-01"
+compatibility_flags = ["python_workers"]
+
+# Served at https://cynea-voice.<your-subdomain>.workers.dev
+workers_dev = true
+# To serve it from your own hostname instead, the zone must be on Cloudflare:
+# routes = [{ pattern = "voice.cynea.ai", custom_domain = true }]
+
+# Copies the shared pipeline (cynea/, cynea_africa/) from the repo root into
+# src/ before every dev and deploy. See sync_shared.py for why it is a copy.
+[build]
+command = "uv run --no-project python sync_shared.py"
+watch_dir = ["src", "../cynea", "../cynea_africa"]  # sync_shared.py only writes changed files, so watching its output cannot loop
+
+[[durable_objects.bindings]]
+name = "VOICE_SESSION"
+class_name = "VoiceSession"
+
+# SQLite-backed: the only Durable Object storage backend on the Workers Free
+# plan, and the recommended one on Paid.
+[[migrations]]
+tag = "v1"
+new_sqlite_classes = ["VoiceSession"]
+
+[vars]
+# Ten minutes. The FastAPI socket defaulted to five, but only enforced it
+# when the next utterance arrived; here an alarm enforces it even on a
+# silent call, so the cap is real — set it to what you mean.
+VOICE_DEMO_MAX_CALL_S = "600"
+VOICE_DEMO_MAX_TURNS = "40"
+# Also the number of lines (Durable Objects) the Worker spreads calls over.
+VOICE_DEMO_MAX_CONCURRENT = "6"
+# Browsers always send Origin on a WebSocket handshake; anything not listed
+# here is refused. Requests with no Origin (curl, test scripts) are allowed,
+# because a script can forge any Origin it likes anyway — this stops other
+# websites from spending the quota, not determined clients.
+ALLOWED_ORIGINS = "https://cynea.ai,https://www.cynea.ai,http://localhost:*,http://127.0.0.1:*"
+
+# Secrets — set with `pywrangler secret put NAME`, never in this file:
+#   GROQ_API_KEY        required: transcription and the model
+#   ELEVENLABS_API_KEY  optional, unused by this socket (Edge TTS is free)
+#   DATABASE_URL        optional, unused by this socket (demo calls are not stored)
+#   SESSION_SECRET      optional, unused by this socket (no sign-in)

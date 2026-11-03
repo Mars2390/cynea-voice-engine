@@ -1,0 +1,11 @@
+# pywrangler / wrangler working state
+python_modules/
+.venv-workers/
+.wrangler/
+
+# Copied in from the repo root by sync_shared.py on every dev/deploy
+src/cynea/
+src/cynea_africa/
+
+# Local secrets for `pywrangler dev`
+.dev.vars

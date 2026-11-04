@@ -72,7 +72,7 @@ h1,h2,h3{font-family:var(--display);letter-spacing:-.02em;font-weight:700;line-h
 .label{font-family:var(--sans);font-size:11.5px;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);font-weight:600}
 .input{width:100%;background:var(--bg-3);color:var(--ink);border:1px solid var(--line);border-radius:10px;padding:12px 14px;font-family:inherit;font-size:15px;outline:none;transition:border-color .15s,box-shadow .15s,background .15s}
 .input:focus{border-color:var(--cyan);background:var(--bg-3);box-shadow:0 0 0 3px rgba(0,212,255,.22)}
-.input::placeholder{color:var(--faint)}
+.input::placeholder{color:var(--muted)}
 .btn-submit{width:100%;margin-top:4px;font-size:15px;font-weight:600;padding:13px 20px;border-radius:999px}
 
 /* ── divider ─────────────────────────────────────────────────── */
@@ -82,6 +82,9 @@ h1,h2,h3{font-family:var(--display);letter-spacing:-.02em;font-weight:700;line-h
 .msg{min-height:20px;margin:16px 0 0;font-size:13.5px;color:var(--muted);text-align:center}
 .msg.err{color:var(--bad)}
 .msg.ok{color:var(--ok)}
+.resend{display:flex;justify-content:center;margin:12px 0 0}
+.resend[hidden]{display:none}
+.btn-resend{font-size:14px;padding:10px 18px}
 
 /* ── google btn ──────────────────────────────────────────────── */
 .btn-google{width:100%;gap:10px;font-weight:500;padding:12px 18px;background:var(--bg-3);border-color:var(--line);color:var(--ink)}
@@ -125,10 +128,13 @@ h1,h2,h3{font-family:var(--display);letter-spacing:-.02em;font-weight:700;line-h
     </form>
 
     <p class="msg" id="msg" role="status" aria-live="polite"></p>
+    <div class="resend" id="resendBox" hidden>
+      <button class="btn btn-resend" id="resendBtn" type="button">Send a new link</button>
+    </div>
 
     <p class="aside">
       Don't have an account?
-      <a href="index.html#try-demo">Request access</a>
+      <a href="signup.html">Create an account</a>
     </p>
   </article>
 
@@ -166,6 +172,62 @@ function say(text, kind){
   msg.className = 'msg' + (kind ? ' ' + kind : '');
 }
 
+/* Verification: the emailed link lands here as ?verified=1 or ?verify=invalid,
+   and an unverified login gets a 403. Both offer to resend the link. */
+var resendBox = document.getElementById('resendBox');
+var resendBtn = document.getElementById('resendBtn');
+
+function showResend(on){ resendBox.hidden = !on; }
+
+resendBtn.addEventListener('click', function(){
+  var emailEl = document.getElementById('email');
+  var email = emailEl.value.trim();
+  if (!email){
+    say('Enter your email above, then press Send a new link.', 'err');
+    emailEl.focus();
+    return;
+  }
+  resendBtn.disabled = true;
+  say('Sending…');
+  fetch(API_BASE + '/auth/resend-verification', {
+    method: 'POST',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify({email: email})
+  })
+  .then(function(r){
+    return r.json().catch(function(){ return {}; })
+      .then(function(body){ return {ok: r.ok, status: r.status, body: body || {}}; });
+  })
+  .then(function(res){
+    resendBtn.disabled = false;
+    if (res.ok){
+      say('If that email is registered and unverified, a new link is on its way.', 'ok');
+    } else {
+      say(res.body.detail || 'Could not send a new link. Try again in a moment.', 'err');
+    }
+  })
+  .catch(function(){
+    resendBtn.disabled = false;
+    say('Cannot reach the API at ' + API_BASE + '. Try again in a moment.', 'err');
+  });
+});
+
+(function(){
+  var q = new URLSearchParams(location.search);
+  if (q.get('verified') === '1'){
+    say('Email verified — you can sign in now.', 'ok');
+  } else if (q.get('verify') === 'invalid'){
+    say('That verification link is invalid or has expired.', 'err');
+    showResend(true);
+  } else {
+    return;
+  }
+  /* Drop the one-shot flag so a refresh doesn't repeat it; keep ?next. */
+  q.delete('verified'); q.delete('verify');
+  var rest = q.toString();
+  history.replaceState(null, '', location.pathname + (rest ? '?' + rest : '') + location.hash);
+})();
+
 /* Already signed in? Don't make them type it again. */
 (function(){
   var token = localStorage.getItem('cynea_token');
@@ -186,6 +248,7 @@ form.addEventListener('submit', function(e){
   }
 
   btn.disabled = true;
+  showResend(false);
   say('Signing in…');
 
   fetch(API_BASE + '/auth/login', {
@@ -205,6 +268,11 @@ form.addEventListener('submit', function(e){
       return;
     }
     btn.disabled = false;
+    if (res.status === 403){
+      say(res.body.detail || 'Please verify your email first.', 'err');
+      showResend(true);
+      return;
+    }
     /* The API returns the same message for an unknown email and a wrong
        password on purpose, so this page must not guess which it was. */
     say(res.status === 401

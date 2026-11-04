@@ -53,3 +53,6 @@ assets/kwame_agent.mp3
 assets/kwame_caller.mp3
 assets/amina_agent.mp3
 assets/amina_caller.mp3
+
+# Local-disk call recordings from development. Production uses R2.
+recordings/

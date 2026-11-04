@@ -109,6 +109,16 @@ class User(Base):
     password_hash = Column(String(255), nullable=False)
     created_at = Column(DateTime(timezone=True), default=_now, nullable=False)
 
+    # Sign-up details and email verification. All nullable so the columns
+    # can be added to a live table; see upgrade_schema() for how accounts
+    # that predate verification are treated.
+    full_name = Column(String(120), nullable=True)
+    company = Column(String(160), nullable=True)
+    email_verified_at = Column(DateTime(timezone=True), nullable=True)
+    # sha256 of the emailed token — the token itself is never stored.
+    verify_token_hash = Column(String(64), nullable=True)
+    verify_token_expires = Column(DateTime(timezone=True), nullable=True)
+
     agents = relationship("Agent", back_populates="user",
                           cascade="all, delete-orphan")
 
@@ -151,13 +161,52 @@ class Call(Base):
     status = Column(String(20), nullable=False, default="resolved")
     created_at = Column(DateTime(timezone=True), default=_now,
                         nullable=False, index=True)
+    # Where the call's audio lives ("r2://bucket/key" or "local://key"),
+    # null when nothing was recorded. The row in call_recordings carries
+    # the details; this is the quick "is there audio?" answer.
+    audio_url = Column(Text, nullable=True)
 
     agent = relationship("Agent", back_populates="calls")
+    recordings = relationship("CallRecording", back_populates="call",
+                              cascade="all, delete-orphan")
 
     VALID_STATUSES = ("resolved", "escalated", "abandoned")
 
     def __repr__(self) -> str:
         return f"<Call {self.caller_number} {self.status} {self.duration_s}s>"
+
+
+class CallRecording(Base):
+    """One stored audio file for a call. See cynea/recordings.py."""
+    __tablename__ = "call_recordings"
+
+    id = Column(GUID, primary_key=True, default=_uuid)
+    call_id = Column(GUID, ForeignKey("calls.id", ondelete="CASCADE"),
+                     nullable=False, index=True)
+    storage_key = Column(String(512), nullable=False)
+    content_type = Column(String(80), nullable=True)
+    duration_s = Column(Integer, nullable=True)
+    bytes = Column(Integer, nullable=False, default=0)
+    created_at = Column(DateTime(timezone=True), default=_now,
+                        nullable=False, index=True)
+
+    call = relationship("Call", back_populates="recordings")
+
+
+class RateEvent(Base):
+    """One rate-limited action (e.g. a sign-up attempt) from one client.
+
+    In the database rather than in memory because the API runs as many
+    short-lived serverless instances, and a per-process counter would let
+    each one grant its own allowance. The key is a hash, not an address.
+    """
+    __tablename__ = "rate_events"
+
+    id = Column(GUID, primary_key=True, default=_uuid)
+    scope = Column(String(32), nullable=False, index=True)
+    key_hash = Column(String(64), nullable=False, index=True)
+    created_at = Column(DateTime(timezone=True), default=_now,
+                        nullable=False, index=True)
 
 
 class PromptVersion(Base):
@@ -246,16 +295,60 @@ def reset_connection() -> None:
 
 
 def init_db(url: Optional[str] = None) -> None:
-    """Create every table that does not exist yet. Safe to re-run."""
+    """Create missing tables and add missing columns. Safe to re-run."""
     engine = get_engine(url) if url else get_engine()
     try:
         Base.metadata.create_all(engine)
+        upgrade_schema(engine)
     except SQLAlchemyError as exc:
         raise DatabaseNotConfigured(
             f"Could not create tables: {exc}\n"
             "Check that DATABASE_URL points at a reachable database and that "
             "the user has CREATE rights."
         ) from exc
+
+
+def upgrade_schema(engine=None) -> List[str]:
+    """Add columns a model has gained to a table that already exists.
+
+    `create_all` creates missing tables but never alters existing ones, so
+    columns added to a model in a later release would otherwise be missing
+    from the live database and every query that selects them would fail.
+    Only additive, nullable columns are handled — anything else is a real
+    migration and should be written as one. Returns "table.column" for each
+    column it added.
+
+    Accounts that existed before email verification are marked verified the
+    moment the column is first added: they signed up under the old rules,
+    and locking them out of their own workspace is not a security gain.
+    """
+    from sqlalchemy import inspect, text
+
+    engine = engine or get_engine()
+    insp = inspect(engine)
+    added: List[str] = []
+    with engine.begin() as conn:
+        for table in Base.metadata.sorted_tables:
+            if not insp.has_table(table.name):
+                continue
+            have = {c["name"] for c in insp.get_columns(table.name)}
+            for col in table.columns:
+                if col.name in have:
+                    continue
+                if not col.nullable:
+                    raise DatabaseNotConfigured(
+                        f"{table.name}.{col.name} is NOT NULL and missing from the "
+                        "database; write a real migration for it.")
+                ddl = col.type.compile(dialect=engine.dialect)
+                conn.execute(text(f"ALTER TABLE {table.name} ADD COLUMN {col.name} {ddl}"))
+                added.append(f"{table.name}.{col.name}")
+        if "users.email_verified_at" in added:
+            n = conn.execute(text("UPDATE users SET email_verified_at = created_at "
+                                  "WHERE email_verified_at IS NULL")).rowcount
+            log.warning("email verification added: %s existing account(s) marked verified", n)
+    if added:
+        log.warning("schema upgraded, columns added: %s", ", ".join(added))
+    return added
 
 
 def healthcheck(retries: int = 3, backoff_s: float = 2.0) -> bool:
@@ -291,10 +384,12 @@ def healthcheck(retries: int = 3, backoff_s: float = 2.0) -> bool:
 # Users
 # ----------------------------------------------------------------------
 
-def create_user(email: str, password_hash: str) -> User:
+def create_user(email: str, password_hash: str, full_name: Optional[str] = None,
+                company: Optional[str] = None) -> User:
     """Create a user. Email is stored lowercase so lookups are consistent."""
     with session_scope() as s:
-        user = User(email=email.strip().lower(), password_hash=password_hash)
+        user = User(email=email.strip().lower(), password_hash=password_hash,
+                    full_name=full_name, company=company)
         s.add(user)
         s.flush()
         return user
@@ -446,8 +541,8 @@ def get_latest_prompt(agent_id: str) -> Optional[PromptVersion]:
 
 
 __all__ = [
-    "Base", "User", "Agent", "Call", "PromptVersion",
-    "DatabaseNotConfigured", "init_db", "healthcheck", "session_scope",
+    "Base", "User", "Agent", "Call", "PromptVersion", "CallRecording", "RateEvent",
+    "DatabaseNotConfigured", "init_db", "upgrade_schema", "healthcheck", "session_scope",
     "get_engine", "get_database_url", "reset_connection",
     "create_user", "get_user_by_email", "get_user_by_id",
     "create_agent", "get_agents_by_user", "get_agent_by_id",

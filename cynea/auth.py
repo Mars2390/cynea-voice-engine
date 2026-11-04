@@ -72,6 +72,10 @@ class WeakPassword(AuthError):
     pass
 
 
+class EmailNotVerified(AuthError):
+    """The password is right but the email address was never confirmed."""
+
+
 class InvalidSession(AuthError):
     """Token missing, malformed, tampered with, or expired."""
 
@@ -128,16 +132,22 @@ def verify_password(password: str, password_hash: str) -> bool:
 # Registration and login
 # ----------------------------------------------------------------------
 
-def register_user(email: str, password: str):
-    """Create a user. Raises EmailAlreadyRegistered / WeakPassword."""
+def register_user(email: str, password: str, full_name: Optional[str] = None,
+                  company: Optional[str] = None):
+    """Create a user. Raises EmailAlreadyRegistered / WeakPassword.
+
+    The account starts unverified; call issue_verification() to mail a link.
+    """
     email = (email or "").strip().lower()
     if not email or "@" not in email:
         raise AuthError(f"{email!r} is not a valid email address.")
 
     if db.get_user_by_email(email) is not None:
-        raise EmailAlreadyRegistered(f"{email} is already registered.")
+        raise EmailAlreadyRegistered("Email already registered")
 
-    user = db.create_user(email, hash_password(password))
+    user = db.create_user(email, hash_password(password),
+                          full_name=(full_name or "").strip() or None,
+                          company=(company or "").strip() or None)
     log.info("registered user %s", email)
     return user
 
@@ -230,6 +240,74 @@ def validate_session(token: str) -> str:
     return str(user_id)
 
 
+# ----------------------------------------------------------------------
+# Email verification
+# ----------------------------------------------------------------------
+# The token is 32 random bytes, sent only in the email. The database keeps
+# its sha256, so a leaked users table cannot be replayed into verifications.
+
+VERIFY_TTL_SECONDS = 24 * 3600
+
+
+def _token_hash(raw: str) -> str:
+    return hashlib.sha256(raw.encode("utf-8")).hexdigest()
+
+
+def _aware(dt):
+    """SQLite hands back naive datetimes for timezone=True columns."""
+    from datetime import timezone
+    return dt if dt is None or dt.tzinfo else dt.replace(tzinfo=timezone.utc)
+
+
+def is_verified(user) -> bool:
+    return user is not None and user.email_verified_at is not None
+
+
+def issue_verification(user_id: str) -> str:
+    """Store a fresh token hash with a 24h expiry; return the raw token.
+
+    Issuing a new token replaces the old one, so a resend invalidates the
+    previous email's link.
+    """
+    from datetime import timedelta
+
+    raw = secrets.token_urlsafe(32)
+    with db.session_scope() as s:
+        user = s.get(db.User, str(user_id))
+        if user is None:
+            raise AuthError("No such account.")
+        user.verify_token_hash = _token_hash(raw)
+        user.verify_token_expires = db._now() + timedelta(seconds=VERIFY_TTL_SECONDS)
+    return raw
+
+
+def verify_email(raw: str):
+    """Mark the account behind a token verified. Returns the user or None.
+
+    None covers an unknown, already-used or expired token alike — the
+    response must not tell a guesser which.
+    """
+    from sqlalchemy import select
+
+    if not raw:
+        return None
+    with db.session_scope() as s:
+        user = s.scalar(select(db.User).where(db.User.verify_token_hash == _token_hash(raw)))
+        if user is None:
+            return None
+        if _aware(user.verify_token_expires) is None or _aware(user.verify_token_expires) < db._now():
+            return None
+        user.email_verified_at = db._now()
+        user.verify_token_hash = None
+        user.verify_token_expires = None
+        return user
+
+
+def require_verified(user) -> None:
+    if not is_verified(user):
+        raise EmailNotVerified("Please verify your email first.")
+
+
 def current_user(token: str):
     """Resolve a token all the way to a User row.
 
@@ -244,9 +322,11 @@ def current_user(token: str):
 
 __all__ = [
     "AuthError", "InvalidCredentials", "EmailAlreadyRegistered",
-    "WeakPassword", "InvalidSession",
+    "WeakPassword", "InvalidSession", "EmailNotVerified",
     "hash_password", "verify_password",
     "register_user", "login_user", "get_user_by_id",
     "create_session", "validate_session", "current_user",
+    "issue_verification", "verify_email", "is_verified", "require_verified",
+    "VERIFY_TTL_SECONDS",
     "SESSION_TTL_SECONDS", "MIN_PASSWORD_LENGTH",
 ]

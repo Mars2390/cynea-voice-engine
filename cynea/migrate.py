@@ -63,6 +63,12 @@ def main(argv=None) -> int:
     print(f"Reachable: {healthcheck()}")
     print(f"Existing tables : {sorted(existing & wanted) or 'none'}")
     print(f"Missing tables  : {sorted(wanted - existing) or 'none'}")
+    insp = inspect(engine)
+    missing_cols = sorted(
+        f"{t.name}.{c.name}"
+        for t in Base.metadata.sorted_tables if t.name in existing
+        for c in t.columns if c.name not in {x["name"] for x in insp.get_columns(t.name)})
+    print(f"Missing columns : {missing_cols or 'none'}")
 
     if args.check:
         return 0
@@ -85,6 +91,8 @@ def main(argv=None) -> int:
     now = set(_inspect(engine).get_table_names())
     created = sorted((now & wanted) - existing) if not args.drop else sorted(wanted)
     print(f"\nCreated: {created or 'nothing (already up to date)'}")
+    if missing_cols and not args.drop:
+        print(f"Columns added: {missing_cols}")
     print(f"Schema ready: {sorted(now & wanted)}")
     return 0
 

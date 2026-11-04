@@ -209,11 +209,14 @@ Any class with the right `async` method works — `transcribe(audio)`,
 ### HTTP API
 
 ```
-POST   /auth/register              GET    /agents/{id}
-POST   /auth/login                 PUT    /agents/{id}
-GET    /auth/me                    DELETE /agents/{id}
-POST   /agents                     POST   /agents/{id}/prompt
-GET    /agents                     GET    /agents/{id}/prompts
+GET    /auth/config                GET    /agents/{id}
+POST   /auth/register              PUT    /agents/{id}
+GET    /auth/verify?token=         DELETE /agents/{id}
+POST   /auth/resend-verification   POST   /agents/{id}/prompt
+POST   /auth/login                 GET    /agents/{id}/prompts
+GET    /auth/me
+POST   /agents                     POST   /calls/{id}/recording
+GET    /agents                     GET    /calls/{id}/recording
 
 POST   /calls                      GET    /dashboard/stats
 GET    /calls?agent_id=            GET    /dashboard/queue
@@ -223,7 +226,25 @@ GET    /health
 
 Bearer tokens from `/auth/login`. Every agent and call route is scoped to
 the authenticated user — ownership is re-checked on each lookup, so another
-workspace's rows 404 even with a valid id. Interactive docs at `/docs`.
+workspace's rows 404 even with a valid id. Interactive docs at `/docs` in
+development; with `ENV=production` there are no docs and `/openapi.json`
+needs a bearer token.
+
+**Sign-up.** `signup.html` posts to `/auth/register`, which creates an
+unverified account and emails a link (24-hour, single-use; only its sha256
+is stored). `/auth/login` answers 403 "Please verify your email first."
+until the link is followed. Registration is limited to 5 attempts per IP
+per hour (counted in the database, so every serverless instance shares
+it), and guarded by Cloudflare Turnstile when its keys are set.
+
+**Recordings.** `POST /calls/{id}/recording` (multipart, field `file`, plus
+optional `duration_s`) stores the call's audio in Cloudflare R2, or on local
+disk when R2 is not configured. `GET /calls/{id}/recording` returns a link
+that expires in 10 minutes, or 404 "No recording available". Recordings
+older than `RECORDING_RETENTION_DAYS` are removed by
+`python tools/purge_recordings.py` — run it on a schedule. Uploads through
+Vercel are capped by its 4.5 MB request-body limit (about 4–5 minutes of
+128 kbps MP3).
 
 ```bash
 curl -s localhost:8000/auth/login -H 'Content-Type: application/json' \
@@ -271,8 +292,23 @@ Money is integer cents, never a float.
 |---|---|---|
 | `GROQ_API_KEY` | **yes** | LLM, and hosted STT fallback |
 | `DATABASE_URL` | for persistence | Neon Postgres, or `sqlite:///cynea.db` |
+| `SESSION_SECRET` | **yes, deployed** | Signs sessions and playback links; random per process if unset |
 | `ELEVENLABS_API_KEY` | no | Premium voices; `edge_tts` is free |
 | `GROQ_MODEL` | no | Default `openai/gpt-oss-20b` |
+
+**On Vercel (the API)** — set these in Project → Settings → Environment Variables:
+
+| Variable | Required | Purpose |
+|---|---|---|
+| `ENV` | **yes** | `production` — turns off `/docs` and `/redoc`, puts `/openapi.json` behind a bearer token |
+| `DATABASE_URL`, `SESSION_SECRET` | **yes** | as above |
+| `EMAIL_API_KEY` | for real sign-ups | Resend API key; without it the verification link is only logged |
+| `EMAIL_FROM` | with `EMAIL_API_KEY` | e.g. `Cynea <hello@cynea.ai>` — a domain verified in Resend |
+| `TURNSTILE_SITE_KEY`, `TURNSTILE_SECRET_KEY` | recommended | Cloudflare Turnstile on sign-up; skipped (with a warning) when unset |
+| `R2_ACCOUNT_ID`, `R2_ACCESS_KEY_ID`, `R2_SECRET_ACCESS_KEY`, `R2_BUCKET` | for recordings | Cloudflare R2; without them recordings land in `/tmp` and do not survive the instance |
+| `RECORDING_RETENTION_DAYS` | no | Default `30` |
+| `SITE_URL` | no | Where `signin.html` lives, if not the API's own origin |
+| `REGISTER_RATE_LIMIT` | no | Sign-up attempts per IP per hour, default `5` |
 
 > **Model note.** The brief specified `llama-3.3-70b-versatile`, but this
 > account exposes no Llama models at all — that name returns 404. The default
@@ -317,8 +353,13 @@ marketing pages only). Use Fly.io, Railway, or Render.
 
 ```bash
 python -m cynea.migrate --check    # connectivity + what exists
-python -m cynea.migrate            # create missing tables
+python -m cynea.migrate            # create missing tables, add missing columns
 ```
+
+`init_db()` also adds columns a model has gained to tables that already
+exist (nullable ones only), so an upgrade is the same command. Accounts that
+predate email verification are marked verified when that column first
+appears.
 
 **CI.** `.github/workflows/ci.yml` runs the suite on 3.11 and 3.13, asserts
 every provider and persona registers, and builds the image.

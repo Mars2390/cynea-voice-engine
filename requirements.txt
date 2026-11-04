@@ -9,6 +9,8 @@
 
 # --- core -------------------------------------------------------------
 httpx==0.28.1              # LLM + hosted-STT transport (Groq, ElevenLabs)
+python-multipart==0.0.20   # recording uploads (multipart forms)
+boto3==1.43.123            # Cloudflare R2 recording storage (S3 API)
 python-dotenv==1.0.1       # loaded by cynea/__init__.py so .env is visible
 numpy==2.3.3
 

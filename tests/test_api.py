@@ -16,6 +16,15 @@ from fastapi.testclient import TestClient  # noqa: E402
 def client(tmp_path, monkeypatch):
     monkeypatch.setenv("DATABASE_URL", f"sqlite:///{tmp_path / 'api.db'}")
     monkeypatch.setenv("SESSION_SECRET", "test-secret")
+    monkeypatch.setenv("RECORDINGS_DIR", str(tmp_path / "recordings"))
+    for k in ("EMAIL_API_KEY", "TURNSTILE_SECRET_KEY", "R2_ACCOUNT_ID", "R2_ACCESS_KEY_ID"):
+        monkeypatch.delenv(k, raising=False)
+
+    # Capture verification links instead of mailing them.
+    from cynea import mailer
+    sent = {}
+    monkeypatch.setattr(mailer, "send_verification",
+                        lambda to, link, name="": sent.__setitem__(to, link) or "logged")
 
     from cynea import db as dbmod
     dbmod.reset_connection()
@@ -23,13 +32,24 @@ def client(tmp_path, monkeypatch):
 
     from cynea.api import app
     with TestClient(app) as c:
+        c.sent = sent
         yield c
     dbmod.reset_connection()
 
 
+def _verify_link(client, email):
+    """The path+query of the verification link the API 'emailed'."""
+    link = client.sent[email]
+    return link[link.index("/auth/verify"):]
+
+
 def _account(client, email="owner@example.com"):
+    """Sign up, follow the emailed link, sign in — the real path to a token."""
     r = client.post("/auth/register", json={"email": email, "password": "demo1234"})
     assert r.status_code == 201, r.text
+    assert client.get(_verify_link(client, email), follow_redirects=False).status_code == 303
+    r = client.post("/auth/login", json={"email": email, "password": "demo1234"})
+    assert r.status_code == 200, r.text
     return {"Authorization": "Bearer " + r.json()["token"]}
 
 
@@ -53,16 +73,24 @@ def test_health_reports_database_and_providers(client):
 # Auth
 # ----------------------------------------------------------------------
 
-def test_register_returns_a_usable_token(client):
-    headers = _account(client)
+def test_register_does_not_sign_you_in(client):
+    """Sign-up returns no token: the account is usable only after verifying."""
+    r = client.post("/auth/register", json={"email": "ama@example.com", "password": "demo1234"})
+    assert r.status_code == 201
+    assert r.json() == {"status": "verification_sent", "email": "ama@example.com"}
+    assert "token" not in r.json()
+
+
+def test_login_is_refused_until_the_email_is_verified(client):
+    client.post("/auth/register", json={"email": "ama@example.com", "password": "demo1234"})
+    r = client.post("/auth/login", json={"email": "ama@example.com", "password": "demo1234"})
+    assert r.status_code == 403
+    assert r.json()["detail"] == "Please verify your email first."
+
+
+def test_verified_account_gets_a_usable_token(client):
+    headers = _account(client, "ama@example.com")
     assert client.get("/auth/me", headers=headers).status_code == 200
-
-
-def test_login_after_register(client):
-    _account(client, "ama@example.com")
-    r = client.post("/auth/login",
-                    json={"email": "ama@example.com", "password": "demo1234"})
-    assert r.status_code == 200 and r.json()["token"]
 
 
 def test_login_with_a_wrong_password_is_401(client):

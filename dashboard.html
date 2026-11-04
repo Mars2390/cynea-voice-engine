@@ -315,6 +315,8 @@ table.hist tbody tr:hover{background:var(--panel);cursor:pointer}
 .rnd.alt:hover{box-shadow:inset 0 0 0 1px var(--ink)}
 .wf-t{font-size:12px;color:var(--muted);font-variant-numeric:tabular-nums}
 .wf-note{margin-left:auto;font-size:11px;color:var(--muted)}
+.wf-wrap.no-rec .wf{opacity:.35}
+.wf-ctl .rnd:disabled{opacity:.4;cursor:not-allowed}
 .i-pause{display:none}
 .playing .i-play{display:none}
 .playing .i-pause{display:block}
@@ -766,7 +768,7 @@ table.hist tbody tr:hover{background:var(--panel);cursor:pointer}
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12a8 8 0 1 0 3-6.2"/><path d="M4 4.5V10h5.5"/></svg>
         </button>
         <span class="wf-t"><span id="mCur">0:00</span> / <span id="mDur">0:00</span></span>
-        <span class="wf-note">Sample excerpt · full call was <span id="mFull">—</span></span>
+        <span class="wf-note" id="mNote" role="status" aria-live="polite"><span id="mNoteText">Loading recording…</span> · full call <span id="mFull">—</span></span>
       </div>
     </div>
 
@@ -1217,8 +1219,9 @@ function openCall(id){
   }).join('');
 
   showMTab('overview');
-  au.pause(); au.src='assets/'+a.clip+'.mp3'; au.currentTime=0;
-  au.load();   /* preload="none" means duration is unknown until we ask for it */
+  /* The call's own audio, or an honest "none" — never a stand-in clip. */
+  au.pause(); au.removeAttribute('src'); au.load();
+  loadRecording(c);
   wfWrap.classList.remove('playing'); paintWave(0);
   $('#mCur').textContent='0:00'; $('#mDur').textContent='—';
   $('#mPlay').setAttribute('aria-label','Play recording');
@@ -1256,7 +1259,35 @@ addEventListener('keydown',function(e){
   else if(!e.shiftKey&&document.activeElement===last){e.preventDefault();first.focus();}
 });
 
+/* Recording state for the open call: loading | ready | none | error. The
+   play controls are only enabled for a real recording; there is no sample
+   clip to fall back to, because a fake one reads as the customer's call. */
+function setRecording(state){
+  var text={loading:'Loading recording…', ready:'Recording',
+            none:'No recording available', error:'Recording unavailable right now'}[state];
+  $('#mNoteText').textContent=text;
+  var off=state!=='ready';
+  $('#mPlay').disabled=off; $('#mRestart').disabled=off;
+  wfWrap.classList.toggle('no-rec', off);
+  if(off){ $('#mCur').textContent='0:00'; $('#mDur').textContent='—'; }
+}
+function loadRecording(c){
+  setRecording('loading');
+  /* _api, not _remote: _remote is cleared once the detail is hydrated,
+     which is exactly when the modal opens. */
+  if(!API.live || !c._api){ setRecording('none'); return; }
+  API.get('/calls/' + c.id + '/recording').then(function(d){
+    if(curCall !== c) return;               /* another call was opened meanwhile */
+    au.src = d.url; au.load();               /* preload="none": ask for the duration */
+    setRecording('ready');
+  }).catch(function(err){
+    if(curCall !== c) return;
+    setRecording(/ -> 404$/.test(String(err.message || err)) ? 'none' : 'error');
+  });
+}
+
 $('#mPlay').addEventListener('click',function(){
+  if(this.disabled) return;
   if(au.paused){
     au.play().then(function(){
       wfWrap.classList.add('playing');
@@ -1542,7 +1573,7 @@ function applyStats(stats){
     stats.agents.forEach(function(a){
       AGENTS[a.persona] = {
         name:a.name, role:a.role || '',
-        photo:a.photo, clip:'kwame_test_1',
+        photo:a.photo,
         voice:a.voice || '', ver:'v1', cost:'$0.04',
         prompt:'', id:a.id
       };
@@ -1561,7 +1592,8 @@ function applyCalls(rows){
       dur:r.duration, out:r.outcome, st:r.status,
       sent:r.sentiment, cost:r.cost,
       sum:'', turns:[], fields:[],      /* fetched on open */
-      _remote:true
+      _remote:true,                     /* detail not fetched yet */
+      _api:true                         /* a real call row: it may have a recording */
     };
   });
 }

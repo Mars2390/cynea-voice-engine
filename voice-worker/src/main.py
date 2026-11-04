@@ -461,6 +461,9 @@ class Default(WorkerEntrypoint):
 
         origin = request.headers.get("Origin")
         if origin and not self._origin_allowed(origin):
+            # Logged because tail shows a deliberate 403 as outcome "Ok",
+            # and the browser only ever sees onerror + 1006.
+            print(f"refused origin {origin!r}")
             return _json({"error": f"origin {origin} is not allowed"}, 403)
 
         agent = (parse_qs(url.query).get("agent") or [DEFAULT_PERSONA])[0].lower()

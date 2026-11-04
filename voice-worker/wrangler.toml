@@ -39,7 +39,7 @@ VOICE_DEMO_MAX_CONCURRENT = "6"
 # here is refused. Requests with no Origin (curl, test scripts) are allowed,
 # because a script can forge any Origin it likes anyway — this stops other
 # websites from spending the quota, not determined clients.
-ALLOWED_ORIGINS = "https://cynea.ai,https://www.cynea.ai,http://localhost:*,http://127.0.0.1:*"
+ALLOWED_ORIGINS = "https://cynea-voice-engine.vercel.app,https://cynea.ai,https://www.cynea.ai,http://localhost:*,http://127.0.0.1:*"
 
 # The model: Cerebras (OpenAI-compatible, https://api.cerebras.ai/v1).
 CEREBRAS_MODEL = "gpt-oss-120b"         # every turn not on the fast path

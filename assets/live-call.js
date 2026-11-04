@@ -53,16 +53,19 @@
   let started = 0, tick = null, agentBusy = false;
   let queue = [], playing = null;
 
+  function isLocal() {
+    const h = location.hostname;
+    return h === 'localhost' || h === '127.0.0.1' || h === '' ||
+           location.protocol === 'file:';
+  }
+
   function socketURL() {
-    const proto = location.protocol === 'https:' ? 'wss:' : 'ws:';
     const override = localStorage.getItem('cynea_api');
     let base;
     if (override) {
       base = override.replace(/^http/, 'ws').replace(/\/$/, '');
     } else {
-      const h = location.hostname;
-      const local = h === 'localhost' || h === '127.0.0.1' || h === '' ||
-                    location.protocol === 'file:';
+      const local = isLocal();
       base = local ? 'ws://127.0.0.1:8000' : 'wss://cynea-voice.albertmomanyi07.workers.dev';
     }
     const agent = new URLSearchParams(location.search).get('agent') || 'maya';
@@ -336,13 +339,28 @@
       }
     };
 
+    const sock = ws;
+    let failed = false;
+
+    // A refused handshake (a 403, a server that is down) reaches the page
+    // only as onerror then onclose; the status code is never exposed.
     ws.onerror = () => {
+      failed = true;
       setState('Cannot reach the server', 'bad');
-      note('The call server did not answer. If you are running locally, start it with ' +
-           '`uvicorn cynea.api:app --port 8000`.', 'bad');
+      note(isLocal()
+        ? 'The call server did not answer. Start it with `uvicorn cynea.api:app --port 8000`.'
+        : 'The call server did not answer. Try again in a moment.', 'bad');
     };
 
-    ws.onclose = () => { if (tick) teardown(); };
+    // Always release the microphone — including when the handshake never
+    // completed, which never runs onopen and so never sets `tick`. Bound to
+    // this socket so a late close from a previous call cannot tear down the
+    // call that replaced it.
+    ws.onclose = () => {
+      if (ws !== sock && ws !== null) return;
+      teardown();
+      if (failed) setState('Cannot reach the server', 'bad');
+    };
   }
 
   function teardown() {

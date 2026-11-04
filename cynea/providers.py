@@ -133,8 +133,11 @@ try:
     import cynea.llms  # noqa: F401  (registers "groq" and the "anthropic" alias)
 except Exception as _exc:  # pragma: no cover - depends on optional httpx
     import logging
+    # Not "only mock is registered": a host can register its own adapter
+    # after this import (the Cloudflare Worker registers "cerebras"), and a
+    # log line claiming otherwise sends whoever reads it the wrong way.
     logging.getLogger("cynea.providers").warning(
-        "LLM adapters unavailable (%s). Only the 'mock' provider is registered.", _exc
+        "cynea.llms adapters unavailable (%s); 'groq' is not registered.", _exc
     )
 
 # --- STT ---------------------------------------------------------------

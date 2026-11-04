@@ -49,6 +49,15 @@ WorkerEdgeTTS speaks it over the runtime's own outbound WebSocket
 Sec-MS-GEC token from edge-tts. Everything above the wire — SSML
 generation, prosody mapping, break folding — is the existing
 EdgeTTSSynthesizer, inherited unchanged.
+
+The model is Cerebras
+---------------------
+Replies come from Cerebras over its OpenAI-compatible API (CerebrasLLM,
+registered as "cerebras"): gpt-oss-120b for conversation, and qwen-3.8-27b
+for the fast path — a caller turn of a few words, like "yes" or "thanks",
+where waiting on a large reasoning model is the slowest thing on the line.
+Speech-to-text is still Whisper, hosted by Groq, because Cerebras serves
+language models only; GROQ_API_KEY is read by that one step and nothing else.
 """
 
 from __future__ import annotations
@@ -91,13 +100,16 @@ from edge_tts.drm import DRM as _EdgeDRM
 # ── environment ──────────────────────────────────────────────────────────
 # The providers read os.environ, as they do under uvicorn. A Worker's
 # secrets and vars arrive on `env` instead, so they are copied across once
-# per isolate. Only GROQ_API_KEY is on the call path; the other secrets are
-# passed through so the shared modules see the same environment they would
-# on Vercel, but this socket never persists a call (no workspace owns an
+# per isolate. Two secrets are on the call path: CEREBRAS_API_KEY for the
+# model and GROQ_API_KEY for Whisper transcription. The others are passed
+# through so the shared modules see the same environment they would on
+# Vercel, but this socket never persists a call (no workspace owns an
 # anonymous visitor's call) and never signs a session.
 _ENV_KEYS = (
-    "GROQ_API_KEY", "ELEVENLABS_API_KEY", "DATABASE_URL", "SESSION_SECRET",
-    "GROQ_MODEL", "GROQ_STT_MODEL", "GROQ_BASE_URL",
+    "CEREBRAS_API_KEY", "CEREBRAS_MODEL", "CEREBRAS_FAST_MODEL",
+    "CEREBRAS_FAST_MAX_WORDS", "CEREBRAS_BASE_URL",
+    "GROQ_API_KEY", "GROQ_STT_MODEL", "GROQ_BASE_URL",          # Whisper only
+    "ELEVENLABS_API_KEY", "DATABASE_URL", "SESSION_SECRET",
     "VOICE_DEMO_MAX_CALL_S", "VOICE_DEMO_MAX_TURNS", "VOICE_DEMO_MAX_CONCURRENT",
 )
 
@@ -302,6 +314,136 @@ class WorkerEdgeTTS(EdgeTTSSynthesizer):
 providers.register_tts("edge_tts", WorkerEdgeTTS)
 
 
+# ── the model: Cerebras ──────────────────────────────────────────────────
+_CEREBRAS_BASE = "https://api.cerebras.ai/v1"
+_CEREBRAS_MODEL = "gpt-oss-120b"        # conversation
+_CEREBRAS_FAST_MODEL = "qwen-3.8-27b"   # short turns
+_CEREBRAS_TIMEOUT_S = 30.0
+
+
+class CerebrasLLMError(RuntimeError):
+    """Cerebras could not be reached or returned nothing usable."""
+
+
+class _OutOfTokens(CerebrasLLMError):
+    """A reasoning model thought until max_tokens ran out; retryable."""
+
+
+class CerebrasLLM:
+    """Chat completions on Cerebras, over its OpenAI-compatible HTTP API.
+
+    Plain httpx rather than the openai SDK, measured: the SDK took the
+    bundle from 0.9 MB to 4.19 MB gzipped (2,708 modules, mostly its type
+    stubs) — over the Workers Free plan's 3 MB cap — and made cold starts
+    load all of it. The endpoint, the body and the reasoning_effort field
+    are the same either way; the SDK only wraps them.
+
+    Same contract as the other LLM adapters (`generate(messages, system)`
+    returns the reply text or raises), so CyneaEngine does not know which
+    provider answered. It raises rather than returning "" — on a phone line
+    an empty reply is indistinguishable from a dropped call.
+
+    Model choice is per turn. When the caller's latest turn is at most
+    CEREBRAS_FAST_MAX_WORDS words (default 3; 0 turns the fast path off) the
+    reply comes from CEREBRAS_FAST_MODEL, otherwise from CEREBRAS_MODEL.
+    Both see the full system prompt and history, so the persona and the
+    truth rule hold on either path.
+
+    Every Qwen call carries reasoning_effort="none". Without it Qwen spends
+    the token budget thinking and returns empty content, so it is set by
+    model name, not by path — an override of CEREBRAS_MODEL to a Qwen model
+    gets it too.
+    """
+
+    def __init__(self, max_tokens: int = 1024):
+        self.api_key = os.getenv("CEREBRAS_API_KEY")
+        self.base_url = os.getenv("CEREBRAS_BASE_URL", _CEREBRAS_BASE).rstrip("/")
+        self.model = os.getenv("CEREBRAS_MODEL", _CEREBRAS_MODEL)
+        self.fast_model = os.getenv("CEREBRAS_FAST_MODEL", _CEREBRAS_FAST_MODEL)
+        self.fast_max_words = int(os.getenv("CEREBRAS_FAST_MAX_WORDS", "3"))
+        self.max_tokens = max_tokens
+
+    def pick_model(self, messages: list) -> str:
+        last = next((m.get("content") or "" for m in reversed(messages)
+                     if m.get("role") == "user"), "")
+        words = len(str(last).split())
+        if 0 < words <= self.fast_max_words:
+            return self.fast_model
+        return self.model
+
+    async def generate(self, messages: list, system: str = "") -> str:
+        body = list(messages)
+        if system and not (body and body[0].get("role") == "system"):
+            body = [{"role": "system", "content": system}] + body
+        model = self.pick_model(body)
+        try:
+            return await self._complete(model, body, self.max_tokens)
+        except _OutOfTokens:
+            # A reasoning model that thought until the budget ran out. One
+            # retry with double the room.
+            try:
+                return await self._complete(model, body, self.max_tokens * 2)
+            except _OutOfTokens:
+                raise CerebrasLLMError(
+                    f"{model} produced no reply even at {self.max_tokens * 2} tokens.") from None
+
+    async def _complete(self, model: str, body: list, max_tokens: int) -> str:
+        import httpx
+
+        if not self.api_key:
+            raise CerebrasLLMError("CEREBRAS_API_KEY is not set. "
+                                   "Run: pywrangler secret put CEREBRAS_API_KEY")
+        payload = {"model": model, "messages": body,
+                   "max_tokens": max_tokens, "temperature": 0.7}
+        if "qwen" in model.lower():
+            payload["reasoning_effort"] = "none"
+        try:
+            async with httpx.AsyncClient(timeout=_CEREBRAS_TIMEOUT_S) as client:
+                r = await client.post(f"{self.base_url}/chat/completions", json=payload,
+                                      headers={"Authorization": f"Bearer {self.api_key}"})
+        except httpx.TimeoutException as exc:
+            raise CerebrasLLMError(f"Cerebras timed out after {_CEREBRAS_TIMEOUT_S:.0f}s.") from exc
+        except Exception as exc:
+            raise CerebrasLLMError(f"Cerebras unreachable: {exc}") from exc
+
+        if r.status_code == 401:
+            raise CerebrasLLMError("Cerebras rejected the API key (401). Check CEREBRAS_API_KEY.")
+        if r.status_code == 429:
+            raise CerebrasLLMError("Cerebras rate limit hit (429).")
+        if r.status_code == 404:
+            raise CerebrasLLMError(f"Cerebras has no model named {model!r} on this key: "
+                                   f"{r.text[:200]}")
+        if r.status_code >= 400:
+            raise CerebrasLLMError(f"Cerebras returned {r.status_code}: {r.text[:300]}")
+
+        try:
+            choice = r.json()["choices"][0]
+            text = (choice["message"].get("content") or "").strip()
+        except (ValueError, KeyError, IndexError, TypeError) as exc:
+            raise CerebrasLLMError(f"Unexpected Cerebras response: {r.text[:300]}") from exc
+        if text:
+            return text
+        if choice.get("finish_reason") == "length":
+            raise _OutOfTokens()
+        hint = ' (is reasoning_effort="none" reaching it?)' if "qwen" in model.lower() else ""
+        raise CerebrasLLMError(f"{model} returned an empty reply{hint}.")
+
+
+providers.register_llm("cerebras", CerebrasLLM)
+
+
+def _call_config(persona: str):
+    """The demo persona, answered by Cerebras.
+
+    demo_config() is shared with the FastAPI fallback, which still names
+    Groq; the Worker swaps the model provider and keeps everything else —
+    prompt, truth rule, voice — identical.
+    """
+    config = demo_config(persona)
+    config.llm_provider = "cerebras"
+    return config
+
+
 # ── the Worker ───────────────────────────────────────────────────────────
 class Default(WorkerEntrypoint):
     async def fetch(self, request):
@@ -347,13 +489,16 @@ class Default(WorkerEntrypoint):
 
     def _health(self):
         reg = providers.registered()
-        key = bool(os.getenv("GROQ_API_KEY"))
+        missing = [k for k in ("CEREBRAS_API_KEY", "GROQ_API_KEY") if not os.getenv(k)]
+        llm = CerebrasLLM()
         return _json({
-            "ok": key,
-            "reason": None if key else "GROQ_API_KEY is not set",
+            "ok": not missing,
+            "reason": f"not set: {', '.join(missing)}" if missing else None,
             "capacity": max_concurrent(),
             "stt": "groq-stt" in reg.get("stt", []),
-            "llm": "groq" in reg.get("llm", []),
+            "llm": "cerebras" in reg.get("llm", []),
+            "model": llm.model,
+            "fast_model": llm.fast_model if llm.fast_max_words > 0 else None,
             "tts": "edge_tts" in reg.get("tts", []),
             "rate": RATE,
             "max_call_s": max_call_s(),
@@ -413,7 +558,7 @@ class VoiceSession(DurableObject):
         await self.ctx.storage.delete("history")
         await self.ctx.storage.setAlarm(int((time.time() + max_call_s()) * 1000))
 
-        self._send(server, {"type": "ready", "agent": demo_config(persona).name,
+        self._send(server, {"type": "ready", "agent": _call_config(persona).name,
                             "persona": persona, "rate": RATE,
                             "max_call_s": max_call_s()})
         asyncio.ensure_future(self._greet(server, meta))
@@ -548,7 +693,7 @@ class VoiceSession(DurableObject):
         comes from the current deploy, not from storage, so a prompt fix
         reaches calls already in progress.
         """
-        engine = CyneaEngine(demo_config(meta["persona"]), persist=False)
+        engine = CyneaEngine(_call_config(meta["persona"]), persist=False)
         saved = await self.ctx.storage.get("history")
         if isinstance(saved, str):
             engine.history.restore(json.loads(saved))

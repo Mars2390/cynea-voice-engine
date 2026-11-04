@@ -27,7 +27,7 @@ psycopg2-binary==2.9.10    # Neon Postgres driver
 greenlet==3.5.3            # required by SQLAlchemy on some platforms
 
 # --- speech -----------------------------------------------------------
-edge-tts==7.2.8            # free TTS, 9 voices, 4 African accents
+edge-tts==7.3.1            # free TTS, 9 voices; 7.2.8 is refused by Microsoft (403)
 elevenlabs==2.45.0         # premium TTS
 pydub==0.25.1
 scipy==1.17.1

@@ -3,17 +3,20 @@ name = "cynea-voice-worker"
 version = "0.1.0"
 description = "Cynea's browser voice socket as a Cloudflare Python Worker + Durable Object"
 requires-python = ">=3.12"
-# httpx is what the shared Groq adapters already use (cynea/llms/groq_llm.py,
-# cynea_africa/transcriber/groq_stt.py); Python Workers route it over fetch.
+# httpx carries both HTTP calls on the path: Cerebras for the model
+# (src/main.py, CerebrasLLM — an OpenAI-compatible API at
+# https://api.cerebras.ai/v1) and Groq's Whisper for transcription
+# (cynea_africa/transcriber/groq_stt.py). Python Workers route it over fetch.
+#
+# Deliberately absent: openai. Measured, it took the bundle from 0.9 MB to
+# 4.19 MB gzipped — over the Workers Free plan's 3 MB cap — for a wrapper
+# around the same POST.
 #
 # edge-tts supplies the protocol constants and Microsoft's Sec-MS-GEC token,
 # not the connection: its aiohttp socket client has no sockets to use in a
 # Worker, so src/main.py opens the socket through the runtime instead.
 # The floor matters. Microsoft moved the token to a v2 scheme and 7.2.8 is
 # refused with HTTP 403; 7.3.1 is answered (both checked 2026-11-03).
-#
-# Deliberately absent: groq. The existing adapters call Groq's HTTP API with
-# httpx, and reusing them beats adding the SDK and its pydantic tree.
 dependencies = [
     "httpx",
     "edge-tts>=7.3.1",

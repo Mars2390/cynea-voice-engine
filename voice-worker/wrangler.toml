@@ -41,8 +41,16 @@ VOICE_DEMO_MAX_CONCURRENT = "6"
 # websites from spending the quota, not determined clients.
 ALLOWED_ORIGINS = "https://cynea.ai,https://www.cynea.ai,http://localhost:*,http://127.0.0.1:*"
 
+# The model: Cerebras (OpenAI-compatible, https://api.cerebras.ai/v1).
+CEREBRAS_MODEL = "gpt-oss-120b"         # every turn not on the fast path
+CEREBRAS_FAST_MODEL = "qwen-3.8-27b"    # always called with reasoning_effort="none"
+# Caller turns of at most this many words ("yes", "thank you") go to the
+# fast model. "0" sends every turn to CEREBRAS_MODEL.
+CEREBRAS_FAST_MAX_WORDS = "3"
+
 # Secrets — set with `pywrangler secret put NAME`, never in this file:
-#   GROQ_API_KEY        required: transcription and the model
+#   CEREBRAS_API_KEY    required: the model
+#   GROQ_API_KEY        required: Whisper transcription only (Cerebras has no STT)
 #   ELEVENLABS_API_KEY  optional, unused by this socket (Edge TTS is free)
 #   DATABASE_URL        optional, unused by this socket (demo calls are not stored)
 #   SESSION_SECRET      optional, unused by this socket (no sign-in)

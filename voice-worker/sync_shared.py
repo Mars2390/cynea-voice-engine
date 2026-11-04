@@ -15,8 +15,9 @@ mode — a module the pipeline needs and this list forgets — and that one
 fails loudly at import, on the first `pywrangler dev`.
 
 What is deliberately left out: the FastAPI app (cynea/api.py, voice_ws.py),
-the database layer, local Whisper, ElevenLabs, telephony, and the 5,560-line
-dashboard preview. cynea/providers.py guards each of those imports, so their
+the Groq LLM adapter (cynea/llms — replies come from Cerebras, in
+src/main.py), the database layer, local Whisper, ElevenLabs, telephony, and
+the 5,560-line dashboard preview. cynea/providers.py guards each of those imports, so their
 absence just leaves them unregistered.
 """
 
@@ -37,8 +38,6 @@ SHARED = [
     "cynea/providers.py",
     "cynea/agent_loader.py",
     "cynea/voice_demo.py",
-    "cynea/llms/__init__.py",
-    "cynea/llms/groq_llm.py",
     "cynea_africa/__init__.py",
     "cynea_africa/theme.py",
     "cynea_africa/persona/__init__.py",
@@ -76,6 +75,16 @@ def main() -> None:
         for stale in (SRC / pkg).rglob("*.py") if (SRC / pkg).exists() else ():
             if stale not in wanted:
                 stale.unlink()
+        # And neither may its directory: an empty one still imports, as a
+        # namespace package, so `import cynea.llms` would quietly succeed.
+        for d in sorted((SRC / pkg).rglob("*"), reverse=True) if (SRC / pkg).exists() else ():
+            if d.is_dir() and not any(p.suffix == ".py" for p in d.rglob("*")):
+                for leftover in d.rglob("*"):
+                    if leftover.is_file():
+                        leftover.unlink()
+                for sub in sorted(d.rglob("*"), reverse=True):
+                    sub.rmdir()
+                d.rmdir()
 
     print(f"sync_shared: {len(SHARED)} shared modules, {written} updated")
 

@@ -24,5 +24,5 @@ httpx==0.28.1
 # model are Groq over httpx, speech is Edge TTS over a socket to
 # Microsoft, and the browser sends PCM the engine already understands.
 # So the demo adds a socket, not a codec.
-edge-tts==7.2.8
+edge-tts==7.3.1    # 7.2.8 is refused by Microsoft with 403 (Sec-MS-GEC v2)
 websockets==16.0

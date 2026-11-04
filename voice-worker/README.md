@@ -9,7 +9,7 @@ needs a new URL.
 ```
 browser ──wss──▶ Worker (src/main.py: Default) ──▶ VoiceSession Durable Object "line-N"
                   origin check, picks a free line     Hibernation API, one call per line
-                                                       Groq Whisper → Groq LLM → Edge TTS
+                                                       Groq Whisper → Cerebras → Edge TTS
 ```
 
 | File | What it is |
@@ -38,7 +38,8 @@ pywrangler whoami
 pywrangler deploy
 
 # 4. Secrets — each prompts for the value; nothing goes in a file.
-pywrangler secret put GROQ_API_KEY          # required
+pywrangler secret put CEREBRAS_API_KEY      # required: the model
+pywrangler secret put GROQ_API_KEY          # required: Whisper transcription only
 pywrangler secret put ELEVENLABS_API_KEY    # optional — unused by this socket
 pywrangler secret put DATABASE_URL          # optional — unused by this socket
 pywrangler secret put SESSION_SECRET        # optional — unused by this socket
@@ -49,8 +50,27 @@ uv run --with websockets python check_idle.py wss://cynea-voice.<your-subdomain>
 pywrangler tail                             # live logs while you call it from the site
 ```
 
-`/voice/health` must report `"ok": true`; `false` with
-`"GROQ_API_KEY is not set"` means step 4 has not landed yet.
+`/voice/health` must report `"ok": true`, `"model": "gpt-oss-120b"` and
+`"fast_model": "qwen-3.8-27b"`. `"reason": "not set: …"` names the secret
+step 4 has not landed yet.
+
+## The model: Cerebras
+
+Every reply comes from Cerebras (`https://api.cerebras.ai/v1`,
+OpenAI-compatible), in `CerebrasLLM` in `src/main.py`:
+
+| Turn | Model | Set by |
+|---|---|---|
+| everything else | `gpt-oss-120b` | `CEREBRAS_MODEL` |
+| caller said ≤ 3 words ("yes", "thank you") | `qwen-3.8-27b`, always with `reasoning_effort: "none"` | `CEREBRAS_FAST_MODEL`, `CEREBRAS_FAST_MAX_WORDS` (`0` = off) |
+
+Both see the full persona prompt and history. The client is plain httpx,
+not the openai SDK: the SDK took the bundle from 0.9 MB to 4.19 MB gzipped,
+over the Free plan's 3 MB limit, to wrap the same POST.
+
+Transcription is still Whisper on Groq — Cerebras serves language models
+only — so a call needs a working `GROQ_API_KEY` as well. The FastAPI
+fallback (`cynea/voice_ws.py`) still uses Groq for both.
 
 Then point the browser at it — one line in `assets/live-call.js`
 (`socketURL()`, line 66):
@@ -67,7 +87,7 @@ previews to place calls; anything else is refused with 403.
 
 ```powershell
 cd voice-worker
-"GROQ_API_KEY=gsk_..." | Out-File -Encoding ascii .dev.vars   # gitignored
+"CEREBRAS_API_KEY=csk-...", "GROQ_API_KEY=gsk_..." | Out-File -Encoding ascii .dev.vars   # gitignored
 pywrangler dev
 ```
 

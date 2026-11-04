@@ -7,13 +7,13 @@
   "agent": {
    "name": "Kwame",
    "role": "Hotel Receptionist",
-   "where": "Adinkra Hotel · Accra",
+   "where": "Adinkra Hotel",
    "avatar": "avatar-kwame"
   },
   "caller": {
    "name": "David Osei",
    "role": "Guest",
-   "where": "Calling from Accra",
+   "where": "Planning an anniversary",
    "avatar": null
   },
   "lines": [
@@ -1512,13 +1512,13 @@
   "agent": {
    "name": "Amina",
    "role": "Bank Support",
-   "where": "Cynea Bank · Nairobi",
+   "where": "Cynea Bank",
    "avatar": "avatar-amina"
   },
   "caller": {
    "name": "Caller",
    "role": "Customer",
-   "where": "Calling from Nairobi",
+   "where": "Chasing a stuck transfer",
    "avatar": null
   },
   "lines": [

@@ -489,7 +489,7 @@ table.hist tbody tr:hover{background:var(--panel);cursor:pointer}
           <label class="lbl" for="fAgent" style="position:absolute;left:-9999px">Filter by agent</label>
           <select class="sel" id="fAgent">
             <option>All agents</option>
-            <option>Kwame</option><option>Amina</option><option>Kofi</option><option>Maya</option>
+            <option>Peter</option><option>Amina</option><option>Kofi</option><option>Maya</option>
           </select>
           <button class="btn btn-primary" type="button" id="createAgent">
             <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>
@@ -609,7 +609,7 @@ table.hist tbody tr:hover{background:var(--panel);cursor:pointer}
 
       <div class="ed-head">
         <img id="edPhoto" src="assets/avatar-kwame.jpg" alt="" width="240" height="240">
-        <h1 id="edName">Kwame</h1>
+        <h1 id="edName">Peter</h1>
         <span class="ver" id="edVer">v12</span>
         <div class="ed-tabs" role="tablist" aria-label="Agent editor">
           <button class="tab" role="tab" aria-selected="true" data-edtab="configure">Configure</button>
@@ -956,7 +956,7 @@ function renderAgents(){
       '<span class="acard-top">'+
       '<span class="ph" style="--c1:'+tint(k)[0]+';--c2:'+tint(k)[1]+'" data-initial="'+
         esc(a.name.charAt(0))+'">'+pic(a.photo||('avatar-'+k),'',a.name,240,'.ph')+'</span>'+
-      '<span><b>'+esc(a.name)+'</b><span class="role">'+esc(a.role)+' · '+esc(a.place)+'</span></span></span>'+
+      '<span><b>'+esc(a.name)+'</b><span class="role">'+esc(a.role)+'</span></span></span>'+
       '<span class="acard-st '+(s.on?'st-on':'st-idle')+'"><i aria-hidden="true"></i>'+
       (s.on?'On call':'Idle')+'<span class="timer">'+esc(s.timer)+'</span></span></button>';
   }).join('');
@@ -1541,7 +1541,7 @@ function applyStats(stats){
     AGENTS = {}; STATUS = {};
     stats.agents.forEach(function(a){
       AGENTS[a.persona] = {
-        name:a.name, role:a.role || '', place:a.place || '',
+        name:a.name, role:a.role || '',
         photo:a.photo, clip:'kwame_test_1',
         voice:a.voice || '', ver:'v1', cost:'$0.04',
         prompt:'', id:a.id

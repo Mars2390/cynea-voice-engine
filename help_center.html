@@ -3,88 +3,207 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Help center — Cynea Voice Engine</title>
+<title>Help center — Cynea</title>
 <meta name="description" content="Guides, FAQs, and support for building and deploying human-like AI voice agents with Cynea." />
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="assets/favicon.ico" sizes="48x48 32x32 16x16">
+<link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+<link rel="mask-icon" href="assets/mask-icon.svg" color="#00D4FF">
+<meta name="theme-color" content="#050505">
+<meta name="color-scheme" content="dark">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@500;600;700;800&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<noscript><style>.rv{opacity:1!important;transform:none!important}</style></noscript>
 <style>
-:root{--cream:#F5F1EA;--cream-2:#EFEAE0;--surface:#FFFFFF;--surface-2:#FBF8F2;--ink:#161616;--muted:#6B6660;--faint:#9A938A;--line:#E6E0D5;--black:#0A0A0A;--accent:#00D4FF;--accent-ink:#0089A8;--r:18px;--r-lg:28px;--maxw:1200px}
-*,*::before,*::after{box-sizing:border-box}html{scroll-behavior:smooth}
-body{margin:0;background:var(--cream);color:var(--ink);font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;font-size:16px;line-height:1.55;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+/* Tokens match index.html: near-black ground, one cyan accent,
+   Syne for display, DM Sans for everything else. */
+:root{
+  color-scheme:dark;
+  --c-bg:#050505;--c-bg-2:#0E0E0E;--c-bg-3:#161616;--c-card:#111111;
+  --cyan:#00D4FF;--cyan-hover:#00B8E6;--cyan-dark:#0088AA;
+  --c-text:#F5F5F5;--c-text-2:#8A8A8A;--c-border:#1E1E1E;
+
+  /* old names, repointed */
+  --bg:var(--c-bg);--bg-2:var(--c-bg-2);--card:var(--c-card);--card-2:var(--c-bg-3);
+  --line:var(--c-border);--ink:var(--c-text);--muted:var(--c-text-2);
+  --faint:#6B6B6B;            /* incidental labels only, never body copy */
+  --accent:var(--cyan);--accent-ink:var(--cyan);--on-cyan:#050505;
+  --surface:var(--c-card);--surface-2:var(--c-bg-3);
+
+  --r:16px;--r-card:16px;--r-btn:6px;--r-block:clamp(18px,.62vw + 15.6px,24px);
+  --gutter:8px;--maxw:1200px;--col:calc(var(--maxw) - 48px);
+  --display:'Syne',system-ui,sans-serif;
+  --sans:'DM Sans',system-ui,-apple-system,'Segoe UI',sans-serif;
+}
+*,*::before,*::after{box-sizing:border-box}
+[hidden]{display:none !important}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:16px;line-height:1.55;-webkit-font-smoothing:antialiased;overflow-x:hidden}
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important;scroll-behavior:auto!important}}
+h1,h2,h3,h4,p{margin:0}
 a{color:inherit;text-decoration:none}img{max-width:100%;display:block}
-.wrap{max-width:var(--maxw);margin:0 auto;padding:0 24px}.mono{font-family:'JetBrains Mono',monospace}
-.eyebrow{font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--accent-ink);font-weight:500}
-h1,h2,h3{letter-spacing:-.02em;font-weight:600;margin:0}.muted{color:var(--muted)}
-.btn{display:inline-flex;align-items:center;gap:8px;font-family:inherit;font-size:15px;font-weight:500;padding:11px 20px;border-radius:999px;border:1px solid var(--line);background:var(--surface);color:var(--ink);cursor:pointer;transition:transform .18s,box-shadow .2s,background .2s,border-color .2s}
-.btn:hover{transform:translateY(-1px)}.btn-dark{background:var(--black);color:#fff;border-color:var(--black)}.btn-dark:hover{background:#262626;box-shadow:0 10px 28px rgba(0,0,0,.18)}.btn-sm{padding:8px 14px;font-size:13px}
-.nav{position:sticky;top:0;z-index:60;background:rgba(245,241,234,.8);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border-bottom:1px solid var(--line)}
-.nav-in{display:flex;align-items:center;gap:24px;height:64px;max-width:var(--maxw);margin:0 auto;padding:0 24px}
-.brand{display:inline-flex;align-items:baseline;gap:9px}.brand b{font-weight:700;font-size:20px;letter-spacing:.02em}.brand span{font-size:10px;letter-spacing:.28em;color:var(--faint);font-weight:600}
-.nav-links{display:flex;gap:26px;margin:0 auto}.nav-links a{font-size:14.5px;color:var(--muted);font-weight:500;transition:color .15s}.nav-links a:hover,.nav-links a.active{color:var(--ink)}
-.nav-right{display:flex;align-items:center;gap:14px}.nav-signin{font-size:14.5px;color:var(--ink);font-weight:500}
-@media(max-width:920px){.nav-links{display:none}.nav-signin{display:none}}
-.sec{padding:72px 0}.sec-head{max-width:680px;margin:0 0 36px}.sec-head.center{margin-left:auto;margin-right:auto;text-align:center}.sec-head h2{font-size:clamp(26px,3vw,36px);line-height:1.1;margin:12px 0 12px}.sec-head p{font-size:16px;color:var(--muted);margin:0}
-.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);box-shadow:0 1px 2px rgba(22,22,22,.03)}
-.foot{padding:56px 0 36px;border-top:1px solid var(--line);margin-top:24px}.foot-in{max-width:var(--maxw);margin:0 auto;padding:0 24px;display:grid;grid-template-columns:1.6fr repeat(3,1fr);gap:32px}@media(max-width:760px){.foot-in{grid-template-columns:1fr 1fr}}
-.foot-brand p{font-size:13.5px;color:var(--muted);max-width:280px;margin:14px 0 0}.foot-col h4{font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--faint);margin:0 0 14px}.foot-col a,.foot-col span{display:block;font-size:14px;color:var(--muted);margin-bottom:10px}.foot-col a:hover{color:var(--ink)}
-.rv{opacity:0;transform:translateY(22px);transition:opacity .7s cubic-bezier(.2,.8,.2,1),transform .7s cubic-bezier(.2,.8,.2,1)}.rv.in{opacity:1;transform:none}
-#prog{position:fixed;top:0;left:0;height:2px;width:0;background:linear-gradient(90deg,#00D4FF,#7C5CFC);z-index:80;box-shadow:0 0 8px rgba(0,212,255,.5)}
+button,input{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:4px}
+.wrap{max-width:var(--maxw);margin:0 auto;padding:0 24px}
+.eyebrow{font-family:var(--sans);font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--cyan);font-weight:600}
+h1,h2,h3{font-family:var(--display);font-weight:700;letter-spacing:-.02em;text-wrap:balance}
+.muted{color:var(--muted)}
+
+/* ── buttons (as index.html) ─────────────────────────────────────── */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;height:32px;padding:0 16px;border-radius:var(--r-btn);font-size:12px;font-weight:500;letter-spacing:-.16px;border:0;cursor:pointer;white-space:nowrap;transition:box-shadow .18s ease,background-color .18s ease}
+.btn-navy,.btn-dark{background:var(--cyan);color:var(--on-cyan);font-weight:600}
+.btn-navy:hover,.btn-dark:hover{background:var(--cyan-hover)}
+.btn-line{background:transparent;color:var(--ink);box-shadow:inset 0 0 0 1px var(--line)}
+.btn-line:hover{box-shadow:inset 0 0 0 1px var(--cyan)}
+.btn-lg{height:40px;padding:0 20px;font-size:14px}
+
+/* ═══ NAV (structure and behaviour copied from index.html) ═══════════ */
+.nav{position:sticky;top:0;z-index:60;background:rgba(14,14,14,.78);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);border-bottom:1px solid transparent;transition:border-color .2s}
+.nav.stuck{border-bottom-color:var(--line)}
+.nav-in{position:relative;display:flex;align-items:center;gap:28px;height:60px;max-width:var(--maxw);margin-inline:auto;padding-inline:24px}
+.logo{display:inline-flex;align-items:center;gap:9px;flex-shrink:0;color:var(--ink)}
+.logo .prism{display:block;width:auto;height:18px;color:var(--cyan);flex-shrink:0}
+.logo-word{font-family:var(--display);font-size:19px;font-weight:700;letter-spacing:-.01em;line-height:1}
+.nav-links{display:flex;gap:22px;margin-left:auto}
+.nav-links a{font-size:13px;color:var(--muted);transition:color .18s}
+.nav-links a:hover{color:var(--ink)}
+.nav-cta{display:flex;gap:8px;margin-left:22px}
+.nav-burger{display:none}
+@media(max-width:900px){
+  .nav-cta{margin-left:auto}
+  .nav-burger{display:grid;align-content:center;justify-items:center;gap:5px;width:32px;height:32px;border-radius:var(--r-btn);margin-left:8px;background:transparent;border:0;cursor:pointer;box-shadow:inset 0 0 0 1px var(--line);transition:box-shadow .18s}
+  .nav-burger:hover{box-shadow:inset 0 0 0 1px var(--cyan)}
+  .nav-burger span{display:block;width:14px;height:1.5px;background:var(--ink);border-radius:1px;transition:transform .26s cubic-bezier(.2,.8,.2,1)}
+  .nav-burger[aria-expanded="true"] span:nth-child(1){transform:translateY(3.25px) rotate(45deg)}
+  .nav-burger[aria-expanded="true"] span:nth-child(2){transform:translateY(-3.25px) rotate(-45deg)}
+  .nav-links{display:grid;position:absolute;left:0;right:0;top:100%;margin:0;gap:0;background:var(--bg-2);border-bottom:1px solid transparent;padding:0 24px;max-height:0;overflow:hidden;visibility:hidden;transition:max-height .3s cubic-bezier(.2,.7,.2,1),padding .3s cubic-bezier(.2,.7,.2,1),visibility .3s,border-color .3s}
+  .nav-links.open{max-height:70vh;overflow-y:auto;visibility:visible;padding:8px 24px 16px;border-bottom-color:var(--line)}
+  .nav-links a{font-size:15px;color:var(--ink);padding:13px 2px;border-bottom:1px solid var(--line)}
+  .nav-links a:last-child{border-bottom:0}
+}
+@media(prefers-reduced-motion:reduce){.nav-links{transition:none}.nav-burger span{transition:none}}
+
+/* ── sections ───────────────────────────────────────────────────── */
+.sec{padding:64px 0}
+.sec-head{max-width:680px;margin:0 0 32px}
+.sec-head h2{font-size:clamp(26px,2.6vw,34px);line-height:1.08;margin:12px 0}
+.sec-head p{font-size:16px;color:var(--muted);text-wrap:pretty}
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--r-card)}
+.rv{opacity:0;transform:translateY(16px) scale(.98);transition:opacity .6s cubic-bezier(.16,.84,.44,1),transform .6s cubic-bezier(.16,.84,.44,1)}.rv.in{opacity:1;transform:none}
+#prog{position:fixed;top:0;left:0;height:2px;width:0;background:linear-gradient(90deg,var(--cyan-dark),var(--cyan));z-index:80;box-shadow:0 0 8px rgba(0,212,255,.5)}
 
 /* ── hero ─────────────────────────────────────────────────────── */
-.hero{position:relative;text-align:center;padding:84px 0 56px;overflow:hidden}
-.hero::before{content:"";position:absolute;inset:0;pointer-events:none;background:radial-gradient(620px 420px at 50% -8%,rgba(0,212,255,.16),transparent 64%),radial-gradient(520px 360px at 80% 0%,rgba(124,92,252,.07),transparent 70%)}
+.hero{position:relative;text-align:center;padding:80px 0 48px;overflow:hidden}
+.hero::before{content:"";position:absolute;inset:0;pointer-events:none;background:radial-gradient(620px 420px at 50% -8%,rgba(0,212,255,.16),transparent 64%),radial-gradient(520px 360px at 82% 0%,rgba(0,136,170,.10),transparent 70%)}
 .hero-in{position:relative;z-index:1}
-.hero h1{font-size:clamp(34px,5vw,56px);line-height:1.04;margin:14px 0 14px}
-.hero .lead{font-size:17px;color:var(--muted);max-width:560px;margin:0 auto 30px}
+.hero h1{font-size:clamp(32px,4.2vw,48px);line-height:1.04;margin:16px auto;max-width:18ch}
+.hero .lead{font-size:17px;color:var(--muted);max-width:560px;margin:0 auto 32px;text-wrap:pretty}
 .search{position:relative;max-width:560px;margin:0 auto}
-.search svg{position:absolute;left:20px;top:50%;transform:translateY(-50%);color:var(--faint);pointer-events:none}
-.search input{width:100%;background:var(--surface);color:var(--ink);border:1px solid var(--line);border-radius:999px;padding:16px 22px 16px 52px;font-family:inherit;font-size:16px;outline:none;box-shadow:0 6px 24px rgba(22,22,22,.05);transition:border-color .15s,box-shadow .15s}
+.search svg{position:absolute;left:20px;top:50%;transform:translateY(-50%);color:var(--muted);pointer-events:none}
+.search input{width:100%;background:var(--card-2);color:var(--ink);border:1px solid var(--line);border-radius:999px;padding:16px 24px 16px 52px;font-size:16px;outline:none;box-shadow:0 12px 32px rgba(0,0,0,.4);transition:border-color .15s,box-shadow .15s}
 .search input:focus{border-color:var(--accent);box-shadow:0 0 0 4px rgba(0,212,255,.14)}
-.search input::placeholder{color:var(--faint)}
+.search input::placeholder{color:var(--muted)}
+.search input::-webkit-search-cancel-button{filter:invert(1) grayscale(1) brightness(.7)}
 
 /* ── quick-start ──────────────────────────────────────────────── */
-.qs-grid{display:grid;gap:18px;grid-template-columns:repeat(4,1fr)}
+.qs-grid{display:grid;gap:16px;grid-template-columns:repeat(4,1fr)}
 @media(max-width:920px){.qs-grid{grid-template-columns:repeat(2,1fr)}}
 @media(max-width:560px){.qs-grid{grid-template-columns:1fr}}
-.qs{display:flex;flex-direction:column;padding:24px;border-radius:var(--r);background:var(--surface);border:1px solid var(--line);box-shadow:0 1px 2px rgba(22,22,22,.03);transition:transform .2s,box-shadow .22s,border-color .22s}
-.qs:hover{transform:translateY(-4px);border-color:rgba(0,212,255,.4);box-shadow:0 18px 44px rgba(0,212,255,.12)}
-.qs-icon{width:44px;height:44px;display:inline-flex;align-items:center;justify-content:center;border-radius:13px;background:linear-gradient(150deg,#00D4FF,#0089A8);color:#fff;margin-bottom:16px;box-shadow:0 8px 20px rgba(0,212,255,.28)}
+.qs{display:flex;flex-direction:column;padding:24px;border-radius:var(--r-card);background:var(--card);border:1px solid var(--line);transition:transform .2s,box-shadow .22s,border-color .22s}
+.qs:hover{transform:translateY(-4px);border-color:rgba(0,212,255,.4);box-shadow:0 18px 44px rgba(0,212,255,.10)}
+.qs-icon{width:44px;height:44px;display:inline-flex;align-items:center;justify-content:center;border-radius:12px;background:rgba(0,212,255,.08);box-shadow:inset 0 0 0 1px rgba(0,212,255,.28);color:var(--cyan);margin-bottom:16px}
 .qs-icon svg{width:22px;height:22px}
-.qs h3{font-size:16.5px;margin:0 0 8px}
+.qs h3{font-size:17px;line-height:1.2;margin:0 0 8px}
 .qs p{font-size:14px;color:var(--muted);margin:0 0 16px;flex:1}
-.qs-link{font-size:14px;font-weight:600;color:var(--accent-ink)}
+.qs-link{font-size:14px;font-weight:600;color:var(--cyan)}
+.qs:hover .qs-link{color:var(--cyan-hover)}
 
 /* ── faq ──────────────────────────────────────────────────────── */
-.faq-cat{margin:34px 0 14px}
+#faqList{max-width:880px}
+.faq-cat{margin:32px 0 12px}
 .faq-cat:first-of-type{margin-top:8px}
-.faq{background:var(--surface);border:1px solid var(--line);border-radius:14px;margin-bottom:10px;overflow:hidden;transition:border-color .2s,box-shadow .2s}
-.faq.open{border-color:rgba(0,212,255,.4);box-shadow:0 10px 30px rgba(0,212,255,.08)}
-.faq-q{display:flex;align-items:center;justify-content:space-between;gap:16px;width:100%;background:none;border:0;text-align:left;font-family:inherit;font-size:15.5px;font-weight:600;color:var(--ink);padding:18px 20px;cursor:pointer}
-.faq-plus{flex-shrink:0;width:24px;height:24px;position:relative;color:var(--accent-ink);transition:transform .25s cubic-bezier(.2,.8,.2,1)}
+.faq-cat .eyebrow{color:var(--muted)}
+.faq{background:var(--card);border:1px solid var(--line);border-radius:12px;margin-bottom:8px;overflow:hidden;transition:border-color .2s,box-shadow .2s}
+.faq:hover{border-color:#2A2A2A}
+.faq.open{border-color:rgba(0,212,255,.4);box-shadow:0 10px 30px rgba(0,212,255,.06)}
+.faq-q{display:flex;align-items:center;justify-content:space-between;gap:16px;width:100%;background:none;border:0;text-align:left;font-size:16px;font-weight:500;letter-spacing:-.2px;color:var(--ink);padding:20px 24px;cursor:pointer}
+.faq-plus{flex-shrink:0;width:24px;height:24px;position:relative;color:var(--muted);transition:transform .25s cubic-bezier(.2,.8,.2,1),color .2s}
+.faq.open .faq-plus,.faq-q:hover .faq-plus{color:var(--cyan)}
 .faq-plus::before,.faq-plus::after{content:"";position:absolute;background:currentColor;border-radius:2px}
-.faq-plus::before{left:50%;top:5px;width:2px;height:14px;transform:translateX(-50%)}
-.faq-plus::after{top:50%;left:5px;height:2px;width:14px;transform:translateY(-50%)}
+.faq-plus::before{left:50%;top:6px;width:1.5px;height:12px;transform:translateX(-50%)}
+.faq-plus::after{top:50%;left:6px;height:1.5px;width:12px;transform:translateY(-50%)}
 .faq.open .faq-plus{transform:rotate(135deg)}
 .faq-a{max-height:0;overflow:hidden;transition:max-height .3s cubic-bezier(.2,.8,.2,1)}
-.faq-a p{margin:0;padding:0 20px 20px;font-size:14.5px;color:var(--muted);line-height:1.65}
-.faq-empty{display:none;padding:28px;text-align:center;color:var(--muted);font-size:14.5px}
+.faq-a p{margin:0;padding:0 24px 24px;font-size:15px;color:var(--muted);line-height:1.65;max-width:68ch;text-wrap:pretty}
+.faq-empty{display:none;padding:32px;text-align:center;color:var(--muted);font-size:15px;border:1px dashed var(--line);border-radius:12px}
 .faq-empty.show{display:block}
 
 /* ── contact cta ──────────────────────────────────────────────── */
-.cta{position:relative;text-align:center;padding:44px 32px;border-radius:var(--r-lg);overflow:hidden}
-.cta::before{content:"";position:absolute;inset:0;pointer-events:none;background:radial-gradient(460px 300px at 50% 0%,rgba(0,212,255,.12),transparent 70%)}
+.cta{position:relative;text-align:center;padding:48px 32px;border-radius:var(--r-block);overflow:hidden;background:radial-gradient(80% 90% at 50% 120%,rgba(0,212,255,.18),transparent 62%),var(--bg-2)}
+.cta::before{content:"";position:absolute;inset:0;pointer-events:none;background:radial-gradient(460px 300px at 50% 0%,rgba(0,212,255,.10),transparent 70%)}
 .cta-in{position:relative;z-index:1}
-.cta h2{font-size:clamp(22px,3vw,30px);margin:0 0 10px}
-.cta p{color:var(--muted);margin:0 auto 24px;max-width:460px}
-.cta-row{display:inline-flex;gap:12px;flex-wrap:wrap;justify-content:center}
+.cta h2{font-size:clamp(24px,2.6vw,32px);line-height:1.08;margin:0 0 12px}
+.cta p{color:var(--muted);margin:0 auto 24px;max-width:460px;text-wrap:pretty}
+.cta-row{display:inline-flex;gap:8px;flex-wrap:wrap;justify-content:center}
+
+/* ═══ FOOTER (structure copied from index.html) ══════════════════════ */
+.foot{background:radial-gradient(70% 60% at 85% 0%,rgba(0,212,255,.10),transparent 64%),var(--bg-2);border:1px solid var(--line);color:var(--ink);margin:var(--gutter);border-radius:var(--r-block);padding:clamp(64px,2.29vw + 55.1px,88px) clamp(24px,2.29vw + 15.1px,48px) 32px}
+.foot-top,.foot-cols,.foot-base{width:100%;max-width:var(--col);margin-inline:auto}
+.foot-top{display:grid;grid-template-columns:1fr;gap:48px;align-items:start}
+@media(min-width:901px){.foot-top{grid-template-columns:.85fr 1.15fr;gap:clamp(48px,1.2vw + 37.2px,56px)}}
+.news label{display:block;font-size:12px;text-transform:uppercase;letter-spacing:.08em;font-weight:600;color:var(--muted);margin-bottom:14px}
+.news-pill{display:flex;align-items:center;gap:8px;padding:6px 6px 6px 18px;background:var(--card-2);border:1px solid var(--line);border-radius:999px;max-width:390px}
+.news-pill input{flex:1;min-width:0;background:transparent;border:0;height:32px;font-size:13px;color:var(--ink)}
+.news-pill input::placeholder{color:var(--muted)}
+.news-pill:focus-within{border-color:rgba(0,212,255,.5)}
+.news-pill input:focus{outline:0}
+.news-pill .btn{border-radius:999px}
+.news-msg{font-size:12px;color:var(--muted);margin-top:12px;min-height:16px}
+.foot-serif{font-family:var(--display);font-weight:700;line-height:1.02;letter-spacing:-.02em;font-size:clamp(32px,5.2vw,62px);color:var(--ink)}
+.foot-serif .row:nth-child(2){margin-left:.8em}
+.foot-serif .row:nth-child(3){margin-left:.3em}
+.foot-serif .row:nth-child(4){margin-left:1.5em}
+.foot-cols{display:grid;grid-template-columns:1fr 1fr;gap:32px;margin-top:64px;padding-top:48px;border-top:1px solid var(--line)}
+@media(min-width:901px){.foot-cols{grid-template-columns:repeat(4,1fr);gap:32px;margin-top:88px}}
+.foot-cols h4{font-size:12px;text-transform:uppercase;letter-spacing:.08em;font-weight:600;color:var(--muted);margin-bottom:16px}
+.foot-cols a{display:block;font-size:clamp(13.5px,.14vw + 13px,15px);color:rgba(245,245,245,.86);padding:5px 0;transition:color .18s}
+.foot-cols a:hover{color:var(--cyan)}
+.foot-copy{display:inline-flex;align-items:center;gap:8px}
+.foot-copy .prism{display:block;width:auto;height:16px;color:var(--cyan);flex-shrink:0}
+.foot-base{display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;margin-top:48px;padding-top:24px;border-top:1px solid var(--line);font-size:clamp(12px,.1vw + 11.6px,13px);color:var(--muted);letter-spacing:-.16px}
+.foot-social{display:flex;gap:8px}
+.foot-social a{width:32px;height:32px;border-radius:50%;display:grid;place-items:center;box-shadow:inset 0 0 0 1px var(--line);color:var(--ink);transition:box-shadow .18s,color .18s}
+.foot-social a:hover{box-shadow:inset 0 0 0 1px var(--cyan);color:var(--cyan)}
 </style>
 </head>
 <body>
 
 <div id="prog"></div>
-<nav class="nav"><div class="nav-in"><a class="brand" href="index.html"><b>CYNEA</b><span>VOICE ENGINE</span></a><div class="nav-links"><a href="index.html#agents">Agents</a><a href="index.html#platform">Platform</a><a href="product_tour.html">Product tour</a><a href="agent_manager.html">Dashboard</a><a class="active" href="help_center.html">Docs</a></div><div class="nav-right"><a class="nav-signin" href="signin.html">Sign in</a><a class="btn btn-dark btn-sm" href="https://calendly.com/albertmomanyi07/30min" target="_blank" rel="noopener">Get started</a></div></div></nav>
+
+<!-- ═══ NAV ══════════════════════════════════════════════════════════ -->
+<nav class="nav" id="nav">
+  <div class="nav-in">
+    <a class="logo" href="index.html" aria-label="Cynea"><svg class="prism" viewBox="14 2 30 52" width="15" height="26" aria-hidden="true" focusable="false"><g transform="translate(2,2)"><path d="M28 2 L38 2 L40 4 L40 9 L34 15 L34 37 L40 43 L40 48 L38 50 L28 50 L18 43 L14 30 L14 22 L18 9 Z" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linejoin="bevel"/><path d="M22 12 L34 6 L34 15 L27 23 Z" fill="currentColor" fill-opacity=".18"/><path d="M22 40 L34 46 L34 37 L27 29 Z" fill="currentColor" fill-opacity=".09"/><circle cx="26" cy="26" r="2.5" fill="currentColor"/></g></svg><span class="logo-word" aria-hidden="true">Cynea</span></a>
+    <div class="nav-links" id="nav-links">
+      <a href="index.html#try-demo">Live demo</a>
+      <a href="live-call.html">Live call</a>
+      <a href="index.html#agents">Agents</a>
+      <a href="index.html#highlights">Product</a>
+      <a href="index.html#channels">Channels</a>
+      <a href="index.html#telephony">Telephony</a>
+      <a href="index.html#faq">FAQ</a>
+    </div>
+    <div class="nav-cta">
+      <a class="btn btn-line" href="signin.html">Sign in</a>
+      <a class="btn btn-navy" href="index.html#try-demo">Get a call</a>
+    </div>
+    <button class="nav-burger" id="nav-burger" type="button"
+            aria-expanded="false" aria-controls="nav-links" aria-label="Menu">
+      <span aria-hidden="true"></span><span aria-hidden="true"></span>
+    </button>
+  </div>
+</nav>
 
 <main>
 
@@ -156,61 +275,61 @@ h1,h2,h3{letter-spacing:-.02em;font-weight:600;margin:0}.muted{color:var(--muted
 
         <div class="faq-cat"><span class="eyebrow">Getting started</span></div>
         <div class="faq" data-faq>
-          <button class="faq-q" type="button">How do I create a voice agent?<span class="faq-plus" aria-hidden="true"></span></button>
+          <button class="faq-q" type="button" aria-expanded="false">How do I create a voice agent?<span class="faq-plus" aria-hidden="true"></span></button>
           <div class="faq-a"><p>From your dashboard, start a new agent and follow the guided setup: give it a name and persona, add your content, pick a voice, then connect a phone number. Most teams have a working agent in a few minutes.</p></div>
         </div>
         <div class="faq" data-faq>
-          <button class="faq-q" type="button">What can my agent handle?<span class="faq-plus" aria-hidden="true"></span></button>
+          <button class="faq-q" type="button" aria-expanded="false">What can my agent handle?<span class="faq-plus" aria-hidden="true"></span></button>
           <div class="faq-a"><p>Agents handle conversational tasks such as answering common questions, booking appointments, qualifying leads, taking simple requests, and routing callers. The more relevant content you upload, the better it represents your business.</p></div>
         </div>
         <div class="faq" data-faq>
-          <button class="faq-q" type="button">Do I need technical skills to get started?<span class="faq-plus" aria-hidden="true"></span></button>
+          <button class="faq-q" type="button" aria-expanded="false">Do I need technical skills to get started?<span class="faq-plus" aria-hidden="true"></span></button>
           <div class="faq-a"><p>No. The dashboard is built for operations and support teams. You upload your existing scripts and documents and configure the agent through the interface — no coding required.</p></div>
         </div>
 
         <div class="faq-cat"><span class="eyebrow">Voice &amp; language</span></div>
         <div class="faq" data-faq>
-          <button class="faq-q" type="button">What voices are available?<span class="faq-plus" aria-hidden="true"></span></button>
+          <button class="faq-q" type="button" aria-expanded="false">What voices are available?<span class="faq-plus" aria-hidden="true"></span></button>
           <div class="faq-a"><p>A range of natural, human-like voices with different tones and styles. You can preview each voice in the dashboard and switch at any time before or after deploying.</p></div>
         </div>
         <div class="faq" data-faq>
-          <button class="faq-q" type="button">Can the agent handle different accents?<span class="faq-plus" aria-hidden="true"></span></button>
+          <button class="faq-q" type="button" aria-expanded="false">Can the agent handle different accents?<span class="faq-plus" aria-hidden="true"></span></button>
           <div class="faq-a"><p>Yes. Speech recognition is designed to understand a wide variety of speakers and accents. Adding example phrases and domain terms from your business helps accuracy in your specific use case.</p></div>
         </div>
         <div class="faq" data-faq>
-          <button class="faq-q" type="button">What languages do you support?<span class="faq-plus" aria-hidden="true"></span></button>
-          <div class="faq-a"><p>Cynea supports human-like conversation in multiple languages, with more added over time. Check the dashboard for the current list, and reach out if you need a specific language for your market.</p></div>
+          <button class="faq-q" type="button" aria-expanded="false">What languages do you support?<span class="faq-plus" aria-hidden="true"></span></button>
+          <div class="faq-a"><p>Cynea supports human-like conversation in multiple languages, with more added over time. Check the dashboard for the current list, and reach out if your callers need a specific language.</p></div>
         </div>
 
         <div class="faq-cat"><span class="eyebrow">Pricing &amp; billing</span></div>
         <div class="faq" data-faq>
-          <button class="faq-q" type="button">How much does it cost?<span class="faq-plus" aria-hidden="true"></span></button>
+          <button class="faq-q" type="button" aria-expanded="false">How much does it cost?<span class="faq-plus" aria-hidden="true"></span></button>
           <div class="faq-a"><p>Pricing is usage-based, so you pay for what you use. For current rates and plan options that fit your call volume, talk to our team and we will put together pricing for your needs.</p></div>
         </div>
         <div class="faq" data-faq>
-          <button class="faq-q" type="button">Is there a free trial?<span class="faq-plus" aria-hidden="true"></span></button>
+          <button class="faq-q" type="button" aria-expanded="false">Is there a free trial?<span class="faq-plus" aria-hidden="true"></span></button>
           <div class="faq-a"><p>You can try Cynea before committing. Book a session with our team and we will set you up so you can build an agent and hear it in action.</p></div>
         </div>
         <div class="faq" data-faq>
-          <button class="faq-q" type="button">How does billing work?<span class="faq-plus" aria-hidden="true"></span></button>
+          <button class="faq-q" type="button" aria-expanded="false">How does billing work?<span class="faq-plus" aria-hidden="true"></span></button>
           <div class="faq-a"><p>Billing is based on your usage over each period. You can review activity in the dashboard, and our team can help you set up the plan and limits that work for your account.</p></div>
         </div>
 
         <div class="faq-cat"><span class="eyebrow">Telephony</span></div>
         <div class="faq" data-faq>
-          <button class="faq-q" type="button">Which telephony providers are supported?<span class="faq-plus" aria-hidden="true"></span></button>
-          <div class="faq-a"><p>Cynea connects to phone numbers through Twilio and major carriers worldwide. Our team helps you link a number and get your agent live for inbound and outbound calls.</p></div>
+          <button class="faq-q" type="button" aria-expanded="false">Which telephony providers are supported?<span class="faq-plus" aria-hidden="true"></span></button>
+          <div class="faq-a"><p>Cynea connects to phone numbers through Twilio and other major carriers. Our team helps you link a number and get your agent live for inbound and outbound calls.</p></div>
         </div>
         <div class="faq" data-faq>
-          <button class="faq-q" type="button">Can the agent transfer a call to a human?<span class="faq-plus" aria-hidden="true"></span></button>
+          <button class="faq-q" type="button" aria-expanded="false">Can the agent transfer a call to a human?<span class="faq-plus" aria-hidden="true"></span></button>
           <div class="faq-a"><p>Yes. You can define when a call should escalate, and the agent will hand off to a team member so the caller reaches the right person when needed.</p></div>
         </div>
         <div class="faq" data-faq>
-          <button class="faq-q" type="button">How do I deploy my agent to a phone number?<span class="faq-plus" aria-hidden="true"></span></button>
+          <button class="faq-q" type="button" aria-expanded="false">How do I deploy my agent to a phone number?<span class="faq-plus" aria-hidden="true"></span></button>
           <div class="faq-a"><p>Once your agent is configured, connect it to a phone number through a supported provider and publish it. After that, calls to that number are answered by your agent.</p></div>
         </div>
 
-        <div class="faq-empty" id="faqEmpty">No answers match your search. Try a different term, or contact our team below.</div>
+        <div class="faq-empty" id="faqEmpty" role="status">No answers match your search. Try a different term, or contact our team below.</div>
       </div>
     </div>
   </section>
@@ -223,8 +342,8 @@ h1,h2,h3{letter-spacing:-.02em;font-weight:600;margin:0}.muted{color:var(--muted
           <h2>Still need help?</h2>
           <p>Talk to our team about your use case, or browse the source and examples on GitHub.</p>
           <div class="cta-row">
-            <a class="btn btn-dark" href="https://calendly.com/albertmomanyi07/30min" target="_blank" rel="noopener">Contact sales</a>
-            <a class="btn" href="https://github.com/Mars2390/cynea-voice-engine" target="_blank" rel="noopener">View on GitHub</a>
+            <a class="btn btn-dark btn-lg" href="https://calendly.com/albertmomanyi07/30min" target="_blank" rel="noopener">Contact sales</a>
+            <a class="btn btn-line btn-lg" href="https://github.com/Mars2390/cynea-voice-engine" target="_blank" rel="noopener">View on GitHub</a>
           </div>
         </div>
       </div>
@@ -233,11 +352,111 @@ h1,h2,h3{letter-spacing:-.02em;font-weight:600;margin:0}.muted{color:var(--muted
 
 </main>
 
-<footer class="foot"><div class="foot-in"><div class="foot-brand"><a class="brand" href="index.html"><b>CYNEA</b><span>VOICE ENGINE</span></a><p>Human-like AI voice agents for businesses worldwide.</p></div><div class="foot-col"><h4>Product</h4><a href="index.html#agents">Agents</a><a href="index.html#platform">Platform</a><a href="agent_manager.html">Dashboard</a><a href="demo_call_flow.html">Live demo</a></div><div class="foot-col"><h4>Resources</h4><a href="product_tour.html">Product tour</a><a href="help_center.html">Docs</a><a href="https://github.com/Mars2390/cynea-voice-engine" target="_blank" rel="noopener">GitHub</a></div><div class="foot-col"><h4>Company</h4><a href="signin.html">Sign in</a><a href="https://calendly.com/albertmomanyi07/30min" target="_blank" rel="noopener">Contact sales</a><span>Voice AI for every market</span></div></div></footer>
+<!-- ═══ FOOTER ═══════════════════════════════════════════════════════ -->
+<footer class="foot">
+  <div class="foot-top">
+    <div class="news">
+      <label for="news-email">Newsletter</label>
+      <form class="news-pill" id="news-form">
+        <input id="news-email" type="email" placeholder="you@company.com" autocomplete="email" aria-label="Email address">
+        <button class="btn btn-dark" type="submit">Subscribe</button>
+      </form>
+      <!-- No mailing-list provider is connected; submitting sends nothing. -->
+      <p class="news-msg" id="news-msg" role="status"></p>
+    </div>
+
+    <div class="foot-serif" aria-label="Real people. Real voices.">
+      <div class="row">Real</div>
+      <div class="row">people.</div>
+      <div class="row">Real</div>
+      <div class="row">voices.</div>
+    </div>
+  </div>
+
+  <div class="foot-cols">
+    <div>
+      <h4>Products</h4>
+      <a href="index.html#try-demo">Live demo</a>
+      <a href="index.html#highlights">Voice agents</a>
+      <a href="index.html#telephony">Telephony</a>
+      <a href="index.html#channels">Channels</a>
+    </div>
+    <div>
+      <h4>Solutions</h4>
+      <a href="index.html#try-demo">Hotels</a>
+      <a href="index.html#try-demo">Banking</a>
+      <a href="index.html#try-demo">Restaurants</a>
+      <a href="index.html#try-demo">Clinics</a>
+    </div>
+    <div>
+      <h4>Resources</h4>
+      <a href="help_center.html" aria-current="page">Help center</a>
+      <a href="product_tour.html">Product tour</a>
+      <a href="demo_call_flow.html">Call flow</a>
+      <a href="index.html#faq">FAQ</a>
+    </div>
+    <div>
+      <h4>Company</h4>
+      <a href="index.html">About</a>
+      <a href="https://calendly.com/albertmomanyi07/30min" target="_blank" rel="noopener">Contact sales</a>
+      <a href="signin.html">Sign in</a>
+      <a href="dashboard.html">Dashboard</a>
+    </div>
+  </div>
+
+  <div class="foot-base">
+    <span class="foot-copy"><svg class="prism" viewBox="14 2 30 52" width="15" height="26" aria-hidden="true" focusable="false"><g transform="translate(2,2)"><path d="M28 2 L38 2 L40 4 L40 9 L34 15 L34 37 L40 43 L40 48 L38 50 L28 50 L18 43 L14 30 L14 22 L18 9 Z" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linejoin="bevel"/><path d="M22 12 L34 6 L34 15 L27 23 Z" fill="currentColor" fill-opacity=".18"/><path d="M22 40 L34 46 L34 37 L27 29 Z" fill="currentColor" fill-opacity=".09"/><circle cx="26" cy="26" r="2.5" fill="currentColor"/></g></svg>© 2026 Cynea AI · Made with real voices</span>
+    <!-- These accounts do not exist yet, so the links are inert. -->
+    <div class="foot-social">
+      <a href="#" aria-label="X (placeholder — no account yet)"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M18.2 2h3.4l-7.4 8.5L23 22h-6.8l-5.3-7-6.1 7H1.4l7.9-9.1L1 2h7l4.8 6.4zm-1.2 18h1.9L7.1 4H5z"/></svg></a>
+      <a href="#" aria-label="LinkedIn (placeholder — no account yet)"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M4.98 3.5A2.5 2.5 0 1 1 0 3.5a2.5 2.5 0 0 1 4.98 0zM.4 8.2h4.2V24H.4zM8.5 8.2h4v2.2h.06c.56-1.06 1.94-2.2 4-2.2 4.3 0 5.1 2.8 5.1 6.5V24h-4.2v-6.9c0-1.65-.03-3.8-2.3-3.8-2.3 0-2.66 1.8-2.66 3.66V24H8.5z"/></svg></a>
+      <a href="#" aria-label="GitHub (placeholder — no account yet)"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 .5a12 12 0 0 0-3.8 23.4c.6.1.8-.26.8-.57v-2c-3.3.7-4-1.6-4-1.6-.55-1.4-1.34-1.77-1.34-1.77-1.1-.74.08-.73.08-.73 1.2.09 1.84 1.24 1.84 1.24 1.07 1.84 2.8 1.3 3.5 1 .1-.78.42-1.3.76-1.6-2.66-.3-5.46-1.33-5.46-5.93 0-1.3.47-2.38 1.24-3.22-.13-.3-.54-1.52.12-3.18 0 0 1-.32 3.3 1.23a11.5 11.5 0 0 1 6 0C17.99 4.7 19 5.02 19 5.02c.66 1.66.25 2.88.12 3.18a4.65 4.65 0 0 1 1.24 3.22c0 4.61-2.8 5.63-5.48 5.92.43.37.81 1.1.81 2.22v3.3c0 .31.2.68.8.56A12 12 0 0 0 12 .5z"/></svg></a>
+    </div>
+  </div>
+</footer>
 
 <script>'use strict';var prog=document.getElementById('prog');if(prog)addEventListener('scroll',function(){var h=document.documentElement;prog.style.width=(h.scrollTop/(h.scrollHeight-h.clientHeight||1)*100)+'%';},{passive:true});var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target);}});},{threshold:.12});document.querySelectorAll('.rv').forEach(function(el){io.observe(el);});</script>
 
 <script>'use strict';
+// ── Nav: links panel below 900px (same behaviour as index.html) ──
+(function(){
+  var btn=document.getElementById('nav-burger'),
+      panel=document.getElementById('nav-links');
+  if(!btn||!panel) return;
+  function set(open){
+    btn.setAttribute('aria-expanded',open?'true':'false');
+    panel.classList.toggle('open',open);
+  }
+  btn.addEventListener('click',function(){
+    set(btn.getAttribute('aria-expanded')!=='true');
+  });
+  panel.addEventListener('click',function(e){
+    if(e.target.closest && e.target.closest('a')) set(false);
+  });
+  addEventListener('keydown',function(e){
+    if(e.key==='Escape'&&btn.getAttribute('aria-expanded')==='true'){ set(false); btn.focus(); }
+  });
+  var wide=matchMedia('(min-width:901px)');
+  function sync(e){ if(e.matches) set(false); }
+  if(wide.addEventListener) wide.addEventListener('change',sync);
+  else if(wide.addListener) wide.addListener(sync);
+})();
+// ── Nav hairline on scroll ─────────────────────────────────────
+(function(){
+  var nav=document.getElementById('nav');
+  if(!nav) return;
+  function s(){ nav.classList.toggle('stuck',scrollY>8); }
+  addEventListener('scroll',s,{passive:true}); s();
+})();
+// ── Newsletter (no provider wired up yet) ──────────────────────
+(function(){
+  var f=document.getElementById('news-form'),m=document.getElementById('news-msg');
+  if(!f) return;
+  f.addEventListener('submit',function(e){
+    e.preventDefault();
+    m.textContent='Newsletter isn’t live yet — nothing was sent.';
+  });
+})();
 // ── Accordion ──────────────────────────────────────────────────
 (function(){
   var faqs=document.querySelectorAll('[data-faq]');
@@ -248,6 +467,7 @@ h1,h2,h3{letter-spacing:-.02em;font-weight:600;margin:0}.muted{color:var(--muted
       var open=faq.classList.contains('open');
       if(open){faq.classList.remove('open');a.style.maxHeight=null;}
       else{faq.classList.add('open');a.style.maxHeight=a.scrollHeight+'px';}
+      q.setAttribute('aria-expanded',open?'false':'true');
     });
   });
 })();

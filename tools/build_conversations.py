@@ -121,9 +121,9 @@ SCRIPT: dict[str, dict] = {
     "kwame": {
         "audio": "kwame_full_conversation.mp3",
         "agent": {"name": "Kwame", "role": "Hotel Receptionist",
-                  "where": "Adinkra Hotel · Accra", "avatar": "avatar-kwame"},
+                  "where": "Adinkra Hotel", "avatar": "avatar-kwame"},
         "caller": {"name": "David Osei", "role": "Guest",
-                   "where": "Calling from Accra", "avatar": None},
+                   "where": "Planning an anniversary", "avatar": None},
         "title": "Kwame Assistant",
         "summary": "A guest books a tenth-anniversary weekend. Kwame recommends "
                    "a suite, prices it, adds a package, and takes the booking.",
@@ -153,9 +153,9 @@ SCRIPT: dict[str, dict] = {
     "amina": {
         "audio": "amina_full_conversation.mp3",
         "agent": {"name": "Amina", "role": "Bank Support",
-                  "where": "Cynea Bank · Nairobi", "avatar": "avatar-amina"},
+                  "where": "Cynea Bank", "avatar": "avatar-amina"},
         "caller": {"name": "Caller", "role": "Customer",
-                   "where": "Calling from Nairobi", "avatar": None},
+                   "where": "Chasing a stuck transfer", "avatar": None},
         "title": "Amina Assistant",
         "summary": "An M-Pesa transfer is stuck. Amina finds it, escalates it, "
                    "and commits to a callback window and a reversal rather than "

@@ -23,12 +23,20 @@ log = logging.getLogger("cynea.dashboard")
 
 # Agent display metadata. The database stores which persona an agent uses;
 # these are the presentation details the console shows beside it.
+# `name` is what the agent is called on screen, which is not always the
+# persona key: the "kwame" persona is presented as Peter. Keys stay as they
+# are because they are stored in agents.persona and in asset file names.
+# No location labels: the product is positioned for every market.
 PERSONA_META = {
-    "kwame": {"role": "Hotel Receptionist",   "place": "Ghana",       "photo": "avatar-kwame"},
-    "amina": {"role": "Bank Support",          "place": "Kenya",       "photo": "avatar-amina"},
-    "kofi":  {"role": "Restaurant Orders",     "place": "Ghana",       "photo": "avatar-kofi"},
-    "maya":  {"role": "Bookings & Scheduling", "place": "Pan-African", "photo": "avatar-maya"},
+    "kwame": {"name": "Peter", "role": "Hotel Receptionist",    "photo": "avatar-kwame"},
+    "amina": {"name": "Amina", "role": "Bank Support",          "photo": "avatar-amina"},
+    "kofi":  {"name": "Kofi",  "role": "Restaurant Orders",     "photo": "avatar-kofi"},
+    "maya":  {"name": "Maya",  "role": "Bookings & Scheduling", "photo": "avatar-maya"},
 }
+
+
+def _display_name(persona: str) -> str:
+    return PERSONA_META.get(persona, {}).get("name") or persona.title()
 
 _STATUS_TO_BADGE = {"resolved": "ok", "escalated": "warn", "abandoned": "bad"}
 
@@ -105,7 +113,7 @@ def get_call_history(agent_id: Optional[str] = None, limit: int = 50,
                 "id": call.id,
                 "time": created.strftime("%H:%M") if created else "--:--",
                 "date": created.strftime("%Y-%m-%d") if created else None,
-                "agent": agent.persona.title(),
+                "agent": _display_name(agent.persona),
                 "agent_id": agent.id,
                 "persona": agent.persona,
                 "photo": meta.get("photo", "avatar-kwame"),
@@ -150,14 +158,14 @@ def get_call_detail(call_id: str) -> Optional[dict]:
         is_caller = speaker.strip().lower() == "caller"
         turns.append({
             "speaker": "caller" if is_caller else "agent",
-            "label": "Caller" if is_caller else f"{agent.persona.title()} · agent",
+            "label": "Caller" if is_caller else f"{_display_name(agent.persona)} · agent",
             "text": text.strip(),
         })
 
     meta = PERSONA_META.get(agent.persona, {})
     return {
         "id": call.id,
-        "agent": agent.persona.title(),
+        "agent": _display_name(agent.persona),
         "persona": agent.persona,
         "photo": meta.get("photo", "avatar-kwame"),
         "time": call.created_at.strftime("%H:%M") if call.created_at else "--:--",
@@ -249,9 +257,8 @@ def get_dashboard_stats(user_id: Optional[str] = None) -> dict:
             ) or 0
             agent_cards.append({
                 "id": a.id,
-                "name": a.persona.title(),
+                "name": _display_name(a.persona),
                 "role": meta.get("role", "Voice agent"),
-                "place": meta.get("place", ""),
                 "photo": meta.get("photo", "avatar-kwame"),
                 "persona": a.persona,
                 "calls_today": n_today,
@@ -284,7 +291,7 @@ def get_dashboard_stats(user_id: Optional[str] = None) -> dict:
         "volume": volume,
         "sentiment": sentiment_series,
         "cost_breakdown": [
-            {"k": persona.title(), "v": round(cents / 100, 2), "calls": int(n)}
+            {"k": _display_name(persona), "v": round(cents / 100, 2), "calls": int(n)}
             for persona, n, cents, _ in by_agent
         ],
         "agents": agent_cards,
@@ -322,7 +329,7 @@ def get_live_queue(user_id: Optional[str] = None) -> List[dict]:
             "cat": (call.transcript or "").splitlines()[0][:40] if call.transcript else "In progress",
             "wait": _mmss(waited),
             "wait_s": waited,
-            "agent": agent.persona.title(),
+            "agent": _display_name(agent.persona),
             "hot": waited > 120,
         })
     return out

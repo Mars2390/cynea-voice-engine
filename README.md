@@ -15,7 +15,7 @@ Honest summary, because the gap between "written" and "wired up" matters:
 |---|---|
 | Conversation core (barge-in, history, turn-taking) | **Working**, 152 tests |
 | LLM → speech pipeline | **Working** end to end |
-| Personas (Kwame, Amina, Kofi, Maya) | **Working** |
+| Personas (Peter, Amina, Kofi, Maya) | **Working** |
 | Database layer | **Working** (Neon Postgres / SQLite) |
 | HTTP API server | **Working** — auth, agents, calls, dashboard |
 | Auth (bcrypt + sessions) | **Working** |
@@ -73,7 +73,7 @@ async def main():
     })
 
     greeting = await engine.start()
-    print(greeting.text)            # "Adinkra Hotel, this is Kwame..."
+    print(greeting.text)            # "Adinkra Hotel, this is Peter..."
     print(len(greeting.audio))      # synthesised MP3 bytes, ready to play
 
     turn = await engine.process_audio(AudioChunk(data=pcm, sample_rate=16000))
@@ -160,7 +160,7 @@ a first message, a speech-pattern spec, and a conversation flowchart.
 
 | Persona | Role | Market | Voice |
 |---|---|---|---|
-| **Kwame** | Hotel receptionist | Accra, Ghana | `en-GB-RyanNeural` |
+| **Peter** (`kwame`) | Hotel receptionist | Accra, Ghana | `en-GB-RyanNeural` |
 | **Amina** | Bank support | Nairobi, Kenya | `en-GB-SoniaNeural` |
 | **Kofi** | Restaurant orders | Ghana | `en-GB-RyanNeural` |
 | **Maya** | Bookings & scheduling | Pan-African | `en-US-AriaNeural` |
@@ -255,7 +255,7 @@ user  = db.create_user("ama@example.com", password_hash)
 agent = db.create_agent(user.id, "Front Desk", "kwame", {"voice": "en-GB-RyanNeural"})
 db.log_call(agent.id, "+233240004417", 79, transcript="...",
             sentiment=0.62, cost=5, status="resolved")   # cost is integer CENTS
-db.save_prompt_version(agent.id, "# Kwame\n...")         # auto-numbered
+db.save_prompt_version(agent.id, "# Peter\n...")         # auto-numbered
 ```
 
 `users → agents → {calls, prompt_versions}`, cascading deletes, UUID keys.

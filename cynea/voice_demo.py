@@ -156,7 +156,7 @@ def demo_config(persona: str) -> AgentConfig:
 
     voice = spec.get("voice") or {}
     return AgentConfig(
-        name=spec.get("name", persona).title(),
+        name=spec.get("display") or spec.get("name", persona).title(),
         system_prompt=demo_prompt(spec["prompt"]),
         first_message=(DEMO_GREETING if persona.lower() == DEFAULT_PERSONA
                        else spec.get("first_message", "")),

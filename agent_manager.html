@@ -228,7 +228,7 @@ table.tbl .act .btn{padding:6px 11px;font-size:12px;margin-left:6px}
 <body>
 
 <div id="prog"></div>
-<nav class="nav"><div class="nav-in"><a class="brand" href="index.html" aria-label="Cynea"><svg class="prism" viewBox="14 2 30 52" width="11" height="19" aria-hidden="true" focusable="false"><g transform="translate(2,2)"><path d="M28 2 L38 2 L40 4 L40 9 L34 15 L34 37 L40 43 L40 48 L38 50 L28 50 L18 43 L14 30 L14 22 L18 9 Z" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linejoin="bevel"/><path d="M22 12 L34 6 L34 15 L27 23 Z" fill="currentColor" fill-opacity=".18"/><path d="M22 40 L34 46 L34 37 L27 29 Z" fill="currentColor" fill-opacity=".09"/><circle cx="26" cy="26" r="2.5" fill="currentColor"/></g></svg><b>Cynea</b></a><div class="nav-links"><a href="dashboard.html">Dashboard</a><a class="active" href="agent_manager.html">Agents</a><a href="dashboard.html#history">Call history</a><a href="help_center.html">Docs</a></div><div class="nav-right"><a class="nav-signin" href="signin.html">Sign in</a><a class="btn btn-dark btn-sm" href="dashboard.html">Operations</a></div></div></nav>
+<nav class="nav"><div class="nav-in"><a class="brand" href="index.html" aria-label="Cynea"><svg class="prism" viewBox="14 2 30 52" width="11" height="19" aria-hidden="true" focusable="false"><g transform="translate(2,2)"><path d="M28 2 L38 2 L40 4 L40 9 L34 15 L34 37 L40 43 L40 48 L38 50 L28 50 L18 43 L14 30 L14 22 L18 9 Z" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linejoin="bevel"/><path d="M22 12 L34 6 L34 15 L27 23 Z" fill="currentColor" fill-opacity=".18"/><path d="M22 40 L34 46 L34 37 L27 29 Z" fill="currentColor" fill-opacity=".09"/><circle cx="26" cy="26" r="2.5" fill="currentColor"/></g></svg><b>Cynea</b></a><div class="nav-links"><a href="dashboard.html">Dashboard</a><a class="active" href="agent_manager.html">Agents</a><a href="dashboard.html#history">Call history</a><a href="help_center.html">Docs</a></div><div class="nav-right"><a class="nav-signin" id="navSign" href="signin.html">Sign in</a><a class="btn btn-dark btn-sm" href="dashboard.html">Operations</a></div></div></nav>
 
 <main class="wrap">
 
@@ -409,7 +409,7 @@ var API = {
 /* Persona presentation details. The database stores which persona an
    agent uses; these are the colours and clips the cards render with. */
 var PERSONA_UI = {
-  kwame: {c1:'#00D4FF', c2:'#0088AA', img:'assets/avatar-kwame.jpg', audio:'assets/kwame_real_voice.mp3'},
+  kwame: {name:'Peter', c1:'#00D4FF', c2:'#0088AA', img:'assets/avatar-kwame.jpg', audio:'assets/kwame_real_voice.mp3'},
   amina: {c1:'#00B8E6', c2:'#0088AA', img:'assets/avatar-amina.jpg', audio:'assets/amina_real_voice.mp3'},
   kofi:  {c1:'#00D4FF', c2:'#00B8E6', img:'assets/avatar-kofi.jpg',  audio:'assets/kofi_real_voice.mp3'},
   maya:  {c1:'#00B8E6', c2:'#00D4FF', img:'assets/avatar-maya.jpg',  audio:'assets/maya_real_voice.mp3'}
@@ -664,7 +664,7 @@ function boot(){
         var live = perAgent[a.persona] || {};
         return {
           id: a.id,
-          name: a.persona.charAt(0).toUpperCase() + a.persona.slice(1),
+          name: ui.name || (a.persona.charAt(0).toUpperCase() + a.persona.slice(1)),
           role: a.role || a.name,
           voice: (a.voice_config || {}).voice || '',
           status: 'ready',
@@ -672,7 +672,7 @@ function boot(){
           containment: null,          /* per-agent containment is not computed yet */
           created: a.created_at ? a.created_at.slice(0, 10) : '',
           img: ui.img, audio: ui.audio,
-          initial: a.persona.charAt(0).toUpperCase(),
+          initial: (ui.name || a.persona).charAt(0).toUpperCase(),
           c1: ui.c1 || '#00D4FF', c2: ui.c2 || '#0088AA'
         };
       });
@@ -694,6 +694,21 @@ function boot(){
 }
 
 boot();
+</script>
+<script>
+/* The top bar used to say "Sign in" to someone already signed in. This page
+   redirects to sign-in without a token, so a visitor who can see it is
+   signed in — offer the way out instead. */
+(function(){
+  var a = document.getElementById('navSign');
+  if(!a || !localStorage.getItem('cynea_token')) return;
+  a.textContent = 'Sign out';
+  a.href = 'signin.html';
+  a.addEventListener('click', function(){
+    localStorage.removeItem('cynea_token');
+    localStorage.removeItem('cynea_email');
+  });
+})();
 </script>
 </body>
 </html>

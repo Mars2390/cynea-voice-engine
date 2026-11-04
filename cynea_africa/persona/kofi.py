@@ -10,7 +10,7 @@ common Twi tokens used sparingly).
 
 Disclosure policy (read first)
 ------------------------------
-Same pattern as Kwame and Amina: Kofi identifies as AI on the opening
+Same pattern as Peter and Amina: Kofi identifies as AI on the opening
 turn in his own register, confirms once if asked directly, and never
 repeats the literal phrase "I am an AI assistant" (which is itself a
 robotic tell). The disclosure is honest, brief, and does not break the
@@ -44,11 +44,11 @@ Modules exported
 # =====================================================================
 # Numerical parameters consumed by the audio post-processing layer
 # (TTS rate, pause injection, prosody shaping). Tuned tighter than
-# Kwame: order-taking calls reward speed over warmth, and Ghanaian
+# Peter: order-taking calls reward speed over warmth, and Ghanaian
 # restaurant agents speak fast.
 
 KOFI_SPEECH_PATTERN = {
-    # Disfluency injection — lower than hospitality (12% vs Kwame's
+    # Disfluency injection — lower than hospitality (12% vs Peter's
     # 18%). Order-takers self-correct more than they pause; the
     # distribution skews toward self-correction over filled pauses.
     "filler_frequency": 0.12,
@@ -59,20 +59,20 @@ KOFI_SPEECH_PATTERN = {
         "trail_off": 0.05,
     },
     # Tighter micro-pause band — orders move fast, no need for the
-    # 150 ms breaks Kwame uses for hospitality warmth.
+    # 150 ms breaks Peter uses for hospitality warmth.
     "micro_pause_ms": [50, 75, 100],
     # End-of-turn latency — the fastest of the three personas. Below
     # 150 ms reads artificial; above 400 ms reads as inattention on a
     # food-delivery call.
     "response_latency_ms": [150, 200, 300, 400],
     # Pitch variation around the speaker's mean F0 (semitones, ±).
-    # Slightly less than Kwame because order-taking is more matter-
+    # Slightly less than Peter because order-taking is more matter-
     # of-fact than hospitality empathy.
     "pitch_variation": 0.15,
     # Multiplicative speech-rate variation. Baseline runs slightly
     # above 1.0× — Kofi's a fast talker by design.
     "speech_rate_variation": (1.0, 1.1),
-    # Code-switch density — Twi/pidgin tokens. Lower than Kwame (3%
+    # Code-switch density — Twi/pidgin tokens. Lower than Peter (3%
     # vs 6%); too much code-switch on a transactional call slows the
     # order down.
     "code_switch_density": 0.03,
@@ -81,7 +81,7 @@ KOFI_SPEECH_PATTERN = {
     "turn_median_words": 22,
     "turn_hard_cap_words": 40,
     # Backchannel density during caller turns: lower than hospitality
-    # (15% vs Kwame's 25%) — orders flow better when the agent doesn't
+    # (15% vs Peter's 25%) — orders flow better when the agent doesn't
     # interrupt the caller's "and... and... and..." stream.
     "backchannel_density": 0.15,
     # Soft inhale before turns longer than ~14 words.
@@ -231,7 +231,7 @@ tell. Never deny being AI. Never deflect.
 
   Turn-taking dynamics:
     - Response latency: 150–400 ms, weighted toward 200–300 ms.
-      Faster than Kwame — order-takers don't have hospitality time.
+      Faster than Peter — order-takers don't have hospitality time.
       Numerics and addresses pull the latency higher (simulated
       "let me check the system").
     - Backchannel density 15% — lower than hospitality. While the
@@ -441,7 +441,7 @@ tell. Never deny being AI. Never deflect.
 
 KOFI_VOICE_CONFIG = {
     "provider": "elevenlabs",
-    # ElevenLabs "George" — British male, warm. Same voice the Kwame
+    # ElevenLabs "George" — British male, warm. Same voice the Peter
     # demo audio uses; can be A/B'd against en-NG-AbeoNeural (Edge,
     # Nigerian male) for a more West-African cadence.
     "voice": "JBFqnCBsd6RMkjVDRZzb",
@@ -460,7 +460,7 @@ KOFI_FIRST_MESSAGE = (
 
 
 # Convenience aliases for callers that prefer the documented public
-# names, matching the Kwame / Amina pattern.
+# names, matching the Peter / Amina pattern.
 KOFI_GREETING_VARIANTS = KOFI_FLOWCHART["greeting_variants"]
 
 

@@ -46,10 +46,17 @@ from cynea.models import AgentConfig
 _PERSONAS: Dict[str, dict] = {}
 
 
+# What each persona is called when it speaks or is shown. The "kwame"
+# persona keeps its key (it is stored in the database and in file names)
+# and is presented as Peter.
+_DISPLAY = {"kwame": "Peter"}
+
+
 def _register(name: str, prompt: str, voice_config: dict, first_message: str) -> None:
     """Register a persona. Called at module import time."""
     _PERSONAS[name.lower()] = {
-        "name": name.lower(),
+        "name": name.lower(),                       # the key; stored in agents.persona
+        "display": _DISPLAY.get(name.lower(), name.title()),
         "prompt": prompt,
         "voice": dict(voice_config),
         "first_message": first_message,

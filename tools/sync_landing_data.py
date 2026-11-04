@@ -36,6 +36,11 @@ PAGE = ROOT / "index.html"
 # and doubles as the placeholder text, so keep the first entry a greeting.
 PRESENTATION: dict[str, dict] = {
     "kwame": {
+        # The rest of the product presents this persona as Peter. The landing
+        # page keeps "Kwame" until the recordings are re-done, because the
+        # audio says "Adinkra Hotel, Kwame speaking". Change this to "Peter"
+        # when the new takes land, then re-run this script.
+        "name": "Kwame",
         "role": "Hotel Receptionist",
         "suggest": ["Hello", "What are your rates?", "I want to book a room", "Thank you"],
     },
@@ -78,6 +83,7 @@ def build() -> str:
         # [file, duration, text] rather than an object: this line ships to
         # every visitor, and the keys would be a third of its weight.
         agents[name] = {
+            "name": page.get("name", name.title()),
             "role": page["role"],
             "fallback": entry.get("fallback", "greeting"),
             "suggest": page["suggest"],

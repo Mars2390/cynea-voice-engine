@@ -140,13 +140,6 @@ picture{display:contents}
 .gs{display:block;width:100%;text-align:left;padding:10px;border-radius:var(--r-sm);background:var(--panel);
   transition:background .16s}
 .gs:hover{background:var(--panel-2)}
-.gs-row{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:8px}
-.gs-row b{font-size:12px;font-weight:500}
-.gs-row span{font-size:11px;color:var(--muted);font-variant-numeric:tabular-nums}
-.gs-track{height:4px;border-radius:2px;background:var(--viz-track);overflow:hidden}
-.gs-fill{height:100%;width:0%;background:var(--viz-solo);border-radius:2px}
-.trial{margin-top:12px;font-size:11px;color:var(--muted);display:flex;align-items:center;gap:6px}
-.trial i{width:6px;height:6px;border-radius:50%;background:var(--warn)}
 .who{margin-top:10px;font-size:11px;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 
 /* ── main column ──────────────────────────────────────────────────── */
@@ -162,11 +155,6 @@ picture{display:contents}
 .bar-right{margin-left:auto;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
 
 /* one filter row, above the content — never inside a chart card */
-.seg{display:inline-flex;padding:2px;background:var(--bg-2);border-radius:var(--r-sm);box-shadow:inset 0 0 0 1px var(--line)}
-.seg button{min-height:28px;padding:0 11px;border-radius:6px;font-size:12px;color:var(--muted);
-  transition:background .14s,color .14s}
-.seg button[aria-pressed="true"]{background:var(--panel-2);color:var(--ink);font-weight:500;
-  box-shadow:inset 0 0 0 1px var(--line-strong)}
 .sel{height:28px;padding:0 26px 0 10px;border-radius:var(--r-sm);font-size:12px;
   box-shadow:inset 0 0 0 1px var(--line-strong);background-color:var(--bg-3);appearance:none;cursor:pointer;
   background-image:url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' fill='none' stroke='%238A8A8A' stroke-width='1.5'%3E%3Cpath d='M1 1l4 4 4-4'/%3E%3C/svg%3E");
@@ -436,7 +424,7 @@ table.hist tbody tr:hover{background:var(--panel);cursor:pointer}
   .ed-cols{padding:14px}
   /* every interactive control clears the 44px touch minimum on mobile */
   .btn,.btn-sm{height:44px;padding-inline:16px}
-  .nav-item,.acc-h,.tab,.seg button{min-height:44px}
+  .nav-item,.acc-h,.tab{min-height:44px}
   .sel{height:44px}
   .x,.rnd,.hamb{width:44px;height:44px}
   .tbtn{min-height:44px;display:inline-flex;align-items:center}
@@ -460,7 +448,6 @@ table.hist tbody tr:hover{background:var(--panel);cursor:pointer}
         <span class="ws-av" aria-hidden="true">CW</span>
         <span>
           <b>Cynea Workspace</b>
-          <small>Free trial</small>
         </span>
         <svg width="10" height="6" viewBox="0 0 10 6" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M1 1l4 4 4-4"/></svg>
       </button>
@@ -468,76 +455,15 @@ table.hist tbody tr:hover{background:var(--panel);cursor:pointer}
 
     <nav class="side-nav" aria-label="Console">
       <div class="nav-group">
-        <span>Build</span>
-        <a class="nav-item" href="#/agents">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4.5 21c0-4.1 3.4-7.5 7.5-7.5s7.5 3.4 7.5 7.5"/></svg>
-          Agents <span class="cnt tnum" id="navAgents"></span>
-        </a>
-        <a class="nav-item" href="#/knowledge">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 5.5A1.5 1.5 0 0 1 5.5 4H11v16H5.5A1.5 1.5 0 0 1 4 18.5z"/><path d="M20 5.5A1.5 1.5 0 0 0 18.5 4H13v16h5.5a1.5 1.5 0 0 0 1.5-1.5z"/></svg>
-          Knowledge Base
-        </a>
-        <a class="nav-item" href="#/voices">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v16M7.5 8v8M17 8v8M3.5 11v2M20.5 11v2"/></svg>
-          Voices <span class="cnt tnum">9</span>
-        </a>
-      </div>
-
-      <div class="nav-group">
-        <span>Deploy</span>
-        <a class="nav-item" href="#/numbers">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6.5 3h-3v3a14.5 14.5 0 0 0 14.5 14.5h3v-3l-4-1.5-2 2A11.5 11.5 0 0 1 9 9.5l2-2z"/></svg>
-          Phone Numbers
-        </a>
-        <a class="nav-item" href="#/batch">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h10"/></svg>
-          Batch Calls
-        </a>
-        <a class="nav-item" href="#/integrations">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 7l-5 5 5 5M15 7l5 5-5 5"/></svg>
-          Integrations
-        </a>
-      </div>
-
-      <div class="nav-group">
-        <span>Data</span>
-        <a class="nav-item" href="#/history">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/></svg>
-          Call History
-        </a>
-        <a class="nav-item" href="#/contacts">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="9" r="3.5"/><path d="M3 19c0-3.3 2.7-6 6-6s6 2.7 6 6"/><path d="M16 6h5M16 10h5M16 14h3"/></svg>
-          Contacts
-        </a>
-        <a class="nav-item" href="#/transcripts">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 3.5h9L19 8v12.5H6z"/><path d="M9 11h7M9 15h5"/></svg>
-          Transcripts
-        </a>
-      </div>
-
-      <div class="nav-group">
         <span>Monitor</span>
         <a class="nav-item" href="#/ops" aria-current="page">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3.5 13h4l2.5-6 3 12 2.5-6h5"/></svg>
           Live Calls <span class="live" id="navLive"><i aria-hidden="true"></i><span id="navLiveN">0</span></span>
         </a>
-        <a class="nav-item" href="#/analytics">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg>
-          Analytics
-        </a>
-        <a class="nav-item" href="#/costs">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><path d="M14.5 9.5c-.5-1-1.5-1.5-2.5-1.5-1.4 0-2.5.8-2.5 2s1.1 1.8 2.5 2 2.5.8 2.5 2-1.1 2-2.5 2c-1 0-2-.5-2.5-1.5M12 6.5v11"/></svg>
-          Costs
-        </a>
       </div>
     </nav>
 
     <div class="side-foot">
-      <button class="gs" type="button">
-        <span class="gs-row"><b>Getting started</b><span id="gsCount">0/6</span></span>
-        <span class="gs-track"><span class="gs-fill" id="gsFill"></span></span>
-      </button>
-      <p class="trial"><i aria-hidden="true"></i>Free trial</p>
       <p class="who" id="whoEmail"></p>
       <button class="gs" id="signOut" type="button" style="margin-top:8px;padding:7px 10px">
         <span style="font-size:12px;font-weight:500">Sign out</span>
@@ -560,12 +486,6 @@ table.hist tbody tr:hover{background:var(--panel);cursor:pointer}
           <span id="dataBadgeText">Connecting…</span>
         </span>
         <div class="bar-right">
-          <div class="seg" role="group" aria-label="Date range">
-            <button type="button" aria-pressed="true">Today</button>
-            <button type="button" aria-pressed="false">7d</button>
-            <button type="button" aria-pressed="false">30d</button>
-            <button type="button" aria-pressed="false">Custom</button>
-          </div>
           <label class="lbl" for="fAgent" style="position:absolute;left:-9999px">Filter by agent</label>
           <select class="sel" id="fAgent">
             <option>All agents</option>
@@ -820,23 +740,6 @@ table.hist tbody tr:hover{background:var(--panel);cursor:pointer}
       </div>
     </div>
 
-    <!-- ── ROUTES WITHOUT A SCREEN YET ────────────────────────────── -->
-    <div class="view" id="v-stub" hidden>
-      <header class="bar">
-        <button class="hamb" type="button" data-hamb aria-label="Open navigation">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
-        </button>
-        <h1 id="stubTitle">—</h1>
-        <div class="bar-right"><a class="btn btn-ghost" href="#/ops">Back to Operations</a></div>
-      </header>
-      <div class="scroll">
-        <div class="empty">
-          <span class="ic" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 8v5M12 16.5v.5"/><circle cx="12" cy="12" r="9"/></svg></span>
-          <h2 id="stubHead">Not built yet</h2>
-          <p id="stubBody">This route is part of the shell but has no screen behind it. Operations Center and the agent editor are the two implemented views.</p>
-        </div>
-      </div>
-    </div>
 
   </div>
 </div>
@@ -1190,7 +1093,11 @@ function renderDonut(){
   var total=COST.reduce(function(a,b){return a+b.v;},0),
       R=54,C=2*Math.PI*R,GAP=2,off=0,
       hues=['var(--viz-1)','var(--viz-2)','var(--viz-3)','var(--viz-4)'],
-      s='<svg viewBox="0 0 132 132" role="img" aria-label="Cost breakdown: telephony $21.40, speech-to-text $12.85, LLM tokens $7.60, text-to-speech $4.05">'+
+      /* The label is read from the data: a fixed string here once told
+         screen readers about invented telephony/LLM costs while the chart
+         drew real per-agent spend. */
+      label='Cost breakdown: '+COST.map(function(d){return d.k+' $'+d.v.toFixed(2);}).join(', '),
+      s='<svg viewBox="0 0 132 132" role="img" aria-label="'+esc(label)+'">'+
         '<circle cx="66" cy="66" r="'+R+'" fill="none" stroke="var(--card)" stroke-width="17"/>';
 
   COST.forEach(function(d,i){
@@ -1448,41 +1355,24 @@ $('#createAgent').addEventListener('click',function(){ location.hash='#/agent/kw
 /* ═══════════════════════════════════════════════════════════════════
    ROUTER
    ═══════════════════════════════════════════════════════════════════ */
-var STUBS={
-  '/agents':['Agents','Agent list isn’t built yet','The four agents are on the Operations Center under Agent status — clicking one opens the editor.'],
-  '/knowledge':['Knowledge Base','Knowledge Base isn’t built yet','Sources are attached per agent in the editor’s Settings accordion.'],
-  '/voices':['Voices','Voice library isn’t built yet','Nine voices ship today, including several regional English accents. See cynea_africa/synthesizer/edge_tts.py.'],
-  '/numbers':['Phone Numbers','Number management isn’t built yet','Numbers are provisioned through Africa’s Talking in seven countries.'],
-  '/batch':['Batch Calls','Batch calling isn’t built yet','Outbound campaigns run from the API today, not from this console.'],
-  '/integrations':['Integrations','Integrations aren’t built yet','Webhooks are configured per agent in the editor.'],
-  '/history':['Call History','Full history isn’t built yet','The six most recent calls are on the Operations Center.'],
-  '/contacts':['Contacts','Contacts aren’t built yet','No CRM is wired up.'],
-  '/transcripts':['Transcripts','Transcript search isn’t built yet','Per-call transcripts open from any call row.'],
-  '/analytics':['Analytics','Deeper analytics aren’t built yet','The four charts on the Operations Center are what exists.'],
-  '/costs':['Costs','Cost explorer isn’t built yet','Today’s breakdown is the donut on the Operations Center.']
-};
 function route(){
   var h=(location.hash||'#/ops').replace(/^#/,'');
-  var views={ops:$('#v-ops'),agent:$('#v-agent'),stub:$('#v-stub')};
+  var views={ops:$('#v-ops'),agent:$('#v-agent')};
   Object.keys(views).forEach(function(k){views[k].hidden=true;});
 
   var m=h.match(/^\/agent\/([a-z]+)$/);
   if(m&&AGENTS[m[1]]){ fillAgent(m[1]); views.agent.hidden=false; }
-  else if(STUBS[h]){
-    $('#stubTitle').textContent=STUBS[h][0];
-    $('#stubHead').textContent=STUBS[h][1];
-    $('#stubBody').textContent=STUBS[h][2];
-    views.stub.hidden=false;
-  }
+  /* Every other route — including the old stub links, if bookmarked —
+     lands on the one implemented screen instead of an empty page. */
   else{ views.ops.hidden=false; h='/ops'; }
 
   $$('.nav-item').forEach(function(a){
     var href=a.getAttribute('href').replace(/^#/,'');
-    if(href===h||(h.indexOf('/agent/')===0&&href==='/agents')) a.setAttribute('aria-current','page');
+    if(href===h||(h.indexOf('/agent/')===0&&href==='/ops')) a.setAttribute('aria-current','page');
     else a.removeAttribute('aria-current');
   });
   closeSide();
-  $('.scroll',views.ops.hidden?(views.agent.hidden?views.stub:views.agent):views.ops).scrollTop=0;
+  $('.scroll',views.ops.hidden?views.agent:views.ops).scrollTop=0;
 }
 addEventListener('hashchange',route);
 
@@ -1513,14 +1403,6 @@ $$('[data-table]').forEach(function(b){
   });
 });
 
-/* date-range segmented control (presentation only — no refetch to make) */
-$$('.seg button').forEach(function(b){
-  b.addEventListener('click',function(){
-    $$('.seg button').forEach(function(o){o.setAttribute('aria-pressed','false');});
-    b.setAttribute('aria-pressed','true');
-  });
-});
-
 /* sidebar drawer */
 var side=$('#side'),ovl=$('#ovl');
 function openSide(){side.classList.add('open');ovl.classList.add('on');
@@ -1535,13 +1417,6 @@ ovl.addEventListener('click',closeSide);
 (function(){
   var b=document.getElementById('signOut');
   if(b) b.addEventListener('click', signOut);
-})();
-
-/* getting-started meter (0/6 as specified) */
-(function(){
-  var done=0,total=6;
-  $('#gsCount').textContent=done+'/'+total;
-  $('#gsFill').style.width=(done/total*100)+'%';
 })();
 
 /* on-call timers tick so the shell feels live */

@@ -63,7 +63,7 @@
       const h = location.hostname;
       const local = h === 'localhost' || h === '127.0.0.1' || h === '' ||
                     location.protocol === 'file:';
-      base = local ? 'ws://127.0.0.1:8000' : `${proto}//${location.host}/api`;
+      base = local ? 'ws://127.0.0.1:8000' : 'wss://cynea-voice.albertmomanyi07.workers.dev';
     }
     const agent = new URLSearchParams(location.search).get('agent') || 'maya';
     return `${base}/voice?agent=${encodeURIComponent(agent)}`;

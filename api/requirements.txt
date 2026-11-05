@@ -27,6 +27,10 @@ python-multipart==0.0.20
 # imported when the R2_* variables are set (cynea/recordings.py).
 boto3==1.43.123
 
+# Checks the signature on Twilio's voice webhook (POST /tel/twilio/voice). Loaded
+# only when that route runs.
+twilio==9.12.0
+
 # The browser call demo (cynea/voice_ws.py). Each of these is an HTTP or
 # WebSocket client rather than an audio library: transcription and the
 # model are Groq over httpx, speech is Edge TTS over a socket to

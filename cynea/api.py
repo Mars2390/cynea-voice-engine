@@ -26,13 +26,13 @@ from typing import List, Optional
 
 import cynea  # noqa: F401  — loads .env
 from cynea import (account, apikeys, auth, call_config, dashboard_data, db, mailer,
-                   monitoring, ratelimit, recordings, turnstile, webhooks)
+                   monitoring, ratelimit, recordings, turnstile, twilio_voice, webhooks)
 
 try:
     from fastapi import (BackgroundTasks, Depends, FastAPI, File, Form, Header, HTTPException,
                          Query, Request, UploadFile, status)
     from fastapi.middleware.cors import CORSMiddleware
-    from fastapi.responses import FileResponse, JSONResponse, RedirectResponse
+    from fastapi.responses import FileResponse, JSONResponse, RedirectResponse, Response
     from pydantic import BaseModel, EmailStr, Field
     from sqlalchemy.exc import SQLAlchemyError
 except ImportError as exc:  # pragma: no cover
@@ -516,6 +516,7 @@ def health():
                 "bot_check": bool(turnstile.site_key()),
                 "recordings": recordings.backend(),
                 "error_tracking": monitoring.endpoint() is not None,
+                "twilio": twilio_voice.is_configured(),
             },
         },
     )
@@ -1055,6 +1056,38 @@ def recording_file(call_id: str, exp: int = Query(...), sig: str = Query(...)):
         rec = s.scalar(select(db.CallRecording).where(db.CallRecording.call_id == call.id))
         ctype = rec.content_type if rec and rec.content_type else "audio/mpeg"
     return FileResponse(path, media_type=ctype)
+
+
+# ----------------------------------------------------------------------
+# Telephony
+# ----------------------------------------------------------------------
+
+@app.post("/tel/twilio/voice", tags=["telephony"], include_in_schema=False)
+async def twilio_voice_webhook(request: Request):
+    """Twilio calls this when a call arrives, and speaks the TwiML it gets back.
+
+    Touches no database: a caller is on the line, and Neon's cold start alone takes
+    seconds. The signature is checked before anything in the body is believed.
+    """
+    form = await request.form()
+    try:
+        verified = twilio_voice.signature_ok(form, request.headers.get("X-Twilio-Signature", ""))
+    except twilio_voice.NotConfigured as exc:
+        log.error("twilio webhook refused: %s", exc)
+        raise HTTPException(503, "Twilio is not configured on this server.") from None
+    if not verified:
+        log.warning("twilio webhook refused: bad signature")
+        raise HTTPException(403, "Invalid Twilio signature.")
+    if not twilio_voice.account_ok(form):
+        log.warning("twilio webhook refused: call is on another account")
+        raise HTTPException(403, "This call is not on the configured account.")
+
+    # print, not log: Vercel's Python runtime shows stdout, and the root logger
+    # drops info. One line per call, whatever the fields contain.
+    fields = {k: " ".join(str(form.get(k)).split()) for k in ("CallSid", "From", "To")}
+    print(f"[twilio] inbound call CallSid={fields['CallSid']} From={fields['From']} "
+          f"To={fields['To']}", flush=True)
+    return Response(content=twilio_voice.TWIML, headers={"Content-Type": "text/xml"})
 
 
 # ----------------------------------------------------------------------

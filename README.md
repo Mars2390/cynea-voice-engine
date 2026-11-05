@@ -22,7 +22,8 @@ Honest summary, because the gap between "written" and "wired up" matters:
 | HTTP API server | **Working** — auth, agents, calls, dashboard, API keys, webhooks |
 | Auth (bcrypt + sessions) | **Working** — email verification, password reset, sign-out, rate limits |
 | Console reading live data | **Working** — real login, empty states, no sample data |
-| Telephony (Africa's Talking) | **Interface only** — no audio transport, so no phone calls |
+| Telephony (Twilio) | **Test webhook only** — answers inbound calls with a fixed message; no agent on the line |
+| Telephony (Africa's Talking) | **Interface only** — no audio transport |
 | Billing, multi-tenancy beyond per-user scoping | **Not built** |
 
 ---

@@ -73,6 +73,7 @@ log = logging.getLogger("cynea.voice_ws")
 # Cloudflare Worker (voice-worker/src/main.py), which carries this same call
 # in production. They live in cynea/voice_demo.py so the two cannot drift.
 from cynea.voice_demo import (  # noqa: E402
+    CALL_ERROR_TEXT,
     DEFAULT_PERSONA,
     MAX_UTTERANCE_BYTES,
     MAX_UTTERANCE_S,
@@ -218,12 +219,10 @@ def register(app) -> None:
                                    encoding="pcm16"))
                 except Exception as exc:
                     # The engine raises on a provider failure precisely so
-                    # this does not become silence on the line. Say which
-                    # stage broke; a demo that fails legibly is worth more
-                    # than one that just stops.
+                    # this does not become silence on the line. The caller
+                    # hears that it failed; the cause goes to the log.
                     log.exception("voice turn failed")
-                    await send({"type": "error",
-                                "message": f"{type(exc).__name__}: {exc}"[:300]})
+                    await send({"type": "error", "message": CALL_ERROR_TEXT})
                     continue
 
                 if result is None:
@@ -252,7 +251,7 @@ def register(app) -> None:
 
     @app.get("/voice/health", tags=["system"])
     def voice_health():
-        """Whether a browser call can actually be placed right now."""
+        """Whether the local socket has its key. The Worker's check really uses it."""
         from cynea import providers
 
         reg = providers.registered()

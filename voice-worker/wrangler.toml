@@ -35,6 +35,10 @@ VOICE_DEMO_MAX_CALL_S = "600"
 VOICE_DEMO_MAX_TURNS = "40"
 # Also the number of lines (Durable Objects) the Worker spreads calls over.
 VOICE_DEMO_MAX_CONCURRENT = "6"
+# A forgotten tab holds a line and a microphone. Silence this long ends the call.
+VOICE_DEMO_IDLE_S = "180"
+# Calls one address may start in an hour. "0" turns the limit off.
+VOICE_DEMO_CALLS_PER_HOUR = "10"
 # Browsers always send Origin on a WebSocket handshake; anything not listed
 # here is refused. Requests with no Origin (curl, test scripts) are allowed,
 # because a script can forge any Origin it likes anyway — this stops other

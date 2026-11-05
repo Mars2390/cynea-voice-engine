@@ -8,9 +8,8 @@ requires-python = ">=3.12"
 # https://api.cerebras.ai/v1) and Groq's Whisper for transcription
 # (cynea_africa/transcriber/groq_stt.py). Python Workers route it over fetch.
 #
-# Deliberately absent: openai. Measured, it took the bundle from 0.9 MB to
-# 4.19 MB gzipped — over the Workers Free plan's 3 MB cap — for a wrapper
-# around the same POST.
+# Deliberately absent: openai. Measured, it adds 2,708 modules (mostly type
+# stubs) and a 124 s cold start in local dev, for a wrapper around the same POST.
 #
 # edge-tts supplies the protocol constants and Microsoft's Sec-MS-GEC token,
 # not the connection: its aiohttp socket client has no sockets to use in a

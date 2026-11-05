@@ -2,12 +2,12 @@
 
     wss://cynea-voice.<subdomain>.workers.dev/voice?agent=maya
 
-Vercel functions cannot hold a WebSocket open, so this one route moves here
-and everything else stays where it is. The wire contract is unchanged from
-cynea/voice_ws.py, which remains the local fallback: the browser sends one
-binary frame of 16 kHz mono PCM16 per utterance and gets JSON frames back
-(ready / greeting / you / reply / audio / thinking / idle / interrupted /
-busy / ended / error). assets/live-call.js needs only its URL changed.
+A call sits silent for most of its length, so this one route lives where a
+silent socket costs nothing: a hibernating Durable Object. Everything else
+stays on Vercel. The wire contract is shared with cynea/voice_ws.py, which
+remains the local fallback: the browser sends one binary frame of 16 kHz mono
+PCM16 per utterance and gets JSON frames back (ready / greeting / you / reply /
+audio / thinking / idle / interrupted / busy / limit / ended / error).
 
 Shape
 -----
@@ -23,7 +23,11 @@ line-0..line-N, each holds at most one call, and the Worker tries them in
 random order. "Is this line free?" is answered by the runtime's own list of
 accepted sockets, so a call that drops without a close frame cannot leak a
 slot the way a counter would — and the alarm below reclaims any line a
-vanished client is still sitting on.
+vanished client or a forgotten tab is still sitting on.
+
+Two more objects use the same class for a different job: "health" probes the
+providers on behalf of /voice/health, and "ip-<hash>" counts one address's
+calls. Neither ever holds a call.
 
 Hibernation
 -----------
@@ -65,6 +69,8 @@ from __future__ import annotations
 import asyncio
 import base64
 import fnmatch
+import hashlib
+import ipaddress
 import json
 import os
 import random
@@ -73,7 +79,7 @@ import uuid
 from urllib.parse import parse_qs, urlparse
 from xml.sax.saxutils import escape
 
-from js import Object, Uint8Array, WebSocketPair, WebSocketRequestResponsePair
+from js import AbortSignal, Object, Uint8Array, WebSocketPair, WebSocketRequestResponsePair
 from js import fetch as js_fetch
 from pyodide.ffi import create_proxy, to_js
 from workers import DurableObject, Response, WorkerEntrypoint
@@ -84,11 +90,14 @@ from cynea import providers
 from cynea.engine import CyneaEngine
 from cynea.models import AudioChunk
 from cynea.voice_demo import (
+    CALL_ERROR_TEXT,
     DEFAULT_PERSONA,
     MAX_UTTERANCE_BYTES,
     MAX_UTTERANCE_S,
     RATE,
+    calls_per_hour,
     demo_config,
+    idle_s,
     max_call_s,
     max_concurrent,
     max_turns,
@@ -111,6 +120,7 @@ _ENV_KEYS = (
     "GROQ_API_KEY", "GROQ_STT_MODEL", "GROQ_BASE_URL",          # Whisper only
     "ELEVENLABS_API_KEY", "DATABASE_URL", "SESSION_SECRET",
     "VOICE_DEMO_MAX_CALL_S", "VOICE_DEMO_MAX_TURNS", "VOICE_DEMO_MAX_CONCURRENT",
+    "VOICE_DEMO_IDLE_S", "VOICE_DEMO_CALLS_PER_HOUR",
 )
 
 
@@ -129,6 +139,28 @@ def _cap_text() -> str:
     span = (f"{secs // 60} minute{'s' if secs // 60 != 1 else ''}" if secs % 60 == 0
             else f"{secs} seconds")
     return f"The demo is capped at {span}."
+
+
+def _idle_text() -> str:
+    secs = idle_s()
+    span = (f"{secs // 60} minute{'s' if secs // 60 != 1 else ''}" if secs % 60 == 0
+            else f"{secs} seconds")
+    return f"The call ended after {span} of silence."
+
+
+def _address_key(ip: str) -> str:
+    """The name of one address's counter. Hashed, so no address is stored.
+
+    IPv6 counts per /64: one household or phone holds a whole /64, so counting
+    single addresses would not limit anybody.
+    """
+    try:
+        addr = ipaddress.ip_address(ip)
+        if addr.version == 6:
+            ip = str(ipaddress.ip_network(f"{ip}/64", strict=False).network_address)
+    except ValueError:
+        pass
+    return "ip-" + hashlib.sha256(ip.encode("utf-8")).hexdigest()[:32]
 
 
 def _json(payload: dict, status: int = 200) -> Response:
@@ -332,11 +364,10 @@ class _OutOfTokens(CerebrasLLMError):
 class CerebrasLLM:
     """Chat completions on Cerebras, over its OpenAI-compatible HTTP API.
 
-    Plain httpx rather than the openai SDK, measured: the SDK took the
-    bundle from 0.9 MB to 4.19 MB gzipped (2,708 modules, mostly its type
-    stubs) — over the Workers Free plan's 3 MB cap — and made cold starts
-    load all of it. The endpoint, the body and the reasoning_effort field
-    are the same either way; the SDK only wraps them.
+    Plain httpx rather than the openai SDK, measured: the SDK adds 2,708
+    modules, mostly its type stubs, and cold starts load all of them (124 s
+    to the first response in local dev). The endpoint, the body and the
+    reasoning_effort field are the same either way; the SDK only wraps them.
 
     Same contract as the other LLM adapters (`generate(messages, system)`
     returns the reply text or raises), so CyneaEngine does not know which
@@ -444,6 +475,113 @@ def _call_config(persona: str):
     return config
 
 
+# ── health: does each service actually answer? ───────────────────────────
+# "Is the secret set" is not health. The Groq key on this Worker was set and
+# dead: every check said fine while every turn failed with a 401. So each key
+# is used, against the cheapest authenticated route its provider has.
+_HEALTH_TTL_S = 60          # /voice/health is public; one probe a minute at most
+_PROBE_TIMEOUT_MS = 8000
+_GROQ_BASE = "https://api.groq.com/openai/v1"
+_GROQ_STT_MODEL = "whisper-large-v3"
+
+
+def _judge_key(service: str, provider: str, secret: str, status: int,
+               models=None, wanted=()) -> dict:
+    """What one provider's answer means, in terms of what to do about it."""
+    check = {"service": service, "provider": provider, "secret": secret,
+             "ok": False, "status": status, "why": None}
+    fix = f"Create a new key, then run: pywrangler secret put {secret}"
+    if status in (401, 403):
+        check["why"] = (f"{secret} is set but {provider} rejected it (HTTP {status}): "
+                        f"the key is invalid, revoked or expired. {fix}")
+    elif status == 429:
+        # Answered and recognised the caller, so the key itself is good. A call
+        # placed right now might still hit the limit, so it is reported.
+        check["ok"] = True
+        check["why"] = f"{secret} works, but {provider} is rate limiting it (HTTP 429)."
+    elif status >= 500:
+        check["why"] = f"{provider} is having trouble (HTTP {status}). Nothing to fix on this side."
+    elif status >= 400:
+        check["why"] = f"{provider} refused the check (HTTP {status}). {fix}"
+    else:
+        missing = [m for m in wanted if models is not None and m not in models]
+        if missing:
+            check["why"] = (f"{secret} works, but {provider} does not offer "
+                            f"{', '.join(missing)} on this key.")
+        else:
+            check["ok"] = True
+    return check
+
+
+async def _probe_key(service: str, provider: str, secret: str, url: str, wanted=()) -> dict:
+    key = os.getenv(secret)
+    if not key:
+        return {"service": service, "provider": provider, "secret": secret, "ok": False,
+                "status": None,
+                "why": f"{secret} is not set. Run: pywrangler secret put {secret}"}
+    try:
+        resp = await js_fetch(url, to_js(
+            {"headers": {"Authorization": f"Bearer {key}"},
+             "signal": AbortSignal.timeout(_PROBE_TIMEOUT_MS)},
+            dict_converter=Object.fromEntries))
+        status = int(resp.status)
+        models = None
+        if status < 300:
+            try:
+                models = {m.get("id") for m in json.loads(str(await resp.text())).get("data", [])}
+            except (ValueError, AttributeError):
+                models = None        # answered, but not in a shape worth judging
+    except Exception as exc:
+        return {"service": service, "provider": provider, "secret": secret, "ok": False,
+                "status": None, "why": f"{provider} could not be reached: {type(exc).__name__}."}
+    return _judge_key(service, provider, secret, status, models, wanted)
+
+
+async def _probe_voice() -> dict:
+    """Edge TTS has no key to test, and its failure mode is a 403 after a
+    Microsoft protocol change — so the only real check is one short synthesis."""
+    check = {"service": "speech", "provider": "Edge TTS", "secret": None, "ok": False,
+             "status": None, "why": None}
+    try:
+        audio = await WorkerEdgeTTS()._synth_segment(
+            edge_tts=None, text="OK", voice="en-US-AriaNeural",
+            rate="+0%", pitch="+0Hz", volume="+0%")
+        check["ok"] = bool(audio)
+    except Exception as exc:
+        check["why"] = f"Edge TTS failed: {exc}"[:200]
+    return check
+
+
+async def _health_report() -> dict:
+    llm = CerebrasLLM()
+    fast = llm.fast_model if llm.fast_max_words > 0 else None
+    stt_model = os.getenv("GROQ_STT_MODEL", _GROQ_STT_MODEL)
+    groq = os.getenv("GROQ_BASE_URL", _GROQ_BASE).rstrip("/")
+    stt, model, speech = await asyncio.gather(
+        _probe_key("transcription", "Groq", "GROQ_API_KEY", f"{groq}/models", (stt_model,)),
+        _probe_key("reply", "Cerebras", "CEREBRAS_API_KEY", f"{llm.base_url}/models",
+                   tuple(m for m in (llm.model, fast) if m)),
+        _probe_voice(),
+    )
+    checks = [stt, model, speech]
+    failed = [c for c in checks if not c["ok"]]
+    return {
+        "ok": not failed,
+        "failed": [c["secret"] or c["provider"] for c in failed],
+        "reason": " ".join(c["why"] for c in failed) or None,
+        "checks": checks,
+        "checked_at": int(time.time()),
+        "capacity": max_concurrent(),
+        "model": llm.model,
+        "fast_model": fast,
+        "stt_model": stt_model,
+        "rate": RATE,
+        "max_call_s": max_call_s(),
+        "idle_s": idle_s(),
+        "calls_per_hour": calls_per_hour(),
+    }
+
+
 # ── the Worker ───────────────────────────────────────────────────────────
 class Default(WorkerEntrypoint):
     async def fetch(self, request):
@@ -452,7 +590,10 @@ class Default(WorkerEntrypoint):
         path = url.path.rstrip("/") or "/"
 
         if path in ("/voice/health", "/api/voice/health"):
-            return self._health()
+            # In one object, so the probes are not on the Free plan's 10 ms per
+            # request CPU budget and every isolate shares one cached answer.
+            ns = self.env.VOICE_SESSION
+            return await ns.get(ns.idFromName("health")).fetch("https://voice-session/health")
         if path not in ("/voice", "/api/voice"):
             return _json({"error": "not found", "socket": "/voice?agent=maya"}, 404)
 
@@ -466,11 +607,23 @@ class Default(WorkerEntrypoint):
             print(f"refused origin {origin!r}")
             return _json({"error": f"origin {origin} is not allowed"}, 403)
 
+        ns = self.env.VOICE_SESSION
+
+        # Same object, same class, a different name: one counter per address.
+        # Answered before a line is touched, so an address over its limit
+        # cannot hold one. 204 means carry on; a 101 is that object's socket,
+        # which tells the browser why and hangs up.
+        ip = request.headers.get("CF-Connecting-IP")
+        if ip and calls_per_hour() > 0:
+            resp = await ns.get(ns.idFromName(_address_key(ip))).fetch(
+                "https://voice-session/limit", headers={"Upgrade": "websocket"})
+            if resp.status != 204:
+                return resp
+
         agent = (parse_qs(url.query).get("agent") or [DEFAULT_PERSONA])[0].lower()
         lines = list(range(max_concurrent()))
         random.shuffle(lines)
 
-        ns = self.env.VOICE_SESSION
         for n, line in enumerate(lines):
             last = n == len(lines) - 1
             stub = ns.get(ns.idFromName(f"line-{line}"))
@@ -490,25 +643,11 @@ class Default(WorkerEntrypoint):
         patterns = [p.strip() for p in str(raw or "").split(",") if p.strip()]
         return any(fnmatch.fnmatchcase(origin, p) for p in patterns)
 
-    def _health(self):
-        reg = providers.registered()
-        missing = [k for k in ("CEREBRAS_API_KEY", "GROQ_API_KEY") if not os.getenv(k)]
-        llm = CerebrasLLM()
-        return _json({
-            "ok": not missing,
-            "reason": f"not set: {', '.join(missing)}" if missing else None,
-            "capacity": max_concurrent(),
-            "stt": "groq-stt" in reg.get("stt", []),
-            "llm": "cerebras" in reg.get("llm", []),
-            "model": llm.model,
-            "fast_model": llm.fast_model if llm.fast_max_words > 0 else None,
-            "tts": "edge_tts" in reg.get("tts", []),
-            "rate": RATE,
-            "max_call_s": max_call_s(),
-        })
-
 
 # ── one line ─────────────────────────────────────────────────────────────
+_LIMIT_WINDOW_S = 3600
+
+
 class VoiceSession(DurableObject):
     """One phone line: at most one call at a time, hibernating between turns."""
 
@@ -524,7 +663,13 @@ class VoiceSession(DurableObject):
 
     # ── connect ──────────────────────────────────────────────────────────
     async def fetch(self, request):
-        query = parse_qs(urlparse(request.url).query)
+        target = urlparse(request.url)
+        if target.path == "/health":
+            return await self._health()
+        if target.path == "/limit":
+            return await self._limit()
+
+        query = parse_qs(target.query)
         persona = (query.get("agent") or [DEFAULT_PERSONA])[0].lower()
         last = (query.get("last") or ["0"])[0] == "1"
 
@@ -551,19 +696,20 @@ class VoiceSession(DurableObject):
         client, server = WebSocketPair.new().object_values()
         self.ctx.acceptWebSocket(server, to_js(["call"]))  # Hibernation API
 
+        now = time.time()
         meta = {"id": uuid.uuid4().hex, "persona": persona,
-                "started": time.time(), "turns": 0}
+                "started": now, "last": now, "turns": 0}
         server.serializeAttachment(json.dumps(meta))
 
         # A fresh call on this line: drop the last caller's conversation and
-        # set the hard stop. The alarm, not the next utterance, ends the
-        # call — otherwise an abandoned tab would hold the line forever.
+        # set the first deadline. The alarm, not the next utterance, ends the
+        # call — otherwise an abandoned tab would hold the line.
         await self.ctx.storage.delete("history")
-        await self.ctx.storage.setAlarm(int((time.time() + max_call_s()) * 1000))
+        await self.ctx.storage.setAlarm(int((now + min(max_call_s(), idle_s())) * 1000))
 
         self._send(server, {"type": "ready", "agent": _call_config(persona).name,
                             "persona": persona, "rate": RATE,
-                            "max_call_s": max_call_s()})
+                            "max_call_s": max_call_s(), "idle_s": idle_s()})
         asyncio.ensure_future(self._greet(server, meta))
         return Response(None, status=101, web_socket=client)
 
@@ -576,8 +722,8 @@ class VoiceSession(DurableObject):
                 if greeting:
                     self._speak(ws, "greeting", str(greeting), greeting.audio)
             except Exception as exc:
-                self._send(ws, {"type": "error",
-                                "message": f"{type(exc).__name__}: {exc}"[:300]})
+                print(f"greeting failed: {type(exc).__name__}: {exc}")
+                self._send(ws, {"type": "error", "message": CALL_ERROR_TEXT})
 
     # ── hibernation handlers ─────────────────────────────────────────────
     async def webSocketMessage(self, ws, message):
@@ -601,10 +747,14 @@ class VoiceSession(DurableObject):
             await self._release()
 
     async def alarm(self, *args):
-        """One alarm per object, two jobs: hang up busy callers, end long calls.
+        """One alarm per object. It hangs up busy callers, ends calls that ran
+        too long or went silent, and clears an address's expired count.
 
         Whichever deadline is still in the future is re-armed, so a busy
         caller's quarter-second alarm cannot cancel the call's time cap.
+        Turns do not touch the alarm: the silence deadline moves with every
+        turn, so it is worked out here, when the old one fires. That costs a
+        wake every few minutes rather than a storage write every turn.
         """
         now = time.time()
         for ws in self.ctx.getWebSockets("busy"):
@@ -612,14 +762,25 @@ class VoiceSession(DurableObject):
 
         upcoming = []
         for ws in self.ctx.getWebSockets("call"):
-            deadline = json.loads(ws.deserializeAttachment())["started"] + max_call_s()
-            if now >= deadline:
-                self._send(ws, {"type": "ended", "reason":
-                                _cap_text()})
+            meta = json.loads(ws.deserializeAttachment())
+            capped_at = meta["started"] + max_call_s()
+            silent_at = meta.get("last", meta["started"]) + idle_s()
+            if now >= capped_at:
+                self._send(ws, {"type": "ended", "reason": _cap_text()})
                 self._hang_up(ws, 1000, "time limit")
                 await self.ctx.storage.delete("history")
+            elif now >= silent_at:
+                self._send(ws, {"type": "ended", "reason": _idle_text()})
+                self._hang_up(ws, 1000, "idle")
+                await self.ctx.storage.delete("history")
             else:
-                upcoming.append(deadline)
+                upcoming.append(min(capped_at, silent_at))
+
+        calls = await self._recent_calls(now)
+        if calls:
+            upcoming.append(calls[0] + _LIMIT_WINDOW_S)
+        else:
+            await self.ctx.storage.delete("calls")     # nothing lingers per address
         if upcoming:
             await self.ctx.storage.setAlarm(int(min(upcoming) * 1000))
 
@@ -665,6 +826,7 @@ class VoiceSession(DurableObject):
             return
 
         meta["turns"] += 1
+        meta["last"] = time.time()
         ws.serializeAttachment(json.dumps(meta))
         self._send(ws, {"type": "thinking"})
 
@@ -673,9 +835,10 @@ class VoiceSession(DurableObject):
             result = await engine.process_audio(
                 AudioChunk(data=bytes(pcm), sample_rate=RATE, channels=1, encoding="pcm16"))
         except Exception as exc:
-            # Say which stage broke; a demo that fails legibly is worth more
-            # than one that just stops.
-            self._send(ws, {"type": "error", "message": f"{type(exc).__name__}: {exc}"[:300]})
+            # The caller hears that it failed, never silence; the cause goes
+            # to the log, where `pywrangler tail` shows it.
+            print(f"turn failed: {type(exc).__name__}: {exc}")
+            self._send(ws, {"type": "error", "message": CALL_ERROR_TEXT})
             return
 
         if result is None:
@@ -686,6 +849,56 @@ class VoiceSession(DurableObject):
         if result.user_text:
             self._send(ws, {"type": "you", "text": result.user_text})
         self._speak(ws, "reply", str(result), result.audio)
+        # Silence is counted from the end of the agent's turn, not the start.
+        meta["last"] = time.time()
+        ws.serializeAttachment(json.dumps(meta))
+
+    # ── the two jobs that are not calls ──────────────────────────────────
+    async def _health(self):
+        raw = await self.ctx.storage.get("health")
+        report = json.loads(raw) if isinstance(raw, str) else None
+        if report and time.time() - report["checked_at"] < _HEALTH_TTL_S:
+            report["cached"] = True
+        else:
+            report = await _health_report()
+            await self.ctx.storage.put("health", json.dumps(report))
+            report["cached"] = False
+        # Not 200 when a turn would fail: an uptime monitor reads the status,
+        # not the body.
+        return _json(report, 200 if report["ok"] else 503)
+
+    async def _recent_calls(self, now: float) -> list:
+        raw = await self.ctx.storage.get("calls")
+        if not isinstance(raw, str):
+            return []
+        return [t for t in json.loads(raw) if now - t < _LIMIT_WINDOW_S]
+
+    async def _limit(self):
+        """One address's calls in the last hour. 204 to proceed, or a socket
+        that says why not: a refused handshake reaches a browser as a bare
+        1006, and the page could only guess at the reason."""
+        now = time.time()
+        calls = await self._recent_calls(now)
+
+        if len(calls) >= calls_per_hour():
+            wait = max(1, round((calls[0] + _LIMIT_WINDOW_S - now) / 60))
+            client, server = WebSocketPair.new().object_values()
+            self.ctx.acceptWebSocket(server, to_js(["busy"]))
+            server.send(json.dumps({
+                "type": "limit",
+                "message": (f"That's the limit of {calls_per_hour()} demo calls an hour from "
+                            f"one connection. Try again in about {wait} "
+                            f"minute{'s' if wait != 1 else ''}."),
+            }))
+            # Closed by the alarm: see the note in fetch().
+            await self.ctx.storage.setAlarm(int((now + 0.25) * 1000))
+            return Response(None, status=101, web_socket=client)
+
+        calls.append(now)
+        await self.ctx.storage.put("calls", json.dumps(calls))
+        if not self.ctx.getWebSockets("busy"):
+            await self.ctx.storage.setAlarm(int((calls[0] + _LIMIT_WINDOW_S) * 1000))
+        return Response(None, status=204)
 
     # ── state ────────────────────────────────────────────────────────────
     async def _engine(self, meta: dict) -> CyneaEngine:

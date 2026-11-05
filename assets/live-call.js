@@ -328,12 +328,16 @@
           setState('All lines busy', 'bad');
           note(m.message, 'bad');
           break;
+        case 'limit':
+          setState('Demo limit reached', 'bad');
+          note(m.message, 'bad');
+          break;
         case 'ended':
           note(m.reason);
           stop();
           break;
         case 'error':
-          setState('Error', 'bad');
+          setState('Could not answer', 'bad');
           note(m.message, 'bad');
           break;
       }

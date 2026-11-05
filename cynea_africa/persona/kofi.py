@@ -32,7 +32,7 @@ Modules exported
     KOFI_SYSTEM_PROMPT      -- full LLM system prompt, modular sections
                                ({client_name} placeholder; the agent
                                 loader substitutes it before send)
-    KOFI_VOICE_CONFIG       -- TTS provider config (ElevenLabs George)
+    KOFI_VOICE_CONFIG       -- TTS provider config (Edge, Eric)
     KOFI_FIRST_MESSAGE      -- opening line used by CyneaEngine.start()
     KOFI_SPEECH_PATTERN     -- prosody / disfluency / latency parameters
     KOFI_GREETING_VARIANTS  -- 7 opening lines (rotates per call)
@@ -440,13 +440,12 @@ tell. Never deny being AI. Never deflect.
 # =====================================================================
 
 KOFI_VOICE_CONFIG = {
-    "provider": "elevenlabs",
-    # ElevenLabs "George" — British male, warm. Same voice the Peter
-    # demo audio uses; can be A/B'd against en-NG-AbeoNeural (Edge,
-    # Nigerian male) for a more West-African cadence.
-    "voice": "JBFqnCBsd6RMkjVDRZzb",
+    # Edge TTS: free, needs no key, and the only synthesizer the browser call
+    # on Cloudflare can run. ElevenLabs is a paid account Cynea does not use.
+    "provider": "edge_tts",
+    "voice": "en-US-EricNeural",
     "speed": 1.05,           # Slightly faster than 1.0 — order-taking pace.
-    "supports_ssml": False,  # ElevenLabs handles prosody internally.
+    "supports_ssml": True,
 }
 
 

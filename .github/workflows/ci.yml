@@ -72,7 +72,7 @@ jobs:
         env:
           # Tests use a temp SQLite file; no Postgres service needed.
           DATABASE_URL: "sqlite:///ci.db"
-        run: pytest tests/ -v --tb=short
+        run: python -m pytest tests/ -v --tb=short
 
       - name: Schema creates cleanly
         env:

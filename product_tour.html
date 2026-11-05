@@ -8,7 +8,7 @@
 <link rel="icon" href="assets/favicon.ico" sizes="48x48 32x32 16x16">
 <link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
 <link rel="mask-icon" href="assets/mask-icon.svg" color="#00D4FF">
-<meta name="description" content="A 60-second guided walkthrough of the Cynea agent manager — human-like AI voice agents for your business." />
+<meta name="description" content="A short walkthrough of the Cynea console: agents, prompts, test calls and the call log." />
 <meta name="theme-color" content="#050505">
 <meta name="color-scheme" content="dark">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -149,9 +149,6 @@ main{padding:0 16px}
 .foot-copy{display:inline-flex;align-items:center;gap:8px}
 .foot-copy .prism{display:block;width:auto;height:16px;color:var(--cyan);flex-shrink:0}
 .foot-base{display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;margin-top:48px;padding-top:24px;border-top:1px solid var(--line);font-size:clamp(12px,.1vw + 11.6px,13px);color:var(--muted);letter-spacing:-.16px}
-.foot-social{display:flex;gap:8px}
-.foot-social a{width:32px;height:32px;border-radius:50%;display:grid;place-items:center;box-shadow:inset 0 0 0 1px var(--line);color:var(--ink);transition:box-shadow .18s,color .18s}
-.foot-social a:hover{box-shadow:inset 0 0 0 1px var(--cyan);color:var(--cyan)}
 </style>
 </head>
 <body>
@@ -165,13 +162,11 @@ main{padding:0 16px}
       <a href="live-call.html">Live call</a>
       <a href="index.html#agents">Agents</a>
       <a href="index.html#highlights">Product</a>
-      <a href="index.html#channels">Channels</a>
-      <a href="index.html#telephony">Telephony</a>
       <a href="index.html#faq">FAQ</a>
     </div>
     <div class="nav-cta">
       <a class="btn btn-line" href="signin.html">Sign in</a>
-      <a class="btn btn-navy" href="index.html#try-demo">Get a call</a>
+      <a class="btn btn-navy" href="live-call.html">Talk to Maya</a>
     </div>
     <button class="nav-burger" id="nav-burger" type="button"
             aria-expanded="false" aria-controls="nav-links" aria-label="Menu">
@@ -181,9 +176,9 @@ main{padding:0 16px}
 </nav>
 
 <header class="hero">
-  <span class="eyebrow">60-second tour</span>
+  <span class="eyebrow">Product tour</span>
   <h1>See Cynea in action</h1>
-  <p class="lead">A guided walkthrough of the agent manager. Skip ahead, jump to any step, or explore on your own.</p>
+  <p class="lead">A short walkthrough of the console. Skip ahead or jump to any step.</p>
 </header>
 
 <main>
@@ -194,51 +189,51 @@ main{padding:0 16px}
       <div class="tour-body">
         <!-- Step 1 -->
         <article class="step active" data-step="1">
-          <h2>This is your Cynea Agent Manager</h2>
-          <p>A single workspace to build, configure, monitor and launch human-like AI voice agents for your business.</p>
-          <p class="muted">Take the 60-second tour, or jump straight into the dashboard whenever you like.</p>
+          <h2>This is your Cynea console</h2>
+          <p>One place to create voice agents, edit what they are told to do, and see their calls.</p>
+          <p class="muted">Take the tour, or jump straight into the dashboard whenever you like.</p>
         </article>
 
         <!-- Step 2 -->
         <article class="step" data-step="2">
-          <h2>Create and manage voice agents</h2>
-          <p>Spin up an agent in minutes. Give each one a persona, pick from natural, lifelike voices, and serve customers in their own language.</p>
-          <p class="muted">Every agent lives in one place — clone, pause, or refine any of them at any time.</p>
+          <h2>Create an agent</h2>
+          <p>Give it a persona and choose a voice. Agents you create speak with Edge TTS.</p>
+          <p class="muted">Every agent you create is listed in the console.</p>
         </article>
 
         <!-- Step 3 -->
         <article class="step" data-step="3">
-          <h2>Tune persona, voice and rules</h2>
-          <p>Shape exactly how your agent sounds and behaves. Set tone and personality, choose a voice, connect a knowledge base, and define escalation rules for when a human should step in.</p>
-          <p class="muted">Changes apply instantly — test, adjust, and re-test until it feels right.</p>
+          <h2>Edit its prompt</h2>
+          <p>The prompt tells an agent how to behave and what it knows. Change it whenever you need to.</p>
+          <p class="muted">Every change is kept in version history.</p>
         </article>
 
         <!-- Step 4 -->
         <article class="step" data-step="4">
-          <h2>Attach a number in minutes</h2>
-          <p>Connect a phone number through Twilio and other major carriers, or bring your own. Inbound and outbound calls route to your agent automatically.</p>
-          <p class="muted">No telecom expertise required — provision, link, and you're taking calls.</p>
+          <h2>Test it in your browser</h2>
+          <p>Start a test call and talk to your agent with your microphone.</p>
+          <p class="muted">Browser calls work today. Phone calls are not connected yet.</p>
         </article>
 
         <!-- Step 5 -->
         <article class="step" data-step="5">
-          <h2>Watch calls as they happen</h2>
-          <p>The live monitor shows active calls in real time — live transcripts, agent status, and call duration as the conversation unfolds.</p>
-          <p class="muted">Step in, take over, or simply observe how your agents handle every call.</p>
+          <h2>Check the call log</h2>
+          <p>The call log lists your calls in one place.</p>
+          <p class="muted">A recording appears when one was uploaded.</p>
         </article>
 
         <!-- Step 6 -->
         <article class="step" data-step="6">
-          <h2>Measure containment, sentiment &amp; cost</h2>
-          <p>Track the metrics that matter: how many calls your agents resolve on their own, customer sentiment, average handling time, and cost per call.</p>
-          <p class="muted">Every report is exportable, so insights flow straight into your own tools.</p>
+          <h2>Connect your systems</h2>
+          <p>Create API keys, and receive signed outbound webhooks in your own systems.</p>
+          <p class="muted">You can also export your account data or delete it.</p>
         </article>
 
         <!-- Step 7 -->
         <article class="step" data-step="7">
-          <h2>Go live</h2>
-          <p>You're ready. Flip your agent live and it starts taking calls — answering customers around the clock.</p>
-          <p class="muted">Welcome aboard. Your dashboard is waiting.</p>
+          <h2>That is the tour</h2>
+          <p>Open the dashboard to see your agents, or create your first one.</p>
+          <p class="muted">Your dashboard is waiting.</p>
         </article>
       </div>
 
@@ -272,16 +267,16 @@ main{padding:0 16px}
     <div>
       <h4>Products</h4>
       <a href="index.html#try-demo">Live demo</a>
-      <a href="index.html#highlights">Voice agents</a>
-      <a href="index.html#telephony">Telephony</a>
-      <a href="index.html#channels">Channels</a>
+      <a href="live-call.html">Live call</a>
+      <a href="index.html#agents">Voice agents</a>
+      <a href="index.html#console">Console</a>
     </div>
     <div>
-      <h4>Solutions</h4>
-      <a href="index.html#try-demo">Hotels</a>
-      <a href="index.html#try-demo">Banking</a>
-      <a href="index.html#try-demo">Restaurants</a>
-      <a href="index.html#try-demo">Clinics</a>
+      <h4>Hear an agent</h4>
+      <a href="index.html#use-kwame">Hotels</a>
+      <a href="index.html#use-amina">Banking</a>
+      <a href="index.html#use-kofi">Restaurants</a>
+      <a href="index.html#use-maya">Bookings</a>
     </div>
     <div>
       <h4>Resources</h4>
@@ -291,9 +286,8 @@ main{padding:0 16px}
       <a href="index.html#faq">FAQ</a>
     </div>
     <div>
-      <h4>Company</h4>
-      <a href="index.html#top">About</a>
-      <a href="https://calendly.com/albertmomanyi07/30min" target="_blank" rel="noopener">Contact sales</a>
+      <h4>Account</h4>
+      <a href="signup.html">Create an account</a>
       <a href="signin.html">Sign in</a>
       <a href="dashboard.html">Dashboard</a>
     </div>
@@ -301,12 +295,6 @@ main{padding:0 16px}
 
   <div class="foot-base">
     <span class="foot-copy"><svg class="prism" viewBox="14 2 30 52" width="15" height="26" aria-hidden="true" focusable="false"><g transform="translate(2,2)"><path d="M28 2 L38 2 L40 4 L40 9 L34 15 L34 37 L40 43 L40 48 L38 50 L28 50 L18 43 L14 30 L14 22 L18 9 Z" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linejoin="bevel"/><path d="M22 12 L34 6 L34 15 L27 23 Z" fill="currentColor" fill-opacity=".18"/><path d="M22 40 L34 46 L34 37 L27 29 Z" fill="currentColor" fill-opacity=".09"/><circle cx="26" cy="26" r="2.5" fill="currentColor"/></g></svg>© 2026 Cynea AI · Made with real voices</span>
-    <!-- These accounts do not exist yet, so the links are inert. -->
-    <div class="foot-social">
-      <a href="#" aria-label="X (placeholder — no account yet)"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M18.2 2h3.4l-7.4 8.5L23 22h-6.8l-5.3-7-6.1 7H1.4l7.9-9.1L1 2h7l4.8 6.4zm-1.2 18h1.9L7.1 4H5z"/></svg></a>
-      <a href="#" aria-label="LinkedIn (placeholder — no account yet)"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M4.98 3.5A2.5 2.5 0 1 1 0 3.5a2.5 2.5 0 0 1 4.98 0zM.4 8.2h4.2V24H.4zM8.5 8.2h4v2.2h.06c.56-1.06 1.94-2.2 4-2.2 4.3 0 5.1 2.8 5.1 6.5V24h-4.2v-6.9c0-1.65-.03-3.8-2.3-3.8-2.3 0-2.66 1.8-2.66 3.66V24H8.5z"/></svg></a>
-      <a href="#" aria-label="GitHub (placeholder — no account yet)"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 .5a12 12 0 0 0-3.8 23.4c.6.1.8-.26.8-.57v-2c-3.3.7-4-1.6-4-1.6-.55-1.4-1.34-1.77-1.34-1.77-1.1-.74.08-.73.08-.73 1.2.09 1.84 1.24 1.84 1.24 1.07 1.84 2.8 1.3 3.5 1 .1-.78.42-1.3.76-1.6-2.66-.3-5.46-1.33-5.46-5.93 0-1.3.47-2.38 1.24-3.22-.13-.3-.54-1.52.12-3.18 0 0 1-.32 3.3 1.23a11.5 11.5 0 0 1 6 0C17.99 4.7 19 5.02 19 5.02c.66 1.66.25 2.88.12 3.18a4.65 4.65 0 0 1 1.24 3.22c0 4.61-2.8 5.63-5.48 5.92.43.37.81 1.1.81 2.22v3.3c0 .31.2.68.8.56A12 12 0 0 0 12 .5z"/></svg></a>
-    </div>
   </div>
 </footer>
 
@@ -314,7 +302,7 @@ main{padding:0 16px}
 'use strict';
 (function(){
   var STEPS = 7;
-  var LABELS = ['Welcome','Agents','Configure','Phone numbers','Live monitor','Analytics','Go live'];
+  var LABELS = ['Welcome','Agents','Prompts','Test calls','Call log','Connect','Done'];
   var current = 1;
 
   var steps = Array.prototype.slice.call(document.querySelectorAll('.step'));
@@ -346,7 +334,7 @@ main{padding:0 16px}
 
   function finish(){
     try { localStorage.setItem('cynea_tour_seen','1'); } catch(_){}
-    location.href = 'agent_manager.html';
+    location.href = 'dashboard.html';
   }
 
   nextBtn.addEventListener('click', function(){

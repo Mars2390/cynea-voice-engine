@@ -4,7 +4,7 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Help center — Cynea</title>
-<meta name="description" content="Guides, FAQs, and support for building and deploying human-like AI voice agents with Cynea." />
+<meta name="description" content="Answers about creating and testing voice agents with Cynea." />
 <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
 <link rel="icon" href="assets/favicon.ico" sizes="48x48 32x32 16x16">
 <link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
@@ -150,16 +150,6 @@ h1,h2,h3{font-family:var(--display);font-weight:700;letter-spacing:-.02em;text-w
 /* ═══ FOOTER (structure copied from index.html) ══════════════════════ */
 .foot{background:radial-gradient(70% 60% at 85% 0%,rgba(0,212,255,.10),transparent 64%),var(--bg-2);border:1px solid var(--line);color:var(--ink);margin:var(--gutter);border-radius:var(--r-block);padding:clamp(64px,2.29vw + 55.1px,88px) clamp(24px,2.29vw + 15.1px,48px) 32px}
 .foot-top,.foot-cols,.foot-base{width:100%;max-width:var(--col);margin-inline:auto}
-.foot-top{display:grid;grid-template-columns:1fr;gap:48px;align-items:start}
-@media(min-width:901px){.foot-top{grid-template-columns:.85fr 1.15fr;gap:clamp(48px,1.2vw + 37.2px,56px)}}
-.news label{display:block;font-size:12px;text-transform:uppercase;letter-spacing:.08em;font-weight:600;color:var(--muted);margin-bottom:14px}
-.news-pill{display:flex;align-items:center;gap:8px;padding:6px 6px 6px 18px;background:var(--card-2);border:1px solid var(--line);border-radius:999px;max-width:390px}
-.news-pill input{flex:1;min-width:0;background:transparent;border:0;height:32px;font-size:13px;color:var(--ink)}
-.news-pill input::placeholder{color:var(--muted)}
-.news-pill:focus-within{border-color:rgba(0,212,255,.5)}
-.news-pill input:focus{outline:0}
-.news-pill .btn{border-radius:999px}
-.news-msg{font-size:12px;color:var(--muted);margin-top:12px;min-height:16px}
 .foot-serif{font-family:var(--display);font-weight:700;line-height:1.02;letter-spacing:-.02em;font-size:clamp(32px,5.2vw,62px);color:var(--ink)}
 .foot-serif .row:nth-child(2){margin-left:.8em}
 .foot-serif .row:nth-child(3){margin-left:.3em}
@@ -172,9 +162,6 @@ h1,h2,h3{font-family:var(--display);font-weight:700;letter-spacing:-.02em;text-w
 .foot-copy{display:inline-flex;align-items:center;gap:8px}
 .foot-copy .prism{display:block;width:auto;height:16px;color:var(--cyan);flex-shrink:0}
 .foot-base{display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;margin-top:48px;padding-top:24px;border-top:1px solid var(--line);font-size:clamp(12px,.1vw + 11.6px,13px);color:var(--muted);letter-spacing:-.16px}
-.foot-social{display:flex;gap:8px}
-.foot-social a{width:32px;height:32px;border-radius:50%;display:grid;place-items:center;box-shadow:inset 0 0 0 1px var(--line);color:var(--ink);transition:box-shadow .18s,color .18s}
-.foot-social a:hover{box-shadow:inset 0 0 0 1px var(--cyan);color:var(--cyan)}
 </style>
 </head>
 <body>
@@ -190,13 +177,11 @@ h1,h2,h3{font-family:var(--display);font-weight:700;letter-spacing:-.02em;text-w
       <a href="live-call.html">Live call</a>
       <a href="index.html#agents">Agents</a>
       <a href="index.html#highlights">Product</a>
-      <a href="index.html#channels">Channels</a>
-      <a href="index.html#telephony">Telephony</a>
       <a href="index.html#faq">FAQ</a>
     </div>
     <div class="nav-cta">
       <a class="btn btn-line" href="signin.html">Sign in</a>
-      <a class="btn btn-navy" href="index.html#try-demo">Get a call</a>
+      <a class="btn btn-navy" href="live-call.html">Talk to Maya</a>
     </div>
     <button class="nav-burger" id="nav-burger" type="button"
             aria-expanded="false" aria-controls="nav-links" aria-label="Menu">
@@ -212,7 +197,7 @@ h1,h2,h3{font-family:var(--display);font-weight:700;letter-spacing:-.02em;text-w
     <div class="wrap hero-in">
       <span class="eyebrow">Help center</span>
       <h1>How can we help?</h1>
-      <p class="lead">Guides, answers, and setup walkthroughs for building and deploying human-like AI voice agents with Cynea.</p>
+      <p class="lead">Answers about creating and testing voice agents with Cynea.</p>
       <div class="search">
         <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
         <input id="search" type="search" placeholder="Search for answers…" aria-label="Search the help center" autocomplete="off">
@@ -225,37 +210,37 @@ h1,h2,h3{font-family:var(--display);font-weight:700;letter-spacing:-.02em;text-w
     <div class="wrap">
       <div class="sec-head">
         <span class="eyebrow">Quick start</span>
-        <h2>Up and running in minutes</h2>
-        <p>Four short guides that take you from an empty workspace to a live agent answering calls.</p>
+        <h2>Where to start</h2>
+        <p>Four places to go first, from hearing an agent to creating your own.</p>
       </div>
       <div class="qs-grid">
 
-        <a class="qs rv" href="product_tour.html">
-          <span class="qs-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></span>
-          <h3>Create your first agent</h3>
-          <p>Name it, give it a persona, and walk through the guided setup to a working agent.</p>
-          <span class="qs-link">Start &rarr;</span>
-        </a>
-
-        <a class="qs rv" href="product_tour.html">
+        <a class="qs rv" href="live-call.html">
           <span class="qs-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/></svg></span>
-          <h3>Choose the right voice</h3>
-          <p>Preview natural voices and match tone, pace, and accent to your brand.</p>
-          <span class="qs-link">Compare &rarr;</span>
+          <h3>Talk to Maya</h3>
+          <p>Hear what an agent does, live in your browser. No account needed.</p>
+          <span class="qs-link">Start a call &rarr;</span>
         </a>
 
-        <a class="qs rv" href="product_tour.html">
-          <span class="qs-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg></span>
-          <h3>Upload scripts &amp; content</h3>
-          <p>Add scripts, FAQs, and documents so your agent answers in your own words.</p>
-          <span class="qs-link">Guide &rarr;</span>
+        <a class="qs rv" href="index.html#agents">
+          <span class="qs-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M10 8.5l5.5 3.5-5.5 3.5z"/></svg></span>
+          <h3>Hear the recorded voices</h3>
+          <p>Play the four agents on the home page and hear how each one sounds.</p>
+          <span class="qs-link">Listen &rarr;</span>
         </a>
 
-        <a class="qs rv" href="product_tour.html">
-          <span class="qs-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92V21a1 1 0 0 1-1.09 1 19.91 19.91 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6A19.91 19.91 0 0 1 3.21 4.09 1 1 0 0 1 4.2 3h4.09a1 1 0 0 1 1 .76 12.4 12.4 0 0 0 .65 2.62 1 1 0 0 1-.23 1L8 8.91a16 16 0 0 0 6 6l1.51-1.69a1 1 0 0 1 1-.23 12.4 12.4 0 0 0 2.62.65 1 1 0 0 1 .87 1.28z"/></svg></span>
-          <h3>Deploy to a phone number</h3>
-          <p>Connect a number and take your agent live for inbound and outbound calls.</p>
-          <span class="qs-link">Set up &rarr;</span>
+        <a class="qs rv" href="signup.html">
+          <span class="qs-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></span>
+          <h3>Create an account</h3>
+          <p>Sign up and verify your email to open the console.</p>
+          <span class="qs-link">Sign up &rarr;</span>
+        </a>
+
+        <a class="qs rv" href="agent_manager.html">
+          <span class="qs-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20h4L19 9l-4-4L4 16z"/><path d="M13.5 6.5l4 4"/></svg></span>
+          <h3>Create your first agent</h3>
+          <p>Choose a persona and a voice, then edit its prompt. You will be asked to sign in first.</p>
+          <span class="qs-link">Open the console &rarr;</span>
         </a>
 
       </div>
@@ -268,7 +253,7 @@ h1,h2,h3{font-family:var(--display);font-weight:700;letter-spacing:-.02em;text-w
       <div class="sec-head">
         <span class="eyebrow">FAQ</span>
         <h2>Frequently asked</h2>
-        <p>Honest answers to the questions teams ask most. Use the search above to filter.</p>
+        <p>Plain answers. Use the search above to filter.</p>
       </div>
 
       <div id="faqList">
@@ -276,60 +261,74 @@ h1,h2,h3{font-family:var(--display);font-weight:700;letter-spacing:-.02em;text-w
         <div class="faq-cat"><span class="eyebrow">Getting started</span></div>
         <div class="faq" data-faq>
           <button class="faq-q" type="button" aria-expanded="false">How do I create a voice agent?<span class="faq-plus" aria-hidden="true"></span></button>
-          <div class="faq-a"><p>From your dashboard, start a new agent and follow the guided setup: give it a name and persona, add your content, pick a voice, then connect a phone number. Most teams have a working agent in a few minutes.</p></div>
+          <div class="faq-a"><p>Create an account and verify your email. In the console, create an agent, choose a persona and a voice, then edit its prompt. Test it with a call in your browser.</p></div>
         </div>
         <div class="faq" data-faq>
           <button class="faq-q" type="button" aria-expanded="false">What can my agent handle?<span class="faq-plus" aria-hidden="true"></span></button>
-          <div class="faq-a"><p>Agents handle conversational tasks such as answering common questions, booking appointments, qualifying leads, taking simple requests, and routing callers. The more relevant content you upload, the better it represents your business.</p></div>
+          <div class="faq-a"><p>It holds a spoken conversation, following its prompt. What it knows is what the prompt tells it, so that is the place to put what callers will ask.</p></div>
         </div>
         <div class="faq" data-faq>
           <button class="faq-q" type="button" aria-expanded="false">Do I need technical skills to get started?<span class="faq-plus" aria-hidden="true"></span></button>
-          <div class="faq-a"><p>No. The dashboard is built for operations and support teams. You upload your existing scripts and documents and configure the agent through the interface — no coding required.</p></div>
+          <div class="faq-a"><p>No. You can create an agent and edit its prompt in the console without writing code. API keys and signed outbound webhooks are there if you want to connect your own systems.</p></div>
         </div>
-
         <div class="faq-cat"><span class="eyebrow">Voice &amp; language</span></div>
         <div class="faq" data-faq>
           <button class="faq-q" type="button" aria-expanded="false">What voices are available?<span class="faq-plus" aria-hidden="true"></span></button>
-          <div class="faq-a"><p>A range of natural, human-like voices with different tones and styles. You can preview each voice in the dashboard and switch at any time before or after deploying.</p></div>
+          <div class="faq-a"><p>You choose a voice when you create an agent. Agents you create speak with Edge TTS, which is synthetic. The clips on the home page are recordings of real people.</p></div>
         </div>
         <div class="faq" data-faq>
           <button class="faq-q" type="button" aria-expanded="false">Can the agent handle different accents?<span class="faq-plus" aria-hidden="true"></span></button>
-          <div class="faq-a"><p>Yes. Speech recognition is designed to understand a wide variety of speakers and accents. Adding example phrases and domain terms from your business helps accuracy in your specific use case.</p></div>
+          <div class="faq-a"><p>Speech to text is Whisper on Groq, which copes with many accents. The quickest check is your own: talk to Maya in your browser and read the transcript.</p></div>
         </div>
         <div class="faq" data-faq>
           <button class="faq-q" type="button" aria-expanded="false">What languages do you support?<span class="faq-plus" aria-hidden="true"></span></button>
-          <div class="faq-a"><p>Cynea supports human-like conversation in multiple languages, with more added over time. Check the dashboard for the current list, and reach out if your callers need a specific language.</p></div>
+          <div class="faq-a"><p>English. Every voice we offer is an English voice. Whisper can transcribe other languages, but the agent answers with an English voice.</p></div>
         </div>
-
         <div class="faq-cat"><span class="eyebrow">Pricing &amp; billing</span></div>
         <div class="faq" data-faq>
           <button class="faq-q" type="button" aria-expanded="false">How much does it cost?<span class="faq-plus" aria-hidden="true"></span></button>
-          <div class="faq-a"><p>Pricing is usage-based, so you pay for what you use. For current rates and plan options that fit your call volume, talk to our team and we will put together pricing for your needs.</p></div>
+          <div class="faq-a"><p>Pricing is not published yet.</p></div>
         </div>
         <div class="faq" data-faq>
-          <button class="faq-q" type="button" aria-expanded="false">Is there a free trial?<span class="faq-plus" aria-hidden="true"></span></button>
-          <div class="faq-a"><p>You can try Cynea before committing. Book a session with our team and we will set you up so you can build an agent and hear it in action.</p></div>
+          <button class="faq-q" type="button" aria-expanded="false">Can I try it for free?<span class="faq-plus" aria-hidden="true"></span></button>
+          <div class="faq-a"><p>Talking to Maya in your browser costs nothing and needs no account.</p></div>
+        </div>
+        <div class="faq-cat"><span class="eyebrow">Calls</span></div>
+        <div class="faq" data-faq>
+          <button class="faq-q" type="button" aria-expanded="false">Can my agent answer a phone number?<span class="faq-plus" aria-hidden="true"></span></button>
+          <div class="faq-a"><p>Browser calls work today. Phone calls are not connected yet.</p></div>
         </div>
         <div class="faq" data-faq>
-          <button class="faq-q" type="button" aria-expanded="false">How does billing work?<span class="faq-plus" aria-hidden="true"></span></button>
-          <div class="faq-a"><p>Billing is based on your usage over each period. You can review activity in the dashboard, and our team can help you set up the plan and limits that work for your account.</p></div>
+          <button class="faq-q" type="button" aria-expanded="false">How do I test my agent?<span class="faq-plus" aria-hidden="true"></span></button>
+          <div class="faq-a"><p>Start a test call from the console. It runs in your browser and uses your microphone.</p></div>
+        </div>
+        <div class="faq" data-faq>
+          <button class="faq-q" type="button" aria-expanded="false">Where do I see my calls?<span class="faq-plus" aria-hidden="true"></span></button>
+          <div class="faq-a"><p>The call log in the console lists them. A recording appears when one was uploaded.</p></div>
+        </div>
+        <div class="faq" data-faq>
+          <button class="faq-q" type="button" aria-expanded="false">Does the agent say it is an AI?<span class="faq-plus" aria-hidden="true"></span></button>
+          <div class="faq-a"><p>Yes. On the browser demo Maya does not open with a disclaimer, but the page says she is an AI and she answers straight when asked. The other agents say so in their greeting.</p></div>
+        </div>
+        <div class="faq-cat"><span class="eyebrow">Account &amp; data</span></div>
+        <div class="faq" data-faq>
+          <button class="faq-q" type="button" aria-expanded="false">I forgot my password. What now?<span class="faq-plus" aria-hidden="true"></span></button>
+          <div class="faq-a"><p>Use the password reset on the sign-in page.</p></div>
+        </div>
+        <div class="faq" data-faq>
+          <button class="faq-q" type="button" aria-expanded="false">Can I export or delete my data?<span class="faq-plus" aria-hidden="true"></span></button>
+          <div class="faq-a"><p>Yes. You can export your account data or delete it from your account.</p></div>
+        </div>
+        <div class="faq" data-faq>
+          <button class="faq-q" type="button" aria-expanded="false">What is stored?<span class="faq-plus" aria-hidden="true"></span></button>
+          <div class="faq-a"><p>Nothing from the browser demo with Maya. With an account, your agents, prompts, call log and any uploaded recordings are kept with your account.</p></div>
+        </div>
+        <div class="faq" data-faq>
+          <button class="faq-q" type="button" aria-expanded="false">How do I connect my own systems?<span class="faq-plus" aria-hidden="true"></span></button>
+          <div class="faq-a"><p>Create an API key in the console. Cynea can also send signed outbound webhooks to your systems.</p></div>
         </div>
 
-        <div class="faq-cat"><span class="eyebrow">Telephony</span></div>
-        <div class="faq" data-faq>
-          <button class="faq-q" type="button" aria-expanded="false">Which telephony providers are supported?<span class="faq-plus" aria-hidden="true"></span></button>
-          <div class="faq-a"><p>Cynea connects to phone numbers through Twilio and other major carriers. Our team helps you link a number and get your agent live for inbound and outbound calls.</p></div>
-        </div>
-        <div class="faq" data-faq>
-          <button class="faq-q" type="button" aria-expanded="false">Can the agent transfer a call to a human?<span class="faq-plus" aria-hidden="true"></span></button>
-          <div class="faq-a"><p>Yes. You can define when a call should escalate, and the agent will hand off to a team member so the caller reaches the right person when needed.</p></div>
-        </div>
-        <div class="faq" data-faq>
-          <button class="faq-q" type="button" aria-expanded="false">How do I deploy my agent to a phone number?<span class="faq-plus" aria-hidden="true"></span></button>
-          <div class="faq-a"><p>Once your agent is configured, connect it to a phone number through a supported provider and publish it. After that, calls to that number are answered by your agent.</p></div>
-        </div>
-
-        <div class="faq-empty" id="faqEmpty" role="status">No answers match your search. Try a different term, or contact our team below.</div>
+        <div class="faq-empty" id="faqEmpty" role="status">No answers match your search. Try a different term.</div>
       </div>
     </div>
   </section>
@@ -339,11 +338,11 @@ h1,h2,h3{font-family:var(--display);font-weight:700;letter-spacing:-.02em;text-w
     <div class="wrap">
       <div class="card cta rv">
         <div class="cta-in">
-          <h2>Still need help?</h2>
-          <p>Talk to our team about your use case, or browse the source and examples on GitHub.</p>
+          <h2>Try it yourself</h2>
+          <p>The fastest way to see what an agent does is to talk to one.</p>
           <div class="cta-row">
-            <a class="btn btn-dark btn-lg" href="https://calendly.com/albertmomanyi07/30min" target="_blank" rel="noopener">Contact sales</a>
-            <a class="btn btn-line btn-lg" href="https://github.com/Mars2390/cynea-voice-engine" target="_blank" rel="noopener">View on GitHub</a>
+            <a class="btn btn-dark btn-lg" href="live-call.html">Talk to Maya</a>
+            <a class="btn btn-line btn-lg" href="signup.html">Create an account</a>
           </div>
         </div>
       </div>
@@ -355,16 +354,6 @@ h1,h2,h3{font-family:var(--display);font-weight:700;letter-spacing:-.02em;text-w
 <!-- ═══ FOOTER ═══════════════════════════════════════════════════════ -->
 <footer class="foot">
   <div class="foot-top">
-    <div class="news">
-      <label for="news-email">Newsletter</label>
-      <form class="news-pill" id="news-form">
-        <input id="news-email" type="email" placeholder="you@company.com" autocomplete="email" aria-label="Email address">
-        <button class="btn btn-dark" type="submit">Subscribe</button>
-      </form>
-      <!-- No mailing-list provider is connected; submitting sends nothing. -->
-      <p class="news-msg" id="news-msg" role="status"></p>
-    </div>
-
     <div class="foot-serif" aria-label="Real people. Real voices.">
       <div class="row">Real</div>
       <div class="row">people.</div>
@@ -377,16 +366,16 @@ h1,h2,h3{font-family:var(--display);font-weight:700;letter-spacing:-.02em;text-w
     <div>
       <h4>Products</h4>
       <a href="index.html#try-demo">Live demo</a>
-      <a href="index.html#highlights">Voice agents</a>
-      <a href="index.html#telephony">Telephony</a>
-      <a href="index.html#channels">Channels</a>
+      <a href="live-call.html">Live call</a>
+      <a href="index.html#agents">Voice agents</a>
+      <a href="index.html#console">Console</a>
     </div>
     <div>
-      <h4>Solutions</h4>
-      <a href="index.html#try-demo">Hotels</a>
-      <a href="index.html#try-demo">Banking</a>
-      <a href="index.html#try-demo">Restaurants</a>
-      <a href="index.html#try-demo">Clinics</a>
+      <h4>Hear an agent</h4>
+      <a href="index.html#use-kwame">Hotels</a>
+      <a href="index.html#use-amina">Banking</a>
+      <a href="index.html#use-kofi">Restaurants</a>
+      <a href="index.html#use-maya">Bookings</a>
     </div>
     <div>
       <h4>Resources</h4>
@@ -396,9 +385,8 @@ h1,h2,h3{font-family:var(--display);font-weight:700;letter-spacing:-.02em;text-w
       <a href="index.html#faq">FAQ</a>
     </div>
     <div>
-      <h4>Company</h4>
-      <a href="index.html">About</a>
-      <a href="https://calendly.com/albertmomanyi07/30min" target="_blank" rel="noopener">Contact sales</a>
+      <h4>Account</h4>
+      <a href="signup.html">Create an account</a>
       <a href="signin.html">Sign in</a>
       <a href="dashboard.html">Dashboard</a>
     </div>
@@ -406,12 +394,6 @@ h1,h2,h3{font-family:var(--display);font-weight:700;letter-spacing:-.02em;text-w
 
   <div class="foot-base">
     <span class="foot-copy"><svg class="prism" viewBox="14 2 30 52" width="15" height="26" aria-hidden="true" focusable="false"><g transform="translate(2,2)"><path d="M28 2 L38 2 L40 4 L40 9 L34 15 L34 37 L40 43 L40 48 L38 50 L28 50 L18 43 L14 30 L14 22 L18 9 Z" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linejoin="bevel"/><path d="M22 12 L34 6 L34 15 L27 23 Z" fill="currentColor" fill-opacity=".18"/><path d="M22 40 L34 46 L34 37 L27 29 Z" fill="currentColor" fill-opacity=".09"/><circle cx="26" cy="26" r="2.5" fill="currentColor"/></g></svg>© 2026 Cynea AI · Made with real voices</span>
-    <!-- These accounts do not exist yet, so the links are inert. -->
-    <div class="foot-social">
-      <a href="#" aria-label="X (placeholder — no account yet)"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M18.2 2h3.4l-7.4 8.5L23 22h-6.8l-5.3-7-6.1 7H1.4l7.9-9.1L1 2h7l4.8 6.4zm-1.2 18h1.9L7.1 4H5z"/></svg></a>
-      <a href="#" aria-label="LinkedIn (placeholder — no account yet)"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M4.98 3.5A2.5 2.5 0 1 1 0 3.5a2.5 2.5 0 0 1 4.98 0zM.4 8.2h4.2V24H.4zM8.5 8.2h4v2.2h.06c.56-1.06 1.94-2.2 4-2.2 4.3 0 5.1 2.8 5.1 6.5V24h-4.2v-6.9c0-1.65-.03-3.8-2.3-3.8-2.3 0-2.66 1.8-2.66 3.66V24H8.5z"/></svg></a>
-      <a href="#" aria-label="GitHub (placeholder — no account yet)"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 .5a12 12 0 0 0-3.8 23.4c.6.1.8-.26.8-.57v-2c-3.3.7-4-1.6-4-1.6-.55-1.4-1.34-1.77-1.34-1.77-1.1-.74.08-.73.08-.73 1.2.09 1.84 1.24 1.84 1.24 1.07 1.84 2.8 1.3 3.5 1 .1-.78.42-1.3.76-1.6-2.66-.3-5.46-1.33-5.46-5.93 0-1.3.47-2.38 1.24-3.22-.13-.3-.54-1.52.12-3.18 0 0 1-.32 3.3 1.23a11.5 11.5 0 0 1 6 0C17.99 4.7 19 5.02 19 5.02c.66 1.66.25 2.88.12 3.18a4.65 4.65 0 0 1 1.24 3.22c0 4.61-2.8 5.63-5.48 5.92.43.37.81 1.1.81 2.22v3.3c0 .31.2.68.8.56A12 12 0 0 0 12 .5z"/></svg></a>
-    </div>
   </div>
 </footer>
 
@@ -447,15 +429,6 @@ h1,h2,h3{font-family:var(--display);font-weight:700;letter-spacing:-.02em;text-w
   if(!nav) return;
   function s(){ nav.classList.toggle('stuck',scrollY>8); }
   addEventListener('scroll',s,{passive:true}); s();
-})();
-// ── Newsletter (no provider wired up yet) ──────────────────────
-(function(){
-  var f=document.getElementById('news-form'),m=document.getElementById('news-msg');
-  if(!f) return;
-  f.addEventListener('submit',function(e){
-    e.preventDefault();
-    m.textContent='Newsletter isn’t live yet — nothing was sent.';
-  });
 })();
 // ── Accordion ──────────────────────────────────────────────────
 (function(){

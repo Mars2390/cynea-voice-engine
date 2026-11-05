@@ -157,7 +157,7 @@ SCRIPT: dict[str, dict] = {
         "caller": {"name": "Caller", "role": "Customer",
                    "where": "Chasing a stuck transfer", "avatar": None},
         "title": "Amina Assistant",
-        "summary": "An M-Pesa transfer is stuck. Amina finds it, escalates it, "
+        "summary": "A mobile money transfer is stuck. Amina finds it, flags it, "
                    "and commits to a callback window and a reversal rather than "
                    "an apology.",
         "turns": [

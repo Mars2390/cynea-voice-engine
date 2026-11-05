@@ -4,7 +4,7 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Demo call flow · Cynea</title>
-<meta name="description" content="Accept a demo call and watch a scripted hotel booking with Peter, Cynea's hotel agent, play out — with a sample of the agent's voice and illustrative call metrics alongside." />
+<meta name="description" content="Accept a demo call and watch a scripted hotel booking with Peter, Cynea's hotel agent, play out, with a short sample of the agent's voice." />
 <meta name="theme-color" content="#050505">
 <meta name="color-scheme" content="dark">
 <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
@@ -164,7 +164,7 @@ button,input{font:inherit;color:inherit}
 .phone-note{font-size:12px;line-height:1.5;color:var(--muted);text-align:center;margin:8px auto 0;max-width:34ch}
 
 /* ── example metrics panel ────────────────────────────── */
-.metrics{padding:24px}
+.metrics{padding:24px;align-self:center}
 .metrics-head{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:8px}
 .metrics-head h2{font-family:var(--display);font-weight:700;font-size:20px;letter-spacing:-.01em;line-height:1.1}
 .badge-illus{display:inline-flex;align-items:center;gap:6px;flex:none;font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--cyan);padding:4px 10px;border-radius:999px;background:rgba(0,212,255,.08);border:1px dashed rgba(0,212,255,.45)}
@@ -174,12 +174,8 @@ button,input{font:inherit;color:inherit}
 .tile{padding:16px;border:1px solid var(--line);border-radius:12px;background:var(--surface-2)}
 .tile .lbl{font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);font-weight:600;display:block}
 .tile .val{font-family:var(--sans);font-weight:600;font-size:28px;color:var(--ink);margin-top:8px;letter-spacing:-.02em;font-variant-numeric:tabular-nums;line-height:1.15}
-.tile .val.accent{color:var(--cyan)}
-.tile .val.good{color:var(--ok)}
 .tile .sub{font-size:12px;color:var(--muted);margin-top:4px}
-.tile.span{grid-column:1/-1;display:flex;align-items:center;justify-content:space-between;gap:12px}
-.stars{font-size:24px;letter-spacing:3px;color:#2E2E2E;transition:color .4s}
-.stars.full{color:var(--cyan)}
+.metrics-after{margin:20px 0 0}
 
 /* ── feature stats + cta ──────────────────────────────── */
 .feats{max-width:var(--maxw);margin:0 auto;padding:48px 24px 8px;display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
@@ -192,15 +188,6 @@ button,input{font:inherit;color:inherit}
 /* ── footer (index.html) ──────────────────────────────── */
 .foot{background:radial-gradient(70% 60% at 85% 0%,rgba(0,212,255,.10),transparent 64%),var(--bg-2);border:1px solid var(--line);color:var(--ink);margin:var(--gutter);border-radius:var(--r-block);padding:clamp(64px,2.29vw + 55.1px,88px) clamp(24px,2.29vw + 15.1px,48px) 32px}
 .foot-top,.foot-cols,.foot-base{width:100%;max-width:var(--col);margin-inline:auto}
-.foot-top{display:grid;grid-template-columns:1fr;gap:48px;align-items:start}
-@media(min-width:901px){.foot-top{grid-template-columns:.85fr 1.15fr;gap:clamp(48px,1.2vw + 37.2px,56px)}}
-.news label{display:block;font-size:12px;text-transform:uppercase;letter-spacing:.08em;font-weight:600;color:var(--muted);margin-bottom:14px}
-.news-pill{display:flex;align-items:center;gap:8px;padding:6px 6px 6px 18px;background:var(--card-2);border:1px solid var(--line);border-radius:999px;max-width:390px}
-.news-pill input{flex:1;min-width:0;background:transparent;border:0;height:32px;font-size:13px;color:var(--ink)}
-.news-pill input::placeholder{color:var(--muted)}
-.news-pill:focus-within{border-color:rgba(0,212,255,.5)}
-.news-pill input:focus{outline:0}
-.news-msg{font-size:12px;color:var(--muted);margin-top:12px;min-height:16px}
 .foot-serif{font-family:var(--display);font-weight:700;line-height:1.02;letter-spacing:-.02em;font-size:clamp(32px,5.2vw,62px);color:var(--ink)}
 .foot-serif .row:nth-child(2){margin-left:.8em}
 .foot-serif .row:nth-child(3){margin-left:.3em}
@@ -213,9 +200,6 @@ button,input{font:inherit;color:inherit}
 .foot-copy{display:inline-flex;align-items:center;gap:8px}
 .foot-copy .prism{display:block;width:auto;height:16px;color:var(--cyan);flex-shrink:0}
 .foot-base{display:flex;justify-content:space-between;align-items:center;gap:18px;flex-wrap:wrap;margin-top:52px;padding-top:24px;border-top:1px solid var(--line);font-size:clamp(12px,.1vw + 11.6px,13px);color:var(--muted);letter-spacing:-.16px}
-.foot-social{display:flex;gap:8px}
-.foot-social a{width:32px;height:32px;border-radius:50%;display:grid;place-items:center;box-shadow:inset 0 0 0 1px var(--line);color:var(--ink);transition:box-shadow .18s,color .18s}
-.foot-social a:hover{box-shadow:inset 0 0 0 1px var(--cyan);color:var(--cyan)}
 </style>
 </head>
 <body>
@@ -231,13 +215,11 @@ button,input{font:inherit;color:inherit}
       <a href="live-call.html">Live call</a>
       <a href="index.html#agents">Agents</a>
       <a href="index.html#highlights">Product</a>
-      <a href="index.html#channels">Channels</a>
-      <a href="index.html#telephony">Telephony</a>
       <a href="index.html#faq">FAQ</a>
     </div>
     <div class="nav-cta">
       <a class="btn btn-line" href="signin.html">Sign in</a>
-      <a class="btn btn-navy" href="index.html#try-demo">Get a call</a>
+      <a class="btn btn-navy" href="live-call.html">Talk to Maya</a>
     </div>
     <button class="nav-burger" id="nav-burger" type="button"
             aria-expanded="false" aria-controls="nav-links" aria-label="Menu">
@@ -249,7 +231,7 @@ button,input{font:inherit;color:inherit}
 <header class="hero-head rv">
   <span class="kicker">Demo call flow</span>
   <h1>Walk through a call with Peter</h1>
-  <p class="lead">Accept the call to watch a scripted hotel booking play out, with a short sample of the agent's voice and illustrative call metrics alongside.</p>
+  <p class="lead">Accept the call to watch a scripted hotel booking play out, with a short sample of the agent's voice.</p>
 </header>
 
 <section class="stage">
@@ -261,13 +243,13 @@ button,input{font:inherit;color:inherit}
       <div class="phone-screen">
         <div class="scene-grad" aria-hidden="true"></div>
 
-        <div class="phone-status layer" id="phoneStatus">CYNEA · LTE</div>
+        <div class="phone-status layer" id="phoneStatus">CYNEA · DEMO</div>
 
         <!-- ringing splash -->
         <div class="ringing-splash layer" id="ringingSplash">
           <div class="ring-avatar" aria-hidden="true"><span>P</span></div>
           <div class="ring-name">Peter</div>
-          <div class="ring-sub">Adinkra Hotel · <span class="num">00:18</span></div>
+          <div class="ring-sub">Adinkra Hotel</div>
           <div class="ring-state" id="ringState">Ringing<span class="dots"></span></div>
           <button class="accept-btn" id="acceptBtn" type="button">Accept call</button>
         </div>
@@ -277,7 +259,7 @@ button,input{font:inherit;color:inherit}
           <span class="callee-avatar" aria-hidden="true">P</span>
           <div class="callee-id">
             <div class="callee-name">Peter</div>
-            <div class="callee-sub">Adinkra Hotel · <span class="num" id="calleeTime">00:18</span></div>
+            <div class="callee-sub">Adinkra Hotel · <span class="num" id="calleeTime">00:00</span></div>
           </div>
           <span class="live-pill" id="callPill"><span class="dot"></span> <span id="callPillText">In call</span></span>
         </div>
@@ -292,74 +274,48 @@ button,input{font:inherit;color:inherit}
       </div>
     </div>
     <div class="helper" id="helper" role="status"></div>
-    <p class="phone-note">The conversation is scripted for this demo. The audio is a short sample of the agent's voice, not a recording of this call.</p>
+    <p class="phone-note">The conversation is scripted for this demo. The audio is a short sample of the agent's voice, not a recording of this call. Browser calls work today. Phone calls are not connected yet.</p>
   </div>
 
-  <!-- METRICS (right) -->
+  <!-- right: only what this page itself can count -->
   <aside class="card metrics rv" aria-labelledby="metrics-title">
     <div class="metrics-head">
-      <h2 id="metrics-title">Example call metrics</h2>
-      <span class="badge-illus">Illustrative</span>
+      <h2 id="metrics-title">This demo call</h2>
+      <span class="badge-illus">Scripted</span>
     </div>
-    <p class="metrics-cap">Illustrative examples of what the dashboard tracks on a call. This page generates these figures as the demo plays — they are not measurements from a real call.</p>
+    <p class="metrics-cap">Both counters come from this page as the demo plays. They are not measurements from a real call.</p>
     <div class="metric-grid">
       <div class="tile">
         <span class="lbl">Call duration</span>
         <div class="val" id="mDuration">00:00</div>
-        <div class="sub">Ticks with the demo</div>
+        <div class="sub">Stops when you pause</div>
       </div>
       <div class="tile">
-        <span class="lbl">Sentiment</span>
-        <div class="val accent" id="mSentiment">+0.20</div>
-        <div class="sub" id="mSentimentSub">Positive · warming up</div>
-      </div>
-      <div class="tile">
-        <span class="lbl">Cost so far</span>
-        <div class="val" id="mCost">$0.04</div>
-        <div class="sub">Example per-minute rate</div>
-      </div>
-      <div class="tile">
-        <span class="lbl">Containment</span>
-        <div class="val good">100%</div>
-        <div class="sub">No human handoff in this script</div>
-      </div>
-      <div class="tile span">
-        <div>
-          <span class="lbl">Customer satisfaction</span>
-          <div class="sub" id="mStarsSub" style="margin-top:8px">Example rating</div>
-        </div>
-        <div class="stars" id="mStars" aria-hidden="true">★★★★★</div>
+        <span class="lbl">Line</span>
+        <div class="val" id="mTurn">0 of 7</div>
+        <div class="sub">Of the scripted call</div>
       </div>
     </div>
+    <p class="metrics-cap metrics-after">For a real conversation, talk to Maya. With an account, the console keeps a call log, and a recording when one was uploaded.</p>
   </aside>
 
 </section>
 
-<!-- feature stats: every figure is a constant in cynea/interruption.py -->
+<!-- what actually runs when you talk to Maya -->
 <section class="feats">
-  <div class="card feat rv"><div class="k">700&thinsp;ms</div><div class="d">Grace period after you stop before it answers</div></div>
-  <div class="card feat rv"><div class="k">3 words</div><div class="d">Before it treats you as interrupting</div></div>
-  <div class="card feat rv"><div class="k">SIP</div><div class="d">Bring your own carrier and keep your number</div></div>
+  <div class="card feat rv"><div class="k">Whisper on Groq</div><div class="d">Hears what you say in a browser call</div></div>
+  <div class="card feat rv"><div class="k">Cerebras</div><div class="d">Writes the reply</div></div>
+  <div class="card feat rv"><div class="k">Edge TTS</div><div class="d">Speaks it back</div></div>
 </section>
 
 <div class="cta-row rv">
-  <a class="btn btn-dark btn-lg" href="https://calendly.com/albertmomanyi07/30min" target="_blank" rel="noopener">Book a demo</a>
-  <a class="btn btn-line btn-lg" href="https://github.com/Mars2390/cynea-voice-engine" target="_blank" rel="noopener">View on GitHub</a>
+  <a class="btn btn-dark btn-lg" href="live-call.html">Talk to Maya</a>
+  <a class="btn btn-line btn-lg" href="signup.html">Create an account</a>
 </div>
 
 <!-- ═══ FOOTER (same structure as index.html) ═════════════════════════ -->
 <footer class="foot">
   <div class="foot-top">
-    <div class="news">
-      <label for="news-email">Newsletter</label>
-      <form class="news-pill" id="news-form">
-        <input id="news-email" type="email" placeholder="you@company.com" autocomplete="email" aria-label="Email address">
-        <button class="btn btn-light" type="submit">Subscribe</button>
-      </form>
-      <!-- No mailing-list provider is connected; submitting sends nothing. -->
-      <p class="news-msg" id="news-msg" role="status"></p>
-    </div>
-
     <div class="foot-serif" aria-label="Real people. Real voices.">
       <div class="row">Real</div>
       <div class="row">people.</div>
@@ -372,16 +328,16 @@ button,input{font:inherit;color:inherit}
     <div>
       <h4>Products</h4>
       <a href="index.html#try-demo">Live demo</a>
-      <a href="index.html#highlights">Voice agents</a>
-      <a href="index.html#telephony">Telephony</a>
-      <a href="index.html#channels">Channels</a>
+      <a href="live-call.html">Live call</a>
+      <a href="index.html#agents">Voice agents</a>
+      <a href="index.html#console">Console</a>
     </div>
     <div>
-      <h4>Solutions</h4>
-      <a href="index.html#try-demo">Hotels</a>
-      <a href="index.html#try-demo">Banking</a>
-      <a href="index.html#try-demo">Restaurants</a>
-      <a href="index.html#try-demo">Clinics</a>
+      <h4>Hear an agent</h4>
+      <a href="index.html#use-kwame">Hotels</a>
+      <a href="index.html#use-amina">Banking</a>
+      <a href="index.html#use-kofi">Restaurants</a>
+      <a href="index.html#use-maya">Bookings</a>
     </div>
     <div>
       <h4>Resources</h4>
@@ -391,9 +347,8 @@ button,input{font:inherit;color:inherit}
       <a href="index.html#faq">FAQ</a>
     </div>
     <div>
-      <h4>Company</h4>
-      <a href="index.html#top">About</a>
-      <a href="https://calendly.com/albertmomanyi07/30min" target="_blank" rel="noopener">Contact sales</a>
+      <h4>Account</h4>
+      <a href="signup.html">Create an account</a>
       <a href="signin.html">Sign in</a>
       <a href="dashboard.html">Dashboard</a>
     </div>
@@ -401,12 +356,6 @@ button,input{font:inherit;color:inherit}
 
   <div class="foot-base">
     <span class="foot-copy"><svg class="prism" viewBox="14 2 30 52" width="15" height="26" aria-hidden="true" focusable="false"><g transform="translate(2,2)"><path d="M28 2 L38 2 L40 4 L40 9 L34 15 L34 37 L40 43 L40 48 L38 50 L28 50 L18 43 L14 30 L14 22 L18 9 Z" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linejoin="bevel"/><path d="M22 12 L34 6 L34 15 L27 23 Z" fill="currentColor" fill-opacity=".18"/><path d="M22 40 L34 46 L34 37 L27 29 Z" fill="currentColor" fill-opacity=".09"/><circle cx="26" cy="26" r="2.5" fill="currentColor"/></g></svg>© 2026 Cynea AI · Made with real voices</span>
-    <!-- These accounts do not exist yet, so the links are inert. -->
-    <div class="foot-social">
-      <a href="#" aria-label="X (placeholder — no account yet)"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M18.2 2h3.4l-7.4 8.5L23 22h-6.8l-5.3-7-6.1 7H1.4l7.9-9.1L1 2h7l4.8 6.4zm-1.2 18h1.9L7.1 4H5z"/></svg></a>
-      <a href="#" aria-label="LinkedIn (placeholder — no account yet)"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M4.98 3.5A2.5 2.5 0 1 1 0 3.5a2.5 2.5 0 0 1 4.98 0zM.4 8.2h4.2V24H.4zM8.5 8.2h4v2.2h.06c.56-1.06 1.94-2.2 4-2.2 4.3 0 5.1 2.8 5.1 6.5V24h-4.2v-6.9c0-1.65-.03-3.8-2.3-3.8-2.3 0-2.66 1.8-2.66 3.66V24H8.5z"/></svg></a>
-      <a href="#" aria-label="GitHub (placeholder — no account yet)"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 .5a12 12 0 0 0-3.8 23.4c.6.1.8-.26.8-.57v-2c-3.3.7-4-1.6-4-1.6-.55-1.4-1.34-1.77-1.34-1.77-1.1-.74.08-.73.08-.73 1.2.09 1.84 1.24 1.84 1.24 1.07 1.84 2.8 1.3 3.5 1 .1-.78.42-1.3.76-1.6-2.66-.3-5.46-1.33-5.46-5.93 0-1.3.47-2.38 1.24-3.22-.13-.3-.54-1.52.12-3.18 0 0 1-.32 3.3 1.23a11.5 11.5 0 0 1 6 0C17.99 4.7 19 5.02 19 5.02c.66 1.66.25 2.88.12 3.18a4.65 4.65 0 0 1 1.24 3.22c0 4.61-2.8 5.63-5.48 5.92.43.37.81 1.1.81 2.22v3.3c0 .31.2.68.8.56A12 12 0 0 0 12 .5z"/></svg></a>
-    </div>
   </div>
 </footer>
 
@@ -442,16 +391,6 @@ button,input{font:inherit;color:inherit}
   addEventListener('scroll',s,{passive:true}); s();
 })();
 
-/* ── newsletter (no provider wired up yet) ──────────── */
-(function(){
-  var f=document.getElementById('news-form'),m=document.getElementById('news-msg');
-  if(!f) return;
-  f.addEventListener('submit',function(e){
-    e.preventDefault();
-    m.textContent='Newsletter isn’t live yet — nothing was sent.';
-  });
-})();
-
 /* ── scroll progress + reveal ───────────────────────── */
 var prog = document.getElementById('prog');
 window.addEventListener('scroll', function(){
@@ -471,9 +410,9 @@ var TURNS = [
   { who:'caller', text:"Hi, I'd like to book a room for my anniversary next weekend." },
   { who:'agent',  text:"Wonderful, congratulations! We have an ocean-view suite available. Would you like champagne and flowers on arrival?" },
   { who:'caller', text:"Yes, that sounds perfect. Can we also get a late checkout?" },
-  { who:'agent',  text:"Absolutely — I've added a 2pm checkout and the celebration package. Shall I confirm the booking now?" },
+  { who:'agent',  text:"Absolutely. I've added a 2pm checkout and the celebration package. Shall I confirm the booking now?" },
   { who:'caller', text:"Please do. Thank you so much!" },
-  { who:'agent',  text:"All confirmed. You'll receive a text shortly. We look forward to hosting you — have a lovely day!" }
+  { who:'agent',  text:"All confirmed. We look forward to hosting you. Have a lovely day!" }
 ];
 
 /* ── DOM refs ───────────────────────────────────────── */
@@ -491,19 +430,32 @@ var callPill     = document.getElementById('callPill');
 var callPillText = document.getElementById('callPillText');
 
 var mDuration    = document.getElementById('mDuration');
-var mSentiment   = document.getElementById('mSentiment');
-var mSentimentSub= document.getElementById('mSentimentSub');
-var mCost        = document.getElementById('mCost');
-var mStars       = document.getElementById('mStars');
-var mStarsSub    = document.getElementById('mStarsSub');
+var mTurn        = document.getElementById('mTurn');
 
 var AUDIO_PRIMARY  = 'assets/demo_kwame_02.mp3';
 var AUDIO_FALLBACK = 'assets/kwame_test_1.mp3';
 
+/* ── the script clock ───────────────────────────────────
+   One number, `clock`, in milliseconds of call. It moves only while
+   playing, and the transcript, the timers and the end of the call are all
+   painted from it, so pausing is the clock not moving, whether that lands
+   mid-line or in the gap between two lines. There is no chain of timeouts
+   to lose its place. */
+var GAP_MS = 650;
+var TIMELINE = (function(){
+  var at = 0;
+  return TURNS.map(function(turn){
+    var type = turn.text.length * (turn.who === 'agent' ? 42 : 34);
+    var span = { start:at, typed:at + type };
+    at = span.typed + GAP_MS;
+    return span;
+  });
+})();
+var CALL_MS = TIMELINE[TIMELINE.length - 1].typed + GAP_MS;
+
 var state = {
-  started:false, playing:false, audioOK:false,
-  turnIndex:-1, turnTimer:null, typeTimer:null,
-  durTimer:null, elapsed:18, finished:false
+  started:false, playing:false, finished:false,
+  audioStarted:false, clock:0, lastTick:0, ticker:null
 };
 
 /* ── helpers ────────────────────────────────────────── */
@@ -512,33 +464,6 @@ function fmtClock(s){
   return String(m).padStart(2,'0') + ':' + String(sec).padStart(2,'0');
 }
 
-/* ── example metrics: duration count-up + interpolation ── */
-function syncMetrics(){
-  mDuration.textContent = fmtClock(state.elapsed);
-  calleeTime.textContent = fmtClock(state.elapsed);
-  var done = Math.max(0, state.turnIndex + 1);
-  var p = Math.min(1, done / TURNS.length);
-  var sent = +(0.20 + 0.30 * p).toFixed(2);
-  mSentiment.textContent = (sent >= 0 ? '+' : '') + sent.toFixed(2);
-  mSentimentSub.textContent = sent >= 0.40 ? 'Positive · happy customer' : 'Positive · warming up';
-  var minutes = state.elapsed / 60;
-  mCost.textContent = '$' + Math.max(0.04, minutes * 0.09).toFixed(2);
-  if (state.finished){ mStars.classList.add('full'); mStarsSub.textContent = 'Booking confirmed · example 5/5'; }
-}
-
-function startDurationTimer(){
-  if (state.durTimer) return;
-  // Prefer audio timeupdate when available; otherwise tick a timer.
-  state.durTimer = setInterval(function(){
-    if (state.playing && !state.audioOK){ state.elapsed += 0.25; }
-    syncMetrics();
-  }, 250);
-}
-player.addEventListener('timeupdate', function(){
-  if (state.audioOK){ state.elapsed = 18 + player.currentTime; syncMetrics(); }
-});
-
-/* ── transcript typing ──────────────────────────────── */
 function appendBubble(turn){
   var div = document.createElement('div');
   div.className = 'bubble bubble-' + turn.who;
@@ -554,52 +479,63 @@ function appendBubble(turn){
     wave.setAttribute('aria-hidden','true');
     wave.innerHTML = '<span class="bar"></span><span class="bar"></span><span class="bar"></span><span class="bar"></span><span class="bar"></span>';
     div.appendChild(wave);
-    div.classList.add('speaking');
   }
   convo.appendChild(div);
   convo.scrollTop = convo.scrollHeight;
   return { div:div, txt:txt };
 }
 
-function typeInto(host, text, totalMs, done){
-  var delay = Math.max(14, totalMs / Math.max(text.length,1));
-  var i = 0;
-  host.textContent = '';
-  function tick(){
-    if (!state.playing){ state.typeTimer = setTimeout(tick, 200); return; }
-    if (i >= text.length){ done && done(); return; }
-    host.textContent += text.charAt(i++);
-    convo.scrollTop = convo.scrollHeight;
-    if (i < text.length) state.typeTimer = setTimeout(tick, delay);
-    else done && done();
-  }
-  tick();
+/* Restate the transcript and the counters from the clock. */
+var bubbles = [];
+function paint(){
+  var due = 0;
+  TIMELINE.forEach(function(span, i){
+    if (!state.started || state.clock < span.start) return;
+    due = i + 1;
+    var turn = TURNS[i];
+    if (!bubbles[i]) bubbles[i] = appendBubble(turn);
+    var share = Math.min(1, (state.clock - span.start) / (span.typed - span.start));
+    var text = turn.text.slice(0, Math.round(turn.text.length * share));
+    if (bubbles[i].txt.textContent !== text){
+      bubbles[i].txt.textContent = text;
+      convo.scrollTop = convo.scrollHeight;
+    }
+    bubbles[i].div.classList.toggle('speaking', turn.who === 'agent' && share < 1 && state.playing);
+  });
+  var clockText = fmtClock(state.clock / 1000);
+  mDuration.textContent = clockText;
+  calleeTime.textContent = clockText;
+  mTurn.textContent = due + ' of ' + TURNS.length;
 }
 
-function nextTurn(){
-  if (state.finished) return;
-  state.turnIndex += 1;
-  if (state.turnIndex >= TURNS.length){ finish(); return; }
-  var turn = TURNS[state.turnIndex];
-  var ui = appendBubble(turn);
-  var span = turn.text.length * (turn.who === 'agent' ? 42 : 34);
-  syncMetrics();
-  typeInto(ui.txt, turn.text, span, function(){
-    if (turn.who === 'agent') ui.div.classList.remove('speaking');
-    state.turnTimer = setTimeout(function(){
-      if (state.playing) nextTurn();
-    }, 650);
-  });
+function tick(){
+  if (!state.playing) return;
+  var now = performance.now();
+  state.clock = Math.min(CALL_MS, state.clock + (now - state.lastTick));
+  state.lastTick = now;
+  paint();
+  if (state.clock >= CALL_MS) finish();
+}
+
+function startTicking(){
+  state.lastTick = performance.now();
+  if (!state.ticker) state.ticker = setInterval(tick, 40);
+}
+function stopTicking(){
+  clearInterval(state.ticker);
+  state.ticker = null;
 }
 
 function finish(){
   state.finished = true;
   state.playing = false;
-  syncMetrics();
+  stopTicking();
+  paint();
+  try { player.pause(); } catch(_){}
   playBtn.textContent = '▶ Replay call';
   phoneStatus.textContent = 'CYNEA · CALL ENDED';
   callPill.classList.add('ended'); callPillText.textContent = 'Ended';
-  helper.textContent = 'Demo call ended · ' + fmtClock(state.elapsed);
+  helper.textContent = 'Demo call ended · ' + fmtClock(state.clock / 1000);
 }
 
 /* ── play / pause ───────────────────────────────────── */
@@ -607,58 +543,66 @@ function beginCall(){
   if (!state.started){
     state.started = true;
     ringingSplash.hidden = true;
-    phoneStatus.textContent = 'CYNEA · LTE';
+    phoneStatus.textContent = 'CYNEA · DEMO';
     phoneCallee.hidden = false;
     convo.hidden = false;
     phonePlay.hidden = false;
   }
 }
 
-function playAudio(){
-  // Try primary, fall back to secondary on error.
-  player.src = AUDIO_PRIMARY;
-  state.audioOK = true;
-  player.currentTime = 0;
-  var pr = player.play();
-  if (pr && pr.catch){ pr.catch(function(){ state.audioOK = false; }); }
+/* The sample is shorter than the script. Once it has ended it stays ended:
+   resuming must not start it again. A rejected play() only means the
+   transcript runs silent. */
+function runAudio(){
+  var pr;
+  if (!state.audioStarted){
+    state.audioStarted = true;
+    player.src = AUDIO_PRIMARY;
+    pr = player.play();
+  } else if (!player.ended){
+    pr = player.play();
+  }
+  if (pr && pr.catch) pr.catch(function(){});
 }
 player.addEventListener('error', function(){
   if (player.src.indexOf(AUDIO_FALLBACK) === -1){
     player.src = AUDIO_FALLBACK;
-    var pr = player.play();
-    if (pr && pr.catch){ pr.catch(function(){ state.audioOK = false; }); }
-  } else {
-    state.audioOK = false; // no audio — metrics timer drives duration
+    if (state.playing){
+      var pr = player.play();
+      if (pr && pr.catch) pr.catch(function(){});
+    }
   }
 });
-player.addEventListener('ended', function(){ /* transcript may still be typing */ });
 
 function play(){
   beginCall();
-  if (state.finished){ resetCall(); }
+  if (state.finished) resetCall();
   state.playing = true;
   playBtn.textContent = '❚❚ Pause';
   helper.textContent = 'Playing the scripted call…';
-  startDurationTimer();
-  playAudio();
-  if (state.turnIndex < 0) nextTurn();
+  startTicking();
+  runAudio();
+  paint();
 }
 
 function pause(){
+  tick();                      /* bank the time since the last tick */
+  if (!state.playing) return;  /* that tick may have ended the call */
   state.playing = false;
+  stopTicking();
+  paint();
   playBtn.textContent = '▶ Resume';
   helper.textContent = 'Paused';
   try { player.pause(); } catch(_){}
 }
 
 function resetCall(){
-  clearTimeout(state.turnTimer); clearTimeout(state.typeTimer);
   convo.innerHTML = '';
-  state.turnIndex = -1; state.finished = false; state.elapsed = 18;
-  mStars.classList.remove('full'); mStarsSub.textContent = 'Example rating';
+  bubbles = [];
+  state.finished = false; state.clock = 0; state.audioStarted = false;
   callPill.classList.remove('ended'); callPillText.textContent = 'In call';
-  phoneStatus.textContent = 'CYNEA · LTE';
-  try { player.pause(); player.currentTime = 0; } catch(_){}
+  phoneStatus.textContent = 'CYNEA · DEMO';
+  try { player.pause(); player.removeAttribute('src'); player.load(); } catch(_){}
 }
 
 playBtn.addEventListener('click', function(){
@@ -670,7 +614,7 @@ acceptBtn.addEventListener('click', function(){
   play();
 });
 
-syncMetrics();
+paint();
 </script>
 </body>
 </html>

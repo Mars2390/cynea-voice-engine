@@ -76,7 +76,7 @@ import os
 import random
 import time
 import uuid
-from urllib.parse import parse_qs, urlparse
+from urllib.parse import parse_qs, quote, urlparse
 from xml.sax.saxutils import escape
 
 from js import AbortSignal, Object, Uint8Array, WebSocketPair, WebSocketRequestResponsePair
@@ -86,7 +86,7 @@ from workers import DurableObject, Response, WorkerEntrypoint
 
 # Shared with the FastAPI fallback. These are copied into src/ at build time
 # by sync_shared.py; the repo-root packages are the source of truth.
-from cynea import providers
+from cynea import monitoring, providers
 from cynea.engine import CyneaEngine
 from cynea.models import AudioChunk
 from cynea.voice_demo import (
@@ -95,12 +95,14 @@ from cynea.voice_demo import (
     MAX_UTTERANCE_BYTES,
     MAX_UTTERANCE_S,
     RATE,
+    TICKET_REFUSED_TEXT,
     calls_per_hour,
     demo_config,
     idle_s,
     max_call_s,
     max_concurrent,
     max_turns,
+    saved_config,
 )
 from cynea_africa.synthesizer.edge_tts import EdgeTTSSynthesizer, _Segment
 from edge_tts import constants as _edge_const
@@ -121,6 +123,7 @@ _ENV_KEYS = (
     "ELEVENLABS_API_KEY", "DATABASE_URL", "SESSION_SECRET",
     "VOICE_DEMO_MAX_CALL_S", "VOICE_DEMO_MAX_TURNS", "VOICE_DEMO_MAX_CONCURRENT",
     "VOICE_DEMO_IDLE_S", "VOICE_DEMO_CALLS_PER_HOUR",
+    "API_URL", "SENTRY_DSN",
 )
 
 
@@ -174,7 +177,7 @@ def _json(payload: dict, status: int = 200) -> Response:
 # v2 scheme in 7.3.x, and 7.2.8 is now refused with 403) the fix is a
 # version bump in pyproject.toml, not an edit here.
 _EDGE_URL = f"https://{_edge_const.BASE_URL}/edge/v1"
-_EDGE_TIMEOUT_S = 15.0
+_EDGE_TIMEOUT_S = 10.0
 _EDGE_PARALLEL = 4          # segments in flight; Workers allow 6 open connections
 
 
@@ -241,13 +244,21 @@ class WorkerEdgeTTS(EdgeTTSSynthesizer):
         gate = asyncio.Semaphore(_EDGE_PARALLEL)
 
         async def one(seg) -> bytes:
+            kwargs = dict(
+                edge_tts=None, text=seg.text, voice=voice,
+                rate=self._merge_rate(seg.prosody.get("rate"), request.speed),
+                pitch=self._ssml_pitch_to_edge(seg.prosody.get("pitch")),
+                volume=self._ssml_volume_to_edge(seg.prosody.get("volume")),
+            )
             async with gate:
-                return await self._synth_segment(
-                    edge_tts=None, text=seg.text, voice=voice,
-                    rate=self._merge_rate(seg.prosody.get("rate"), request.speed),
-                    pitch=self._ssml_pitch_to_edge(seg.prosody.get("pitch")),
-                    volume=self._ssml_volume_to_edge(seg.prosody.get("volume")),
-                )
+                # Once more on failure. Measured locally, the free service now
+                # and then closes a socket with no audio or never answers, and
+                # one lost segment would otherwise lose the caller a whole turn.
+                try:
+                    return await self._synth_segment(**kwargs)
+                except (ConnectionError, RuntimeError) as exc:
+                    print(f"Edge TTS retry: {exc}")
+                    return await self._synth_segment(**kwargs)
 
         chunks = [c for c in await asyncio.gather(*(one(s) for s in segments)) if c]
         if not chunks:
@@ -463,16 +474,60 @@ class CerebrasLLM:
 providers.register_llm("cerebras", CerebrasLLM)
 
 
-def _call_config(persona: str):
-    """The demo persona, answered by Cerebras.
+def _call_config(persona: str, saved: dict = None):
+    """The agent for a call, answered by Cerebras: a customer's saved settings
+    for a test call, otherwise the demo persona.
 
-    demo_config() is shared with the FastAPI fallback, which still names
-    Groq; the Worker swaps the model provider and keeps everything else —
+    The shared builders are also used by the FastAPI fallback, which still
+    names Groq; the Worker swaps the model provider and keeps everything else —
     prompt, truth rule, voice — identical.
     """
-    config = demo_config(persona)
+    config = saved_config(saved) if saved else demo_config(persona)
     config.llm_provider = "cerebras"
     return config
+
+
+async def _fetch_saved_config(ticket: str):
+    """Trade a call ticket for the agent's saved settings, or None if refused.
+
+    None also covers the API being unreachable. A caller who asked for their
+    own agent must not quietly get a different one.
+    """
+    base = os.getenv("API_URL", "").rstrip("/")
+    if not base:
+        print("test call refused: API_URL is not set")
+        return None
+    try:
+        resp = await js_fetch(f"{base}/call-config?ticket={quote(ticket, safe='')}", to_js(
+            {"signal": AbortSignal.timeout(_PROBE_TIMEOUT_MS)},
+            dict_converter=Object.fromEntries))
+        if int(resp.status) != 200:
+            print(f"test call refused: the API answered {resp.status}")
+            return None
+        return json.loads(str(await resp.text()))
+    except Exception as exc:
+        print(f"test call refused: {type(exc).__name__}: {exc}")
+        await _report(exc, "fetch saved config")
+        return None
+
+
+async def _report(exc: BaseException, where: str) -> None:
+    """Tell the error tracker, if there is one. Over the runtime's fetch, since
+    this is called from inside the handlers. Never raises."""
+    target = monitoring.endpoint()
+    if target is None:
+        return
+    try:
+        url, auth = target
+        await js_fetch(url, to_js({
+            "method": "POST",
+            "headers": {"X-Sentry-Auth": auth,
+                        "Content-Type": "application/x-sentry-envelope"},
+            "body": monitoring.envelope(exc, "voice-worker", tags={"where": where}).decode("utf-8"),
+            "signal": AbortSignal.timeout(_PROBE_TIMEOUT_MS),
+        }, dict_converter=Object.fromEntries))
+    except Exception as err:
+        print(f"could not report an error: {type(err).__name__}")
 
 
 # ── health: does each service actually answer? ───────────────────────────
@@ -620,17 +675,19 @@ class Default(WorkerEntrypoint):
             if resp.status != 204:
                 return resp
 
-        agent = (parse_qs(url.query).get("agent") or [DEFAULT_PERSONA])[0].lower()
+        query = parse_qs(url.query)
+        agent = quote((query.get("agent") or [DEFAULT_PERSONA])[0].lower(), safe="")
+        ticket = (query.get("ticket") or [""])[0]
         lines = list(range(max_concurrent()))
         random.shuffle(lines)
 
         for n, line in enumerate(lines):
             last = n == len(lines) - 1
             stub = ns.get(ns.idFromName(f"line-{line}"))
-            resp = await stub.fetch(
-                f"https://voice-session/connect?agent={agent}&last={int(last)}",
-                headers={"Upgrade": "websocket"},
-            )
+            target = f"https://voice-session/connect?agent={agent}&last={int(last)}"
+            if ticket:
+                target += f"&ticket={quote(ticket, safe='')}"
+            resp = await stub.fetch(target, headers={"Upgrade": "websocket"})
             if resp.status != 409:       # 101 with a call, or 101 with "busy"
                 return resp
         return _json({"error": "no line answered"}, 503)  # only if lines == 0
@@ -693,6 +750,20 @@ class VoiceSession(DurableObject):
             await self.ctx.storage.setAlarm(int((time.time() + 0.25) * 1000))
             return Response(None, status=101, web_socket=client)
 
+        # A test call on a customer's agent. Settled before the socket is
+        # accepted as a call, so a bad ticket never holds this line.
+        saved = None
+        ticket = (query.get("ticket") or [""])[0]
+        if ticket:
+            saved = await _fetch_saved_config(ticket)
+            if saved is None:
+                client, server = WebSocketPair.new().object_values()
+                self.ctx.acceptWebSocket(server, to_js(["busy"]))
+                server.send(json.dumps({"type": "ended", "reason": TICKET_REFUSED_TEXT}))
+                await self.ctx.storage.setAlarm(int((time.time() + 0.25) * 1000))
+                return Response(None, status=101, web_socket=client)
+            persona = saved.get("persona") or persona
+
         client, server = WebSocketPair.new().object_values()
         self.ctx.acceptWebSocket(server, to_js(["call"]))  # Hibernation API
 
@@ -705,10 +776,14 @@ class VoiceSession(DurableObject):
         # set the first deadline. The alarm, not the next utterance, ends the
         # call — otherwise an abandoned tab would hold the line.
         await self.ctx.storage.delete("history")
+        await self.ctx.storage.delete("saved")
+        if saved:
+            await self.ctx.storage.put("saved", json.dumps(saved))
         await self.ctx.storage.setAlarm(int((now + min(max_call_s(), idle_s())) * 1000))
 
-        self._send(server, {"type": "ready", "agent": _call_config(persona).name,
-                            "persona": persona, "rate": RATE,
+        self._send(server, {"type": "ready", "agent": _call_config(persona, saved).name,
+                            "persona": persona, "role": (saved or {}).get("role"),
+                            "own_agent": bool(saved), "rate": RATE,
                             "max_call_s": max_call_s(), "idle_s": idle_s()})
         asyncio.ensure_future(self._greet(server, meta))
         return Response(None, status=101, web_socket=client)
@@ -723,14 +798,21 @@ class VoiceSession(DurableObject):
                     self._speak(ws, "greeting", str(greeting), greeting.audio)
             except Exception as exc:
                 print(f"greeting failed: {type(exc).__name__}: {exc}")
+                await _report(exc, "greeting")
                 self._send(ws, {"type": "error", "message": CALL_ERROR_TEXT})
 
     # ── hibernation handlers ─────────────────────────────────────────────
     async def webSocketMessage(self, ws, message):
+        # A caller who was refused has no call to talk to, and is being hung up
+        # by the alarm. The browser's goodbye frame just lands here first.
+        if "call" not in self.ctx.getTags(ws):
+            return
         async with self._turn:
             try:
                 await self._on_message(ws, message)
-            except Exception:
+            except Exception as exc:
+                print(f"message handler failed: {type(exc).__name__}: {exc}")
+                await _report(exc, "message handler")
                 self._send(ws, {"type": "error", "message": "The call dropped. Reload to retry."})
                 self._hang_up(ws, 1011, "internal error")
 
@@ -838,6 +920,7 @@ class VoiceSession(DurableObject):
             # The caller hears that it failed, never silence; the cause goes
             # to the log, where `pywrangler tail` shows it.
             print(f"turn failed: {type(exc).__name__}: {exc}")
+            await _report(exc, "turn")
             self._send(ws, {"type": "error", "message": CALL_ERROR_TEXT})
             return
 
@@ -907,12 +990,16 @@ class VoiceSession(DurableObject):
         persist=False: an anonymous visitor has no workspace to own the
         row, and the demo is not a customer's call log. The system prompt
         comes from the current deploy, not from storage, so a prompt fix
-        reaches calls already in progress.
+        reaches calls already in progress. A test call's settings are the
+        exception: they were fetched once with the ticket and live in storage,
+        so an edit made during a call doesn't change who answers mid-sentence.
         """
-        engine = CyneaEngine(_call_config(meta["persona"]), persist=False)
-        saved = await self.ctx.storage.get("history")
-        if isinstance(saved, str):
-            engine.history.restore(json.loads(saved))
+        raw = await self.ctx.storage.get("saved")
+        agent = json.loads(raw) if isinstance(raw, str) else None
+        engine = CyneaEngine(_call_config(meta["persona"], agent), persist=False)
+        history = await self.ctx.storage.get("history")
+        if isinstance(history, str):
+            engine.history.restore(json.loads(history))
         engine.resume()
         return engine
 
@@ -921,6 +1008,7 @@ class VoiceSession(DurableObject):
 
     async def _release(self) -> None:
         await self.ctx.storage.delete("history")
+        await self.ctx.storage.delete("saved")
         # Leave the alarm if a busy caller is still waiting to be hung up.
         if not self.ctx.getWebSockets("busy"):
             await self.ctx.storage.deleteAlarm()

@@ -38,6 +38,7 @@ SHARED = [
     "cynea/providers.py",
     "cynea/agent_loader.py",
     "cynea/voice_demo.py",
+    "cynea/monitoring.py",
     "cynea_africa/__init__.py",
     "cynea_africa/theme.py",
     "cynea_africa/persona/__init__.py",

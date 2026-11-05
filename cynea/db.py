@@ -209,6 +209,66 @@ class RateEvent(Base):
                         nullable=False, index=True)
 
 
+class RevokedToken(Base):
+    """A session token signed out before it expired. Rows outlive their use by
+    nothing: expired ones are removed whenever another token is revoked."""
+    __tablename__ = "revoked_tokens"
+
+    jti = Column(String(64), primary_key=True)
+    expires_at = Column(Float, nullable=False)
+
+
+class SessionCutoff(Base):
+    """Sessions issued before this moment are dead: the password changed."""
+    __tablename__ = "session_cutoffs"
+
+    user_id = Column(GUID, ForeignKey("users.id", ondelete="CASCADE"), primary_key=True)
+    not_before = Column(Float, nullable=False)
+
+
+class PasswordReset(Base):
+    """A password-reset link. The token itself is only ever in the email."""
+    __tablename__ = "password_resets"
+
+    id = Column(GUID, primary_key=True, default=_uuid)
+    user_id = Column(GUID, ForeignKey("users.id", ondelete="CASCADE"),
+                     nullable=False, index=True)
+    token_hash = Column(String(64), nullable=False, unique=True, index=True)
+    expires_at = Column(DateTime(timezone=True), nullable=False)
+    used_at = Column(DateTime(timezone=True), nullable=True)
+    created_at = Column(DateTime(timezone=True), default=_now, nullable=False)
+
+
+class ApiKey(Base):
+    """A key for calling the API without a session. Only the hash is stored."""
+    __tablename__ = "api_keys"
+
+    id = Column(GUID, primary_key=True, default=_uuid)
+    user_id = Column(GUID, ForeignKey("users.id", ondelete="CASCADE"),
+                     nullable=False, index=True)
+    name = Column(String(120), nullable=False)
+    prefix = Column(String(20), nullable=False)        # enough to recognise it by
+    key_hash = Column(String(64), nullable=False, unique=True, index=True)
+    created_at = Column(DateTime(timezone=True), default=_now, nullable=False)
+    last_used_at = Column(DateTime(timezone=True), nullable=True)
+    revoked_at = Column(DateTime(timezone=True), nullable=True)
+
+
+class Webhook(Base):
+    """Where to POST events. `secret` signs each delivery, so it has to be
+    readable here, unlike a password or an API key."""
+    __tablename__ = "webhooks"
+
+    id = Column(GUID, primary_key=True, default=_uuid)
+    user_id = Column(GUID, ForeignKey("users.id", ondelete="CASCADE"),
+                     nullable=False, index=True)
+    url = Column(String(2048), nullable=False)
+    secret = Column(String(128), nullable=False)
+    created_at = Column(DateTime(timezone=True), default=_now, nullable=False)
+    last_status = Column(Integer, nullable=True)       # HTTP status, 0 for no answer
+    last_delivery_at = Column(DateTime(timezone=True), nullable=True)
+
+
 class PromptVersion(Base):
     __tablename__ = "prompt_versions"
 
@@ -292,6 +352,7 @@ def reset_connection() -> None:
         _ENGINE.dispose()
     _ENGINE = None
     _SESSION_FACTORY = None
+    _READY_TABLES.clear()
 
 
 def init_db(url: Optional[str] = None) -> None:
@@ -351,6 +412,38 @@ def upgrade_schema(engine=None) -> List[str]:
     return added
 
 
+_READY_TABLES: set = set()
+
+
+def table_ready(name: str) -> bool:
+    """Does this table exist yet?
+
+    The deployed API does not run migrations (Vercel's mount skips lifespan),
+    so code can reach production minutes before its table does. Used only for
+    checks that sit on every request, such as session revocation, so that gap
+    cannot take down sign-in. Remembered once true; a table does not go away.
+    """
+    if name in _READY_TABLES:
+        return True
+    from sqlalchemy import inspect
+
+    if inspect(get_engine()).has_table(name):
+        _READY_TABLES.add(name)
+        return True
+    log.error("table %s is missing: run python -m cynea.migrate", name)
+    return False
+
+
+def _is_uuid(value) -> bool:
+    """Postgres raises on a malformed uuid where SQLite just finds nothing, so
+    a bad id in a URL was a 404 in tests and a 500 in production."""
+    try:
+        uuid.UUID(str(value))
+        return True
+    except ValueError:
+        return False
+
+
 def healthcheck(retries: int = 3, backoff_s: float = 2.0) -> bool:
     """True when the database answers. Wire this into /health.
 
@@ -401,8 +494,31 @@ def get_user_by_email(email: str) -> Optional[User]:
 
 
 def get_user_by_id(user_id: str) -> Optional[User]:
+    if not _is_uuid(user_id):
+        return None
     with session_scope() as s:
         return s.get(User, str(user_id))
+
+
+def delete_user(user_id: str) -> bool:
+    """Delete an account and everything it owns.
+
+    Agents, calls, recordings' rows and prompt versions go by ORM cascade. The
+    tables with no relationship on User are removed by hand, because SQLite
+    does not enforce ON DELETE unless asked. Stored audio is not in the
+    database: delete those objects first (see account.delete_account).
+    """
+    from sqlalchemy import delete as sql_delete
+
+    with session_scope() as s:
+        user = s.get(User, str(user_id))
+        if user is None:
+            return False
+        for model in (SessionCutoff, PasswordReset, ApiKey, Webhook):
+            if table_ready(model.__tablename__):
+                s.execute(sql_delete(model).where(model.user_id == str(user_id)))
+        s.delete(user)
+        return True
 
 
 # ----------------------------------------------------------------------
@@ -428,6 +544,8 @@ def get_agents_by_user(user_id: str) -> List[Agent]:
 
 
 def get_agent_by_id(agent_id: str) -> Optional[Agent]:
+    if not _is_uuid(agent_id):
+        return None
     with session_scope() as s:
         return s.get(Agent, str(agent_id))
 
@@ -478,6 +596,10 @@ def log_call(agent_id: str, caller_number: str, duration: int,
         )
     if sentiment is not None and not (-1.0 <= sentiment <= 1.0):
         raise ValueError(f"sentiment must be between -1 and 1, got {sentiment}")
+    if int(duration) < 0:
+        raise ValueError(f"duration cannot be negative, got {duration}")
+    if int(cost) < 0:
+        raise ValueError(f"cost cannot be negative, got {cost}")
 
     with session_scope() as s:
         call = Call(agent_id=str(agent_id), caller_number=caller_number,
@@ -501,6 +623,8 @@ def get_calls_by_agent(agent_id: str, limit: int = 100,
 
 
 def get_call_by_id(call_id: str) -> Optional[Call]:
+    if not _is_uuid(call_id):
+        return None
     with session_scope() as s:
         return s.get(Call, str(call_id))
 
@@ -542,9 +666,10 @@ def get_latest_prompt(agent_id: str) -> Optional[PromptVersion]:
 
 __all__ = [
     "Base", "User", "Agent", "Call", "PromptVersion", "CallRecording", "RateEvent",
+    "RevokedToken", "SessionCutoff", "PasswordReset", "ApiKey", "Webhook",
     "DatabaseNotConfigured", "init_db", "upgrade_schema", "healthcheck", "session_scope",
-    "get_engine", "get_database_url", "reset_connection",
-    "create_user", "get_user_by_email", "get_user_by_id",
+    "get_engine", "get_database_url", "reset_connection", "table_ready",
+    "create_user", "get_user_by_email", "get_user_by_id", "delete_user",
     "create_agent", "get_agents_by_user", "get_agent_by_id",
     "update_agent", "delete_agent",
     "log_call", "get_calls_by_agent", "get_call_by_id",

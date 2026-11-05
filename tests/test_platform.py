@@ -18,6 +18,7 @@ def client(tmp_path, monkeypatch):
     monkeypatch.setenv("DATABASE_URL", f"sqlite:///{tmp_path / 'p.db'}")
     monkeypatch.setenv("SESSION_SECRET", "test-secret")
     monkeypatch.setenv("RECORDINGS_DIR", str(tmp_path / "recordings"))
+    monkeypatch.setenv("EMAIL_DEV_LOG_LINKS", "1")
     for k in ("EMAIL_API_KEY", "TURNSTILE_SECRET_KEY", "TURNSTILE_SITE_KEY", "ENV",
               "R2_ACCOUNT_ID", "R2_ACCESS_KEY_ID", "R2_SECRET_ACCESS_KEY", "R2_BUCKET"):
         monkeypatch.delenv(k, raising=False)
@@ -303,7 +304,8 @@ def test_docs_are_off_and_schema_needs_a_session_in_production(tmp_path, monkeyp
             assert c.get("/docs").status_code == 404
             assert c.get("/redoc").status_code == 404
             assert c.get("/openapi.json").status_code == 401
-            token = auth.create_session("someone")
+            # A real account: a session for nobody is now refused on every route.
+            token = auth.create_session(db.create_user("a@example.com", "x").id)
             r = c.get("/openapi.json", headers={"Authorization": f"Bearer {token}"})
             assert r.status_code == 200 and "/auth/login" in r.json()["paths"]
     finally:

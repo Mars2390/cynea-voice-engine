@@ -78,7 +78,9 @@ from cynea.voice_demo import (  # noqa: E402
     MAX_UTTERANCE_BYTES,
     MAX_UTTERANCE_S,
     RATE,
+    TICKET_REFUSED_TEXT,
     demo_config as _config,
+    saved_config,
     max_call_s,
     max_concurrent,
     max_turns,
@@ -151,10 +153,22 @@ def register(app) -> None:
         try:
             from cynea.engine import CyneaEngine
 
-            # persist=False: this is an anonymous visitor with no workspace
-            # to own the row, and agents.user_id is NOT NULL. The demo is
-            # not a customer's call log and should not appear in one.
-            engine = CyneaEngine(_config(persona), persist=False)
+            config = _config(persona)
+            ticket = ws.query_params.get("ticket")
+            if ticket:
+                # A test call on a customer's own agent, on its saved settings.
+                from cynea.call_config import config_for_ticket
+
+                saved = config_for_ticket(ticket)
+                if saved is None:
+                    await send({"type": "ended", "reason": TICKET_REFUSED_TEXT})
+                    return
+                config = saved_config(saved)
+                persona = config.persona
+
+            # persist=False: the demo is not a customer's call log, and a test
+            # call is not a call anyone took.
+            engine = CyneaEngine(config, persist=False)
 
             await send({"type": "ready", "agent": engine.config.name,
                         "persona": persona, "rate": RATE,

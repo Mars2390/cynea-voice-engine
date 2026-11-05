@@ -1,8 +1,6 @@
 """Call recording storage: Cloudflare R2 in production, local disk otherwise.
 
-The personas announce on the opening turn that the call is recorded, so the
-audio has to actually exist somewhere. Which backend runs is decided by the
-environment, never by a flag in code:
+Which backend runs is decided by the environment, never by a flag in code:
 
     R2 (S3-compatible, free tier 10 GB, no egress fees) when all of
         R2_ACCOUNT_ID, R2_ACCESS_KEY_ID, R2_SECRET_ACCESS_KEY, R2_BUCKET

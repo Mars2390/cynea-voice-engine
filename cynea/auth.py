@@ -10,21 +10,20 @@ per-password salt, and sessions are HMAC-signed tokens carrying an expiry.
 
 What this is not
 ----------------
-Not an identity provider. There is no password reset, no email
-verification, no MFA, no OAuth, and no token revocation list — a stolen
-token stays valid until it expires. For a first paying customer that is
-an acceptable trade; before self-serve signup, move to Clerk or Auth0
-(gap BE-3 in GAP_ANALYSIS.md) rather than growing this file.
+Not an identity provider: no MFA and no OAuth. Email verification, password
+reset, sign-out and "every session dies when the password changes" are here;
+past that, move to a hosted provider rather than growing this file.
 
 Token format
 ------------
     base64url(payload_json) + "." + base64url(hmac_sha256(payload))
 
-Stateless by design: validating a token needs no database round-trip, so
-an API request that only needs `user_id` never touches Postgres. The
-signing key comes from SESSION_SECRET; when it is absent a random one is
-generated at import, which means restarting the process invalidates every
-session. That is deliberate — a predictable default secret is worse.
+validate_session() checks the signature and expiry and needs no database.
+Whether the session has since been signed out is a separate question, answered
+by ensure_active(), which the API asks on every request. The signing key comes
+from SESSION_SECRET; when it is absent a random one is generated at import,
+which means restarting the process invalidates every session. That is
+deliberate — a predictable default secret is worse.
 """
 
 from __future__ import annotations
@@ -35,6 +34,7 @@ import hmac
 import json
 import logging
 import os
+import re
 import secrets
 import time
 from typing import Optional
@@ -132,15 +132,27 @@ def verify_password(password: str, password_hash: str) -> bool:
 # Registration and login
 # ----------------------------------------------------------------------
 
+_EMAIL = re.compile(r"^[^@\s]{1,64}@[^@\s.]+(\.[^@\s.]+)+$")
+
+
+def normalise_email(email: str) -> str:
+    return (email or "").strip().lower()
+
+
+def valid_email(email: str) -> bool:
+    """A shape check, not proof: only the verification link proves an address."""
+    return len(email) <= 320 and bool(_EMAIL.match(email))
+
+
 def register_user(email: str, password: str, full_name: Optional[str] = None,
                   company: Optional[str] = None):
     """Create a user. Raises EmailAlreadyRegistered / WeakPassword.
 
     The account starts unverified; call issue_verification() to mail a link.
     """
-    email = (email or "").strip().lower()
-    if not email or "@" not in email:
-        raise AuthError(f"{email!r} is not a valid email address.")
+    email = normalise_email(email)
+    if not valid_email(email):
+        raise AuthError("That doesn't look like an email address.")
 
     if db.get_user_by_email(email) is not None:
         raise EmailAlreadyRegistered("Email already registered")
@@ -198,7 +210,9 @@ def create_session(user_id: str, ttl_seconds: int = SESSION_TTL_SECONDS) -> str:
     """Mint a signed token for `user_id`."""
     payload = {
         "sub": str(user_id),
-        "iat": int(time.time()),
+        # To the millisecond: session_cutoffs compares against it, and a new
+        # token issued right after a password change must not read as older.
+        "iat": round(time.time(), 3),
         "exp": int(time.time()) + int(ttl_seconds),
         "jti": secrets.token_urlsafe(8),
     }
@@ -207,8 +221,8 @@ def create_session(user_id: str, ttl_seconds: int = SESSION_TTL_SECONDS) -> str:
     return f"{body}.{_b64e(sig)}"
 
 
-def validate_session(token: str) -> str:
-    """Return the user_id carried by a valid token, else raise InvalidSession.
+def session_claims(token: str) -> dict:
+    """The verified contents of a token, else raise InvalidSession.
 
     Verifies the signature before parsing the payload, so a forged token
     never reaches json.loads.
@@ -217,10 +231,10 @@ def validate_session(token: str) -> str:
         raise InvalidSession("Malformed session token.")
 
     body, _, sig = token.partition(".")
-    expected = hmac.new(_session_secret(), body.encode("ascii"), hashlib.sha256).digest()
     try:
+        expected = hmac.new(_session_secret(), body.encode("ascii"), hashlib.sha256).digest()
         provided = _b64d(sig)
-    except Exception:
+    except Exception:                      # non-ASCII is a bad token, not a 500
         raise InvalidSession("Malformed session token.")
 
     if not hmac.compare_digest(expected, provided):
@@ -234,10 +248,84 @@ def validate_session(token: str) -> str:
     if payload.get("exp", 0) < time.time():
         raise InvalidSession("Session has expired. Sign in again.")
 
-    user_id = payload.get("sub")
-    if not user_id:
+    if not payload.get("sub"):
         raise InvalidSession("Session carries no user.")
-    return str(user_id)
+    return payload
+
+
+def validate_session(token: str) -> str:
+    """Return the user_id carried by a valid token, else raise InvalidSession."""
+    return str(session_claims(token)["sub"])
+
+
+# ----------------------------------------------------------------------
+# Signing out
+# ----------------------------------------------------------------------
+
+def ensure_active(claims: dict) -> str:
+    """The user id, if this session is still good. Raises InvalidSession if the
+    account is gone, it was signed out, or the password has changed since."""
+    user_id = str(claims["sub"])
+    with db.session_scope() as s:
+        if not db._is_uuid(user_id) or s.get(db.User, user_id) is None:
+            raise InvalidSession("The account for this session no longer exists.")
+        if db.table_ready("revoked_tokens") and claims.get("jti") \
+                and s.get(db.RevokedToken, str(claims["jti"])) is not None:
+            raise InvalidSession("You have signed out. Sign in again.")
+        if db.table_ready("session_cutoffs"):
+            cutoff = s.get(db.SessionCutoff, user_id)
+            if cutoff is not None and float(claims.get("iat", 0)) < cutoff.not_before:
+                raise InvalidSession("Your password changed. Sign in again.")
+    return user_id
+
+
+def revoke_session(claims: dict) -> None:
+    """Sign one session out, for as long as the token would otherwise work."""
+    from sqlalchemy import delete
+
+    now = time.time()
+    with db.session_scope() as s:
+        s.execute(delete(db.RevokedToken).where(db.RevokedToken.expires_at < now))
+        if s.get(db.RevokedToken, str(claims["jti"])) is None:
+            s.add(db.RevokedToken(jti=str(claims["jti"]), expires_at=float(claims["exp"])))
+
+
+def revoke_all_sessions(user_id: str) -> None:
+    """Every session issued up to now stops working."""
+    now = time.time()
+    with db.session_scope() as s:
+        row = s.get(db.SessionCutoff, str(user_id))
+        if row is None:
+            s.add(db.SessionCutoff(user_id=str(user_id), not_before=now))
+        else:
+            row.not_before = now
+
+
+# ----------------------------------------------------------------------
+# Signed, single-purpose values
+# ----------------------------------------------------------------------
+# A call ticket is signed with the same key as a session but over a different
+# string, so neither can ever be presented as the other.
+
+def sign_value(purpose: str, data: dict, ttl_seconds: int) -> str:
+    body = _b64e(json.dumps({**data, "exp": int(time.time()) + int(ttl_seconds)},
+                            separators=(",", ":")).encode("utf-8"))
+    sig = hmac.new(_session_secret(), f"{purpose}:{body}".encode("ascii"), hashlib.sha256)
+    return f"{body}.{_b64e(sig.digest())}"
+
+
+def read_value(purpose: str, token: str) -> Optional[dict]:
+    """The data in a signed value, or None if it is forged or expired."""
+    try:
+        body, _, sig = (token or "").partition(".")
+        want = hmac.new(_session_secret(), f"{purpose}:{body}".encode("ascii"),
+                        hashlib.sha256).digest()
+        if not body or not hmac.compare_digest(want, _b64d(sig)):
+            return None
+        data = json.loads(_b64d(body))
+    except Exception:
+        return None
+    return data if data.get("exp", 0) >= time.time() else None
 
 
 # ----------------------------------------------------------------------
@@ -292,6 +380,7 @@ def verify_email(raw: str):
     if not raw:
         return None
     with db.session_scope() as s:
+        # _token_hash takes any string, so a junk token simply finds nobody.
         user = s.scalar(select(db.User).where(db.User.verify_token_hash == _token_hash(raw)))
         if user is None:
             return None
@@ -306,6 +395,69 @@ def verify_email(raw: str):
 def require_verified(user) -> None:
     if not is_verified(user):
         raise EmailNotVerified("Please verify your email first.")
+
+
+# ----------------------------------------------------------------------
+# Passwords, after the fact
+# ----------------------------------------------------------------------
+
+RESET_TTL_SECONDS = 3600
+
+
+def issue_password_reset(user_id: str) -> str:
+    """A fresh reset token; any earlier link for this account stops working."""
+    from datetime import timedelta
+
+    from sqlalchemy import delete
+
+    raw = secrets.token_urlsafe(32)
+    with db.session_scope() as s:
+        s.execute(delete(db.PasswordReset).where(db.PasswordReset.user_id == str(user_id)))
+        s.add(db.PasswordReset(user_id=str(user_id), token_hash=_token_hash(raw),
+                               expires_at=db._now() + timedelta(seconds=RESET_TTL_SECONDS)))
+    return raw
+
+
+def reset_password(raw: str, new_password: str):
+    """Set a new password from an emailed link. Returns the user, or None for a
+    bad, used or expired link.
+
+    Following the link proves the mailbox. So this is also how an address is
+    recovered from someone who registered it and never verified: the account
+    becomes verified, and whatever that person typed in at sign-up goes.
+    """
+    from sqlalchemy import select
+
+    password_hash = hash_password(new_password)        # WeakPassword before touching rows
+    with db.session_scope() as s:
+        row = s.scalar(select(db.PasswordReset)
+                       .where(db.PasswordReset.token_hash == _token_hash(raw or "")))
+        if row is None or row.used_at is not None or _aware(row.expires_at) < db._now():
+            return None
+        user = s.get(db.User, row.user_id)
+        if user is None:
+            return None
+        row.used_at = db._now()
+        user.password_hash = password_hash
+        if user.email_verified_at is None:
+            user.email_verified_at = db._now()
+            user.full_name = None
+            user.company = None
+            user.verify_token_hash = None
+            user.verify_token_expires = None
+    revoke_all_sessions(user.id)
+    return user
+
+
+def change_password(user_id: str, current: str, new_password: str) -> None:
+    """Change a password from inside a session. Every other session ends."""
+    user = db.get_user_by_id(user_id)
+    if user is None or not verify_password(current, user.password_hash):
+        raise InvalidCredentials("Your current password is not right.")
+    password_hash = hash_password(new_password)
+    with db.session_scope() as s:
+        s.get(db.User, str(user_id)).password_hash = password_hash
+    revoke_all_sessions(user_id)
 
 
 def current_user(token: str):
@@ -325,8 +477,11 @@ __all__ = [
     "WeakPassword", "InvalidSession", "EmailNotVerified",
     "hash_password", "verify_password",
     "register_user", "login_user", "get_user_by_id",
-    "create_session", "validate_session", "current_user",
+    "create_session", "validate_session", "session_claims", "current_user",
+    "ensure_active", "revoke_session", "revoke_all_sessions",
+    "sign_value", "read_value", "normalise_email", "valid_email",
     "issue_verification", "verify_email", "is_verified", "require_verified",
-    "VERIFY_TTL_SECONDS",
+    "issue_password_reset", "reset_password", "change_password",
+    "VERIFY_TTL_SECONDS", "RESET_TTL_SECONDS",
     "SESSION_TTL_SECONDS", "MIN_PASSWORD_LENGTH",
 ]

@@ -25,14 +25,16 @@ from contextlib import asynccontextmanager
 from typing import List, Optional
 
 import cynea  # noqa: F401  — loads .env
-from cynea import auth, dashboard_data, db, mailer, ratelimit, recordings, turnstile
+from cynea import (account, apikeys, auth, call_config, dashboard_data, db, mailer,
+                   monitoring, ratelimit, recordings, turnstile, webhooks)
 
 try:
-    from fastapi import (Depends, FastAPI, File, Form, Header, HTTPException, Query,
-                         Request, UploadFile, status)
+    from fastapi import (BackgroundTasks, Depends, FastAPI, File, Form, Header, HTTPException,
+                         Query, Request, UploadFile, status)
     from fastapi.middleware.cors import CORSMiddleware
     from fastapi.responses import FileResponse, JSONResponse, RedirectResponse
     from pydantic import BaseModel, EmailStr, Field
+    from sqlalchemy.exc import SQLAlchemyError
 except ImportError as exc:  # pragma: no cover
     raise ImportError(
         "The API needs FastAPI:  pip install fastapi==0.115.6 uvicorn==0.34.0"
@@ -68,6 +70,39 @@ class LoginIn(BaseModel):
     password: str
 
 
+class ForgotIn(BaseModel):
+    email: str
+
+
+class ResetIn(BaseModel):
+    token: str = Field(..., max_length=256)
+    password: str
+
+
+class ChangePasswordIn(BaseModel):
+    current_password: str
+    new_password: str
+
+
+class DeleteAccountIn(BaseModel):
+    password: str
+    # Typed out on purpose, so that no client can do this by accident.
+    confirm: str = Field(..., description='Must be exactly "DELETE".')
+
+
+class ApiKeyIn(BaseModel):
+    name: str = Field(..., max_length=120)
+
+
+class WebhookIn(BaseModel):
+    url: str = Field(..., max_length=2048)
+
+
+class ClientErrorIn(BaseModel):
+    message: str = Field(..., max_length=2000)
+    page: Optional[str] = Field(None, max_length=200)
+
+
 class TokenOut(BaseModel):
     token: str
     user_id: str
@@ -85,16 +120,21 @@ class AgentUpdate(BaseModel):
     name: Optional[str] = Field(None, min_length=1, max_length=120)
     persona: Optional[str] = None
     voice_config: Optional[dict] = None
+    paused: Optional[bool] = None
+
+
+class PromptIn(BaseModel):
+    content: str = Field(..., max_length=100_000)
 
 
 class CallIn(BaseModel):
     agent_id: str
     caller_number: str = Field(..., min_length=1,
                                description="Caller's number from the telephony layer")
-    duration_s: int = 0
+    duration_s: int = Field(0, ge=0)
     transcript: str = ""
     sentiment_score: Optional[float] = Field(None, ge=-1.0, le=1.0)
-    cost_cents: int = 0
+    cost_cents: int = Field(0, ge=0)
     status: str = "resolved"
 
 
@@ -206,6 +246,28 @@ async def _db_not_configured(request: Request, exc: db.DatabaseNotConfigured):
     )
 
 
+@app.exception_handler(SQLAlchemyError)
+async def _database_error(request: Request, exc: SQLAlchemyError):
+    """A database that is down or not migrated is "try again", not "you broke it"."""
+    log.error("database error on %s: %s", request.url.path, type(exc).__name__)
+    monitoring.capture(exc, tags={"path": request.url.path})
+    return JSONResponse(
+        status_code=503,
+        content={"error": "database_unavailable",
+                 "detail": "The database did not answer. Try again in a moment."},
+    )
+
+
+@app.exception_handler(Exception)
+async def _unhandled(request: Request, exc: Exception):
+    """Anything nothing else caught: report it, and tell the client nothing."""
+    log.exception("unhandled error on %s", request.url.path)
+    monitoring.capture(exc, tags={"path": request.url.path})
+    return JSONResponse(status_code=500,
+                        content={"error": "internal_error",
+                                 "detail": "Something went wrong on our side."})
+
+
 @app.exception_handler(auth.AuthError)
 async def _auth_error(request: Request, exc: auth.AuthError):
     code = (401 if isinstance(exc, (auth.InvalidCredentials, auth.InvalidSession))
@@ -220,14 +282,43 @@ async def _auth_error(request: Request, exc: auth.AuthError):
 # Auth dependency
 # ----------------------------------------------------------------------
 
-def current_user_id(authorization: str = Header(default="")) -> str:
-    """Resolve `Authorization: Bearer <token>` to a user id."""
+def _bearer(authorization: str) -> str:
     if not authorization.lower().startswith("bearer "):
         raise HTTPException(401, "Missing bearer token. Sign in at POST /auth/login.")
+    return authorization[7:].strip()
+
+
+def _active_session(token: str) -> dict:
+    """The claims of a session that is still good, else 401."""
     try:
-        return auth.validate_session(authorization[7:].strip())
+        claims = auth.session_claims(token)
+        auth.ensure_active(claims)
+        return claims
     except auth.InvalidSession as exc:
         raise HTTPException(401, str(exc)) from exc
+
+
+def current_user_id(authorization: str = Header(default="")) -> str:
+    """Resolve `Authorization: Bearer <session token or API key>` to a user id."""
+    token = _bearer(authorization)
+    if apikeys.is_key(token):
+        user_id = apikeys.resolve(token)
+        if user_id is None:
+            raise HTTPException(401, "This API key is not valid or has been revoked.")
+        return user_id
+    return str(_active_session(token)["sub"])
+
+
+def session_claims(authorization: str = Header(default="")) -> dict:
+    """For routes that change the account itself: an API key is not enough."""
+    token = _bearer(authorization)
+    if apikeys.is_key(token):
+        raise HTTPException(403, "This needs a signed-in session, not an API key.")
+    return _active_session(token)
+
+
+def session_user_id(claims: dict = Depends(session_claims)) -> str:
+    return str(claims["sub"])
 
 
 def _own_agent(agent_id: str, user_id: str):
@@ -249,29 +340,131 @@ def _client_ip(request: Request) -> str:
         request.client.host if request.client else "unknown")
 
 
-def _api_base(request: Request) -> str:
-    """This API's public base URL, ending in "/" — "https://host/api/" on Vercel,
-    where the app is mounted under /api and Starlette puts that in root_path."""
+class LinksNotConfigured(RuntimeError):
+    """Production with no idea what its own address is."""
+
+
+@app.exception_handler(LinksNotConfigured)
+async def _links_not_configured(request: Request, exc: LinksNotConfigured):
+    log.error("%s", exc)
+    return JSONResponse(status_code=503, content={
+        "error": "not_configured",
+        "detail": "This server is not set up to send links yet. Try again later."})
+
+
+# Links in emails are built from configuration and never from the request. The
+# Host header is whatever the sender typed, so building from it would let anyone
+# ask for a password-reset email whose link points at their own server.
+#
+# Vercel supplies the production domain itself, which is equally out of a
+# caller's reach, so a deployment works before SITE_URL is set. Off Vercel and
+# outside production there is only a laptop to point at. Production with nothing
+# configured refuses.
+def _vercel_origin() -> str:
+    host = os.getenv("VERCEL_PROJECT_PRODUCTION_URL", "").strip()
+    return f"https://{host}" if host else ""
+
+
+def _is_deployed() -> bool:
+    return PRODUCTION or bool(os.getenv("VERCEL"))
+
+
+def _site_base() -> str:
+    """Where the static pages live, without a trailing slash."""
+    base = os.getenv("SITE_URL", "").strip().rstrip("/") or _vercel_origin()
+    if base:
+        return base
+    if _is_deployed():
+        raise LinksNotConfigured("SITE_URL is not set, so no link can be built.")
+    return "http://127.0.0.1:8080"
+
+
+def _api_base() -> str:
+    """This API's public base URL, ending in "/" ("https://host/api/" on Vercel)."""
     explicit = os.getenv("PUBLIC_API_URL", "").strip().rstrip("/")
-    return explicit + "/" if explicit else str(request.base_url)
-
-
-def _site_base(request: Request) -> str:
-    """Where the static pages live: SITE_URL, else the API's origin."""
-    explicit = os.getenv("SITE_URL", "").strip().rstrip("/")
     if explicit:
-        return explicit
-    base = _api_base(request).rstrip("/")
-    return base[:-4] if base.endswith("/api") else base
+        return explicit + "/"
+    if os.getenv("SITE_URL", "").strip() and _is_deployed():
+        return os.getenv("SITE_URL").strip().rstrip("/") + "/api/"
+    if _vercel_origin():
+        return _vercel_origin() + "/api/"
+    if _is_deployed():
+        raise LinksNotConfigured("PUBLIC_API_URL is not set, so no link can be built.")
+    return f"http://127.0.0.1:{os.getenv('PORT', '8000')}/"
 
 
-def _send_verification(request: Request, user) -> str:
-    raw = auth.issue_verification(user.id)
-    link = f"{_api_base(request)}auth/verify?token={raw}"
+def _send_verification(user) -> str:
+    link = f"{_api_base()}auth/verify?token={auth.issue_verification(user.id)}"
     return mailer.send_verification(user.email, link, user.full_name or "")
 
 
+def _send_reset_quietly(user) -> None:
+    """Runs after the response, so how long it takes says nothing about whether
+    the address has an account."""
+    try:
+        link = f"{_site_base()}/signin.html?reset={auth.issue_password_reset(user.id)}"
+        mailer.send_password_reset(user.email, link)
+    except (mailer.EmailError, LinksNotConfigured) as exc:
+        log.error("password reset email for %s failed: %s", user.email, exc)
+
+
+def _resend_quietly(user) -> None:
+    try:
+        _send_verification(user)
+    except (mailer.EmailError, LinksNotConfigured) as exc:
+        log.error("verification resend for %s failed: %s", user.email, exc)
+
+
 REGISTER_LIMIT = int(os.getenv("REGISTER_RATE_LIMIT", "5"))      # per IP per hour
+LOGIN_LIMIT = int(os.getenv("LOGIN_RATE_LIMIT", "10"))           # failures, address + IP
+LOGIN_WINDOW_S = 900
+EMAIL_PER_ADDRESS = 3                                            # emails per address per hour
+
+
+def _voice_options() -> list:
+    from cynea_africa.synthesizer.edge_tts import EdgeTTSSynthesizer
+
+    return [{"id": v, "label": d} for v, d in EdgeTTSSynthesizer.VOICES.items()]
+
+
+def _clean_name(name: str) -> str:
+    name = (name or "").strip()
+    if not name:
+        raise HTTPException(400, "Give the agent a name.")
+    return name
+
+
+def _known_persona(persona: str) -> str:
+    from cynea.agent_loader import _PERSONAS
+
+    persona = (persona or "").strip().lower()
+    if persona not in _PERSONAS:
+        raise HTTPException(400, f"Unknown persona {persona!r}. Available: {sorted(_PERSONAS)}")
+    return persona
+
+
+def _clean_voice_config(cfg: dict) -> dict:
+    """Only what a call actually reads, and only voices that exist."""
+    out = {}
+    voice = cfg.get("voice")
+    if voice:
+        if voice not in {o["id"] for o in _voice_options()}:
+            raise HTTPException(400, f"Unknown voice {voice!r}. See GET /agents/options.")
+        out.update(provider="edge_tts", voice=voice)
+    if cfg.get("speed") is not None:
+        try:
+            speed = float(cfg["speed"])
+        except (TypeError, ValueError):
+            raise HTTPException(400, "speed has to be a number.") from None
+        if not 0.5 <= speed <= 2.0:
+            raise HTTPException(400, "speed has to be between 0.5 and 2.")
+        out["speed"] = speed
+    if cfg.get("first_message") is not None:
+        text = str(cfg["first_message"]).strip()
+        if len(text) > 500:
+            raise HTTPException(400, "The greeting can be at most 500 characters.")
+        out["first_message"] = text
+    return out
 
 
 def _own_call(call_id: str, user_id: str):
@@ -290,10 +483,13 @@ def _agent_json(a) -> dict:
     meta = dashboard_data.PERSONA_META.get(a.persona, {})
     return {
         "id": a.id, "name": a.name, "persona": a.persona,
+        "persona_name": meta.get("name") or a.persona.title(),
         "voice_config": a.voice_config or {},
-        "role": meta.get("role"), "place": meta.get("place"),
+        "voice": dashboard_data.agent_voice(a)["voice"],
+        "paused": call_config.is_paused(a),
+        "role": meta.get("role"),
         "photo": meta.get("photo"),
-        "created_at": a.created_at.isoformat() if a.created_at else None,
+        "created_at": dashboard_data._iso(a.created_at),
     }
 
 
@@ -310,8 +506,34 @@ def health():
             "status": "ok" if ok else "degraded",
             "database": ok,
             "providers": cynea.providers.registered(),
+            # Which settings are present, never their values. Lets a deployment
+            # be checked from outside without anyone reading its secrets.
+            "configured": {
+                "production": PRODUCTION,
+                "session_secret": bool(os.getenv("SESSION_SECRET", "").strip()),
+                "email": bool(os.getenv("EMAIL_API_KEY", "").strip()),
+                "site_url": bool(os.getenv("SITE_URL", "").strip()),
+                "bot_check": bool(turnstile.site_key()),
+                "recordings": recordings.backend(),
+                "error_tracking": monitoring.endpoint() is not None,
+            },
         },
     )
+
+
+@app.post("/client-error", status_code=204, tags=["system"], include_in_schema=False)
+def client_error(body: ClientErrorIn, request: Request):
+    """An unhandled error in a browser. Does nothing at all without a tracker,
+    so an open route costs nothing until there is somewhere to send them."""
+    if monitoring.endpoint() is None:
+        return None
+    try:
+        ratelimit.hit("client-error", _client_ip(request), limit=20, window_s=3600)
+    except ratelimit.RateLimited:
+        return None
+    monitoring.capture(service="browser", message=body.message,
+                       tags={"page": (body.page or "")[:80]})
+    return None
 
 
 # ----------------------------------------------------------------------
@@ -339,11 +561,18 @@ def register(body: RegisterIn, request: Request):
                                  "Try again in an hour.") from None
     if not turnstile.verify(body.turnstile_token, ip):
         raise HTTPException(400, "Bot check failed. Please try again.")
+    # Before the account exists, not after: an account nobody can verify would
+    # just sit on the address.
+    if not mailer.can_send():
+        log.error("sign-up refused: EMAIL_API_KEY is not set")
+        raise HTTPException(503, "Sign-up is not available right now because we can't send "
+                                 "email. Please try again later.")
+    _api_base()                                 # same: refuse before creating anything
 
     user = auth.register_user(body.email, body.password,
                               full_name=body.name, company=body.company)
     try:
-        _send_verification(request, user)
+        _send_verification(user)
     except mailer.EmailError as exc:
         log.error("verification email for %s failed: %s", user.email, exc)
         raise HTTPException(503, "Your account was created, but the verification email "
@@ -357,32 +586,100 @@ def verify(request: Request, token: str = Query("", max_length=256)):
     """The emailed link. Verifies, then sends the browser to sign-in."""
     user = auth.verify_email(token)
     outcome = "verified=1" if user else "verify=invalid"
-    return RedirectResponse(f"{_site_base(request)}/signin.html?{outcome}", status_code=303)
+    return RedirectResponse(f"{_site_base()}/signin.html?{outcome}", status_code=303)
 
 
 @app.post("/auth/resend-verification", status_code=202, tags=["auth"])
-def resend_verification(body: ResendIn, request: Request):
+def resend_verification(body: ResendIn, request: Request, tasks: BackgroundTasks):
     """Mail a new link. Always the same answer, so it reveals no accounts."""
+    email = auth.normalise_email(body.email)
     try:
         ratelimit.hit("resend", _client_ip(request), limit=REGISTER_LIMIT, window_s=3600)
     except ratelimit.RateLimited:
         raise HTTPException(429, "Too many requests from this network. "
                                  "Try again in an hour.") from None
-    user = db.get_user_by_email((body.email or "").strip().lower())
+    user = db.get_user_by_email(email)
     if user is not None and not auth.is_verified(user):
         try:
-            _send_verification(request, user)
-        except mailer.EmailError as exc:
-            log.error("verification resend for %s failed: %s", user.email, exc)
+            ratelimit.hit("resend-address", email, limit=EMAIL_PER_ADDRESS, window_s=3600)
+            tasks.add_task(_resend_quietly, user)
+        except ratelimit.RateLimited:
+            pass                 # the same answer: a limit reveals an account too
     return {"status": "sent_if_registered"}
 
 
+@app.post("/auth/forgot-password", status_code=202, tags=["auth"])
+def forgot_password(body: ForgotIn, request: Request, tasks: BackgroundTasks):
+    """Mail a reset link. Always the same answer, so it reveals no accounts.
+
+    Works on an unverified account too: that is how an address someone else
+    registered gets recovered by the person who actually holds it.
+    """
+    email = auth.normalise_email(body.email)
+    try:
+        ratelimit.hit("forgot", _client_ip(request), limit=REGISTER_LIMIT, window_s=3600)
+    except ratelimit.RateLimited:
+        raise HTTPException(429, "Too many requests from this network. "
+                                 "Try again in an hour.") from None
+    user = db.get_user_by_email(email)
+    if user is not None:
+        try:
+            ratelimit.hit("forgot-address", email, limit=EMAIL_PER_ADDRESS, window_s=3600)
+            tasks.add_task(_send_reset_quietly, user)
+        except ratelimit.RateLimited:
+            pass
+    return {"status": "sent_if_registered"}
+
+
+@app.post("/auth/reset-password", tags=["auth"])
+def reset_password(body: ResetIn):
+    """Finish a reset. Every session on the account ends."""
+    user = auth.reset_password(body.token, body.password)
+    if user is None:
+        raise HTTPException(400, "This reset link is invalid or has expired. "
+                                 "Ask for a new one.")
+    return {"status": "password_changed"}
+
+
+@app.post("/auth/change-password", response_model=TokenOut, tags=["auth"])
+def change_password(body: ChangePasswordIn, user_id: str = Depends(session_user_id)):
+    """Change the password while signed in. Every session ends, including this
+    one, so a new token comes back for the tab that asked."""
+    auth.change_password(user_id, body.current_password, body.new_password)
+    user = db.get_user_by_id(user_id)
+    return TokenOut(token=auth.create_session(user.id), user_id=user.id,
+                    email=user.email, expires_in=auth.SESSION_TTL_SECONDS)
+
+
 @app.post("/auth/login", response_model=TokenOut, tags=["auth"])
-def login(body: LoginIn):
-    user = auth.login_user(body.email, body.password)
+def login(body: LoginIn, request: Request):
+    # Failures only, counted in the database because every serverless instance
+    # would otherwise keep its own count. Two counters: one address from one
+    # network, and everything from one network. Not the address alone, or anyone
+    # could lock a stranger out of their account by failing on purpose.
+    email = auth.normalise_email(body.email)
+    ip = _client_ip(request)
+    pair = f"{ip}|{email}"
+    if (ratelimit.over("login", pair, LOGIN_LIMIT, LOGIN_WINDOW_S)
+            or ratelimit.over("login-ip", ip, LOGIN_LIMIT * 5, LOGIN_WINDOW_S)):
+        raise HTTPException(429, "Too many failed attempts. Wait 15 minutes, or reset "
+                                 "your password.")
+    try:
+        user = auth.login_user(email, body.password)
+    except auth.InvalidCredentials:
+        ratelimit.record("login", pair)
+        ratelimit.record("login-ip", ip)
+        raise
     auth.require_verified(user)          # 403 "Please verify your email first."
     return TokenOut(token=auth.create_session(user.id), user_id=user.id,
                     email=user.email, expires_in=auth.SESSION_TTL_SECONDS)
+
+
+@app.post("/auth/logout", status_code=204, tags=["auth"])
+def logout(claims: dict = Depends(session_claims)):
+    """End this session on the server, not just in the browser that asked."""
+    auth.revoke_session(claims)
+    return None
 
 
 @app.get("/auth/me", tags=["auth"])
@@ -391,22 +688,142 @@ def me(user_id: str = Depends(current_user_id)):
     if user is None:
         raise HTTPException(401, "The account for this session no longer exists.")
     return {"id": user.id, "email": user.email,
+            "name": user.full_name, "company": user.company,
             "created_at": user.created_at.isoformat() if user.created_at else None}
+
+
+@app.get("/auth/me/export", tags=["auth"])
+def export_account(user_id: str = Depends(session_user_id)):
+    """Everything stored about this account, as a JSON download."""
+    return JSONResponse(account.export(user_id), headers={
+        "Content-Disposition": 'attachment; filename="cynea-account-export.json"'})
+
+
+@app.delete("/auth/me", status_code=204, tags=["auth"])
+def delete_account(body: DeleteAccountIn, user_id: str = Depends(session_user_id)):
+    """Permanently delete the account, its agents, calls and recordings."""
+    if body.confirm != "DELETE":
+        raise HTTPException(400, 'Type DELETE to confirm.')
+    user = db.get_user_by_id(user_id)
+    if not auth.verify_password(body.password, user.password_hash):
+        raise HTTPException(403, "That password isn't right, so nothing was deleted.")
+    try:
+        account.delete_account(user_id)
+    except recordings.StorageError as exc:
+        log.error("account deletion stopped: %s", exc)
+        raise HTTPException(503, "We couldn't remove your recordings, so nothing was "
+                                 "deleted. Try again in a moment.") from None
+    return None
+
+
+# ----------------------------------------------------------------------
+# API keys
+# ----------------------------------------------------------------------
+
+def _key_json(k) -> dict:
+    return {"id": k.id, "name": k.name, "prefix": k.prefix,
+            "created_at": dashboard_data._iso(k.created_at),
+            "last_used_at": dashboard_data._iso(k.last_used_at)}
+
+
+@app.get("/api-keys", tags=["integrations"])
+def list_api_keys(user_id: str = Depends(session_user_id)):
+    return [_key_json(k) for k in apikeys.list_for(user_id)]
+
+
+@app.post("/api-keys", status_code=201, tags=["integrations"])
+def create_api_key(body: ApiKeyIn, user_id: str = Depends(session_user_id)):
+    """Make a key. The `key` field is the only time it is ever shown."""
+    name = (body.name or "").strip()
+    if not name:
+        raise HTTPException(400, "Give the key a name.")
+    if len(apikeys.list_for(user_id)) >= apikeys.MAX_PER_USER:
+        raise HTTPException(400, f"An account can have {apikeys.MAX_PER_USER} keys. "
+                                 "Revoke one first.")
+    row, raw = apikeys.create(user_id, name)
+    return {**_key_json(row), "key": raw}
+
+
+@app.delete("/api-keys/{key_id}", status_code=204, tags=["integrations"])
+def revoke_api_key(key_id: str, user_id: str = Depends(session_user_id)):
+    if not apikeys.revoke(user_id, key_id):
+        raise HTTPException(404, "API key not found.")
+    return None
+
+
+# ----------------------------------------------------------------------
+# Webhooks
+# ----------------------------------------------------------------------
+
+def _hook_json(h) -> dict:
+    return {"id": h.id, "url": h.url, "created_at": dashboard_data._iso(h.created_at),
+            "last_status": h.last_status,
+            "last_delivery_at": dashboard_data._iso(h.last_delivery_at)}
+
+
+@app.get("/webhooks", tags=["integrations"])
+def list_webhooks(user_id: str = Depends(session_user_id)):
+    return [_hook_json(h) for h in webhooks.list_for(user_id)]
+
+
+@app.post("/webhooks", status_code=201, tags=["integrations"])
+def create_webhook(body: WebhookIn, user_id: str = Depends(session_user_id)):
+    """Add a receiver. The `secret` field is the only time it is ever shown."""
+    if len(webhooks.list_for(user_id)) >= webhooks.MAX_PER_USER:
+        raise HTTPException(400, f"An account can have {webhooks.MAX_PER_USER} webhooks. "
+                                 "Remove one first.")
+    try:
+        hook = webhooks.create(user_id, body.url)
+    except webhooks.BadWebhookURL as exc:
+        raise HTTPException(400, str(exc)) from exc
+    return {**_hook_json(hook), "secret": hook.secret}
+
+
+@app.post("/webhooks/{hook_id}/test", tags=["integrations"])
+def test_webhook(hook_id: str, user_id: str = Depends(session_user_id)):
+    """Send a test event now and say what the receiver answered."""
+    if webhooks.get_owned(user_id, hook_id) is None:
+        raise HTTPException(404, "Webhook not found.")
+    return {"status": webhooks.deliver(hook_id, "webhook.test", {"message": "This is a test."})}
+
+
+@app.delete("/webhooks/{hook_id}", status_code=204, tags=["integrations"])
+def delete_webhook(hook_id: str, user_id: str = Depends(session_user_id)):
+    if not webhooks.remove(user_id, hook_id):
+        raise HTTPException(404, "Webhook not found.")
+    return None
 
 
 # ----------------------------------------------------------------------
 # Agents
 # ----------------------------------------------------------------------
 
+@app.get("/agents/options", tags=["agents"])
+def agent_options(user_id: str = Depends(current_user_id)):
+    """The personas and voices an agent can be made from."""
+    from cynea.agent_loader import _PERSONAS
+
+    return {
+        "personas": [{"id": key, "name": dashboard_data._display_name(key),
+                      "role": dashboard_data.PERSONA_META.get(key, {}).get("role"),
+                      "photo": dashboard_data.PERSONA_META.get(key, {}).get("photo"),
+                      "default_voice": (spec.get("voice") or {}).get("voice")}
+                     for key, spec in sorted(_PERSONAS.items())],
+        "voices": _voice_options(),
+    }
+
+
 @app.post("/agents", status_code=201, tags=["agents"])
 def create_agent(body: AgentIn, user_id: str = Depends(current_user_id)):
     from cynea.agent_loader import _PERSONAS
-    if body.persona.lower() not in _PERSONAS:
-        raise HTTPException(
-            400, f"Unknown persona {body.persona!r}. Available: {sorted(_PERSONAS)}"
-        )
-    voice = body.voice_config or dict(_PERSONAS[body.persona.lower()]["voice"])
-    agent = db.create_agent(user_id, body.name, body.persona, voice)
+
+    persona = _known_persona(body.persona)
+    voice = _clean_voice_config(body.voice_config or {})
+    if not voice.get("voice"):
+        spec = _PERSONAS[persona]["voice"]
+        voice = {"provider": "edge_tts", "voice": spec.get("voice"),
+                 "speed": spec.get("speed", 1.0), **voice}
+    agent = db.create_agent(user_id, _clean_name(body.name), persona, voice)
     return _agent_json(agent)
 
 
@@ -426,14 +843,46 @@ def get_agent(agent_id: str, user_id: str = Depends(current_user_id)):
     return data
 
 
+@app.post("/agents/{agent_id}/call-ticket", status_code=201, tags=["agents"])
+def call_ticket(agent_id: str, user_id: str = Depends(current_user_id)):
+    """A short-lived pass for one test call on this agent's saved settings."""
+    agent = _own_agent(agent_id, user_id)
+    try:
+        ticket = call_config.issue_ticket(agent)
+    except call_config.AgentPaused:
+        raise HTTPException(409, "This agent is paused. Resume it to call it.") from None
+    return {"ticket": ticket, "expires_in": call_config.TICKET_TTL_S}
+
+
+@app.get("/call-config", tags=["agents"], include_in_schema=False)
+def get_call_config(ticket: str = Query(..., max_length=2048)):
+    """What the call socket trades a ticket for. The ticket is the credential."""
+    saved = call_config.config_for_ticket(ticket)
+    if saved is None:
+        raise HTTPException(403, "This call ticket is not valid.")
+    return saved
+
+
 @app.put("/agents/{agent_id}", tags=["agents"])
 def update_agent(agent_id: str, body: AgentUpdate,
                  user_id: str = Depends(current_user_id)):
-    _own_agent(agent_id, user_id)
+    agent = _own_agent(agent_id, user_id)
     fields = {k: v for k, v in body.model_dump(exclude_unset=True).items()
               if v is not None}
     if not fields:
         raise HTTPException(400, "No fields to update.")
+    if "name" in fields:
+        fields["name"] = _clean_name(fields["name"])
+    if "persona" in fields:
+        fields["persona"] = _known_persona(fields["persona"])
+    # Paused lives in voice_config: it needs no column, and so no migration.
+    # A partial update merges rather than wiping what it didn't mention.
+    if "voice_config" in fields or "paused" in fields:
+        merged = dict(agent.voice_config or {})
+        merged.update(_clean_voice_config(fields.pop("voice_config", {})))
+        if "paused" in fields:
+            merged["paused"] = bool(fields.pop("paused"))
+        fields["voice_config"] = merged
     try:
         agent = db.update_agent(agent_id, **fields)
     except ValueError as exc:
@@ -449,10 +898,10 @@ def delete_agent(agent_id: str, user_id: str = Depends(current_user_id)):
 
 
 @app.post("/agents/{agent_id}/prompt", status_code=201, tags=["agents"])
-def save_prompt(agent_id: str, body: dict, user_id: str = Depends(current_user_id)):
+def save_prompt(agent_id: str, body: PromptIn, user_id: str = Depends(current_user_id)):
     """Append a prompt version. This is what the editor's Save button needs."""
     _own_agent(agent_id, user_id)
-    content = (body or {}).get("content", "").strip()
+    content = body.content.strip()
     if not content:
         raise HTTPException(400, "content is required.")
     v = db.save_prompt_version(agent_id, content)
@@ -475,7 +924,7 @@ def list_prompts(agent_id: str, user_id: str = Depends(current_user_id)):
 # ----------------------------------------------------------------------
 
 @app.post("/calls", status_code=201, tags=["calls"])
-def log_call(body: CallIn, user_id: str = Depends(current_user_id)):
+def log_call(body: CallIn, tasks: BackgroundTasks, user_id: str = Depends(current_user_id)):
     _own_agent(body.agent_id, user_id)
     try:
         call = db.log_call(
@@ -486,6 +935,14 @@ def log_call(body: CallIn, user_id: str = Depends(current_user_id)):
         )
     except ValueError as exc:
         raise HTTPException(400, str(exc)) from exc
+    # After the response, so a customer's slow receiver cannot slow this down.
+    # No transcript or caller number: a receiver can fetch those with a key.
+    tasks.add_task(webhooks.fan_out, user_id, "call.logged", {
+        "call_id": call.id, "agent_id": call.agent_id, "status": call.status,
+        "duration_s": call.duration_s, "cost_cents": call.cost_cents,
+        "sentiment_score": call.sentiment_score,
+        "created_at": dashboard_data._iso(call.created_at),
+    })
     return {"id": call.id, "status": call.status,
             "created_at": call.created_at.isoformat() if call.created_at else None}
 
@@ -554,7 +1011,7 @@ async def upload_recording(call_id: str, file: UploadFile = File(...),
 
 
 @app.get("/calls/{call_id}/recording", tags=["calls"])
-def get_recording(call_id: str, request: Request, user_id: str = Depends(current_user_id)):
+def get_recording(call_id: str, user_id: str = Depends(current_user_id)):
     """A short-lived URL the browser can play, or 404 when there is no audio."""
     call = _own_call(call_id, user_id)
     if not call.audio_url:
@@ -566,7 +1023,7 @@ def get_recording(call_id: str, request: Request, user_id: str = Depends(current
         meta = ({"duration_s": rec.duration_s, "bytes": rec.bytes,
                  "content_type": rec.content_type} if rec else {})
     try:
-        url = recordings.playback_url(call.audio_url, call.id, _api_base(request))
+        url = recordings.playback_url(call.audio_url, call.id, _api_base())
     except recordings.StorageError as exc:
         raise HTTPException(503, str(exc)) from exc
     return {"url": url, "expires_in": recordings.URL_TTL_S, **meta}
@@ -596,8 +1053,9 @@ def recording_file(call_id: str, exp: int = Query(...), sig: str = Query(...)):
 # ----------------------------------------------------------------------
 
 @app.get("/dashboard/stats", tags=["dashboard"])
-def dashboard_stats(user_id: str = Depends(current_user_id)):
-    return dashboard_data.get_dashboard_stats(user_id=user_id)
+def dashboard_stats(tz_offset_min: int = Query(0, ge=-840, le=840),
+                    user_id: str = Depends(current_user_id)):
+    return dashboard_data.get_dashboard_stats(user_id=user_id, tz_offset_min=tz_offset_min)
 
 
 @app.get("/dashboard/queue", tags=["dashboard"])
@@ -606,15 +1064,16 @@ def dashboard_queue(user_id: str = Depends(current_user_id)):
 
 
 @app.get("/dashboard/bootstrap", tags=["dashboard"])
-def dashboard_bootstrap(user_id: str = Depends(current_user_id)):
+def dashboard_bootstrap(tz_offset_min: int = Query(0, ge=-840, le=840),
+                        user_id: str = Depends(current_user_id)):
     """Everything the console needs on load, in one round trip.
 
     The dashboard otherwise fires four requests before it can paint; on a
-    Nairobi mobile connection that is four round trips of latency, plus a
+    slow mobile connection that is four round trips of latency, plus a
     possible Neon cold start on each.
     """
     return {
-        "stats": dashboard_data.get_dashboard_stats(user_id=user_id),
+        "stats": dashboard_data.get_dashboard_stats(user_id=user_id, tz_offset_min=tz_offset_min),
         "queue": dashboard_data.get_live_queue(user_id=user_id),
         "calls": dashboard_data.get_call_history(user_id=user_id, limit=25),
     }

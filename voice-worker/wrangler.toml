@@ -45,6 +45,9 @@ VOICE_DEMO_CALLS_PER_HOUR = "10"
 # websites from spending the quota, not determined clients.
 ALLOWED_ORIGINS = "https://cynea-voice-engine.vercel.app,https://cynea.ai,https://www.cynea.ai,http://localhost:*,http://127.0.0.1:*"
 
+# Where a test call trades its ticket for the agent's saved settings.
+API_URL = "https://cynea-voice-engine.vercel.app/api"
+
 # The model: Cerebras (OpenAI-compatible, https://api.cerebras.ai/v1).
 CEREBRAS_MODEL = "gpt-oss-120b"         # every turn not on the fast path
 CEREBRAS_FAST_MODEL = "qwen-3.8-27b"    # always called with reasoning_effort="none"
@@ -58,3 +61,4 @@ CEREBRAS_FAST_MAX_WORDS = "3"
 #   ELEVENLABS_API_KEY  optional, unused by this socket (Edge TTS is free)
 #   DATABASE_URL        optional, unused by this socket (demo calls are not stored)
 #   SESSION_SECRET      optional, unused by this socket (no sign-in)
+#   SENTRY_DSN          optional: report errors here (see cynea/monitoring.py)

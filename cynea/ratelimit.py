@@ -47,3 +47,24 @@ def hit(scope: str, client: str, limit: int, window_s: int) -> int:
     if n > limit:
         raise RateLimited(f"{scope}: {n} attempts in {window_s}s (limit {limit})")
     return n
+
+
+def over(scope: str, client: str, limit: int, window_s: int) -> bool:
+    """Is this client already at its limit? Records nothing.
+
+    For limits that count failures rather than attempts, like sign-in: a person
+    who gets their password right should not use up an allowance.
+    """
+    since = db._now() - timedelta(seconds=window_s)
+    with db.session_scope() as s:
+        n = s.scalar(select(func.count(db.RateEvent.id)).where(
+            db.RateEvent.scope == scope, db.RateEvent.key_hash == _key(client),
+            db.RateEvent.created_at >= since)) or 0
+    return n >= limit
+
+
+def record(scope: str, client: str) -> None:
+    """Count one failure for over() to see."""
+    with db.session_scope() as s:
+        s.execute(delete(db.RateEvent).where(db.RateEvent.created_at < db._now() - timedelta(days=1)))
+        s.add(db.RateEvent(scope=scope, key_hash=_key(client)))

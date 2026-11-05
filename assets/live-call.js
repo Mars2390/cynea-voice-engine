@@ -68,8 +68,11 @@
       const local = isLocal();
       base = local ? 'ws://127.0.0.1:8000' : 'wss://cynea-voice.albertmomanyi07.workers.dev';
     }
-    const agent = new URLSearchParams(location.search).get('agent') || 'maya';
-    return `${base}/voice?agent=${encodeURIComponent(agent)}`;
+    const params = new URLSearchParams(location.search);
+    const agent = params.get('agent') || 'maya';
+    const ticket = params.get('ticket');     // a test call from the console
+    return `${base}/voice?agent=${encodeURIComponent(agent)}` +
+           (ticket ? `&ticket=${encodeURIComponent(ticket)}` : '');
   }
 
   // ── transcript ─────────────────────────────────────────────────────────
@@ -93,6 +96,19 @@
     p.textContent = text;
     ui.tape.appendChild(p);
     ui.tape.scrollTop = ui.tape.scrollHeight;
+  }
+
+  // The page opens on Maya, but the socket says who actually answered.
+  function introduce(m) {
+    const name = m.agent || 'Agent';
+    ui.agent.textContent = name;
+    document.querySelectorAll('[data-agent-name]').forEach((n) => { n.textContent = name; });
+    const role = el('call-role');
+    if (role && m.role) role.textContent = m.role;
+    if (m.own_agent) {
+      const head = el('call-title');
+      if (head) head.textContent = `Test call: ${name}.`;
+    }
   }
 
   function setState(text, cls) {
@@ -302,7 +318,7 @@
 
       switch (m.type) {
         case 'ready':
-          ui.agent.textContent = m.agent || 'Agent';
+          introduce(m);
           break;
         case 'greeting':
         case 'reply':

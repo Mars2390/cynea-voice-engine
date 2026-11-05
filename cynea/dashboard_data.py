@@ -45,9 +45,39 @@ def _now() -> datetime:
     return datetime.now(timezone.utc)
 
 
-def _start_of_today() -> datetime:
-    n = _now()
-    return n.replace(hour=0, minute=0, second=0, microsecond=0)
+def _aware(dt: Optional[datetime]) -> Optional[datetime]:
+    """SQLite hands back naive datetimes for timezone=True columns."""
+    return dt if dt is None or dt.tzinfo else dt.replace(tzinfo=timezone.utc)
+
+
+def _iso(dt: Optional[datetime]) -> Optional[str]:
+    """An instant the browser can show in the viewer's own time."""
+    return _aware(dt).isoformat() if dt else None
+
+
+def _start_of_today(tz_offset_min: int = 0) -> datetime:
+    """Midnight where the viewer is, as a UTC instant."""
+    shift = timedelta(minutes=tz_offset_min)
+    local = _now() + shift
+    return local.replace(hour=0, minute=0, second=0, microsecond=0) - shift
+
+
+def agent_voice(agent) -> dict:
+    """The voice a call on this agent will use.
+
+    Rows saved before every agent moved to Edge can still name a provider that
+    nothing runs (Kofi's ElevenLabs config). Those get the persona's own voice,
+    so the console shows what a caller would actually hear.
+    """
+    from cynea.agent_loader import _PERSONAS
+
+    saved = agent.voice_config or {}
+    if saved.get("provider", "edge_tts") == "edge_tts" and saved.get("voice"):
+        return {"provider": "edge_tts", "voice": saved["voice"],
+                "speed": float(saved.get("speed", 1.0))}
+    spec = (_PERSONAS.get(agent.persona) or {}).get("voice") or {}
+    return {"provider": "edge_tts", "voice": spec.get("voice", "en-US-AriaNeural"),
+            "speed": float(spec.get("speed", 1.0))}
 
 
 def _mmss(seconds: Optional[int]) -> str:
@@ -56,15 +86,14 @@ def _mmss(seconds: Optional[int]) -> str:
 
 
 def _mask_number(number: str) -> str:
-    """Hide the subscriber digits.
+    """Hide all but the last four digits.
 
-    Console users are supervisors, not account holders — they need to tell
-    two callers apart, not dial them. Storing the full number and masking
-    on read keeps callback possible through a permissioned path later.
+    Console users need to tell two callers apart, not dial them. A short value
+    is not a phone number worth masking ("browser").
     """
     if not number or len(number) < 7:
         return number or "unknown"
-    return f"{number[:7]} ••• {number[-4:]}"
+    return f"••• {number[-4:]}"
 
 
 def _sentiment_label(score: Optional[float]) -> str:
@@ -111,9 +140,11 @@ def get_call_history(agent_id: Optional[str] = None, limit: int = 50,
             created = call.created_at
             out.append({
                 "id": call.id,
+                "created_at": _iso(created),
+                # UTC. The console shows created_at in the viewer's own time.
                 "time": created.strftime("%H:%M") if created else "--:--",
                 "date": created.strftime("%Y-%m-%d") if created else None,
-                "agent": _display_name(agent.persona),
+                "agent": agent.name,
                 "agent_id": agent.id,
                 "persona": agent.persona,
                 "photo": meta.get("photo", "avatar-kwame"),
@@ -158,16 +189,18 @@ def get_call_detail(call_id: str) -> Optional[dict]:
         is_caller = speaker.strip().lower() == "caller"
         turns.append({
             "speaker": "caller" if is_caller else "agent",
-            "label": "Caller" if is_caller else f"{_display_name(agent.persona)} · agent",
+            "label": "Caller" if is_caller else f"{agent.name} · agent",
             "text": text.strip(),
         })
 
     meta = PERSONA_META.get(agent.persona, {})
     return {
         "id": call.id,
-        "agent": _display_name(agent.persona),
+        "agent": agent.name,
+        "agent_id": agent.id,
         "persona": agent.persona,
         "photo": meta.get("photo", "avatar-kwame"),
+        "created_at": _iso(call.created_at),
         "time": call.created_at.strftime("%H:%M") if call.created_at else "--:--",
         "date": call.created_at.strftime("%Y-%m-%d") if call.created_at else None,
         "caller": _mask_number(call.caller_number),
@@ -187,10 +220,15 @@ def get_call_detail(call_id: str) -> Optional[dict]:
 # Aggregates
 # ----------------------------------------------------------------------
 
-def get_dashboard_stats(user_id: Optional[str] = None) -> dict:
-    """KPI row, charts, and agent status — all computed in SQL."""
-    today = _start_of_today()
+def get_dashboard_stats(user_id: Optional[str] = None, tz_offset_min: int = 0) -> dict:
+    """KPI row, charts, and agent status.
+
+    `tz_offset_min` is the viewer's offset from UTC in minutes, so "today" and
+    the hour labels mean what they mean to the person reading them.
+    """
+    today = _start_of_today(tz_offset_min)
     week_ago = _now() - timedelta(days=7)
+    shift = timedelta(minutes=tz_offset_min)
 
     with db.session_scope() as s:
         def scoped(stmt):
@@ -202,8 +240,7 @@ def get_dashboard_stats(user_id: Optional[str] = None) -> dict:
         # --- today -----------------------------------------------------
         today_rows = s.execute(scoped(
             select(db.Call.status, func.count(db.Call.id),
-                   func.coalesce(func.sum(db.Call.cost_cents), 0),
-                   func.avg(db.Call.sentiment_score))
+                   func.coalesce(func.sum(db.Call.cost_cents), 0))
             .where(db.Call.created_at >= today)
             .group_by(db.Call.status)
         )).all()
@@ -211,7 +248,12 @@ def get_dashboard_stats(user_id: Optional[str] = None) -> dict:
         calls_today = sum(r[1] for r in today_rows)
         cost_today = sum(r[2] for r in today_rows)
         resolved_today = sum(r[1] for r in today_rows if r[0] == "resolved")
-        sentiments = [r[3] for r in today_rows if r[3] is not None]
+
+        # Over the calls themselves. Averaging a per-status average would give
+        # one escalated call the same weight as a hundred resolved ones.
+        avg_sentiment = s.scalar(scoped(
+            select(func.avg(db.Call.sentiment_score)).where(db.Call.created_at >= today)
+        ))
 
         # --- last 7 days, for the delta comparisons --------------------
         week_total, week_resolved, week_cost = s.execute(scoped(
@@ -222,24 +264,27 @@ def get_dashboard_stats(user_id: Optional[str] = None) -> dict:
         )).one()
 
         # --- hourly volume, today --------------------------------------
-        hourly = s.execute(scoped(
-            select(func.extract("hour", db.Call.created_at).label("h"),
-                   func.count(db.Call.id),
-                   func.avg(db.Call.sentiment_score))
+        # Bucketed here, in the viewer's hours. One day of rows, and SQL would
+        # need a different expression per dialect for a fractional offset.
+        buckets: dict = {}
+        for created, score in s.execute(scoped(
+            select(db.Call.created_at, db.Call.sentiment_score)
             .where(db.Call.created_at >= today)
-            .group_by("h").order_by("h")
-        )).all()
+        )):
+            bucket = buckets.setdefault((_aware(created) + shift).hour, [0, []])
+            bucket[0] += 1
+            if score is not None:
+                bucket[1].append(score)
 
         # --- cost split by agent ---------------------------------------
         by_agent = s.execute(
-            select(db.Agent.persona,
+            select(db.Agent.id, db.Agent.name,
                    func.count(db.Call.id),
-                   func.coalesce(func.sum(db.Call.cost_cents), 0),
-                   func.avg(db.Call.sentiment_score))
+                   func.coalesce(func.sum(db.Call.cost_cents), 0))
             .join(db.Call, db.Call.agent_id == db.Agent.id)
             .where(db.Call.created_at >= week_ago,
                    *( [db.Agent.user_id == str(user_id)] if user_id else [] ))
-            .group_by(db.Agent.persona)
+            .group_by(db.Agent.id, db.Agent.name)
             .order_by(func.sum(db.Call.cost_cents).desc())
         ).all()
 
@@ -257,23 +302,24 @@ def get_dashboard_stats(user_id: Optional[str] = None) -> dict:
             ) or 0
             agent_cards.append({
                 "id": a.id,
-                "name": _display_name(a.persona),
+                "name": a.name,
+                "persona_name": _display_name(a.persona),
                 "role": meta.get("role", "Voice agent"),
                 "photo": meta.get("photo", "avatar-kwame"),
                 "persona": a.persona,
                 "calls_today": n_today,
-                "voice": (a.voice_config or {}).get("voice", ""),
+                "voice": agent_voice(a)["voice"],
+                "paused": bool((a.voice_config or {}).get("paused")),
             })
 
     containment = round(resolved_today / calls_today * 100) if calls_today else 0
     week_containment = round(week_resolved / week_total * 100) if week_total else 0
     cost_per_call = (cost_today / calls_today / 100) if calls_today else 0.0
-    avg_sentiment = sum(sentiments) / len(sentiments) if sentiments else None
 
-    volume = [{"h": f"{int(h):02d}", "v": int(n)} for h, n, _ in hourly]
+    volume = [{"h": f"{h:02d}", "v": n} for h, (n, _) in sorted(buckets.items())]
     sentiment_series = [
-        {"h": f"{int(h):02d}", "v": round(float(sc), 3)}
-        for h, _, sc in hourly if sc is not None
+        {"h": f"{h:02d}", "v": round(sum(scores) / len(scores), 3)}
+        for h, (_, scores) in sorted(buckets.items()) if scores
     ]
 
     return {
@@ -285,14 +331,14 @@ def get_dashboard_stats(user_id: Optional[str] = None) -> dict:
             "cost_per_call": round(cost_per_call, 2),
             "cost_today_cents": int(cost_today),
             "cost_week_cents": int(week_cost),
-            "avg_sentiment": round(avg_sentiment, 3) if avg_sentiment is not None else None,
+            "avg_sentiment": round(float(avg_sentiment), 3) if avg_sentiment is not None else None,
             "containment_delta_pts": containment - week_containment,
         },
         "volume": volume,
         "sentiment": sentiment_series,
         "cost_breakdown": [
-            {"k": _display_name(persona), "v": round(cents / 100, 2), "calls": int(n)}
-            for persona, n, cents, _ in by_agent
+            {"k": name, "agent_id": agent_id, "v": round(cents / 100, 2), "calls": int(n)}
+            for agent_id, name, n, cents in by_agent
         ],
         "agents": agent_cards,
         "totals": {"week_calls": int(week_total), "week_containment_pct": week_containment},
@@ -300,13 +346,12 @@ def get_dashboard_stats(user_id: Optional[str] = None) -> dict:
 
 
 def get_live_queue(user_id: Optional[str] = None) -> List[dict]:
-    """Calls still in progress.
+    """Calls logged as abandoned in the last 15 minutes.
 
-    The engine writes a row on the first turn and only marks it resolved
-    at end_call(), so anything still 'abandoned' and recent is a live
-    call. There is no telephony layer yet, so in practice this is empty
-    until TEL-1 lands — it returns [] rather than inventing waiting
-    callers.
+    Nothing here is known to be live. A row is "abandoned" until end_call()
+    resolves it, so this is either a call in progress or one that was dropped,
+    and the row cannot say which. It is labelled as what it is, and its age is
+    how long ago it started, not how long anybody has been waiting.
     """
     cutoff = _now() - timedelta(minutes=15)
     with db.session_scope() as s:
@@ -322,15 +367,15 @@ def get_live_queue(user_id: Optional[str] = None) -> List[dict]:
 
     out = []
     for call, agent in rows:
-        waited = int((_now() - call.created_at).total_seconds())
+        age = int((_now() - _aware(call.created_at)).total_seconds())
         out.append({
             "id": call.id,
             "num": _mask_number(call.caller_number),
-            "cat": (call.transcript or "").splitlines()[0][:40] if call.transcript else "In progress",
-            "wait": _mmss(waited),
-            "wait_s": waited,
-            "agent": _display_name(agent.persona),
-            "hot": waited > 120,
+            "cat": ((call.transcript or "").splitlines() or ["Not finished"])[0][:40],
+            "age": _mmss(age),
+            "age_s": age,
+            "created_at": _iso(call.created_at),
+            "agent": agent.name,
         })
     return out
 

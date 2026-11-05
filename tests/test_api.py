@@ -17,6 +17,7 @@ def client(tmp_path, monkeypatch):
     monkeypatch.setenv("DATABASE_URL", f"sqlite:///{tmp_path / 'api.db'}")
     monkeypatch.setenv("SESSION_SECRET", "test-secret")
     monkeypatch.setenv("RECORDINGS_DIR", str(tmp_path / "recordings"))
+    monkeypatch.setenv("EMAIL_DEV_LOG_LINKS", "1")
     for k in ("EMAIL_API_KEY", "TURNSTILE_SECRET_KEY", "R2_ACCOUNT_ID", "R2_ACCESS_KEY_ID"):
         monkeypatch.delenv(k, raising=False)
 

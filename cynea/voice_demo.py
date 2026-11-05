@@ -67,6 +67,11 @@ DEFAULT_PERSONA = "maya"
 # The demo opens like a person answering a phone, with no disclaimer.
 DEMO_GREETING = "Hello, this is Maya. How can I help you today?"
 
+# Said when a test call's ticket is no good: expired, or the agent was paused
+# or deleted after it was issued. Going back to the console fetches a new one.
+TICKET_REFUSED_TEXT = ("This test call link has expired or the agent is paused. "
+                       "Start the test call again from the console.")
+
 # Who the personas work for on the public demo. Their prompts and greetings
 # carry a {client_name} placeholder; left alone, it is read aloud.
 DEMO_CLIENT = "Cynea"
@@ -169,6 +174,32 @@ def demo_prompt(base: str, client: str = DEMO_CLIENT) -> str:
         return (base.replace(_PERSONA_DISCLOSURE, _DEMO_DISCLOSURE, 1)
                 + "\n\n" + _DEMO_TRUTH_RULE)
     return base + "\n\n" + TRUTH_RULE
+
+
+def customer_prompt(base: str, client: str) -> str:
+    """A customer's saved prompt, or their persona's, ready for a call.
+
+    Nothing is swapped: whatever disclosure they kept stays. The truth rule is
+    added whatever they wrote, so an edited prompt cannot talk an agent into
+    claiming to be human.
+    """
+    return fill_client(base, client) + "\n\n" + TRUTH_RULE
+
+
+def saved_config(saved: dict) -> AgentConfig:
+    """An AgentConfig from cynea.call_config's JSON. Every voice is on Edge: it
+    is the one synthesizer both sockets can run."""
+    return AgentConfig(
+        name=saved["name"],
+        system_prompt=saved["system_prompt"],
+        first_message=saved.get("first_message", ""),
+        persona=saved.get("persona", ""),
+        stt_provider="groq-stt",
+        llm_provider="groq",
+        tts_provider="edge_tts",
+        voice=saved.get("voice", ""),
+        speed=saved.get("speed", 1.0),
+    )
 
 
 def demo_config(persona: str) -> AgentConfig:

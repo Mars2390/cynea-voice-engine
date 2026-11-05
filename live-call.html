@@ -188,10 +188,10 @@ h1{
 <main class="wrap">
   <header class="head">
     <p class="kicker">Live call</p>
-    <h1>Talk to Maya in your browser.</h1>
-    <p class="lede">Maya is an AI voice agent, not a person. Your microphone, no phone
-      number: she transcribes what you say, works out a reply and speaks it back when
-      you stop talking.</p>
+    <h1 id="call-title">Talk to <span data-agent-name>Maya</span> in your browser.</h1>
+    <p class="lede"><span data-agent-name>Maya</span> is an AI voice agent, not a person.
+      Your microphone, no phone number: it transcribes what you say, works out a reply and
+      speaks it back when you stop talking.</p>
   </header>
 
   <section class="call">
@@ -201,7 +201,7 @@ h1{
       </div>
 
       <p class="who" id="call-agent">Maya</p>
-      <p class="role">Bookings &amp; Scheduling · Cynea</p>
+      <p class="role" id="call-role">Bookings &amp; Scheduling · Cynea</p>
 
       <p class="status">
         <span class="lc-dot" id="call-dot" aria-hidden="true"></span>
@@ -246,6 +246,7 @@ h1{
   </div>
 </main>
 
+<script src="assets/report-errors.js"></script>
 <script src="assets/live-call.js"></script>
 </body>
 </html>

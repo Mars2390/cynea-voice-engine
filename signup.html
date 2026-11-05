@@ -3,15 +3,16 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Create an account — Cynea</title>
+<title>Create an account · Cynea</title>
 <!-- Brand icons: the Prism mark (faceted geometric C). -->
 <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
 <link rel="icon" href="assets/favicon.ico" sizes="48x48 32x32 16x16">
 <link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
 <link rel="mask-icon" href="assets/mask-icon.svg" color="#00D4FF">
 <meta name="theme-color" content="#050505">
+<script src="assets/report-errors.js"></script>
 
-<meta name="description" content="Create a Cynea account — human-like AI voice agents for businesses worldwide." />
+<meta name="description" content="Create a Cynea account for AI voice agents." />
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@500;600;700;800&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -31,6 +32,8 @@
   --sans:'DM Sans',system-ui,-apple-system,'Segoe UI',sans-serif;
   --r:18px;--r-lg:28px;--maxw:1200px}
 *,*::before,*::after{box-sizing:border-box}html{scroll-behavior:smooth}
+/* An author display rule beats the UA stylesheet's [hidden], so say it outright. */
+[hidden]{display:none!important}
 body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:16px;line-height:1.55;-webkit-font-smoothing:antialiased;overflow-x:hidden}
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important}}
 a{color:inherit;text-decoration:none}img{max-width:100%;display:block}
@@ -99,7 +102,6 @@ h1,h2,h3{font-family:var(--display);letter-spacing:-.02em;font-weight:700;line-h
 
 /* ── success state ───────────────────────────────────────────── */
 .done{text-align:center;padding:8px 0 0}
-.done[hidden]{display:none}
 .done .mark{width:56px;height:56px;margin:0 auto 24px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:rgba(0,212,255,.08);border:1px solid rgba(0,212,255,.35);color:var(--cyan)}
 .done .mark svg{width:26px;height:26px}
 .done h2{font-size:21px;margin:0 0 12px}
@@ -221,12 +223,18 @@ function say(text, kind){
   msg.className = 'msg' + (kind ? ' ' + kind : '');
 }
 
-function sayWithSignIn(text){
-  say(text + '. ', 'err');
-  var a = document.createElement('a');
-  a.href = 'signin.html';
-  a.textContent = 'Sign in';
-  msg.appendChild(a);
+function sayAlreadyRegistered(){
+  say('An account with this email already exists. ', 'err');
+  var signin = document.createElement('a');
+  signin.href = 'signin.html';
+  signin.textContent = 'Sign in';
+  var reset = document.createElement('a');
+  reset.href = 'signin.html?forgot=1';
+  reset.textContent = 'reset your password';
+  msg.appendChild(signin);
+  msg.appendChild(document.createTextNode(' or '));
+  msg.appendChild(reset);
+  msg.appendChild(document.createTextNode('.'));
 }
 
 function setFieldError(id, text){
@@ -360,7 +368,7 @@ form.addEventListener('submit', function(e){
     btn.disabled = false;
     btn.textContent = 'Create account';
     resetTurnstile();
-    if (kind === 'signin') sayWithSignIn(text);
+    if (kind === 'exists') sayAlreadyRegistered();
     else say(text, 'err');
   }
 
@@ -391,7 +399,7 @@ form.addEventListener('submit', function(e){
       }
       if (res.status === 400 && detail === 'Email already registered'){
         setFieldError('email', '');
-        fail('Email already registered', 'signin');
+        fail('', 'exists');
         return;
       }
       if (res.status === 422){
@@ -400,7 +408,9 @@ form.addEventListener('submit', function(e){
         return;
       }
       if (typeof detail === 'string' && detail){
-        fail(detail);       /* 400 bot check, 429 rate limit, anything else the server words */
+        /* 400 bot check, 429 rate limit, 503 email not configured or not sent:
+           the server's words, because they say what to do next. */
+        fail(detail);
         return;
       }
       fail('Something went wrong creating your account. Try again in a moment.');

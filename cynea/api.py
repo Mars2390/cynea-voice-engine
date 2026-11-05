@@ -644,8 +644,12 @@ def reset_password(body: ResetIn):
 @app.post("/auth/change-password", response_model=TokenOut, tags=["auth"])
 def change_password(body: ChangePasswordIn, user_id: str = Depends(session_user_id)):
     """Change the password while signed in. Every session ends, including this
-    one, so a new token comes back for the tab that asked."""
-    auth.change_password(user_id, body.current_password, body.new_password)
+    one, so a new token comes back for the tab that asked. A wrong current password
+    is a 403: a 401 would tell the page the session had died."""
+    try:
+        auth.change_password(user_id, body.current_password, body.new_password)
+    except auth.InvalidCredentials as exc:
+        raise HTTPException(403, str(exc)) from None
     user = db.get_user_by_id(user_id)
     return TokenOut(token=auth.create_session(user.id), user_id=user.id,
                     email=user.email, expires_in=auth.SESSION_TTL_SECONDS)
@@ -689,7 +693,7 @@ def me(user_id: str = Depends(current_user_id)):
         raise HTTPException(401, "The account for this session no longer exists.")
     return {"id": user.id, "email": user.email,
             "name": user.full_name, "company": user.company,
-            "created_at": user.created_at.isoformat() if user.created_at else None}
+            "created_at": dashboard_data._iso(user.created_at)}
 
 
 @app.get("/auth/me/export", tags=["auth"])
@@ -893,7 +897,12 @@ def update_agent(agent_id: str, body: AgentUpdate,
 @app.delete("/agents/{agent_id}", status_code=204, tags=["agents"])
 def delete_agent(agent_id: str, user_id: str = Depends(current_user_id)):
     _own_agent(agent_id, user_id)
-    db.delete_agent(agent_id)
+    try:
+        account.delete_agent(agent_id)
+    except recordings.StorageError as exc:
+        log.error("agent deletion stopped: %s", exc)
+        raise HTTPException(503, "We couldn't remove this agent's recordings, so nothing was "
+                                 "deleted. Try again in a moment.") from None
     return None
 
 
@@ -906,7 +915,7 @@ def save_prompt(agent_id: str, body: PromptIn, user_id: str = Depends(current_us
         raise HTTPException(400, "content is required.")
     v = db.save_prompt_version(agent_id, content)
     return {"id": v.id, "version": v.version,
-            "created_at": v.created_at.isoformat() if v.created_at else None}
+            "created_at": dashboard_data._iso(v.created_at)}
 
 
 @app.get("/agents/{agent_id}/prompts", tags=["agents"])
@@ -914,7 +923,7 @@ def list_prompts(agent_id: str, user_id: str = Depends(current_user_id)):
     _own_agent(agent_id, user_id)
     return [
         {"id": v.id, "version": v.version, "content": v.content,
-         "created_at": v.created_at.isoformat() if v.created_at else None}
+         "created_at": dashboard_data._iso(v.created_at)}
         for v in db.get_prompt_versions(agent_id)
     ]
 
@@ -944,7 +953,7 @@ def log_call(body: CallIn, tasks: BackgroundTasks, user_id: str = Depends(curren
         "created_at": dashboard_data._iso(call.created_at),
     })
     return {"id": call.id, "status": call.status,
-            "created_at": call.created_at.isoformat() if call.created_at else None}
+            "created_at": dashboard_data._iso(call.created_at)}
 
 
 @app.get("/calls", tags=["calls"])

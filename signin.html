@@ -3,15 +3,16 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Sign in — Cynea</title>
+<title>Sign in · Cynea</title>
 <!-- Brand icons: the Prism mark (faceted geometric C). -->
 <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
 <link rel="icon" href="assets/favicon.ico" sizes="48x48 32x32 16x16">
 <link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
 <link rel="mask-icon" href="assets/mask-icon.svg" color="#00D4FF">
 <meta name="theme-color" content="#050505">
+<script src="assets/report-errors.js"></script>
 
-<meta name="description" content="Sign in to Cynea — human-like AI voice agents for businesses worldwide." />
+<meta name="description" content="Sign in to Cynea, AI voice agents for businesses." />
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@500;600;700;800&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -31,6 +32,8 @@
   --sans:'DM Sans',system-ui,-apple-system,'Segoe UI',sans-serif;
   --r:18px;--r-lg:28px;--maxw:1200px}
 *,*::before,*::after{box-sizing:border-box}html{scroll-behavior:smooth}
+/* An author display rule beats the UA stylesheet's [hidden], so say it outright. */
+[hidden]{display:none!important}
 body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:16px;line-height:1.55;-webkit-font-smoothing:antialiased;overflow-x:hidden}
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important}}
 a{color:inherit;text-decoration:none}img{max-width:100%;display:block}
@@ -83,8 +86,11 @@ h1,h2,h3{font-family:var(--display);letter-spacing:-.02em;font-weight:700;line-h
 .msg.err{color:var(--bad)}
 .msg.ok{color:var(--ok)}
 .resend{display:flex;justify-content:center;margin:12px 0 0}
-.resend[hidden]{display:none}
 .btn-resend{font-size:14px;padding:10px 18px}
+.link-btn{background:none;border:0;padding:0;font:inherit;color:var(--cyan);font-weight:500;cursor:pointer}
+.link-btn:hover{color:var(--cyan-hover);text-decoration:underline}
+.forgot-row{display:flex;justify-content:flex-end;margin:-8px 0 0;font-size:13.5px}
+.hint{margin:0;font-size:12.5px;color:var(--muted)}
 
 /* ── google btn ──────────────────────────────────────────────── */
 .btn-google{width:100%;gap:10px;font-weight:500;padding:12px 18px;background:var(--bg-3);border-color:var(--line);color:var(--ink)}
@@ -112,29 +118,68 @@ h1,h2,h3{font-family:var(--display);letter-spacing:-.02em;font-weight:700;line-h
   </a>
 
   <article class="card">
-    <h1>Sign in to Cynea</h1>
-    <p class="lead">Welcome back. Access your dashboard and manage your AI voice agents.</p>
+    <div id="signinView">
+      <h1>Sign in to Cynea</h1>
+      <p class="lead">Welcome back. Access your dashboard and manage your AI voice agents.</p>
 
-    <form id="signin-form" class="form" autocomplete="off" novalidate>
-      <div class="field">
-        <label class="label" for="email">Email</label>
-        <input class="input" id="email" type="email" name="email" placeholder="you@company.com" autocomplete="email" required>
-      </div>
-      <div class="field">
-        <label class="label" for="password">Password</label>
-        <input class="input" id="password" type="password" name="password" placeholder="••••••••" autocomplete="current-password" required>
-      </div>
-      <button class="btn btn-dark btn-submit" id="submitBtn" type="submit">Sign in</button>
-    </form>
+      <form id="signin-form" class="form" novalidate>
+        <div class="field">
+          <label class="label" for="email">Email</label>
+          <input class="input" id="email" type="email" name="email" placeholder="you@company.com" autocomplete="email" required>
+        </div>
+        <div class="field">
+          <label class="label" for="password">Password</label>
+          <input class="input" id="password" type="password" name="password" placeholder="••••••••" autocomplete="current-password" required>
+        </div>
+        <p class="forgot-row"><button class="link-btn" id="forgotLink" type="button">Forgot your password?</button></p>
+        <button class="btn btn-dark btn-submit" id="submitBtn" type="submit">Sign in</button>
+      </form>
+    </div>
+
+    <div id="forgotView" hidden>
+      <h1>Reset your password</h1>
+      <p class="lead">Enter your email and we'll send a link to choose a new password. The link works for one hour.</p>
+      <form id="forgot-form" class="form" novalidate>
+        <div class="field">
+          <label class="label" for="forgotEmail">Email</label>
+          <input class="input" id="forgotEmail" type="email" name="email" placeholder="you@company.com" autocomplete="email" required>
+        </div>
+        <button class="btn btn-dark btn-submit" id="forgotBtn" type="submit">Send reset link</button>
+      </form>
+    </div>
+
+    <div id="resetView" hidden>
+      <h1>Choose a new password</h1>
+      <p class="lead">Every device signed in to this account will be signed out.</p>
+      <form id="reset-form" class="form" novalidate>
+        <div class="field">
+          <label class="label" for="newPassword">New password</label>
+          <input class="input" id="newPassword" type="password" name="new-password" placeholder="••••••••" autocomplete="new-password" minlength="8" required aria-describedby="newPasswordHint">
+          <p class="hint" id="newPasswordHint">At least 8 characters.</p>
+        </div>
+        <div class="field">
+          <label class="label" for="newPassword2">Type it again</label>
+          <input class="input" id="newPassword2" type="password" name="new-password-confirm" placeholder="••••••••" autocomplete="new-password" minlength="8" required>
+        </div>
+        <button class="btn btn-dark btn-submit" id="resetBtn" type="submit">Set new password</button>
+      </form>
+    </div>
 
     <p class="msg" id="msg" role="status" aria-live="polite"></p>
     <div class="resend" id="resendBox" hidden>
       <button class="btn btn-resend" id="resendBtn" type="button">Send a new link</button>
     </div>
 
-    <p class="aside">
+    <p class="aside" id="asideSignup">
       Don't have an account?
       <a href="signup.html">Create an account</a>
+    </p>
+    <p class="aside" id="asideBack" hidden>
+      <button class="link-btn" id="backToSignin" type="button">Back to sign in</button>
+    </p>
+    <p class="aside" id="asideNewLink" hidden>
+      Link not working?
+      <button class="link-btn" id="askNewLink" type="button">Ask for a new one</button>
     </p>
   </article>
 
@@ -165,11 +210,45 @@ var API_BASE = (function(){
 var form   = document.getElementById('signin-form');
 var btn    = document.getElementById('submitBtn');
 var msg    = document.getElementById('msg');
-var NEXT   = new URLSearchParams(location.search).get('next') || 'dashboard.html';
+
+/* Where to go after signing in. The value is whatever the link said, so only a
+   path on this site is allowed: never a scheme, a protocol-relative //host, a
+   backslash (browsers read \ as / in URLs), or a control character (browsers
+   strip tabs and newlines, which is how "java\tscript:" gets past a naive check).
+   The last step asks the URL parser itself rather than trusting the patterns. */
+function safeNext(raw){
+  var fallback = 'dashboard.html';
+  if (!raw) return fallback;
+  if (/[\\\u0000-\u001f\u007f]/.test(raw)) return fallback;
+  if (raw.indexOf('//') !== -1) return fallback;
+  if (/^\s*[a-z][a-z0-9+.\-]*:/i.test(raw)) return fallback;
+  try {
+    var u = new URL(raw, location.origin);
+    if (u.origin !== location.origin) return fallback;
+    return u.pathname + u.search + u.hash;
+  } catch (e) {
+    return fallback;
+  }
+}
+var NEXT   = safeNext(new URLSearchParams(location.search).get('next'));
 
 function say(text, kind){
   msg.textContent = text;
   msg.className = 'msg' + (kind ? ' ' + kind : '');
+}
+
+/* One card, three forms. Whichever view is named is the only one shown,
+   whatever was showing before. */
+var VIEWS = {signin: 'signinView', forgot: 'forgotView', reset: 'resetView'};
+function showView(name, focusId){
+  Object.keys(VIEWS).forEach(function(k){
+    document.getElementById(VIEWS[k]).hidden = (k !== name);
+  });
+  document.getElementById('asideSignup').hidden = (name !== 'signin');
+  document.getElementById('asideBack').hidden = (name !== 'forgot');
+  document.getElementById('asideNewLink').hidden = (name !== 'reset');
+  showResend(false);
+  if (focusId) document.getElementById(focusId).focus();
 }
 
 /* Verification: the emailed link lands here as ?verified=1 or ?verify=invalid,
@@ -208,14 +287,14 @@ resendBtn.addEventListener('click', function(){
   })
   .catch(function(){
     resendBtn.disabled = false;
-    say('Cannot reach the API at ' + API_BASE + '. Try again in a moment.', 'err');
+    say('Cannot reach the server. Try again in a moment.', 'err');
   });
 });
 
 (function(){
   var q = new URLSearchParams(location.search);
   if (q.get('verified') === '1'){
-    say('Email verified — you can sign in now.', 'ok');
+    say('Email verified. You can sign in now.', 'ok');
   } else if (q.get('verify') === 'invalid'){
     say('That verification link is invalid or has expired.', 'err');
     showResend(true);
@@ -228,12 +307,134 @@ resendBtn.addEventListener('click', function(){
   history.replaceState(null, '', location.pathname + (rest ? '?' + rest : '') + location.hash);
 })();
 
-/* Already signed in? Don't make them type it again. */
+/* POST JSON and always come back with {ok,status,body,detail}, whatever the
+   answer's body was. A failed fetch still rejects. */
+function post(path, body){
+  return fetch(API_BASE + path, {
+    method: 'POST',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify(body)
+  }).then(function(r){
+    return r.json().catch(function(){ return {}; }).then(function(b){
+      return {ok: r.ok, status: r.status, body: b || {},
+              detail: (b && typeof b.detail === 'string') ? b.detail : ''};
+    });
+  });
+}
+
+/* ── forgot password ── */
+document.getElementById('forgotLink').addEventListener('click', function(){
+  say('');
+  document.getElementById('forgotEmail').value = document.getElementById('email').value;
+  showView('forgot', 'forgotEmail');
+});
+document.getElementById('backToSignin').addEventListener('click', function(){
+  say('');
+  document.getElementById('email').value = document.getElementById('forgotEmail').value;
+  showView('signin', 'email');
+});
+document.getElementById('askNewLink').addEventListener('click', function(){
+  say('');
+  showView('forgot', 'forgotEmail');
+});
+document.getElementById('forgot-form').addEventListener('submit', function(e){
+  e.preventDefault();
+  var box = document.getElementById('forgotEmail');
+  var email = box.value.trim();
+  var b = document.getElementById('forgotBtn');
+  if (!email){
+    say('Enter your email address.', 'err');
+    box.focus();
+    return;
+  }
+  b.disabled = true;
+  say('Sending…');
+  post('/auth/forgot-password', {email: email}).then(function(res){
+    b.disabled = false;
+    if (res.ok){
+      /* Worded so it says nothing about whether this address has an account. */
+      say('If that email has an account, a reset link is on its way. Check your inbox and spam folder.', 'ok');
+    } else {
+      say(res.detail || 'Could not send a link. Try again in a moment.', 'err');
+    }
+  }).catch(function(){
+    b.disabled = false;
+    say('Cannot reach the server. Try again in a moment.', 'err');
+  });
+});
+
+/* ── reset password: the emailed link lands here as ?reset=<token> ──
+   The token is read once and taken out of the address straight away, so it
+   doesn't sit in browser history or travel on as a referrer. */
+var resetToken = (function(){
+  var q = new URLSearchParams(location.search);
+  var t = q.get('reset');
+  if (t === null) return '';
+  q.delete('reset');
+  var rest = q.toString();
+  history.replaceState(null, '', location.pathname + (rest ? '?' + rest : '') + location.hash);
+  return t;
+})();
+
+document.getElementById('reset-form').addEventListener('submit', function(e){
+  e.preventDefault();
+  var a = document.getElementById('newPassword').value;
+  var c = document.getElementById('newPassword2').value;
+  var b = document.getElementById('resetBtn');
+  if (a.length < 8){
+    say('Password must be at least 8 characters.', 'err');
+    return;
+  }
+  if (a !== c){
+    say("Those two passwords don't match.", 'err');
+    return;
+  }
+  b.disabled = true;
+  say('Saving…');
+  post('/auth/reset-password', {token: resetToken, password: a}).then(function(res){
+    b.disabled = false;
+    if (res.ok){
+      /* Every session on the account just ended, including any in this browser. */
+      localStorage.removeItem('cynea_token');
+      localStorage.removeItem('cynea_email');
+      resetToken = '';
+      document.getElementById('reset-form').reset();
+      showView('signin', 'email');
+      say('Password changed. Sign in with your new password.', 'ok');
+      return;
+    }
+    say(res.detail || 'This reset link is invalid or has expired. Ask for a new one.', 'err');
+  }).catch(function(){
+    b.disabled = false;
+    say('Cannot reach the server. Try again in a moment.', 'err');
+  });
+});
+
+/* Which view the page opens on. signup.html links here with ?forgot=1. */
 (function(){
+  if (resetToken){
+    showView('reset', 'newPassword');
+    return;
+  }
+  var q = new URLSearchParams(location.search);
+  if (q.get('forgot') === '1'){
+    q.delete('forgot');
+    var rest = q.toString();
+    history.replaceState(null, '', location.pathname + (rest ? '?' + rest : '') + location.hash);
+    showView('forgot', 'forgotEmail');
+    return;
+  }
+  /* Already signed in? Don't make them type it again. */
   var token = localStorage.getItem('cynea_token');
   if (!token) return;
   fetch(API_BASE + '/auth/me', {headers:{Authorization:'Bearer ' + token}})
-    .then(function(r){ if (r.ok) location.replace(NEXT); })
+    .then(function(r){
+      if (r.ok) location.replace(NEXT);
+      else if (r.status === 401){
+        localStorage.removeItem('cynea_token');
+        localStorage.removeItem('cynea_email');
+      }
+    })
     .catch(function(){ /* API down; let them sign in normally */ });
 })();
 
@@ -251,14 +452,7 @@ form.addEventListener('submit', function(e){
   showResend(false);
   say('Signing in…');
 
-  fetch(API_BASE + '/auth/login', {
-    method: 'POST',
-    headers: {'Content-Type': 'application/json'},
-    body: JSON.stringify({email: email, password: password})
-  })
-  .then(function(r){
-    return r.json().then(function(body){ return {ok: r.ok, status: r.status, body: body}; });
-  })
+  post('/auth/login', {email: email, password: password})
   .then(function(res){
     if (res.ok){
       localStorage.setItem('cynea_token', res.body.token);
@@ -269,7 +463,7 @@ form.addEventListener('submit', function(e){
     }
     btn.disabled = false;
     if (res.status === 403){
-      say(res.body.detail || 'Please verify your email first.', 'err');
+      say(res.detail || 'Please verify your email first.', 'err');
       showResend(true);
       return;
     }
@@ -277,12 +471,11 @@ form.addEventListener('submit', function(e){
        password on purpose, so this page must not guess which it was. */
     say(res.status === 401
           ? 'Incorrect email or password.'
-          : (res.body.detail || 'Sign-in failed.'), 'err');
+          : (res.detail || 'Sign-in failed. Try again in a moment.'), 'err');
   })
   .catch(function(){
     btn.disabled = false;
-    say('Cannot reach the API at ' + API_BASE +
-        '. Start it with: uvicorn cynea.api:app --port 8000', 'err');
+    say('Cannot reach the server. Try again in a moment.', 'err');
   });
 });
 </script>

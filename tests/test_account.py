@@ -205,7 +205,9 @@ def test_change_password_needs_the_current_one(signed_in):
     c, h = signed_in
     r = c.post("/auth/change-password", headers=h,
                json={"current_password": "not-it-at-all", "new_password": "brand-new-pass-1"})
-    assert r.status_code == 401
+    assert r.status_code == 403
+    assert "current password" in r.json()["detail"]
+    assert c.get("/auth/me", headers=h).status_code == 200      # the session is still fine
     _login(c)
 
 
@@ -356,6 +358,39 @@ def test_when_storage_refuses_nothing_is_deleted(signed_in, monkeypatch):
     r = c.request("DELETE", "/auth/me", headers=h, json={"password": PASSWORD, "confirm": "DELETE"})
     assert r.status_code == 503
     assert db.get_user_by_email(EMAIL) is not None
+
+
+def test_deleting_an_agent_also_removes_its_audio(signed_in, tmp_path):
+    c, h = signed_in
+    agent, _ = _fill(c, h)
+    assert list((tmp_path / "recordings").rglob("*.mp3"))
+    assert c.delete(f"/agents/{agent['id']}", headers=h).status_code == 204
+    assert not list((tmp_path / "recordings").rglob("*.mp3"))
+    assert c.get(f"/agents/{agent['id']}", headers=h).status_code == 404
+
+
+def test_when_storage_refuses_the_agent_stays(signed_in, monkeypatch):
+    from cynea import recordings
+    c, h = signed_in
+    agent, _ = _fill(c, h)
+
+    def refuse(url):
+        raise recordings.StorageError("no")
+    monkeypatch.setattr(recordings, "delete", refuse)
+    assert c.delete(f"/agents/{agent['id']}", headers=h).status_code == 503
+    assert c.get(f"/agents/{agent['id']}", headers=h).status_code == 200
+
+
+def test_every_timestamp_carries_its_offset(signed_in):
+    from datetime import datetime
+    c, h = signed_in
+    agent = _agent(c, h)
+    saved = c.post(f"/agents/{agent['id']}/prompt", headers=h, json={"content": "Hi."}).json()
+    logged = c.post("/calls", headers=h, json={"agent_id": agent["id"], "caller_number": "+1"}).json()
+    for stamp in (c.get("/auth/me", headers=h).json()["created_at"], agent["created_at"],
+                  saved["created_at"], logged["created_at"],
+                  c.get(f"/agents/{agent['id']}/prompts", headers=h).json()[0]["created_at"]):
+        assert datetime.fromisoformat(stamp).utcoffset() is not None, stamp
 
 
 # ── API keys ─────────────────────────────────────────────────────────────

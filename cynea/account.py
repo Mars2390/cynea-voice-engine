@@ -55,6 +55,16 @@ def export(user_id: str) -> dict:
     }
 
 
+def delete_agent(agent_id: str) -> int:
+    """Delete an agent and its stored audio. Same order and same reasoning as
+    delete_account: the files first, because afterwards nothing points at them."""
+    audio = [c.audio_url for c in db.get_calls_by_agent(agent_id, limit=100_000) if c.audio_url]
+    for url in audio:
+        recordings.delete(url)
+    db.delete_agent(agent_id)
+    return len(audio)
+
+
 def delete_account(user_id: str) -> int:
     """Delete the account and its stored audio. Returns how many recordings went.
 

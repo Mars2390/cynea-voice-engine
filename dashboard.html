@@ -14,6 +14,7 @@
 <meta name="color-scheme" content="dark">
 
 <meta name="robots" content="noindex">
+<script src="assets/report-errors.js"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@500;600;700;800&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -66,6 +67,8 @@
   --sans:'DM Sans',system-ui,-apple-system,'Segoe UI',sans-serif;
 }
 *,*::before,*::after{box-sizing:border-box}
+/* An author display rule beats the UA stylesheet's [hidden], so say it outright. */
+[hidden]{display:none!important}
 html,body{height:100%}
 body{
   margin:0;background:var(--bg);color:var(--ink);
@@ -97,9 +100,13 @@ picture{display:contents}
 .btn-ghost{box-shadow:inset 0 0 0 1px var(--line-strong)}
 .btn-ghost:hover{box-shadow:inset 0 0 0 1px var(--ink)}
 .btn-sm{height:28px;padding:0 10px;font-size:12px}
+.btn:disabled{opacity:.5;cursor:not-allowed;box-shadow:none}
+.btn-ghost:disabled:hover{box-shadow:inset 0 0 0 1px var(--line-strong)}
+.btn-danger{background:var(--bad);color:#050505;font-weight:600}
+.btn-danger:hover{box-shadow:0 0 0 3px var(--bad-bg)}
 
 /* ══ APP SHELL ════════════════════════════════════════════════════ */
-.app{display:grid;grid-template-columns:var(--sidebar) 1fr;height:100vh;overflow:hidden}
+.app{display:grid;grid-template-columns:var(--sidebar) minmax(0,1fr);height:100vh;height:100dvh;overflow:hidden}
 
 /* ── sidebar ──────────────────────────────────────────────────────── */
 .side{
@@ -116,9 +123,9 @@ picture{display:contents}
 .ws-av{width:26px;height:26px;border-radius:6px;background:rgba(0,212,255,.12);color:var(--cyan);
   box-shadow:inset 0 0 0 1px rgba(0,212,255,.25);
   display:grid;place-items:center;font-size:11px;font-weight:600;flex-shrink:0}
-.ws b{font-size:13px;font-weight:500;display:block;line-height:1.25}
-.ws small{font-size:11px;color:var(--muted)}
-.ws svg{margin-left:auto;color:var(--muted);flex-shrink:0}
+.ws-txt{min-width:0;display:block}
+.ws b{font-size:13px;font-weight:500;display:block;line-height:1.25;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.ws small{font-size:11px;color:var(--muted);display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 
 .side-nav{flex:1;overflow-y:auto;padding:14px 10px}
 .nav-group{margin-bottom:16px}
@@ -131,9 +138,6 @@ picture{display:contents}
 .nav-item[aria-current="page"]{background:var(--panel-2);font-weight:500}
 .nav-item svg{color:var(--muted);flex-shrink:0}
 .nav-item[aria-current="page"] svg{color:var(--cyan)}
-.nav-item .cnt{margin-left:auto;font-size:11px;color:var(--muted);font-variant-numeric:tabular-nums}
-.nav-item .live{margin-left:auto;display:inline-flex;align-items:center;gap:5px;font-size:11px;color:var(--ok)}
-.nav-item .live i{width:6px;height:6px;border-radius:50%;background:var(--ok);animation:blink 2s ease-in-out infinite}
 @keyframes blink{0%,100%{opacity:1}50%{opacity:.35}}
 
 .side-foot{border-top:1px solid var(--line);padding:14px}
@@ -154,15 +158,9 @@ picture{display:contents}
 .hamb:hover{background:var(--panel)}
 .bar-right{margin-left:auto;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
 
-/* one filter row, above the content — never inside a chart card */
-.sel{height:28px;padding:0 26px 0 10px;border-radius:var(--r-sm);font-size:12px;
-  box-shadow:inset 0 0 0 1px var(--line-strong);background-color:var(--bg-3);appearance:none;cursor:pointer;
-  background-image:url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' fill='none' stroke='%238A8A8A' stroke-width='1.5'%3E%3Cpath d='M1 1l4 4 4-4'/%3E%3C/svg%3E");
-  background-repeat:no-repeat;background-position:right 9px center}
 .samp{display:inline-flex;align-items:center;gap:6px;height:24px;padding:0 9px;border-radius:999px;
   background:var(--warn-bg);color:var(--warn);font-size:11px;font-weight:500;transition:.2s}
 .samp.live{background:var(--ok-bg);color:var(--ok)}
-.samp.live svg{animation:blink 2.4s ease-in-out infinite}
 
 .scroll{flex:1;overflow-y:auto;padding:22px;min-height:0}
 .view[hidden]{display:none}
@@ -174,6 +172,11 @@ picture{display:contents}
 .sec-head h2{font-size:15px;font-weight:700}
 .sec-head .lbl{margin-left:auto}
 
+.sec-note{font-size:12px;color:var(--muted);margin-top:8px}
+.none{padding:26px 16px;text-align:center;font-size:13px;color:var(--muted)}
+.banner{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:18px;padding:10px 14px;border-radius:var(--r-sm);font-size:13px;background:var(--panel);box-shadow:inset 0 0 0 1px var(--line-strong)}
+.banner.ok{background:var(--ok-bg);color:var(--ok);box-shadow:none}
+.banner.err{background:var(--bad-bg);color:var(--bad);box-shadow:none}
 .panel{background:var(--card);border:1px solid var(--line);border-radius:var(--r)}
 .panel-fill{background:var(--panel)}
 .pad{padding:20px}
@@ -187,30 +190,27 @@ picture{display:contents}
 .delta{display:inline-flex;align-items:center;gap:3px;font-size:12px;font-weight:500}
 .delta.up{color:var(--ok)} .delta.down{color:var(--bad)}
 .delta small{color:var(--muted);font-weight:400}
-.spark{margin-left:auto;flex-shrink:0}
 
-/* ══ SECTION 2 · live queue ═══════════════════════════════════════ */
-.qrow{display:grid;grid-template-columns:20px 1fr 140px 84px 20px;gap:12px;align-items:center;
+/* ══ SECTION 2 · recent unfinished calls ══════════════════════════ */
+.qrow{display:grid;grid-template-columns:20px minmax(0,1fr) 140px 170px 20px;gap:12px;align-items:center;
   width:100%;min-height:44px;padding:9px 16px;border-top:1px solid var(--line);
   text-align:left;transition:background .14s}
 .qrow:first-of-type{border-top:0}
 .qrow:hover{background:var(--panel)}
-.q-i{width:8px;height:8px;border-radius:50%;background:var(--viz-solo);justify-self:center}
-.q-i.hot{background:var(--bad);animation:blink 1.6s ease-in-out infinite}
+.q-i{width:8px;height:8px;border-radius:50%;background:var(--muted);justify-self:center}
 .q-num{font-size:13px;font-variant-numeric:tabular-nums}
 .q-cat{font-size:12px;color:var(--muted)}
-.q-wait{font-size:13px;font-variant-numeric:tabular-nums;text-align:right}
-.q-wait.hot{color:var(--bad);font-weight:500}
+.q-wait{font-size:12px;color:var(--muted);font-variant-numeric:tabular-nums;text-align:right}
 .qrow .chev{color:var(--muted);justify-self:end}
 .q-agent{font-size:12px;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 
-/* ══ SECTION 3 · agent status ═════════════════════════════════════ */
-.agents{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+/* ══ SECTION 3 · agents ═══════════════════════════════════════════ */
+.agents{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
 .acard{background:var(--card);border:1px solid var(--line);border-radius:var(--r);
-  padding:16px;text-align:left;transition:border-color .16s}
+  padding:16px;text-align:left;transition:border-color .16s;display:flex;flex-direction:column;gap:12px;min-width:0}
 .acard:hover{border-color:rgba(0,212,255,.55)}
-.acard-top{display:flex;align-items:center;gap:11px}
-.acard-top .ph{width:80px;height:80px;border-radius:50%;flex-shrink:0;position:relative;
+.acard-top{display:flex;align-items:center;gap:11px;min-width:0;border-radius:6px}
+.acard-top .ph{width:64px;height:64px;border-radius:50%;flex-shrink:0;position:relative;
   overflow:hidden;background:linear-gradient(135deg,var(--c1,#00D4FF),var(--c2,#0088AA));
   box-shadow:0 0 0 2px var(--card),0 0 0 3px var(--c1,#00D4FF)}
 .acard-top .ph img{width:100%;height:100%;object-fit:cover;display:block}
@@ -218,20 +218,25 @@ picture{display:contents}
    as this agent rather than as a broken image. */
 .acard-top .ph.no-photo picture{display:none}
 .acard-top .ph.no-photo::after{content:attr(data-initial);position:absolute;inset:0;
-  display:grid;place-items:center;color:#050505;font-family:var(--display);font-weight:700;font-size:30px}
-.acard b{display:block;font-family:var(--display);font-size:15px;font-weight:700;letter-spacing:-.01em}
-.acard .role{font-size:12px;color:var(--muted)}
-.acard{display:flex;flex-direction:column}
-.acard-st{display:flex;align-items:center;gap:6px;margin-top:auto;padding-top:14px;font-size:12px}
+  display:grid;place-items:center;color:#050505;font-family:var(--display);font-weight:700;font-size:24px}
+.acard-id{min-width:0;display:block}
+.acard b{display:block;font-family:var(--display);font-size:15px;font-weight:700;letter-spacing:-.01em;overflow-wrap:anywhere}
+.acard .role{display:block;font-size:12px;color:var(--muted)}
+.acard-facts{margin:0;display:grid;gap:6px;font-size:12px}
+.acard-facts div{display:flex;justify-content:space-between;gap:10px}
+.acard-facts dt{color:var(--muted)}
+.acard-facts dd{margin:0;text-align:right;font-weight:500;font-variant-numeric:tabular-nums}
+.acard-st{display:flex;align-items:center;gap:6px;font-size:12px}
 .acard-st i{width:7px;height:7px;border-radius:50%;flex-shrink:0}
-.st-on i{background:var(--ok);animation:blink 2s ease-in-out infinite}
-.st-on{color:var(--ok)}
-.st-idle i{background:var(--muted)} .st-idle{color:var(--muted)}
-.acard-st .timer{margin-left:auto;font-variant-numeric:tabular-nums;color:var(--muted)}
+.st-ready{color:var(--ok)} .st-ready i{background:var(--ok)}
+.st-paused{color:var(--warn)} .st-paused i{background:var(--warn)}
+.acard-foot{display:flex;gap:8px;flex-wrap:wrap;margin-top:auto}
+.acard-foot .btn{flex:1 1 auto}
+.paused-why{font-size:11.5px;color:var(--warn);margin:0}
 
 /* ══ SECTION 4 · charts ═══════════════════════════════════════════ */
-.charts{display:grid;grid-template-columns:1.35fr 1fr;gap:12px}
-.charts-b{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px}
+.charts{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(0,1fr);gap:12px}
+.charts-b{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:12px;margin-top:12px}
 .card-head{display:flex;align-items:baseline;gap:10px;padding:16px 18px 0}
 .card-head h3{font-size:14px;font-weight:700}
 .card-head .sub{font-size:12px;color:var(--muted)}
@@ -239,6 +244,7 @@ picture{display:contents}
 .card-head .tbtn:hover{background:var(--panel);color:var(--ink)}
 .plot{padding:14px 18px 18px}
 .plot svg{display:block;width:100%;height:auto;overflow:visible}
+.plot-empty{height:190px;display:grid;place-items:center;text-align:center;padding:12px;font-size:13px;color:var(--muted);border:1px dashed var(--line-strong);border-radius:8px}
 .dtable{display:none;padding:0 18px 18px}
 .dtable.on{display:block}
 .dtable table{width:100%;border-collapse:collapse;font-size:12px}
@@ -253,13 +259,13 @@ picture{display:contents}
 .dl span{color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .dl b{margin-left:auto;font-weight:500;font-variant-numeric:tabular-nums;flex-shrink:0}
 .donut-wrap{display:grid;grid-template-columns:132px 1fr;gap:18px;align-items:center}
+#plotDonut{width:132px;max-width:100%}
 
 /* containment meter */
 .meter{margin-top:4px}
 .meter-v{font-family:var(--display);font-size:28px;font-weight:700;letter-spacing:-.02em;line-height:1}
 .meter-track{height:10px;border-radius:5px;background:var(--viz-track);margin-top:14px;position:relative;overflow:hidden}
 .meter-fill{height:100%;border-radius:5px;background:var(--viz-solo)}
-.meter-goal{position:absolute;top:-4px;bottom:-4px;width:2px;background:var(--ink);opacity:.55}
 .meter-legend{display:flex;justify-content:space-between;margin-top:9px;font-size:11px;color:var(--muted)}
 
 /* tooltip shared by every chart */
@@ -301,21 +307,21 @@ table.hist tbody tr:hover{background:var(--panel);cursor:pointer}
 .x{width:32px;height:32px;border-radius:var(--r-sm);display:grid;place-items:center;color:var(--muted)}
 .x:hover{background:var(--panel);color:var(--ink)}
 .m-body{overflow-y:auto;min-height:0}
+.modal-sm{width:min(480px,100%)}
+.ca-body{padding:18px 20px 20px}
+.ca-foot{display:flex;justify-content:flex-end;gap:8px;margin-top:16px}
 
-/* amplitude waveform */
+/* recording progress: plain, because no amplitude data exists to draw */
 .wf-wrap{padding:18px 20px;background:var(--bg-2);border-bottom:1px solid var(--line)}
-.wf{display:flex;align-items:center;gap:2px;height:52px;position:relative}
-.wf i{flex:1;min-width:2px;border-radius:1px;background:var(--viz-soft);transition:background .1s}
-.wf i.past{background:var(--viz-solo)}
-.playing .wf i.past{animation:amp .7s ease-in-out infinite}
-@keyframes amp{0%,100%{transform:scaleY(1)}50%{transform:scaleY(.62)}}
+.wf-track{height:6px;border-radius:3px;background:var(--viz-track);overflow:hidden}
+.wf-fill{height:100%;width:0;background:var(--viz-solo)}
 .wf-ctl{display:flex;align-items:center;gap:10px;margin-top:14px}
 .rnd{width:34px;height:34px;border-radius:50%;background:var(--cyan);color:#050505;display:grid;place-items:center;flex-shrink:0}
 .rnd.alt{background:transparent;color:var(--ink);box-shadow:inset 0 0 0 1px var(--line-strong)}
 .rnd.alt:hover{box-shadow:inset 0 0 0 1px var(--ink)}
 .wf-t{font-size:12px;color:var(--muted);font-variant-numeric:tabular-nums}
 .wf-note{margin-left:auto;font-size:11px;color:var(--muted)}
-.wf-wrap.no-rec .wf{opacity:.35}
+.wf-wrap.no-rec .wf-track{display:none}
 .wf-ctl .rnd:disabled{opacity:.4;cursor:not-allowed}
 .i-pause{display:none}
 .playing .i-play{display:none}
@@ -332,16 +338,15 @@ table.hist tbody tr:hover{background:var(--panel);cursor:pointer}
 .fact{background:var(--panel);border-radius:var(--r-sm);padding:12px 14px}
 .fact .lbl{font-size:11px}
 .fact b{display:block;font-family:var(--display);font-size:18px;font-weight:700;margin-top:3px;letter-spacing:-.01em}
-.turn{display:grid;grid-template-columns:66px 1fr;gap:12px;padding:10px 0;border-bottom:1px solid var(--line)}
+.turn{padding:10px 0;border-bottom:1px solid var(--line)}
 .turn:last-child{border-bottom:0}
-.turn .t{font-size:11px;color:var(--muted);font-variant-numeric:tabular-nums;padding-top:2px}
 .turn .spk{font-size:11px;text-transform:uppercase;letter-spacing:.08em;font-weight:600;color:var(--muted)}
 .turn.agent .spk{color:var(--viz-solo)}
 .turn p{font-size:13px;margin-top:2px}
 .kv{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 .kv div{background:var(--panel);border-radius:var(--r-sm);padding:11px 13px}
 .kv .lbl{font-size:11px}
-.kv b{display:block;font-size:14px;font-weight:500;margin-top:2px}
+.kv b{display:block;font-size:14px;font-weight:500;margin-top:2px;overflow-wrap:anywhere}
 
 /* ══ AGENT EDITOR ═════════════════════════════════════════════════ */
 .ed-head{display:flex;align-items:center;gap:12px;flex-wrap:wrap;
@@ -350,49 +355,68 @@ table.hist tbody tr:hover{background:var(--panel);cursor:pointer}
 .ed-head h1{font-size:17px;font-weight:700}
 .ver{font-size:11px;color:var(--muted);background:var(--panel);padding:2px 7px;border-radius:5px;
   font-variant-numeric:tabular-nums}
-.ed-tabs{display:flex;gap:2px;margin-left:auto}
-/* cost strip — the editor's most consequential line */
-.cost{display:flex;align-items:center;gap:8px;flex-wrap:wrap;
-  padding:10px 22px;background:var(--bg-2);border-bottom:1px solid var(--line);font-size:12px}
-.cost b{font-weight:600;font-variant-numeric:tabular-nums}
-.cost .dot{color:var(--faint)}
-.cost .k{color:var(--muted)}
-.ed-cols{display:grid;grid-template-columns:1.15fr 1fr .8fr;gap:12px;padding:18px 22px}
+.ed-status{padding:9px 22px;font-size:13px;background:var(--panel);border-bottom:1px solid var(--line)}
+.ed-status.ok{background:var(--ok-bg);color:var(--ok)}
+.ed-status.err{background:var(--bad-bg);color:var(--bad)}
+.ed-cols{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr);gap:18px;padding:18px 22px}
 .ed-col>h3{font-size:13px;font-weight:700;margin-bottom:9px}
 .prompt{width:100%;min-height:340px;resize:vertical;padding:14px;border-radius:var(--r-sm);
   border:1px solid var(--line-strong);background:var(--bg-3);font-size:12.5px;line-height:1.6;
   font-family:ui-monospace,'Cascadia Mono',Menlo,monospace}
 .prompt:focus{outline:0;border-color:var(--cyan);box-shadow:0 0 0 3px rgba(0,212,255,.14)}
-.acc{border:1px solid var(--line);border-radius:var(--r-sm);overflow:hidden;background:var(--card)}
-.acc-h{width:100%;display:flex;align-items:center;gap:10px;min-height:44px;padding:11px 13px;
-  font-size:13px;font-weight:500;text-align:left;border-bottom:1px solid var(--line)}
-.acc-h:last-of-type{border-bottom:0}
-.acc-h:hover{background:var(--panel)}
-.acc-h .pm{margin-left:auto;width:16px;height:16px;position:relative;color:var(--muted);flex-shrink:0}
-.acc-h .pm::before,.acc-h .pm::after{content:"";position:absolute;background:currentColor;left:50%;top:50%}
-.acc-h .pm::before{width:10px;height:1.5px;transform:translate(-50%,-50%)}
-.acc-h .pm::after{width:1.5px;height:10px;transform:translate(-50%,-50%);transition:transform .24s}
-.acc-h[aria-expanded="true"] .pm::after{transform:translate(-50%,-50%) scaleY(0)}
-.acc-p{border-bottom:1px solid var(--line);background:var(--bg-2)}
-.acc-p[hidden]{display:none}
-.acc-p .in{padding:13px}
 .frow{margin-bottom:11px}
 .frow:last-child{margin-bottom:0}
 .frow label{display:block;font-size:11px;text-transform:uppercase;letter-spacing:.08em;font-weight:600;color:var(--muted);margin-bottom:4px}
 .frow input,.frow select,.frow textarea{width:100%;min-height:36px;padding:7px 9px;border-radius:6px;
   border:1px solid var(--line-strong);background:var(--bg-3);font-size:13px}
 .frow input:focus,.frow select:focus,.frow textarea:focus{outline:0;border-color:var(--cyan);box-shadow:0 0 0 3px rgba(0,212,255,.14)}
-.frow input::placeholder{color:var(--faint)}
+.frow input::placeholder,.frow textarea::placeholder{color:var(--faint)}
+.frow textarea{resize:vertical;display:block}
 .hint{font-size:11px;color:var(--muted);margin-top:4px}
-.test{background:var(--card);border:1px solid var(--line);border-radius:var(--r-sm);padding:15px}
-.test h4{font-size:14px;font-weight:700;margin-bottom:4px}
-.test p{font-size:12px;color:var(--muted);margin-bottom:13px}
-.test .btn{width:100%}
-.mic{margin-top:10px}
-.test-log{margin-top:14px;padding-top:13px;border-top:1px solid var(--line);font-size:12px;color:var(--muted);min-height:20px}
-.test-log b{color:var(--ink);font-weight:500}
+.ed-state{font-size:13px;margin-bottom:12px}
+.ed-actions{display:flex;gap:8px;flex-wrap:wrap}
+.ed-actions .btn{flex:1 1 auto}
+.versions{border:1px solid var(--line);border-radius:var(--r-sm);padding:2px 12px;background:var(--card)}
+.vrow{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;padding:9px 0;border-bottom:1px solid var(--line)}
+.vrow:last-child{border-bottom:0}
+.vrow-t{font-size:13px;min-width:0}
+.vrow-t b{font-weight:500}
+.vrow-t small{display:inline-block;margin-left:8px;font-size:11.5px;color:var(--muted)}
 
-/* ══ empty state for the routes that aren't built ═════════════════ */
+/* ══ ACCOUNT ══════════════════════════════════════════════════════ */
+.acct{max-width:820px;display:flex;flex-direction:column;gap:14px}
+.acct h2{font-size:15px;font-weight:700;margin-bottom:6px}
+.ac-lead{font-size:13px;color:var(--muted);margin-bottom:14px}
+.ac-lead code,.sig code,.ac-row code{font-family:ui-monospace,'Cascadia Mono',Menlo,monospace;font-size:12px}
+.ac-lead code{color:var(--ink)}
+.acct form .frow{max-width:420px}
+.ac-inline{display:flex;align-items:flex-end;gap:10px;flex-wrap:wrap}
+.ac-inline .frow{flex:1 1 240px;margin-bottom:0;max-width:none}
+.ac-inline .btn{height:36px}
+.ac-msg{font-size:13px;color:var(--muted);margin-top:10px;min-height:0}
+.ac-msg:empty{display:none}
+.ac-msg.ok{color:var(--ok)}
+.ac-msg.err{color:var(--bad)}
+.sig{margin:0 0 14px;padding:10px 12px;background:var(--bg-3);border-radius:var(--r-sm);overflow-x:auto;color:var(--ink)}
+.sig code{white-space:pre-wrap;overflow-wrap:anywhere}
+.once{margin-top:14px;padding:14px;border-radius:var(--r-sm);background:rgba(0,212,255,.06);box-shadow:inset 0 0 0 1px rgba(0,212,255,.35)}
+.once-h{font-size:13px;font-weight:600;margin-bottom:8px}
+.once-v{display:block;padding:9px 11px;background:var(--bg-3);border-radius:6px;font-family:ui-monospace,'Cascadia Mono',Menlo,monospace;font-size:12.5px;overflow-wrap:anywhere;user-select:all}
+.once-a{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+.ac-list{margin-top:14px;border-top:1px solid var(--line)}
+.ac-row{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;padding:11px 0;border-bottom:1px solid var(--line)}
+.ac-row:last-child{border-bottom:0}
+.ac-row-t{min-width:0;flex:1 1 240px}
+.ac-row-t b{display:block;font-size:13px;font-weight:500;overflow-wrap:anywhere}
+.ac-row-t code{display:block;color:var(--muted);margin-top:2px}
+.ac-row-t small{display:block;font-size:11.5px;color:var(--muted);margin-top:2px}
+.ac-row-t small.st-good{color:var(--ok)}
+.ac-row-t small.st-bad{color:var(--bad)}
+.ac-row-a{display:flex;gap:8px;flex-wrap:wrap}
+.danger{border-color:rgba(255,107,107,.35)}
+.kv-acct{margin-top:10px}
+
+/* ══ empty state ══════════════════════════════════════════════════ */
 .empty{display:grid;place-items:center;padding:80px 24px;text-align:center}
 .empty .ic{width:44px;height:44px;border-radius:50%;background:rgba(0,212,255,.08);display:grid;place-items:center;
   color:var(--cyan);box-shadow:inset 0 0 0 1px rgba(0,212,255,.2);margin-bottom:16px}
@@ -402,32 +426,33 @@ table.hist tbody tr:hover{background:var(--panel);cursor:pointer}
 /* ══ RESPONSIVE ═══════════════════════════════════════════════════ */
 .ovl{display:none;position:fixed;inset:0;z-index:40;background:rgba(0,0,0,.6)}
 @media(max-width:1180px){
-  .charts{grid-template-columns:1fr}
-  .kpis{grid-template-columns:1fr 1fr}
-  .agents{grid-template-columns:1fr 1fr}
-  .ed-cols{grid-template-columns:1fr 1fr}
-  .ed-col-test{grid-column:1/-1}
+  .charts{grid-template-columns:minmax(0,1fr)}
+  .kpis{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .agents{grid-template-columns:repeat(2,minmax(0,1fr))}
 }
 @media(max-width:820px){
-  .app{grid-template-columns:1fr}
-  .side{position:fixed;inset:0 auto 0 0;width:264px;z-index:50;transform:translateX(-100%);
-    transition:transform .22s cubic-bezier(.2,.7,.2,1)}
-  .side.open{transform:none}
+  .app{grid-template-columns:minmax(0,1fr)}
+  /* visibility, not just off-screen: a closed drawer must not take Tab focus */
+  .side{position:fixed;inset:0 auto 0 0;width:264px;z-index:50;transform:translateX(-100%);visibility:hidden;
+    transition:transform .22s cubic-bezier(.2,.7,.2,1),visibility 0s linear .22s}
+  /* visible at once on opening, so focus can land inside it straight away */
+  .side.open{transform:none;visibility:visible;transition:transform .22s cubic-bezier(.2,.7,.2,1),visibility 0s}
   .ovl.on{display:block}
   .hamb{display:inline-flex}
-  .kpis,.agents,.charts,.charts-b,.ed-cols,.facts,.kv{grid-template-columns:1fr}
+  .kpis,.agents,.charts,.charts-b,.ed-cols,.facts,.kv{grid-template-columns:minmax(0,1fr)}
   .scroll{padding:16px}
-  .qrow{grid-template-columns:16px 1fr 74px 20px;row-gap:2px}
-  .q-cat,.q-agent{display:none}
+  .qrow{grid-template-columns:16px minmax(0,1fr) 112px 20px;row-gap:2px}
+  .q-agent{display:none}
   .donut-wrap{grid-template-columns:1fr;justify-items:center}
   .bar{padding:10px 14px}
   .bar h1{font-size:15px}
-  .ed-head,.cost{padding-inline:14px}
+  .ed-head,.ed-status{padding-inline:14px}
   .ed-cols{padding:14px}
   /* every interactive control clears the 44px touch minimum on mobile */
   .btn,.btn-sm{height:44px;padding-inline:16px}
-  .nav-item,.acc-h,.tab{min-height:44px}
-  .sel{height:44px}
+  .nav-item,.tab,.gs{min-height:44px}
+  .ac-inline .btn{height:44px}
+  .frow input,.frow select{min-height:44px;font-size:16px}
   .x,.rnd,.hamb{width:44px;height:44px}
   .tbtn{min-height:44px;display:inline-flex;align-items:center}
 }
@@ -446,21 +471,37 @@ table.hist tbody tr:hover{background:var(--panel);cursor:pointer}
   <aside class="side" id="side">
     <div class="side-top">
       <a class="brand" href="#/ops" aria-label="Cynea"><svg class="prism" viewBox="14 2 30 52" width="11" height="19" aria-hidden="true" focusable="false"><g transform="translate(2,2)"><path d="M28 2 L38 2 L40 4 L40 9 L34 15 L34 37 L40 43 L40 48 L38 50 L28 50 L18 43 L14 30 L14 22 L18 9 Z" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linejoin="bevel"/><path d="M22 12 L34 6 L34 15 L27 23 Z" fill="currentColor" fill-opacity=".18"/><path d="M22 40 L34 46 L34 37 L27 29 Z" fill="currentColor" fill-opacity=".09"/><circle cx="26" cy="26" r="2.5" fill="currentColor"/></g></svg><span>Cynea</span></a>
-      <button class="ws" type="button">
-        <span class="ws-av" aria-hidden="true">CW</span>
-        <span>
-          <b>Cynea Workspace</b>
-        </span>
-        <svg width="10" height="6" viewBox="0 0 10 6" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M1 1l4 4 4-4"/></svg>
-      </button>
+      <a class="ws" id="wsLink" href="#/account" hidden>
+        <span class="ws-av" id="wsAv" aria-hidden="true"></span>
+        <span class="ws-txt"><b id="wsName"></b><small id="wsSub"></small></span>
+      </a>
     </div>
 
     <nav class="side-nav" aria-label="Console">
       <div class="nav-group">
         <span>Monitor</span>
-        <a class="nav-item" href="#/ops" aria-current="page">
+        <a class="nav-item" href="#/ops">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3.5 13h4l2.5-6 3 12 2.5-6h5"/></svg>
-          Live Calls <span class="live" id="navLive"><i aria-hidden="true"></i><span id="navLiveN">0</span></span>
+          Operations
+        </a>
+        <a class="nav-item" href="#/history">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/></svg>
+          Call history
+        </a>
+      </div>
+      <div class="nav-group">
+        <span>Manage</span>
+        <a class="nav-item" href="agent_manager.html">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8.5" r="3.5"/><path d="M5 20a7 7 0 0 1 14 0"/></svg>
+          Agents
+        </a>
+        <a class="nav-item" href="#/account">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="10.5" width="14" height="9" rx="2"/><path d="M8.5 10.5V8a3.5 3.5 0 0 1 7 0v2.5"/></svg>
+          Account
+        </a>
+        <a class="nav-item" href="help_center.html">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 5.5A1.5 1.5 0 0 1 6.5 4H19v16H6.5A1.5 1.5 0 0 1 5 18.5z"/><path d="M5 18.5A1.5 1.5 0 0 1 6.5 17H19"/></svg>
+          Docs
         </a>
       </div>
     </nav>
@@ -479,7 +520,7 @@ table.hist tbody tr:hover{background:var(--panel);cursor:pointer}
     <!-- ── OPERATIONS CENTER ─────────────────────────────────────── -->
     <div class="view" id="v-ops">
       <header class="bar">
-        <button class="hamb" id="hamb" type="button" aria-label="Open navigation" aria-expanded="false">
+        <button class="hamb" type="button" data-hamb aria-label="Open navigation" aria-expanded="false" aria-controls="side">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
         </button>
         <h1>Operations Center</h1>
@@ -488,11 +529,6 @@ table.hist tbody tr:hover{background:var(--panel);cursor:pointer}
           <span id="dataBadgeText">Connecting…</span>
         </span>
         <div class="bar-right">
-          <label class="lbl" for="fAgent" style="position:absolute;left:-9999px">Filter by agent</label>
-          <select class="sel" id="fAgent">
-            <option>All agents</option>
-            <option>Peter</option><option>Amina</option><option>Kofi</option><option>Maya</option>
-          </select>
           <button class="btn btn-primary" type="button" id="createAgent">
             <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>
             Create Agent
@@ -500,26 +536,32 @@ table.hist tbody tr:hover{background:var(--panel);cursor:pointer}
         </div>
       </header>
 
-      <div class="scroll">
+      <div class="scroll" id="opsScroll">
+        <div class="banner" id="opsMsg" role="status" aria-live="polite" hidden>
+          <span id="opsMsgText"></span>
+          <button class="btn btn-ghost btn-sm" type="button" id="opsRetry" hidden>Try again</button>
+        </div>
+
         <!-- 1 · KPI ROW -->
         <section class="sec">
           <div class="kpis" id="kpis"></div>
         </section>
 
-        <!-- 2 · LIVE CALL QUEUE (supervisor's first read) -->
+        <!-- 2 · RECENT UNFINISHED CALLS -->
         <section class="sec">
           <div class="sec-head">
-            <h2>Live call queue</h2>
-            <span class="lbl" id="qMeta">6 waiting</span>
+            <h2>Recent unfinished calls</h2>
+            <span class="lbl" id="qMeta"></span>
           </div>
           <div class="panel" id="queue"></div>
+          <p class="sec-note">Calls from the last 15 minutes that have not been marked finished. A call here may still be going or may have dropped: the record can't tell which.</p>
         </section>
 
-        <!-- 3 · AGENT STATUS -->
+        <!-- 3 · AGENTS -->
         <section class="sec">
           <div class="sec-head">
-            <h2>Agent status</h2>
-            <span class="lbl">Click an agent to configure</span>
+            <h2>Your agents</h2>
+            <span class="lbl" id="agentsMeta"></span>
           </div>
           <div class="agents" id="agentCards"></div>
         </section>
@@ -531,8 +573,8 @@ table.hist tbody tr:hover{background:var(--panel);cursor:pointer}
           <div class="charts">
             <div class="panel">
               <div class="card-head">
-                <h3>Call volume</h3><span class="sub">calls per hour</span>
-                <button class="tbtn" type="button" data-table="tblVolume" aria-expanded="false">Table</button>
+                <h3>Call volume</h3><span class="sub">calls per hour today, your time</span>
+                <button class="tbtn" type="button" data-table="tblVolume" data-plot="plotVolume" aria-expanded="false" hidden>Table</button>
               </div>
               <div class="plot" id="plotVolume"></div>
               <div class="dtable" id="tblVolume"></div>
@@ -540,8 +582,8 @@ table.hist tbody tr:hover{background:var(--panel);cursor:pointer}
 
             <div class="panel">
               <div class="card-head">
-                <h3>Sentiment trend</h3><span class="sub">mean score, −1 to +1</span>
-                <button class="tbtn" type="button" data-table="tblSent" aria-expanded="false">Table</button>
+                <h3>Sentiment trend</h3><span class="sub">mean score today, −1 to +1</span>
+                <button class="tbtn" type="button" data-table="tblSent" data-plot="plotSent" aria-expanded="false" hidden>Table</button>
               </div>
               <div class="plot" id="plotSent"></div>
               <div class="dtable" id="tblSent"></div>
@@ -550,25 +592,23 @@ table.hist tbody tr:hover{background:var(--panel);cursor:pointer}
 
           <div class="charts-b">
             <div class="panel">
-              <div class="card-head"><h3>Cost breakdown</h3><span class="sub">today</span></div>
+              <div class="card-head"><h3>Cost by agent</h3><span class="sub">last 7 days</span></div>
               <div class="plot">
-                <div class="donut-wrap">
+                <div class="donut-wrap" id="donutWrap">
                   <div id="plotDonut"></div>
                   <div class="dlegend" id="donutLegend"></div>
                 </div>
+                <div id="donutEmpty"></div>
               </div>
             </div>
 
             <div class="panel">
-              <div class="card-head"><h3>Containment</h3><span class="sub">resolved without a human</span></div>
+              <div class="card-head"><h3>Containment</h3><span class="sub">share of today's calls resolved</span></div>
               <div class="plot">
                 <div class="meter">
                   <div class="meter-v" id="cmVal">—</div>
-                  <div class="meter-track">
-                    <div class="meter-fill" id="cmFill"></div>
-                    <div class="meter-goal" id="cmGoal" title="Target 90%"></div>
-                  </div>
-                  <div class="meter-legend"><span>0%</span><span id="cmGoalLbl">Target 90%</span><span>100%</span></div>
+                  <div class="meter-track"><div class="meter-fill" id="cmFill"></div></div>
+                  <div class="meter-legend"><span>0%</span><span id="cmNote"></span><span>100%</span></div>
                 </div>
               </div>
             </div>
@@ -576,12 +616,12 @@ table.hist tbody tr:hover{background:var(--panel);cursor:pointer}
         </section>
 
         <!-- 5 · CALL HISTORY -->
-        <section class="sec">
+        <section class="sec" id="history">
           <div class="sec-head">
             <h2>Call history</h2>
-            <span class="lbl">Click a row for the recording and transcript</span>
+            <span class="lbl" id="histMeta"></span>
           </div>
-          <div class="panel tscroll">
+          <div class="panel tscroll" tabindex="0" role="region" aria-label="Call history">
             <table class="hist">
               <thead><tr>
                 <th>Time</th><th>Agent</th><th>Caller</th><th>Duration</th><th>Outcome</th><th>Status</th>
@@ -596,7 +636,7 @@ table.hist tbody tr:hover{background:var(--panel);cursor:pointer}
     <!-- ── AGENT EDITOR ──────────────────────────────────────────── -->
     <div class="view" id="v-agent" hidden>
       <header class="bar">
-        <button class="hamb" type="button" data-hamb aria-label="Open navigation">
+        <button class="hamb" type="button" data-hamb aria-label="Open navigation" aria-expanded="false" aria-controls="side">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
         </button>
         <a class="btn btn-ghost btn-sm" href="#/ops">
@@ -604,145 +644,200 @@ table.hist tbody tr:hover{background:var(--panel);cursor:pointer}
           Operations
         </a>
         <div class="bar-right">
-          <button class="btn btn-ghost" type="button">Discard</button>
-          <button class="btn btn-primary" type="button" id="saveAgent">Save &amp; publish</button>
+          <button class="btn btn-ghost" type="button" id="discardAgent" disabled>Discard</button>
+          <button class="btn btn-primary" type="button" id="saveAgent" disabled>Save</button>
         </div>
       </header>
 
       <div class="ed-head">
-        <img id="edPhoto" src="assets/avatar-kwame.jpg" alt="" width="240" height="240">
-        <h1 id="edName">Peter</h1>
-        <span class="ver" id="edVer">v12</span>
-        <div class="ed-tabs" role="tablist" aria-label="Agent editor">
-          <button class="tab" role="tab" aria-selected="true" data-edtab="configure">Configure</button>
-          <button class="tab" role="tab" aria-selected="false" data-edtab="simulation">Simulation</button>
-          <button class="tab" role="tab" aria-selected="false" data-edtab="test">Test</button>
+        <img id="edPhoto" alt="" width="240" height="240" hidden>
+        <h1 id="edName">Agent</h1>
+        <span id="edPill"></span>
+        <span class="ver" id="edVer" hidden></span>
+      </div>
+      <p class="ed-status" id="edStatus" role="status" aria-live="polite" hidden></p>
+
+      <div class="scroll" id="agentScroll" style="padding:0">
+        <div class="empty" id="edEmpty" hidden>
+          <h2 id="edEmptyTitle"></h2>
+          <p id="edEmptyText"></p>
+          <a class="btn btn-ghost" href="#/ops" style="margin-top:16px">Back to Operations</a>
         </div>
-      </div>
 
-      <!-- cost strip: the number that decides whether a config ships -->
-      <div class="cost">
-        <span class="k">Cost</span><b id="edCost">$0.04</b><span class="k">/min</span>
-        <span class="dot">·</span>
-        <span class="k">Latency</span><b>~600 ms</b><span class="k">target</span>
-        <span class="dot">·</span>
-        <span class="k">Voice</span><b id="edVoice">ElevenLabs George</b>
-      </div>
+        <div class="ed-cols" id="edForm" hidden>
+          <!-- LEFT: prompt -->
+          <div class="ed-col">
+            <h3><label for="edPrompt">Prompt</label></h3>
+            <textarea class="prompt" id="edPrompt" spellcheck="false"></textarea>
+            <p class="hint" id="edPromptHint"></p>
+            <h3 style="margin-top:18px">Prompt versions</h3>
+            <div class="versions" id="edVersions"></div>
+          </div>
 
-      <div class="scroll" style="padding:0">
-        <div id="edPane-configure">
-          <div class="ed-cols">
-            <!-- LEFT: prompt -->
-            <div class="ed-col">
-              <h3>Prompt</h3>
-              <textarea class="prompt" id="edPrompt" spellcheck="false" aria-label="Agent prompt"></textarea>
-              <p class="hint">Markdown. Mirrors <code>cynea_africa/persona/</code> — edits here are not written back to the repo.</p>
-            </div>
-
-            <!-- MIDDLE: settings -->
-            <div class="ed-col">
-              <h3>Settings</h3>
-              <div class="acc">
-                <button class="acc-h" type="button" aria-expanded="true" aria-controls="ap1">Voice &amp; Language<span class="pm" aria-hidden="true"></span></button>
-                <div class="acc-p" id="ap1">
-                  <div class="in">
-                    <div class="frow">
-                      <label for="s-voice">Voice</label>
-                      <select id="s-voice">
-                        <option>ElevenLabs · George</option>
-                        <option>Edge TTS · en-GB-RyanNeural</option>
-                        <option>Edge TTS · en-NG-AbeoNeural</option>
-                        <option>Edge TTS · en-ZA-LukeNeural</option>
-                      </select>
-                    </div>
-                    <div class="frow">
-                      <label for="s-lang">Primary language</label>
-                      <select id="s-lang"><option>English (Ghana)</option><option>English (Kenya)</option><option>English (Nigeria)</option></select>
-                      <p class="hint">Whisper transcribes code-switched Twi and Pidgin; synthesis stays English.</p>
-                    </div>
-                  </div>
-                </div>
-
-                <button class="acc-h" type="button" aria-expanded="false" aria-controls="ap2">Knowledge Base<span class="pm" aria-hidden="true"></span></button>
-                <div class="acc-p" id="ap2" hidden>
-                  <div class="in">
-                    <div class="frow">
-                      <label for="s-kb">Attached sources</label>
-                      <select id="s-kb"><option>adinkra-hotel-rates.pdf</option><option>room-inventory.csv</option></select>
-                    </div>
-                    <p class="hint">2 sources · last indexed 4 hours ago.</p>
-                  </div>
-                </div>
-
-                <button class="acc-h" type="button" aria-expanded="false" aria-controls="ap3">Call Settings<span class="pm" aria-hidden="true"></span></button>
-                <div class="acc-p" id="ap3" hidden>
-                  <div class="in">
-                    <div class="frow">
-                      <label for="s-grace">Turn-taking grace period (ms)</label>
-                      <input id="s-grace" type="number" value="700" min="200" max="2000" step="50">
-                      <p class="hint">Real default from <code>cynea/interruption.py</code>.</p>
-                    </div>
-                    <div class="frow">
-                      <label for="s-back">Backchannel after (ms)</label>
-                      <input id="s-back" type="number" value="800" min="300" max="3000" step="50">
-                    </div>
-                    <div class="frow">
-                      <label for="s-max">Max call length (min)</label>
-                      <input id="s-max" type="number" value="12" min="1" max="60">
-                    </div>
-                  </div>
-                </div>
-
-                <button class="acc-h" type="button" aria-expanded="false" aria-controls="ap4">Webhooks<span class="pm" aria-hidden="true"></span></button>
-                <div class="acc-p" id="ap4" hidden>
-                  <div class="in">
-                    <div class="frow">
-                      <label for="s-hook">Call-ended URL</label>
-                      <input id="s-hook" type="url" placeholder="https://api.example.com/cynea/call-ended">
-                    </div>
-                    <p class="hint">POSTs the transcript, extracted fields and cost.</p>
-                  </div>
-                </div>
+          <!-- RIGHT: settings -->
+          <div class="ed-col">
+            <h3>Settings</h3>
+            <div class="panel pad">
+              <div class="frow">
+                <label for="s-name">Name</label>
+                <input id="s-name" type="text" maxlength="120" autocomplete="off">
+              </div>
+              <div class="frow">
+                <label for="s-persona">Persona</label>
+                <select id="s-persona"></select>
+              </div>
+              <div class="frow">
+                <label for="s-voice">Voice</label>
+                <select id="s-voice"></select>
+              </div>
+              <div class="frow">
+                <label for="s-speed">Speed</label>
+                <input id="s-speed" type="number" min="0.5" max="2" step="0.05">
+                <p class="hint">From 0.5 to 2. 1 is normal speed.</p>
+              </div>
+              <div class="frow">
+                <label for="s-greeting">Greeting</label>
+                <textarea id="s-greeting" rows="3" maxlength="500"></textarea>
+                <p class="hint" id="s-greeting-hint"></p>
               </div>
             </div>
 
-            <!-- RIGHT: test panel, always visible -->
-            <div class="ed-col ed-col-test">
-              <h3>Test</h3>
-              <div class="test">
-                <h4>Run a scripted test</h4>
-                <p>Replays a saved caller script against this config and diffs the outcome.</p>
-                <button class="btn btn-primary" type="button" id="runTest">Run Test</button>
-                <div class="mic">
-                  <button class="btn btn-ghost" type="button" id="micTest" style="width:100%">
-                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5.5 11.5a6.5 6.5 0 0 0 13 0M12 18v3"/></svg>
-                    Browser mic test
-                  </button>
-                </div>
-                <div class="test-log" id="testLog">No runs yet.</div>
+            <h3 style="margin-top:18px">Status and testing</h3>
+            <div class="panel pad">
+              <p class="ed-state" id="edState"></p>
+              <div class="ed-actions">
+                <button class="btn btn-primary" type="button" id="edTest">Test call</button>
+                <button class="btn btn-ghost" type="button" id="edPause">Pause</button>
               </div>
+              <p class="hint" id="edTestHint"></p>
             </div>
-          </div>
-        </div>
-
-        <div id="edPane-simulation" hidden>
-          <div class="empty">
-            <span class="ic" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3.5 13h4l2.5-6 3 12 2.5-6h5"/></svg></span>
-            <h2>Simulation isn't built yet</h2>
-            <p>This tab will replay a batch of recorded callers against the current prompt and report containment and escalation deltas before you publish.</p>
-          </div>
-        </div>
-        <div id="edPane-test" hidden>
-          <div class="empty">
-            <span class="ic" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5.5 11.5a6.5 6.5 0 0 0 13 0M12 18v3"/></svg></span>
-            <h2>Full test console isn't built yet</h2>
-            <p>Use the Test panel on the Configure tab meanwhile — it runs the same scripted check.</p>
           </div>
         </div>
       </div>
     </div>
 
+    <!-- ── ACCOUNT ───────────────────────────────────────────────── -->
+    <div class="view" id="v-account" hidden>
+      <header class="bar">
+        <button class="hamb" type="button" data-hamb aria-label="Open navigation" aria-expanded="false" aria-controls="side">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+        </button>
+        <h1>Account</h1>
+      </header>
 
+      <div class="scroll" id="accountScroll">
+        <div class="acct">
+          <section class="panel pad" aria-labelledby="h-profile">
+            <h2 id="h-profile">Profile</h2>
+            <div class="kv kv-acct" id="acProfile"></div>
+          </section>
+
+          <section class="panel pad" aria-labelledby="h-pw">
+            <h2 id="h-pw">Change password</h2>
+            <p class="ac-lead">Every other device signed in to this account will be signed out. This one stays signed in.</p>
+            <form id="pwForm" novalidate>
+              <div class="frow"><label for="pwCurrent">Current password</label>
+                <input id="pwCurrent" type="password" autocomplete="current-password"></div>
+              <div class="frow"><label for="pwNew">New password</label>
+                <input id="pwNew" type="password" autocomplete="new-password">
+                <p class="hint">At least 8 characters.</p></div>
+              <div class="frow"><label for="pwNew2">Type it again</label>
+                <input id="pwNew2" type="password" autocomplete="new-password"></div>
+              <button class="btn btn-primary" type="submit" id="pwBtn">Change password</button>
+              <p class="ac-msg" id="pwMsg" role="status" aria-live="polite"></p>
+            </form>
+          </section>
+
+          <section class="panel pad" aria-labelledby="h-keys">
+            <h2 id="h-keys">API keys</h2>
+            <p class="ac-lead">For calling the API from your own code. Send one as <code>Authorization: Bearer &lt;key&gt;</code>. A key can read and change your agents and calls, but not your account.</p>
+            <form class="ac-inline" id="keyForm" novalidate>
+              <div class="frow"><label for="keyName">Key name</label>
+                <input id="keyName" type="text" maxlength="120" placeholder="e.g. Billing export" autocomplete="off"></div>
+              <button class="btn btn-primary" type="submit" id="keyBtn">Create key</button>
+            </form>
+            <p class="ac-msg" id="keyMsg" role="status" aria-live="polite"></p>
+            <div class="once" id="keyOnce" hidden>
+              <p class="once-h">Copy this key now. You won't see it again.</p>
+              <code class="once-v" id="keyValue"></code>
+              <div class="once-a">
+                <button class="btn btn-primary btn-sm" type="button" id="keyCopy">Copy key</button>
+                <button class="btn btn-ghost btn-sm" type="button" id="keyDone">I've saved it</button>
+              </div>
+            </div>
+            <div class="ac-list" id="keyList"></div>
+          </section>
+
+          <section class="panel pad" aria-labelledby="h-hooks">
+            <h2 id="h-hooks">Webhooks</h2>
+            <p class="ac-lead">We POST JSON to your URL when a call is logged. One attempt per event, with no retries. Every delivery is signed:</p>
+            <pre class="sig"><code>Cynea-Signature: t=&lt;unix&gt;,v1=&lt;hmac_sha256(secret, "t.body")&gt;</code></pre>
+            <form class="ac-inline" id="hookForm" novalidate>
+              <div class="frow"><label for="hookUrl">Receiver URL</label>
+                <input id="hookUrl" type="url" placeholder="https://example.com/cynea" autocomplete="off"></div>
+              <button class="btn btn-primary" type="submit" id="hookBtn">Add webhook</button>
+            </form>
+            <p class="ac-msg" id="hookMsg" role="status" aria-live="polite"></p>
+            <div class="once" id="hookOnce" hidden>
+              <p class="once-h">Copy this signing secret now. You won't see it again.</p>
+              <code class="once-v" id="hookValue"></code>
+              <div class="once-a">
+                <button class="btn btn-primary btn-sm" type="button" id="hookCopy">Copy secret</button>
+                <button class="btn btn-ghost btn-sm" type="button" id="hookDone">I've saved it</button>
+              </div>
+            </div>
+            <div class="ac-list" id="hookList"></div>
+          </section>
+
+          <section class="panel pad" aria-labelledby="h-export">
+            <h2 id="h-export">Export your data</h2>
+            <p class="ac-lead">A JSON file with your account, agents, prompts and calls, including full caller numbers and transcripts. Recordings are listed, not included. Secrets are left out.</p>
+            <button class="btn btn-ghost" type="button" id="exportBtn">Download export</button>
+            <p class="ac-msg" id="exportMsg" role="status" aria-live="polite"></p>
+          </section>
+
+          <section class="panel pad danger" aria-labelledby="h-delete">
+            <h2 id="h-delete">Delete account</h2>
+            <p class="ac-lead">This permanently deletes your account, every agent and prompt version, all calls, transcripts and recordings, your API keys and your webhooks. It can't be undone.</p>
+            <form id="delForm" novalidate>
+              <div class="frow"><label for="delConfirm">Type DELETE to confirm</label>
+                <input id="delConfirm" type="text" autocomplete="off" spellcheck="false"></div>
+              <div class="frow"><label for="delPassword">Your password</label>
+                <input id="delPassword" type="password" autocomplete="current-password"></div>
+              <button class="btn btn-danger" type="submit" id="delBtn" disabled>Delete my account</button>
+              <p class="ac-msg" id="delMsg" role="status" aria-live="polite"></p>
+            </form>
+          </section>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ══ CREATE AGENT MODAL ══════════════════════════════════════════ -->
+<div class="scrim" id="caScrim" hidden>
+  <div class="modal modal-sm" role="dialog" aria-modal="true" aria-labelledby="caTitle">
+    <div class="m-head">
+      <h2 id="caTitle">Create agent</h2>
+      <button class="x" type="button" id="caClose" aria-label="Close" style="margin-left:auto">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>
+      </button>
+    </div>
+    <form class="m-body ca-body" id="caForm" novalidate>
+      <p class="ac-lead">The persona sets who it is and how it talks. You can change everything later.</p>
+      <div class="frow"><label for="caName">Agent name</label>
+        <input id="caName" type="text" maxlength="120" placeholder="e.g. Front Desk" autocomplete="off"></div>
+      <div class="frow"><label for="caPersona">Persona</label>
+        <select id="caPersona" disabled><option>Loading…</option></select></div>
+      <div class="frow"><label for="caVoice">Voice</label>
+        <select id="caVoice" disabled><option>Loading…</option></select></div>
+      <p class="ac-msg err" id="caErr" role="alert" hidden></p>
+      <div class="ca-foot">
+        <button class="btn btn-ghost" type="button" id="caCancel">Cancel</button>
+        <button class="btn btn-primary" type="submit" id="caSubmit" disabled>Create agent</button>
+      </div>
+    </form>
   </div>
 </div>
 
@@ -751,14 +846,14 @@ table.hist tbody tr:hover{background:var(--panel);cursor:pointer}
   <div class="modal" role="dialog" aria-modal="true" aria-labelledby="mTitle">
     <div class="m-head">
       <h2 id="mTitle">Call detail</h2>
-      <span id="mBadge"></span>
+      <span id="mBadge" style="margin-left:auto"></span>
       <button class="x" type="button" id="mClose" aria-label="Close">
         <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>
       </button>
     </div>
 
     <div class="wf-wrap" id="wfWrap">
-      <div class="wf" id="wf" aria-hidden="true"></div>
+      <div class="wf-track" id="wfTrack" aria-hidden="true"><div class="wf-fill" id="wfFill"></div></div>
       <div class="wf-ctl">
         <button class="rnd" type="button" id="mPlay" aria-label="Play recording">
           <svg class="i-play" width="11" height="12" viewBox="0 0 9 10" fill="currentColor" aria-hidden="true"><path d="M0 0l9 5-9 5z"/></svg>
@@ -800,62 +895,91 @@ table.hist tbody tr:hover{background:var(--panel);cursor:pointer}
 'use strict';
 
 /* ═══════════════════════════════════════════════════════════════════
-   SAMPLE DATA
-   No backend is wired up. Everything here is illustrative and the
-   toolbar says so — the point of the shell is the structure, not the
-   figures. Real values that DO come from the repo are marked.
-   ═══════════════════════════════════════════════════════════════════ */
-/* ═══════════════════════════════════════════════════════════════════
    STATE
-   Empty until the API answers. There is no built-in sample data: a
-   console that invents numbers when it cannot reach the database is
-   worse than one that says so, because the reader cannot tell which
-   figures are real.
+   Empty until the API answers. The database is the only source of figures,
+   and a console that can't reach it says so rather than show a stand-in.
    ═══════════════════════════════════════════════════════════════════ */
-var AGENTS = {};      /* persona -> {name, role, place, photo, id, ...}  */
-var STATUS = {};      /* persona -> {on, timer}                          */
-var KPIS   = [];
+var AGENTS = {};       /* agent id -> {id,name,persona,personaName,role,photo,voice,paused,callsToday} */
+var AGENT_ORDER = [];  /* agent ids, in the order the API listed them */
+var KPI    = null;     /* stats.kpis, null until loaded */
+var TOTALS = null;     /* stats.totals */
 var QUEUE  = [];
 var VOLUME = [];
 var SENT   = [];
 var COST   = [];
-var CONTAIN = {value: 0, goal: 90};
 var CALLS  = [];
+var LOAD   = 'loading';   /* loading | ok | error: what an empty list is allowed to claim */
+var OPTIONS = null;       /* GET /agents/options, once it has answered */
+var ME = null;            /* GET /auth/me */
 
 /* ═══════════════════════════════════════════════════════════════════
    HELPERS
    ═══════════════════════════════════════════════════════════════════ */
 var $=function(s,r){return (r||document).querySelector(s);};
 var $$=function(s,r){return [].slice.call((r||document).querySelectorAll(s));};
-function esc(s){return String(s).replace(/[&<>"]/g,function(c){
-  return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});}
+function esc(s){return String(s===null||s===undefined?'':s).replace(/[&<>"']/g,function(c){
+  return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
 /* `host` is a selector for the element that carries the fallback styling.
    Passing it adds an onerror that marks that ancestor, so a missing file
    degrades to the agent's gradient instead of a broken-image icon. */
 function pic(name,cls,alt,size,host){
-  return '<picture><source srcset="assets/'+name+'.webp" type="image/webp">'+
-         '<img'+(cls?' class="'+cls+'"':'')+' src="assets/'+name+'.jpg" alt="'+esc(alt)+'"'+
+  return '<picture><source srcset="assets/'+esc(name)+'.webp" type="image/webp">'+
+         '<img'+(cls?' class="'+cls+'"':'')+' src="assets/'+esc(name)+'.jpg" alt="'+esc(alt)+'"'+
          ' width="'+size+'" height="'+size+'" loading="lazy" decoding="async"'+
          (host?' onerror="this.closest(\''+host+'\').classList.add(\'no-photo\')"':'')+
          '></picture>';
 }
 
-/* Card accent per agent — cyan-family steps of the brand. */
-function tint(k){ return TINT[k]||TINT.kwame; }
+/* An instant from the API. Some timestamps arrive without an offset on SQLite;
+   they are UTC, and JS would otherwise read them as local. */
+function toDate(iso){
+  if(!iso) return null;
+  var d=new Date(/(Z|[+-]\d\d:?\d\d)$/.test(iso)?iso:iso+'Z');
+  return isNaN(d)?null:d;
+}
+/* created_at in the viewer's own time. The API's time/date fields are UTC. */
+function whenLocal(iso){
+  var d=toDate(iso); if(!d) return '—';
+  return d.toLocaleString(undefined,{month:'short',day:'numeric',hour:'2-digit',minute:'2-digit'});
+}
+function dateLocal(iso){
+  var d=toDate(iso); if(!d) return '—';
+  return d.toLocaleDateString(undefined,{year:'numeric',month:'short',day:'numeric'});
+}
+function ago(iso){
+  var d=toDate(iso); if(!d) return '';
+  var s=Math.max(0,(Date.now()-d.getTime())/1000);
+  if(s<60) return 'under a minute ago';
+  var m=Math.floor(s/60);
+  if(m<60) return m+(m===1?' minute ago':' minutes ago');
+  var h=Math.floor(m/60);
+  return h+(h===1?' hour ago':' hours ago');
+}
+
+/* Card accent per persona: cyan-family steps of the brand. */
 var TINT={kwame:['#00D4FF','#0088AA'], amina:['#00B8E6','#0088AA'],
           kofi:['#00D4FF','#00B8E6'],  maya:['#00B8E6','#00D4FF']};
+function tint(p){ return TINT[p]||TINT.kwame; }
 var BADGE={
   ok:['b-ok','Resolved','M4 12.5l4.5 4.5L20 6'],
   warn:['b-warn','Escalated','M12 3.5L21.5 20h-19zM12 9.5v4.5M12 16.5v.5'],
-  bad:['b-bad','Abandoned','M6 6l12 12M18 6L6 18']
+  /* The API's "abandoned" means not marked finished: it may still be going. */
+  bad:['b-bad','Not finished','M6 6l12 12M18 6L6 18']
 };
-/* status is never colour alone — every badge ships an icon and a word */
+/* status is never colour alone: every badge ships an icon and a word */
 function badge(st){
-  var b=BADGE[st];
+  var b=BADGE[st]||BADGE.bad;
   return '<span class="badge '+b[0]+'"><svg width="11" height="11" viewBox="0 0 24 24" fill="none"'+
          ' stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"'+
          ' aria-hidden="true"><path d="'+b[2]+'"/></svg>'+b[1]+'</span>';
 }
+function voiceLabel(id){
+  var list=(OPTIONS&&OPTIONS.voices)||[];
+  for(var i=0;i<list.length;i++) if(list[i].id===id) return list[i].label;
+  return id||'';
+}
+function signed(v){ return (v>0?'+':'')+v.toFixed(2); }
+function plural(n,one,many){ return n+' '+(n===1?one:(many||one+'s')); }
 
 /* ── shared tooltip ───────────────────────────────────────────────── */
 var tip=$('#tip');
@@ -868,197 +992,378 @@ function showTip(html,x,y){
 function hideTip(){tip.classList.remove('on');}
 
 /* ═══════════════════════════════════════════════════════════════════
-   RENDER · KPI stat tiles
-   Proportional figures on the values (tabular only in columns — equal
-   width digits make a standalone number read gappy).
+   API LAYER
    ═══════════════════════════════════════════════════════════════════ */
-function sparkline(vals){
-  var w=64,h=22,max=Math.max.apply(null,vals),min=Math.min.apply(null,vals),
-      span=(max-min)||1,pts=vals.map(function(v,i){
-        return [(i/(vals.length-1)*w).toFixed(1),(h-((v-min)/span)*h).toFixed(1)];
+var API = {
+  base: (function(){
+    /* Deployed, the API is /api on this same origin, so no CORS preflight and
+       no hard-coded hostname to rot. Opened from a file or a static server on
+       localhost there is no /api to talk to, so fall back to a locally-run
+       uvicorn. Set localStorage.cynea_api to override either, which is what
+       you want when pointing a local console at a deployed API. */
+    var override = localStorage.getItem('cynea_api');
+    if (override) return override.replace(/\/$/, '');
+    var h = location.hostname;
+    var local = (h === 'localhost' || h === '127.0.0.1' || h === '' || location.protocol === 'file:');
+    return local ? 'http://127.0.0.1:8000' : '/api';
+  })(),
+  token: localStorage.getItem('cynea_token') || '',
+  live: false,
+
+  headers: function(){
+    var h = {};
+    if(this.token) h['Authorization'] = 'Bearer ' + this.token;
+    return h;
+  },
+
+  /* Rejects with an Error carrying .status and a message fit to show a person.
+     A 401 means the session is over, so it clears up and leaves for sign-in,
+     unless the caller says a 401 means something else (`keep401`). */
+  req: function(method, path, body, opts){
+    opts = opts || {};
+    var init = {method: method, headers: this.headers()};
+    if(body !== undefined){
+      init.headers['Content-Type'] = 'application/json';
+      init.body = JSON.stringify(body);
+    }
+    return fetch(this.base + path, init).catch(function(){
+      throw failure(0, 'Cannot reach the server. Check your connection and try again.');
+    }).then(function(r){
+      if(r.status === 401 && !opts.keep401){
+        toSignIn();
+        throw failure(401, 'Your session has ended.');
+      }
+      if(r.status === 204) return null;
+      return r.json().catch(function(){ return null; }).then(function(data){
+        if(r.ok) return data;
+        var d = data && data.detail;
+        if(Array.isArray(d) && d[0] && d[0].msg) d = d[0].msg;
+        throw failure(r.status, (typeof d === 'string' && d) ? d :
+          'The server answered with an error (' + r.status + '). Try again in a moment.');
       });
-  return '<svg class="spark" width="'+w+'" height="'+h+'" viewBox="0 0 '+w+' '+h+'" aria-hidden="true">'+
-    '<polyline fill="none" stroke="var(--viz-soft)" stroke-width="2" stroke-linecap="round"'+
-    ' stroke-linejoin="round" points="'+pts.slice(0,-1).map(function(p){return p.join(',');}).join(' ')+'"/>'+
-    '<polyline fill="none" stroke="var(--viz-solo)" stroke-width="2" stroke-linecap="round"'+
-    ' points="'+pts.slice(-2).map(function(p){return p.join(',');}).join(' ')+'"/>'+
-    '<circle cx="'+pts[pts.length-1][0]+'" cy="'+pts[pts.length-1][1]+'" r="2.4" fill="var(--viz-solo)"/></svg>';
+    });
+  },
+  get: function(path){ return this.req('GET', path); }
+};
+
+function failure(status, message){
+  var e = new Error(message);
+  e.status = status;
+  return e;
 }
-function renderKpis(){
-  if(!KPIS.length){
-    $('#kpis').innerHTML=['Calls today','Containment rate','Cost per call','Cost this week']
-      .map(function(label){
-        return '<div class="kpi"><span class="lbl">'+label+'</span>'+
-               '<div class="kpi-v" style="color:var(--line-2)">—</div>'+
-               '<div class="kpi-foot"><span class="delta" style="color:var(--muted)">'+
-               'No calls yet</span></div></div>';
-      }).join('');
-    return;
+
+function clearSession(){
+  localStorage.removeItem('cynea_token');
+  localStorage.removeItem('cynea_email');
+}
+/* Several requests can hit the same 401 at once: leave once, or each replace()
+   cancels the one before it. */
+var leaving = false;
+function toSignIn(){
+  if(leaving) return;
+  leaving = true;
+  clearSession();
+  location.replace('signin.html?next=' + encodeURIComponent('dashboard.html' + location.hash));
+}
+
+/* Ends the session on the server, then leaves whatever the server said: a dead
+   API must not be able to keep someone signed in on this browser. */
+function signOut(){
+  var done = false;
+  function leave(){
+    if(done) return;
+    done = true;
+    clearSession();
+    location.replace('signin.html');
   }
-  $('#kpis').innerHTML=KPIS.map(function(k){
-    return '<div class="kpi"><span class="lbl">'+esc(k.label)+'</span>'+
-      '<div class="kpi-v">'+esc(k.value)+'</div>'+
-      '<div class="kpi-foot"><span class="delta '+k.dir+'">'+esc(k.delta)+
-      ' <small>'+esc(k.since)+'</small></span>'+sparkline(k.spark)+'</div></div>';
-  }).join('');
+  setTimeout(leave, 4000);
+  fetch(API.base + '/auth/logout', {method:'POST', headers:API.headers()}).then(leave, leave);
+}
+
+function ensureOptions(){
+  if(OPTIONS) return Promise.resolve(OPTIONS);
+  return API.get('/agents/options').then(function(o){ OPTIONS = o; return o; });
+}
+
+function setBadge(live, detail){
+  var b = $('#dataBadge');
+  b.classList.toggle('live', !!live);
+  /* Two honest states only: connected to the database, or not. */
+  $('#dataBadgeText').textContent = live ? 'Connected' : 'Disconnected';
+  b.title = detail;
+}
+
+/* The one message line on the Operations view. */
+function banner(text, kind, retry){
+  var el = $('#opsMsg');
+  el.hidden = !text;
+  el.className = 'banner' + (kind ? ' ' + kind : '');
+  $('#opsMsgText').textContent = text || '';
+  $('#opsRetry').hidden = !retry;
+}
+$('#opsRetry').addEventListener('click', function(){ banner(''); loadLive(); });
+
+/* Open a test call. The tab opens inside the click, before the request, because
+   a popup blocker only lets a tab through while it can see the click. */
+function startTestCall(id, onError){
+  var tab = window.open('about:blank', '_blank');
+  if(tab){
+    try {
+      tab.document.title = 'Starting your test call';
+      tab.document.body.style.cssText = 'background:#050505;color:#8A8A8A;font:15px system-ui,sans-serif;padding:32px';
+      tab.document.body.textContent = 'Starting your test call…';
+    } catch(_){}
+  }
+  API.req('POST', '/agents/' + encodeURIComponent(id) + '/call-ticket').then(function(d){
+    var url = 'live-call.html?ticket=' + encodeURIComponent(d.ticket);
+    if(tab) tab.location = url;
+    else location.href = url;      /* the blocker won anyway: use this tab */
+  }).catch(function(err){
+    if(tab) tab.close();
+    onError(err);
+  });
 }
 
 /* ═══════════════════════════════════════════════════════════════════
-   RENDER · live queue
+   RENDER · KPI stat tiles
+   Only what the API measured. A dash means no calls to measure yet.
    ═══════════════════════════════════════════════════════════════════ */
-function renderQueue(){
-  if(!QUEUE.length){
-    $('#queue').innerHTML='<div style="padding:26px 16px;text-align:center;'+
-      'font-size:13px;color:var(--muted)">No calls in progress. '+
-      'Live calls appear here once telephony is connected.</div>';
-    $('#qMeta').textContent='No calls in progress';
-    var n0=$('#navLiveN'); if(n0) n0.textContent='0';
-    var b0=$('#navLive'); if(b0) b0.style.display='none';
+function kpiTile(label,value,foot,cls){
+  return '<div class="kpi"><span class="lbl">'+esc(label)+'</span>'+
+    '<div class="kpi-v"'+(value==='—'?' style="color:var(--line-2)"':'')+'>'+esc(value)+'</div>'+
+    '<div class="kpi-foot"><span class="delta '+(cls||'')+'">'+foot+'</span></div></div>';
+}
+function renderKpis(){
+  if(!KPI){
+    var note=LOAD==='error'?'Not loaded':'Loading…';
+    $('#kpis').innerHTML=['Calls today','Containment rate','Cost per call','Cost this week']
+      .map(function(l){ return kpiTile(l,'—','<small>'+note+'</small>'); }).join('');
     return;
   }
-  $('#queue').innerHTML=QUEUE.map(function(q,i){
-    return '<button class="qrow" type="button" data-call="c'+((i%6)+1)+'">'+
-      '<span class="q-i'+(q.hot?' hot':'')+'" aria-hidden="true"></span>'+
+  var today=KPI.calls_today, week=(TOTALS&&TOTALS.week_calls)||0, d=KPI.containment_delta_pts;
+  $('#kpis').innerHTML=[
+    kpiTile('Calls today',String(today),'<small>'+(today?'since midnight, your time':'none so far today')+'</small>'),
+    today
+      ? kpiTile('Containment rate',KPI.containment_pct+'%',
+          (d>=0?'+':'')+d+' pts <small>vs last 7 days</small>',d>=0?'up':'down')
+      : kpiTile('Containment rate','—','<small>no calls today</small>'),
+    today
+      ? kpiTile('Cost per call','$'+KPI.cost_per_call.toFixed(2),'<small>today</small>')
+      : kpiTile('Cost per call','—','<small>no calls today</small>'),
+    week
+      ? kpiTile('Cost this week','$'+(KPI.cost_week_cents/100).toFixed(2),'<small>last 7 days, '+plural(week,'call')+'</small>')
+      : kpiTile('Cost this week','—','<small>no calls in 7 days</small>')
+  ].join('');
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   RENDER · recent unfinished calls
+   Nothing here is known to be live, so nothing here says it is.
+   ═══════════════════════════════════════════════════════════════════ */
+var QUEUE_WINDOW_MS=15*60*1000;
+function renderQueue(){
+  var rows=QUEUE.filter(function(q){
+    var d=toDate(q.created_at);
+    return d&&(Date.now()-d.getTime())<QUEUE_WINDOW_MS;
+  });
+  if(!rows.length){
+    var msg=LOAD==='ok'?'No unfinished calls in the last 15 minutes.'
+           :LOAD==='error'?'Not loaded.':'Loading…';
+    $('#queue').innerHTML='<div class="none">'+msg+'</div>';
+    $('#qMeta').textContent='';
+    return;
+  }
+  $('#queue').innerHTML=rows.map(function(q){
+    return '<button class="qrow" type="button" data-call="'+esc(q.id)+'">'+
+      '<span class="q-i" aria-hidden="true"></span>'+
       '<span><span class="q-num">'+esc(q.num)+'</span><span class="q-cat" style="display:block">'+esc(q.cat)+'</span></span>'+
       '<span class="q-agent">'+esc(q.agent)+'</span>'+
-      '<span class="q-wait'+(q.hot?' hot':'')+'">'+esc(q.wait)+'</span>'+
+      '<span class="q-wait">started '+esc(ago(q.created_at))+'</span>'+
       '<svg class="chev" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor"'+
       ' stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'+
       '<path d="M10 6l6 6-6 6"/></svg></button>';
   }).join('');
-  $('#qMeta').textContent=QUEUE.length
-    ? QUEUE.length+' waiting · longest '+QUEUE[QUEUE.length-1].wait
-    : 'No calls in progress';
-  /* keep the sidebar count honest -- it used to be a hardcoded 6 */
-  var navN=$('#navLiveN'); if(navN) navN.textContent=QUEUE.length;
-  var navBadge=$('#navLive'); if(navBadge) navBadge.style.display=QUEUE.length?'':'none';
+  $('#qMeta').textContent=plural(rows.length,'call');
 }
 
 /* ═══════════════════════════════════════════════════════════════════
-   RENDER · agent status cards
+   RENDER · agent cards
    ═══════════════════════════════════════════════════════════════════ */
+function agentStatusHTML(a){
+  return a.paused
+    ? '<span class="acard-st st-paused"><i aria-hidden="true"></i>Paused</span>'
+    : '<span class="acard-st st-ready"><i aria-hidden="true"></i>Ready</span>';
+}
 function renderAgents(){
-  var keys=Object.keys(AGENTS);
-  var navA=$('#navAgents'); if(navA) navA.textContent=keys.length||'';
-  if(!keys.length){
+  $('#agentsMeta').textContent=AGENT_ORDER.length?plural(AGENT_ORDER.length,'agent'):'';
+  if(!AGENT_ORDER.length){
+    if(LOAD!=='ok'){
+      $('#agentCards').innerHTML='<div class="panel none" style="grid-column:1/-1">'+
+        (LOAD==='error'?'Not loaded.':'Loading…')+'</div>';
+      return;
+    }
     $('#agentCards').innerHTML=
       '<div style="grid-column:1/-1;border:1px dashed var(--line-strong);border-radius:var(--r);'+
       'padding:44px 24px;text-align:center;background:var(--card)">'+
       '<div style="font-family:var(--display);font-size:16px;font-weight:700">No agents yet</div>'+
       '<p style="font-size:13px;color:var(--muted);margin:6px 0 16px">'+
-      'Create your first voice agent to start taking calls.</p>'+
+      'Create your first voice agent, then try it with a test call.</p>'+
       '<button class="btn btn-primary" type="button" id="emptyCreate">Create Agent</button></div>';
-    var ec=$('#emptyCreate');
-    if(ec) ec.addEventListener('click',function(){ $('#createAgent').click(); });
+    $('#emptyCreate').addEventListener('click',openCreate);
     return;
   }
-  $('#agentCards').innerHTML=keys.map(function(k){
-    var a=AGENTS[k],s=STATUS[k];
-    return '<button class="acard" type="button" data-agent="'+k+'">'+
-      '<span class="acard-top">'+
-      '<span class="ph" style="--c1:'+tint(k)[0]+';--c2:'+tint(k)[1]+'" data-initial="'+
-        esc(a.name.charAt(0))+'">'+pic(a.photo||('avatar-'+k),'',a.name,240,'.ph')+'</span>'+
-      '<span><b>'+esc(a.name)+'</b><span class="role">'+esc(a.role)+'</span></span></span>'+
-      '<span class="acard-st '+(s.on?'st-on':'st-idle')+'"><i aria-hidden="true"></i>'+
-      (s.on?'On call':'Idle')+'<span class="timer">'+esc(s.timer)+'</span></span></button>';
+  $('#agentCards').innerHTML=AGENT_ORDER.map(function(id){
+    var a=AGENTS[id],c=tint(a.persona),href='#/agent/'+encodeURIComponent(id);
+    return '<article class="acard" data-agent-card="'+esc(id)+'">'+
+      '<a class="acard-top" href="'+href+'">'+
+      '<span class="ph" style="--c1:'+c[0]+';--c2:'+c[1]+'" data-initial="'+
+        esc(a.name.charAt(0).toUpperCase())+'">'+pic(a.photo||'avatar-kwame','',a.name,240,'.ph')+'</span>'+
+      '<span class="acard-id"><b>'+esc(a.name)+'</b>'+
+      '<span class="role">'+esc(a.personaName)+(a.role?' · '+esc(a.role):'')+'</span></span></a>'+
+      '<dl class="acard-facts">'+
+      '<div><dt>Voice</dt><dd>'+esc(voiceLabel(a.voice))+'</dd></div>'+
+      '<div><dt>Calls today</dt><dd>'+a.callsToday+'</dd></div></dl>'+
+      agentStatusHTML(a)+
+      '<div class="acard-foot">'+
+      '<button class="btn btn-primary btn-sm" type="button" data-test="'+esc(id)+'"'+
+        (a.paused?' disabled title="This agent is paused. Resume it to test it."':'')+'>Test call</button>'+
+      '<a class="btn btn-ghost btn-sm" href="'+href+'">Configure</a></div>'+
+      (a.paused?'<p class="paused-why">Paused agents take no calls. Open it to resume.</p>':'')+
+      '</article>';
   }).join('');
 }
 
 /* ═══════════════════════════════════════════════════════════════════
-   CHART · call volume (bar)
-   Single nominal series -> one hue, no legend (the title names it).
-   Bars capped at 24px, 4px rounded top, square at the baseline, with a
-   2px surface gap between neighbours. Peak labelled; the rest read off
-   the axis or the tooltip, and the table view carries every value.
+   CHART helpers
    ═══════════════════════════════════════════════════════════════════ */
 function emptyPlot(el,label){
-  el.innerHTML='<div style="height:190px;display:grid;place-items:center;'+
-    'font-size:13px;color:var(--muted);border:1px dashed var(--line-strong);'+
-    'border-radius:8px">'+label+'</div>';
+  el.innerHTML='<div class="plot-empty">'+esc(label)+'</div>';
 }
+function setTableToggle(tableId,hasData){
+  var b=$('[data-table="'+tableId+'"]'),t=$('#'+tableId),plot=$('#'+b.getAttribute('data-plot'));
+  b.hidden=!hasData;
+  if(!hasData){
+    t.classList.remove('on'); t.innerHTML='';
+    plot.hidden=false;
+    b.setAttribute('aria-expanded','false'); b.textContent='Table';
+  }
+}
+/* A step of 1, 2 or 5 x 10^n that gives about four whole-number ticks. */
+function niceStep(v){
+  if(v<=1) return 1;
+  var p=Math.pow(10,Math.floor(Math.log(v)/Math.LN10)),n=v/p;
+  return (n<=1?1:n<=2?2:n<=5?5:10)*p;
+}
+var HOUR_LABELS=[0,6,12,18,23];
 
+/* ═══════════════════════════════════════════════════════════════════
+   CHART · call volume (bar)
+   Single nominal series: one hue, no legend (the title names it). All 24
+   hours are drawn, so the gaps between busy hours read as gaps. The axis
+   scales to the data. The table view carries every value.
+   ═══════════════════════════════════════════════════════════════════ */
 function renderVolume(){
-  if(VOLUME.length<2){ emptyPlot($('#plotVolume'),'No calls yet today'); 
-    $('#tblVolume').innerHTML=''; return; }
-  var W=560,H=190,padL=30,padB=26,padT=16,
-      plotW=W-padL-8,plotH=H-padB-padT,
-      max=40,peak=VOLUME.reduce(function(a,b){return b.v>a.v?b:a;}),
-      band=plotW/VOLUME.length,bw=Math.min(24,band-2),
-      s='<svg viewBox="0 0 '+W+' '+H+'" role="img" aria-label="Call volume by hour, peak 34 calls at 15:00">';
+  var total=VOLUME.reduce(function(a,d){return a+d.v;},0);
+  if(!total){
+    emptyPlot($('#plotVolume'),LOAD==='ok'?'No calls yet today':LOAD==='error'?'Not loaded':'Loading…');
+    setTableToggle('tblVolume',false);
+    return;
+  }
+  setTableToggle('tblVolume',true);
+  var byHour={};
+  VOLUME.forEach(function(d){ byHour[parseInt(d.h,10)]=d; });
+  var W=560,H=190,padL=30,padR=8,padB=26,padT=18,
+      plotW=W-padL-padR,plotH=H-padB-padT,
+      peak=VOLUME.reduce(function(a,b){return b.v>a.v?b:a;}),
+      step=niceStep(peak.v/4),top=Math.ceil(peak.v/step)*step,
+      band=plotW/24,bw=Math.min(16,band-2),
+      label='Call volume today: '+plural(total,'call')+', busiest hour '+peak.h+':00 with '+plural(peak.v,'call')+'.',
+      s='<svg viewBox="0 0 '+W+' '+H+'" role="img" aria-label="'+esc(label)+'">';
 
-  [0,20,40].forEach(function(t){
-    var y=padT+plotH-(t/max)*plotH;
-    s+='<line x1="'+padL+'" y1="'+y+'" x2="'+(W-8)+'" y2="'+y+'" stroke="var(--grid)" stroke-width="1"/>'+
-       '<text x="'+(padL-7)+'" y="'+(y+4)+'" text-anchor="end" font-size="10" fill="var(--muted)">'+t+'</text>';
-  });
-
-  VOLUME.forEach(function(d,i){
-    var h=(d.v/max)*plotH,x=padL+i*band+(band-bw)/2,y=padT+plotH-h;
-    /* 4px rounded data-end, square at the baseline */
-    s+='<path d="M'+x+' '+(y+4)+' a4 4 0 0 1 4 -4 h'+(bw-8)+' a4 4 0 0 1 4 4 v'+(h-4)+' h'+(-bw)+' z"'+
-       ' fill="var(--viz-solo)" data-bi="'+i+'"/>'+
-       '<rect x="'+x+'" y="'+padT+'" width="'+bw+'" height="'+plotH+'" fill="transparent" data-bi="'+i+'"/>'+
-       '<text x="'+(x+bw/2)+'" y="'+(H-padB+15)+'" text-anchor="middle" font-size="10" fill="var(--muted)">'+d.h+'</text>';
-    if(d===peak){
-      s+='<text x="'+(x+bw/2)+'" y="'+(y-6)+'" text-anchor="middle" font-size="11" font-weight="600"'+
-         ' fill="var(--ink)">'+d.v+'</text>';
+  for(var t=0;t<=top;t+=step){
+    var gy=padT+plotH-(t/top)*plotH;
+    s+='<line x1="'+padL+'" y1="'+gy+'" x2="'+(W-padR)+'" y2="'+gy+'" stroke="var(--grid)" stroke-width="1"/>'+
+       '<text x="'+(padL-7)+'" y="'+(gy+4)+'" text-anchor="end" font-size="10" fill="var(--muted)">'+t+'</text>';
+  }
+  for(var h=0;h<24;h++){
+    var x=padL+h*band+(band-bw)/2,d=byHour[h];
+    if(d&&d.v>0){
+      var bh=(d.v/top)*plotH,y=padT+plotH-bh,r=Math.min(4,bh,bw/2);
+      /* rounded data-end, square at the baseline */
+      s+='<path d="M'+x+' '+(y+r)+' a'+r+' '+r+' 0 0 1 '+r+' '+(-r)+' h'+(bw-2*r)+' a'+r+' '+r+' 0 0 1 '+r+' '+r+
+         ' v'+(bh-r)+' h'+(-bw)+' z" fill="var(--viz-solo)" data-h="'+h+'"/>'+
+         '<rect x="'+(padL+h*band)+'" y="'+padT+'" width="'+band+'" height="'+plotH+'" fill="transparent" data-h="'+h+'"/>';
+      if(d===peak){
+        s+='<text x="'+(x+bw/2)+'" y="'+(y-5)+'" text-anchor="middle" font-size="11" font-weight="600"'+
+           ' fill="var(--ink)">'+d.v+'</text>';
+      }
     }
-  });
+    if(HOUR_LABELS.indexOf(h)!==-1){
+      s+='<text x="'+(x+bw/2)+'" y="'+(H-padB+15)+'" text-anchor="middle" font-size="10" fill="var(--muted)">'+
+         ('0'+h).slice(-2)+'</text>';
+    }
+  }
   $('#plotVolume').innerHTML=s+'</svg>';
 
   var svg=$('#plotVolume svg');
   svg.addEventListener('mousemove',function(e){
-    var t=e.target.getAttribute&&e.target.getAttribute('data-bi');
+    var t=e.target.getAttribute&&e.target.getAttribute('data-h');
     if(t===null||t===undefined){hideTip();return;}
-    var d=VOLUME[+t];
-    showTip(d.h+':00 · <b>'+d.v+'</b> calls',e.clientX,e.clientY);
+    var d=byHour[+t];
+    showTip(esc(d.h)+':00 · <b>'+d.v+'</b> '+(d.v===1?'call':'calls'),e.clientX,e.clientY);
   });
   svg.addEventListener('mouseleave',hideTip);
 
   $('#tblVolume').innerHTML='<table><thead><tr><th>Hour</th><th>Calls</th></tr></thead><tbody>'+
-    VOLUME.map(function(d){return '<tr><td>'+d.h+':00</td><td>'+d.v+'</td></tr>';}).join('')+
+    VOLUME.map(function(d){return '<tr><td>'+esc(d.h)+':00</td><td>'+d.v+'</td></tr>';}).join('')+
     '</tbody></table>';
 }
 
 /* ═══════════════════════════════════════════════════════════════════
    CHART · sentiment trend (line)
-   2px line, 10% area wash, end marker >=8px with a 2px surface ring,
-   endpoint labelled only. Crosshair + tooltip on hover.
+   Plotted by hour of day, so one scored hour is one dot rather than a line
+   drawn to nowhere. Endpoint labelled only; crosshair and tooltip on hover.
    ═══════════════════════════════════════════════════════════════════ */
 function renderSent(){
-  if(SENT.length<2){ emptyPlot($('#plotSent'),'No sentiment data yet');
-    $('#tblSent').innerHTML=''; return; }
-  var W=420,H=190,padL=32,padB=26,padT=16,
-      plotW=W-padL-14,plotH=H-padB-padT,
-      lo=-1,hi=1,
-      X=function(i){return padL+(i/(SENT.length-1))*plotW;},
-      Y=function(v){return padT+plotH-((v-lo)/(hi-lo))*plotH;},
-      s='<svg viewBox="0 0 '+W+' '+H+'" role="img" aria-label="Mean sentiment by hour, rising from 0.42 to 0.68">';
+  if(!SENT.length){
+    emptyPlot($('#plotSent'),LOAD==='ok'?'No scored calls today':LOAD==='error'?'Not loaded':'Loading…');
+    setTableToggle('tblSent',false);
+    return;
+  }
+  setTableToggle('tblSent',true);
+  var W=420,H=190,padL=32,padR=14,padB=26,padT=16,
+      plotW=W-padL-padR,plotH=H-padB-padT,
+      X=function(h){return padL+(h/23)*plotW;},
+      Y=function(v){return padT+plotH-((v+1)/2)*plotH;},
+      first=SENT[0],last=SENT[SENT.length-1],
+      label=SENT.length===1
+        ? 'Mean sentiment today: '+signed(first.v)+' at '+first.h+':00.'
+        : 'Mean sentiment by hour today, from '+signed(first.v)+' at '+first.h+':00 to '+signed(last.v)+' at '+last.h+':00.',
+      s='<svg viewBox="0 0 '+W+' '+H+'" role="img" aria-label="'+esc(label)+'">';
 
   [-1,0,1].forEach(function(t){
     var y=Y(t);
-    s+='<line x1="'+padL+'" y1="'+y+'" x2="'+(W-14)+'" y2="'+y+'" stroke="var(--grid)" stroke-width="1"/>'+
+    s+='<line x1="'+padL+'" y1="'+y+'" x2="'+(W-padR)+'" y2="'+y+'" stroke="var(--grid)" stroke-width="1"/>'+
        '<text x="'+(padL-7)+'" y="'+(y+4)+'" text-anchor="end" font-size="10" fill="var(--muted)">'+
        (t>0?'+1':t)+'</text>';
   });
-
-  var pts=SENT.map(function(d,i){return X(i).toFixed(1)+','+Y(d.v).toFixed(1);});
-  s+='<polygon points="'+padL+','+Y(0)+' '+pts.join(' ')+' '+X(SENT.length-1)+','+Y(0)+
-     '" fill="var(--viz-solo)" opacity=".10"/>';
-  s+='<polyline points="'+pts.join(' ')+'" fill="none" stroke="var(--viz-solo)" stroke-width="2"'+
-     ' stroke-linecap="round" stroke-linejoin="round"/>';
-
-  SENT.forEach(function(d,i){
-    if(i%3===0||i===SENT.length-1){
-      s+='<text x="'+X(i)+'" y="'+(H-padB+15)+'" text-anchor="middle" font-size="10"'+
-         ' fill="var(--muted)">'+d.h+'</text>';
-    }
+  HOUR_LABELS.forEach(function(h){
+    s+='<text x="'+X(h)+'" y="'+(H-padB+15)+'" text-anchor="middle" font-size="10" fill="var(--muted)">'+
+       ('0'+h).slice(-2)+'</text>';
   });
-  var li=SENT.length-1;
-  s+='<circle cx="'+X(li)+'" cy="'+Y(SENT[li].v)+'" r="4.5" fill="var(--viz-solo)"'+
-     ' stroke="var(--card)" stroke-width="2"/>'+
-     '<text x="'+(X(li)-6)+'" y="'+(Y(SENT[li].v)-10)+'" text-anchor="end" font-size="11"'+
-     ' font-weight="600" fill="var(--ink)">+'+SENT[li].v.toFixed(2)+'</text>';
+
+  var hx=function(d){return X(parseInt(d.h,10));},
+      pts=SENT.map(function(d){return hx(d).toFixed(1)+','+Y(d.v).toFixed(1);});
+  if(SENT.length>1){
+    s+='<polygon points="'+hx(first).toFixed(1)+','+Y(0)+' '+pts.join(' ')+' '+hx(last).toFixed(1)+','+Y(0)+
+       '" fill="var(--viz-solo)" opacity=".10"/>';
+    s+='<polyline points="'+pts.join(' ')+'" fill="none" stroke="var(--viz-solo)" stroke-width="2"'+
+       ' stroke-linecap="round" stroke-linejoin="round"/>';
+  }
+  var endX=hx(last),left=endX>W/2;
+  s+='<circle cx="'+endX+'" cy="'+Y(last.v)+'" r="4.5" fill="var(--viz-solo)" stroke="var(--card)" stroke-width="2"/>'+
+     '<text x="'+(endX+(left?-8:8))+'" y="'+(Y(last.v)-8)+'" text-anchor="'+(left?'end':'start')+'" font-size="11"'+
+     ' font-weight="600" fill="var(--ink)">'+signed(last.v)+'</text>';
   s+='<line id="chair" x1="0" y1="'+padT+'" x2="0" y2="'+(padT+plotH)+'" stroke="var(--muted)"'+
      ' stroke-width="1" opacity="0"/>';
   s+='<rect x="'+padL+'" y="'+padT+'" width="'+plotW+'" height="'+plotH+'" fill="transparent" id="sHit"/>';
@@ -1067,42 +1372,48 @@ function renderSent(){
   var hit=$('#sHit'),chair=$('#chair');
   hit.addEventListener('mousemove',function(e){
     var b=hit.getBoundingClientRect(),
-        f=(e.clientX-b.left)/b.width,
-        i=Math.max(0,Math.min(SENT.length-1,Math.round(f*(SENT.length-1)))),
-        d=SENT[i];
-    chair.setAttribute('x1',X(i)); chair.setAttribute('x2',X(i)); chair.setAttribute('opacity','.35');
-    showTip(d.h+':00 · <b>'+(d.v>0?'+':'')+d.v.toFixed(2)+'</b>',e.clientX,e.clientY);
+        at=padL+((e.clientX-b.left)/b.width)*plotW,
+        d=SENT.reduce(function(best,c){
+          return Math.abs(hx(c)-at)<Math.abs(hx(best)-at)?c:best;
+        });
+    chair.setAttribute('x1',hx(d)); chair.setAttribute('x2',hx(d)); chair.setAttribute('opacity','.35');
+    showTip(esc(d.h)+':00 · <b>'+signed(d.v)+'</b>',e.clientX,e.clientY);
   });
   hit.addEventListener('mouseleave',function(){chair.setAttribute('opacity','0');hideTip();});
 
   $('#tblSent').innerHTML='<table><thead><tr><th>Hour</th><th>Sentiment</th></tr></thead><tbody>'+
-    SENT.map(function(d){return '<tr><td>'+d.h+':00</td><td>'+(d.v>0?'+':'')+d.v.toFixed(2)+'</td></tr>';}).join('')+
+    SENT.map(function(d){return '<tr><td>'+esc(d.h)+':00</td><td>'+signed(d.v)+'</td></tr>';}).join('')+
     '</tbody></table>';
 }
 
 /* ═══════════════════════════════════════════════════════════════════
-   CHART · cost breakdown (donut)
-   Four categories on the validated categorical order. 2px surface gap
-   between segments (never a stroke). Legend AND direct values, which
-   is also the contrast relief the validator asks for on slots 2 and 4.
+   CHART · cost by agent (donut)
+   At most four slices on the validated categorical order: past that, the
+   smallest share one "Other" slice, rather than colours running out.
    ═══════════════════════════════════════════════════════════════════ */
 function renderDonut(){
-  if(!COST.length){
-    emptyPlot($('#plotDonut'),'No spend yet');
-    $('#donutLegend').innerHTML='';
+  var rows=COST.filter(function(d){return d.v>0;});
+  var empty=!rows.length;
+  $('#donutWrap').hidden=empty;
+  $('#donutEmpty').hidden=!empty;
+  if(empty){
+    /* Calls can exist with nothing spent: a donut of zeros would divide by zero. */
+    $('#plotDonut').innerHTML=''; $('#donutLegend').innerHTML='';
+    emptyPlot($('#donutEmpty'),LOAD==='ok'?'No spend in the last 7 days':LOAD==='error'?'Not loaded':'Loading…');
     return;
   }
-  var total=COST.reduce(function(a,b){return a+b.v;},0),
-      R=54,C=2*Math.PI*R,GAP=2,off=0,
+  if(rows.length>4){
+    var rest=rows.slice(3).reduce(function(a,d){return a+d.v;},0);
+    rows=rows.slice(0,3).concat([{k:'Other',v:Math.round(rest*100)/100}]);
+  }
+  var total=rows.reduce(function(a,b){return a+b.v;},0),
+      R=54,C=2*Math.PI*R,GAP=rows.length>1?2:0,off=0,
       hues=['var(--viz-1)','var(--viz-2)','var(--viz-3)','var(--viz-4)'],
-      /* The label is read from the data: a fixed string here once told
-         screen readers about invented telephony/LLM costs while the chart
-         drew real per-agent spend. */
-      label='Cost breakdown: '+COST.map(function(d){return d.k+' $'+d.v.toFixed(2);}).join(', '),
+      label='Cost by agent, last 7 days: '+rows.map(function(d){return d.k+' $'+d.v.toFixed(2);}).join(', ')+'.',
       s='<svg viewBox="0 0 132 132" role="img" aria-label="'+esc(label)+'">'+
         '<circle cx="66" cy="66" r="'+R+'" fill="none" stroke="var(--card)" stroke-width="17"/>';
 
-  COST.forEach(function(d,i){
+  rows.forEach(function(d,i){
     var len=(d.v/total)*C, seg=Math.max(0,len-GAP);
     s+='<circle cx="66" cy="66" r="'+R+'" fill="none" stroke="'+hues[i]+'" stroke-width="17"'+
        ' stroke-dasharray="'+seg.toFixed(2)+' '+(C-seg).toFixed(2)+'"'+
@@ -1115,7 +1426,7 @@ function renderDonut(){
      total.toFixed(2)+'</text></svg>';
   $('#plotDonut').innerHTML=s;
 
-  $('#donutLegend').innerHTML=COST.map(function(d,i){
+  $('#donutLegend').innerHTML=rows.map(function(d,i){
     return '<span class="dl"><i style="background:'+hues[i]+'" aria-hidden="true"></i>'+
       '<span>'+esc(d.k)+'</span><b>$'+d.v.toFixed(2)+'</b></span>';
   }).join('');
@@ -1124,7 +1435,7 @@ function renderDonut(){
   svg.addEventListener('mousemove',function(e){
     var t=e.target.getAttribute&&e.target.getAttribute('data-di');
     if(t===null||t===undefined){hideTip();return;}
-    var d=COST[+t];
+    var d=rows[+t];
     showTip(esc(d.k)+' · <b>$'+d.v.toFixed(2)+'</b> ('+Math.round(d.v/total*100)+'%)',e.clientX,e.clientY);
   });
   svg.addEventListener('mouseleave',hideTip);
@@ -1132,103 +1443,221 @@ function renderDonut(){
 
 /* ═══════════════════════════════════════════════════════════════════
    CHART · containment meter
-   Unfilled track is a lighter step of the same hue, so state reads
-   across the whole bar rather than fill-vs-gray.
    ═══════════════════════════════════════════════════════════════════ */
 function renderMeter(){
-  if(!CALLS.length && !CONTAIN.value){
+  if(!KPI||!KPI.calls_today){
     $('#cmVal').innerHTML='<span style="color:var(--line-2)">—</span>';
     $('#cmFill').style.width='0%';
-    $('#cmGoal').style.left=CONTAIN.goal+'%';
-    $('#cmGoalLbl').textContent='Target '+CONTAIN.goal+'%';
+    $('#cmNote').textContent=KPI?'No calls today':(LOAD==='error'?'Not loaded':'Loading…');
     return;
   }
-  $('#cmVal').textContent=CONTAIN.value+'%';
-  $('#cmFill').style.width=CONTAIN.value+'%';
-  $('#cmGoal').style.left=CONTAIN.goal+'%';
-  $('#cmGoalLbl').textContent='Target '+CONTAIN.goal+'%';
+  $('#cmVal').textContent=KPI.containment_pct+'%';
+  $('#cmFill').style.width=KPI.containment_pct+'%';
+  $('#cmNote').textContent=plural(KPI.calls_today,'call')+' today';
 }
 
 /* ═══════════════════════════════════════════════════════════════════
    RENDER · call history
    ═══════════════════════════════════════════════════════════════════ */
 function renderHistory(){
+  $('#histMeta').textContent=CALLS.length?'Click a row for the recording and transcript':'';
   if(!CALLS.length){
-    $('#histBody').innerHTML=
-      '<tr><td colspan="6"><div style="padding:40px 16px;text-align:center">'+
-      '<div style="font-size:14px;font-weight:500">No calls yet</div>'+
-      '<p style="font-size:13px;color:var(--muted);margin-top:5px">'+
-      'Calls appear here as soon as an agent answers one.</p></div></td></tr>';
+    var inner=LOAD==='ok'
+      ?'<div style="font-size:14px;font-weight:500">No calls logged yet</div>'+
+       '<p style="font-size:13px;color:var(--muted);margin-top:5px">'+
+       'Calls appear here once they are logged. Test calls from this console are not added.</p>'
+      :'<div style="font-size:13px;color:var(--muted)">'+(LOAD==='error'?'Not loaded.':'Loading…')+'</div>';
+    $('#histBody').innerHTML='<tr><td colspan="6"><div style="padding:40px 16px;text-align:center">'+inner+'</div></td></tr>';
     return;
   }
   $('#histBody').innerHTML=CALLS.map(function(c){
-    var a=AGENTS[c.ag];
-    return '<tr tabindex="0" role="button" data-call="'+c.id+'" aria-label="Call at '+c.t+' with '+a.name+'">'+
-      '<td><span class="cell mono">'+c.t+'</span></td>'+
-      '<td><span class="cell"><span class="who-cell">'+pic(a.photo,'',a.name,240)+esc(a.name)+'</span></span></td>'+
+    return '<tr tabindex="0" role="button" data-call="'+esc(c.id)+'" aria-label="Call at '+esc(c.when)+' with '+esc(c.agent)+'">'+
+      '<td><span class="cell mono">'+esc(c.when)+'</span></td>'+
+      '<td><span class="cell"><span class="who-cell">'+pic(c.photo,'','',240)+esc(c.agent)+'</span></span></td>'+
       '<td><span class="cell mono">'+esc(c.caller)+'</span></td>'+
-      '<td><span class="cell mono">'+c.dur+'</span></td>'+
+      '<td><span class="cell mono">'+esc(c.dur)+'</span></td>'+
       '<td><span class="cell">'+esc(c.out)+'</span></td>'+
       '<td><span class="cell">'+badge(c.st)+'</span></td></tr>';
   }).join('');
 }
 
+function renderAll(){
+  renderKpis(); renderQueue(); renderAgents();
+  renderVolume(); renderSent(); renderDonut(); renderMeter();
+  renderHistory();
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   LOADING
+   ═══════════════════════════════════════════════════════════════════ */
+function applyStats(stats){
+  KPI = stats.kpis;
+  TOTALS = stats.totals || null;
+  VOLUME = stats.volume || [];
+  SENT = stats.sentiment || [];
+  COST = stats.cost_breakdown || [];
+  AGENTS = {}; AGENT_ORDER = [];
+  (stats.agents || []).forEach(function(a){
+    AGENT_ORDER.push(a.id);
+    AGENTS[a.id] = {
+      id:a.id, name:a.name, persona:a.persona, personaName:a.persona_name,
+      role:a.role || '', photo:a.photo, voice:a.voice || '',
+      paused:!!a.paused, callsToday:a.calls_today
+    };
+  });
+}
+function applyCalls(rows){
+  CALLS = (rows || []).map(function(r){
+    return {
+      id:r.id, when:whenLocal(r.created_at), created_at:r.created_at,
+      agent:r.agent, agent_id:r.agent_id, photo:r.photo, caller:r.caller,
+      dur:r.duration, out:r.outcome, st:r.status, sent:r.sentiment, cost:r.cost
+    };
+  });
+}
+
+function loadLive(){
+  var tz = -new Date().getTimezoneOffset();
+  return Promise.all([
+    API.get('/dashboard/bootstrap?tz_offset_min=' + tz),
+    ensureOptions().catch(function(){ return null; })    /* labels only: raw voice ids still read */
+  ]).then(function(res){
+    var d = res[0];
+    applyStats(d.stats);
+    QUEUE = d.queue || [];
+    applyCalls(d.calls);
+    API.live = true;
+    LOAD = 'ok';
+    setBadge(true, 'Reading from the API at ' + API.base);
+    renderAll();
+    if(routeName() === 'history') scrollToHistory();
+  }).catch(function(err){
+    if(err.status === 401) return;
+    API.live = false;
+    LOAD = 'error';
+    setBadge(false, err.message);
+    renderAll();
+    banner("Your data couldn't be loaded. " + err.message, 'err', true);
+  });
+}
+
+/* Clock moves on, the rows don't: keep "started X ago" true without a refetch. */
+setInterval(function(){ if(LOAD==='ok') renderQueue(); },30000);
+
+/* ═══════════════════════════════════════════════════════════════════
+   CREATE AGENT
+   ═══════════════════════════════════════════════════════════════════ */
+var caScrim=$('#caScrim'),caFocus=null,caVoiceTouched=false;
+function caError(text){
+  var el=$('#caErr'); el.textContent=text||''; el.hidden=!text;
+}
+function optionHTML(list,valKey,fn){
+  return list.map(function(x){ return '<option value="'+esc(x[valKey])+'">'+esc(fn(x))+'</option>'; }).join('');
+}
+function personaText(p){ return p.name+(p.role?' · '+p.role:''); }
+function voiceText(v){ return v.label; }
+function caDefaultVoice(){
+  if(caVoiceTouched||!OPTIONS) return;
+  var id=$('#caPersona').value,p=OPTIONS.personas.filter(function(x){return x.id===id;})[0];
+  if(p&&p.default_voice) $('#caVoice').value=p.default_voice;
+  if(!$('#caVoice').value) $('#caVoice').selectedIndex=0;
+}
+function openCreate(){
+  caFocus=document.activeElement;
+  $('#caName').value='';
+  caError('');
+  caScrim.hidden=false;
+  $('#caName').focus();
+  ensureOptions().then(function(){
+    $('#caPersona').innerHTML=optionHTML(OPTIONS.personas,'id',personaText);
+    $('#caVoice').innerHTML=optionHTML(OPTIONS.voices,'id',voiceText);
+    $('#caPersona').disabled=$('#caVoice').disabled=false;
+    $('#caSubmit').disabled=false;
+    caVoiceTouched=false;
+    caDefaultVoice();
+  }).catch(function(err){
+    caError("The personas and voices couldn't be loaded, so an agent can't be created yet. "+err.message);
+  });
+}
+function closeCreate(){
+  caScrim.hidden=true;
+  if(caFocus&&caFocus.focus) caFocus.focus();
+}
+$('#createAgent').addEventListener('click',openCreate);
+$('#caClose').addEventListener('click',closeCreate);
+$('#caCancel').addEventListener('click',closeCreate);
+caScrim.addEventListener('mousedown',function(e){if(e.target===caScrim) closeCreate();});
+$('#caPersona').addEventListener('change',caDefaultVoice);
+$('#caVoice').addEventListener('change',function(){caVoiceTouched=true;});
+$('#caForm').addEventListener('submit',function(e){
+  e.preventDefault();
+  var btn=$('#caSubmit'),name=$('#caName').value.trim();
+  if(btn.disabled) return;
+  if(!name){ caError('Give the agent a name.'); $('#caName').focus(); return; }
+  caError('');
+  btn.disabled=true; btn.textContent='Creating…';
+  API.req('POST','/agents',{
+    name:name, persona:$('#caPersona').value,
+    voice_config:{voice:$('#caVoice').value}
+  }).then(function(agent){
+    closeCreate();
+    if(routeName()!=='ops') location.hash='#/ops';
+    banner('Created '+agent.name+'.','ok');
+    return loadLive();
+  }).catch(function(err){
+    caError("The agent wasn't created. "+err.message);
+  }).then(function(){
+    btn.disabled=false; btn.textContent='Create agent';
+  });
+});
+
 /* ═══════════════════════════════════════════════════════════════════
    CALL DETAIL MODAL
    ═══════════════════════════════════════════════════════════════════ */
-var au=$('#au'),scrim=$('#scrim'),wf=$('#wf'),wfWrap=$('#wfWrap'),lastFocus=null,curCall=null;
-
-/* a fixed pseudo-random amplitude profile — stable across opens */
-(function buildWave(){
-  var n=68,h='';
-  for(var i=0;i<n;i++){
-    var a=Math.abs(Math.sin(i*0.7))*0.55+Math.abs(Math.sin(i*0.23))*0.4+0.08;
-    h+='<i style="height:'+Math.round(Math.min(1,a)*100)+'%"></i>';
-  }
-  wf.innerHTML=h;
-})();
+var au=$('#au'),scrim=$('#scrim'),wfWrap=$('#wfWrap'),wfFill=$('#wfFill'),lastFocus=null,curCall=null;
 
 function mmss(t){t=Math.max(0,Math.floor(t||0));return Math.floor(t/60)+':'+('0'+(t%60)).slice(-2);}
+function paintProgress(frac){ wfFill.style.width=(Math.max(0,Math.min(1,frac||0))*100)+'%'; }
 
-function paintWave(frac){
-  var bars=wf.children,cut=Math.round(frac*bars.length);
-  for(var i=0;i<bars.length;i++) bars[i].classList.toggle('past',i<cut);
-}
+function showCall(d){
+  curCall=d;
+  $('#mTitle').textContent=d.agent+' · '+whenLocal(d.created_at);
+  $('#mBadge').innerHTML=badge(d.status);
+  $('#mSummary').textContent=d.summary||'';
+  $('#fStatus').textContent=(BADGE[d.status]||BADGE.bad)[1];
+  $('#fSent').textContent=d.sentiment||'—';
+  $('#fCost').textContent=d.cost||'—';
+  $('#mFull').textContent=d.duration||'—';
 
-function openCall(id){
-  var c=CALLS.filter(function(x){return x.id===id;})[0]; if(!c) return;
-  curCall=c;
-  var a=AGENTS[c.ag];
+  $('#mTurns').innerHTML=(d.turns||[]).length?d.turns.map(function(t){
+    return '<div class="turn '+(t.speaker==='agent'?'agent':'caller')+'"><span class="spk">'+
+      esc(t.label||(t.speaker==='agent'?d.agent+' · agent':'Caller'))+'</span><p>'+esc(t.text)+'</p></div>';
+  }).join(''):'<p class="none" style="padding:12px 0">No transcript was recorded for this call.</p>';
 
-  $('#mTitle').textContent=a.name+' · '+c.t;
-  $('#mBadge').innerHTML=badge(c.st);
-  $('#mSummary').textContent=c.sum;
-  $('#fStatus').textContent=BADGE[c.st][1];
-  $('#fSent').textContent=c.sent;
-  $('#fCost').textContent=c.cost;
-  $('#mFull').textContent=c.dur;
-
-  $('#mTurns').innerHTML=c.turns.map(function(t){
-    return '<div class="turn '+(t[1]==='agent'?'agent':'caller')+'">'+
-      '<span class="t">'+t[0]+'</span><div><span class="spk">'+
-      (t[1]==='agent'?a.name+' · agent':'Caller')+'</span><p>'+esc(t[2])+'</p></div></div>';
-  }).join('');
-
-  $('#mFields').innerHTML=c.fields.map(function(f){
+  $('#mFields').innerHTML=[
+    ['Status',(BADGE[d.status]||BADGE.bad)[1]],['Duration',d.duration||'—'],
+    ['Caller',d.caller||'—'],['When',whenLocal(d.created_at)],['Agent',d.agent||'—'],['Cost',d.cost||'—']
+  ].map(function(f){
     return '<div><span class="lbl">'+esc(f[0])+'</span><b>'+esc(f[1])+'</b></div>';
   }).join('');
 
   showMTab('overview');
-  /* The call's own audio, or an honest "none" — never a stand-in clip. */
+  /* The call's own audio, or an honest "none": never a stand-in clip. */
   au.pause(); au.removeAttribute('src'); au.load();
-  loadRecording(c);
-  wfWrap.classList.remove('playing'); paintWave(0);
+  wfWrap.classList.remove('playing'); paintProgress(0);
   $('#mCur').textContent='0:00'; $('#mDur').textContent='—';
   $('#mPlay').setAttribute('aria-label','Play recording');
+  loadRecording(d);
 
   lastFocus=document.activeElement;
   scrim.hidden=false;
   $('#mClose').focus();
+}
+/* Full detail on demand. A row can be in the queue but not in the 25 history rows. */
+function openCall(id){
+  return API.get('/calls/'+encodeURIComponent(id)).then(showCall).catch(function(err){
+    if(err.status!==401) banner("That call couldn't be opened. "+err.message,'err');
+  });
 }
 function closeCall(){
   scrim.hidden=true; au.pause();
@@ -1247,12 +1676,18 @@ $$('[data-mtab]').forEach(function(b){
 });
 $('#mClose').addEventListener('click',closeCall);
 scrim.addEventListener('mousedown',function(e){if(e.target===scrim) closeCall();});
+
+/* Escape closes, Tab stays inside, for whichever dialog is open. */
 addEventListener('keydown',function(e){
-  if(scrim.hidden) return;
-  if(e.key==='Escape'){closeCall();return;}
+  var open=!scrim.hidden?scrim:(!caScrim.hidden?caScrim:null);
+  if(!open){
+    if(e.key==='Escape'&&side.classList.contains('open')) closeSide(true);
+    return;
+  }
+  if(e.key==='Escape'){ if(open===scrim) closeCall(); else closeCreate(); return; }
   if(e.key!=='Tab') return;
-  var f=$$('button,[href],input,select,textarea,[tabindex]:not([tabindex="-1"])',scrim)
-        .filter(function(el){return el.offsetParent!==null;});
+  var f=$$('button,[href],input,select,textarea,[tabindex]:not([tabindex="-1"])',open)
+        .filter(function(el){return el.offsetParent!==null&&!el.disabled;});
   if(!f.length) return;
   var first=f[0],last=f[f.length-1];
   if(e.shiftKey&&document.activeElement===first){e.preventDefault();last.focus();}
@@ -1273,16 +1708,13 @@ function setRecording(state){
 }
 function loadRecording(c){
   setRecording('loading');
-  /* _api, not _remote: _remote is cleared once the detail is hydrated,
-     which is exactly when the modal opens. */
-  if(!API.live || !c._api){ setRecording('none'); return; }
-  API.get('/calls/' + c.id + '/recording').then(function(d){
+  API.get('/calls/' + encodeURIComponent(c.id) + '/recording').then(function(d){
     if(curCall !== c) return;               /* another call was opened meanwhile */
     au.src = d.url; au.load();               /* preload="none": ask for the duration */
     setRecording('ready');
   }).catch(function(err){
     if(curCall !== c) return;
-    setRecording(/ -> 404$/.test(String(err.message || err)) ? 'none' : 'error');
+    setRecording(err.status === 404 ? 'none' : 'error');
   });
 }
 
@@ -1299,123 +1731,586 @@ $('#mPlay').addEventListener('click',function(){
   }
 });
 $('#mRestart').addEventListener('click',function(){
-  au.currentTime=0; paintWave(0); $('#mCur').textContent='0:00';
+  au.currentTime=0; paintProgress(0); $('#mCur').textContent='0:00';
 });
 au.addEventListener('loadedmetadata',function(){ $('#mDur').textContent=mmss(au.duration); });
 au.addEventListener('timeupdate',function(){
   $('#mCur').textContent=mmss(au.currentTime);
-  if(au.duration) paintWave(au.currentTime/au.duration);
+  if(au.duration) paintProgress(au.currentTime/au.duration);
 });
 au.addEventListener('ended',function(){
-  wfWrap.classList.remove('playing'); paintWave(0);
+  wfWrap.classList.remove('playing'); paintProgress(0);
   $('#mCur').textContent='0:00';
   $('#mPlay').setAttribute('aria-label','Play recording');
 });
 
 /* ═══════════════════════════════════════════════════════════════════
    AGENT EDITOR
+   ED.saved is what the server last said. The form is compared against it, so
+   Save and Discard only offer themselves when there is something to do, and
+   a reload always shows what was stored because that's where it reads from.
    ═══════════════════════════════════════════════════════════════════ */
-function fillAgent(slug){
-  var a=AGENTS[slug]||AGENTS.kwame;
-  $('#edName').textContent=a.name;
-  $('#edVer').textContent=a.ver;
-  $('#edCost').textContent=a.cost;
-  $('#edVoice').textContent=a.voice;
-  $('#edPrompt').value=a.prompt;
-  $('#edPhoto').src='assets/'+a.photo+'.jpg';
-  $('#edPhoto').alt=a.name;
-  $('#testLog').textContent='No runs yet.';
-  showEdTab('configure');
+var ED={id:null,seq:0,saved:null,agent:null,saving:false,pausing:false};
+
+function edStatus(text,kind){
+  var el=$('#edStatus');
+  el.hidden=!text;
+  el.className='ed-status'+(kind?' '+kind:'');
+  el.textContent=text||'';
 }
-function showEdTab(name){
-  $$('[data-edtab]').forEach(function(b){
-    var on=b.getAttribute('data-edtab')===name;
-    b.setAttribute('aria-selected',on?'true':'false');
-    $('#edPane-'+b.getAttribute('data-edtab')).hidden=!on;
+function edShow(what){   /* form | empty | loading */
+  $('#edForm').hidden=what!=='form';
+  $('#edEmpty').hidden=what!=='empty';
+}
+function savedFrom(d){
+  var vc=d.voice_config||{};
+  return {
+    name:d.name, persona:d.persona, voice:d.voice||'',
+    speed:vc.speed===undefined||vc.speed===null?1:Number(vc.speed),
+    greeting:vc.first_message||'',
+    prompt:d.prompt||''
+  };
+}
+function edRead(){
+  return {
+    name:$('#s-name').value.trim(), persona:$('#s-persona').value, voice:$('#s-voice').value,
+    speed:$('#s-speed').value===''?NaN:Number($('#s-speed').value),
+    greeting:$('#s-greeting').value.trim(),
+    prompt:$('#edPrompt').value.trim()
+  };
+}
+function settingsChanged(f,s){
+  return f.name!==s.name||f.persona!==s.persona||f.voice!==s.voice||
+         f.speed!==s.speed||f.greeting!==s.greeting;
+}
+function edDirty(){
+  if(!ED.saved) return false;
+  var f=edRead(),s=ED.saved;
+  return settingsChanged(f,s)||f.prompt!==s.prompt.trim();
+}
+function edSyncButtons(){
+  var dirty=edDirty();
+  $('#saveAgent').disabled=!dirty||ED.saving;
+  $('#discardAgent').disabled=!dirty||ED.saving;
+  var paused=ED.agent&&ED.agent.paused;
+  $('#edTest').disabled=!!paused;
+  $('#edTest').title=paused?'This agent is paused. Resume it to test it.':'';
+  $('#edTestHint').textContent=paused
+    ?'Paused agents take no calls, including test calls. Resume it to test it.'
+    :(dirty?'A test call uses the last saved settings. Save first to hear these changes.'
+           :'Opens a call with this agent in a new tab, using your microphone.');
+}
+function edFillForm(s){
+  $('#s-name').value=s.name;
+  $('#s-persona').value=s.persona;
+  $('#s-voice').value=s.voice;
+  $('#s-speed').value=s.speed;
+  $('#s-greeting').value=s.greeting;
+  $('#edPrompt').value=s.prompt;
+}
+function edPersonaName(id){
+  var p=OPTIONS&&OPTIONS.personas.filter(function(x){return x.id===id;})[0];
+  return p?p.name:id;
+}
+function edHints(){
+  var who=edPersonaName($('#s-persona').value);
+  $('#edPrompt').placeholder='No saved prompt. Calls use '+who+"'s built-in prompt until you save one here.";
+  $('#edPromptHint').textContent=ED.agent&&ED.agent.prompt_version
+    ?'Each save adds a new version. Calls use the latest one.'
+    :'Nothing saved yet, so calls use '+who+"'s built-in prompt. Saving here replaces it for this agent.";
+  $('#s-greeting').placeholder=who+"'s usual greeting";
+  $('#s-greeting-hint').textContent='What it says when a call starts. Leave empty for '+who+"'s usual greeting.";
+}
+function edHead(d){
+  $('#edName').textContent=d.name;
+  document.title=d.name+' · Cynea';
+  var ph=$('#edPhoto');
+  if(d.photo){ ph.onerror=function(){ph.hidden=true;}; ph.src='assets/'+d.photo+'.jpg'; ph.alt=''; ph.hidden=false; }
+  else ph.hidden=true;
+  $('#edPill').innerHTML=d.paused
+    ?'<span class="badge b-warn">Paused</span>':'<span class="badge b-ok">Ready</span>';
+  var v=$('#edVer');
+  v.hidden=!d.prompt_version;
+  v.textContent=d.prompt_version?'Prompt version '+d.prompt_version:'';
+  $('#edState').textContent=d.paused
+    ?'This agent is paused.'
+    :'This agent is ready to take calls.';
+  $('#edPause').textContent=d.paused?'Resume':'Pause';
+}
+function edVersions(list){
+  if(!list||!list.length){
+    $('#edVersions').innerHTML='<p class="none" style="padding:14px 0;text-align:left">No versions yet.</p>';
+    ED.versions=[];
+    return;
+  }
+  ED.versions=list;
+  $('#edVersions').innerHTML=list.map(function(v,i){
+    return '<div class="vrow"><span class="vrow-t"><b>Version '+v.version+'</b>'+(i===0?' <small>latest</small>':'')+
+      '<small>'+esc(whenLocal(v.created_at))+'</small></span>'+
+      (i===0?'':'<button class="btn btn-ghost btn-sm" type="button" data-load-version="'+v.version+'">Load into editor</button>')+
+      '</div>';
+  }).join('');
+}
+/* Everything the editor shows, read fresh from the server. */
+function edFetch(id){
+  return Promise.all([
+    API.get('/agents/'+encodeURIComponent(id)),
+    API.get('/agents/'+encodeURIComponent(id)+'/prompts'),
+    ensureOptions()
+  ]);
+}
+function edApply(res,resetForm){
+  var d=res[0];
+  ED.agent=d;
+  ED.saved=savedFrom(d);
+  $('#s-persona').innerHTML=optionHTML(OPTIONS.personas,'id',personaText);
+  $('#s-voice').innerHTML=optionHTML(OPTIONS.voices,'id',voiceText);
+  /* a legacy row's voice is still shown as what it is, not as the first option */
+  if(ED.saved.voice&&!OPTIONS.voices.some(function(v){return v.id===ED.saved.voice;})){
+    $('#s-voice').insertAdjacentHTML('afterbegin','<option value="'+esc(ED.saved.voice)+'">'+esc(ED.saved.voice)+'</option>');
+  }
+  if(resetForm) edFillForm(ED.saved);
+  edHead(d);
+  edVersions(res[1]);
+  edHints();
+  edShow('form');
+  edSyncButtons();
+}
+function openEditor(id){
+  var seq=++ED.seq;
+  ED.id=id; ED.saved=null; ED.agent=null;
+  edStatus('Loading…');
+  edShow('loading');
+  $('#edName').textContent='Agent';
+  $('#edPill').innerHTML=''; $('#edVer').hidden=true; $('#edPhoto').hidden=true;
+  $('#saveAgent').disabled=true; $('#discardAgent').disabled=true;
+  edFetch(id).then(function(res){
+    if(seq!==ED.seq) return;
+    edStatus('');
+    edApply(res,true);
+  }).catch(function(err){
+    if(seq!==ED.seq||err.status===401) return;
+    edStatus('');
+    $('#edEmptyTitle').textContent=err.status===404?"This agent doesn't exist":"This agent couldn't be loaded";
+    $('#edEmptyText').textContent=err.status===404
+      ?'It may have been deleted, or the link may be out of date.':err.message;
+    edShow('empty');
   });
 }
-$$('[data-edtab]').forEach(function(b){
-  b.addEventListener('click',function(){showEdTab(b.getAttribute('data-edtab'));});
+
+$('#edForm').addEventListener('input',function(){ edSyncButtons(); edHints(); });
+$('#edForm').addEventListener('change',function(){ edSyncButtons(); edHints(); });
+
+$('#edVersions').addEventListener('click',function(e){
+  var b=e.target.closest&&e.target.closest('[data-load-version]');
+  if(!b) return;
+  var n=+b.getAttribute('data-load-version');
+  var v=(ED.versions||[]).filter(function(x){return x.version===n;})[0];
+  if(!v) return;
+  $('#edPrompt').value=v.content;
+  edSyncButtons();
+  edStatus('Version '+n+' is in the editor. Save to make it the latest version.');
+  $('#edPrompt').focus();
 });
 
-/* settings accordion — one open at a time */
-$$('.acc-h').forEach(function(h){
-  h.addEventListener('click',function(){
-    var open=h.getAttribute('aria-expanded')==='true';
-    $$('.acc-h').forEach(function(o){
-      o.setAttribute('aria-expanded','false');
-      $('#'+o.getAttribute('aria-controls')).hidden=true;
-    });
-    if(!open){
-      h.setAttribute('aria-expanded','true');
-      $('#'+h.getAttribute('aria-controls')).hidden=false;
+$('#discardAgent').addEventListener('click',function(){
+  if(!ED.saved) return;
+  edFillForm(ED.saved);
+  edHints(); edSyncButtons();
+  edStatus('Changes discarded.');
+});
+
+$('#saveAgent').addEventListener('click',function(){
+  if(!ED.saved||ED.saving) return;
+  var f=edRead(),s=ED.saved,id=ED.id,seq=ED.seq,path='/agents/'+encodeURIComponent(id);
+  if(!f.name){ edStatus('Not saved. Give the agent a name.','err'); $('#s-name').focus(); return; }
+  if(isNaN(f.speed)||f.speed<0.5||f.speed>2){ edStatus('Not saved. Speed has to be between 0.5 and 2.','err'); $('#s-speed').focus(); return; }
+  var promptChanged=f.prompt!==s.prompt.trim();
+  if(promptChanged&&!f.prompt){
+    edStatus("Not saved. A saved prompt can't be emptied. Type one, or load an earlier version.",'err');
+    $('#edPrompt').focus();
+    return;
+  }
+
+  var body={},vc={};
+  if(f.name!==s.name) body.name=f.name;
+  if(f.persona!==s.persona) body.persona=f.persona;
+  if(f.voice!==s.voice) vc.voice=f.voice;
+  if(f.speed!==s.speed) vc.speed=f.speed;
+  if(f.greeting!==s.greeting) vc.first_message=f.greeting;
+  if(Object.keys(vc).length) body.voice_config=vc;
+  var wantSettings=Object.keys(body).length>0;
+
+  ED.saving=true;
+  edSyncButtons();
+  edStatus('Saving…');
+
+  /* Two requests, each able to fail alone. Both are tried, and the message says
+     exactly which landed: "saved" only for what the server accepted. */
+  var settingsErr=null,promptErr=null,version=null;
+  var p1=wantSettings
+    ?API.req('PUT',path,body).catch(function(e){settingsErr=e;})
+    :Promise.resolve();
+  p1.then(function(){
+    if(!promptChanged) return;
+    return API.req('POST',path+'/prompt',{content:f.prompt})
+      .then(function(r){version=r.version;})
+      .catch(function(e){promptErr=e;});
+  }).then(function(){
+    ED.saving=false;
+    if(seq!==ED.seq) return;
+    if((settingsErr&&settingsErr.status===401)||(promptErr&&promptErr.status===401)) return;
+    var settingsOk=wantSettings&&!settingsErr,promptOk=promptChanged&&!promptErr;
+    var text,kind;
+    if(!settingsErr&&!promptErr){
+      text=promptOk?'Saved. Prompt is now version '+version+'.':'Saved.';
+      kind='ok';
+    }else if(settingsOk||promptOk){
+      text=settingsOk
+        ?'Settings saved, but the prompt was not. '+promptErr.message
+        :'Prompt saved as version '+version+', but the settings were not. '+settingsErr.message;
+      kind='err';
+    }else{
+      text='Not saved. '+(settingsErr||promptErr).message;
+      kind='err';
+    }
+    edStatus(text,kind);
+
+    /* What landed becomes the new baseline. What didn't stays in the form, so
+       nobody's text is lost and it still counts as unsaved. */
+    if(settingsOk){ s.name=f.name; s.persona=f.persona; s.voice=f.voice; s.speed=f.speed; s.greeting=f.greeting; }
+    if(promptOk){ s.prompt=f.prompt; }
+    edSyncButtons();
+
+    if(settingsOk||promptOk){
+      /* The refresh is for showing what's stored. If only the refresh fails,
+         the save still succeeded, and the message above stays true. */
+      edFetch(id).then(function(res){
+        if(seq!==ED.seq) return;
+        var keep=edRead();
+        edApply(res,!settingsErr&&!promptErr);
+        if(settingsErr||promptErr) restoreUnsaved(keep,settingsOk,promptOk);
+      }).catch(function(){ /* message stands; the next load will show it */ });
+      loadLive();
     }
   });
 });
+/* After a partial failure: what landed shows as stored, what didn't stays typed. */
+function restoreUnsaved(keep,settingsOk,promptOk){
+  var s=ED.saved;
+  edFillForm({
+    name:settingsOk?s.name:keep.name, persona:settingsOk?s.persona:keep.persona,
+    voice:settingsOk?s.voice:keep.voice,
+    speed:settingsOk?s.speed:(isNaN(keep.speed)?'':keep.speed),
+    greeting:settingsOk?s.greeting:keep.greeting,
+    prompt:promptOk?s.prompt:keep.prompt
+  });
+  edHints(); edSyncButtons();
+}
 
-$('#runTest').addEventListener('click',function(){
-  var log=$('#testLog');
-  log.innerHTML='Running scripted test…';
-  setTimeout(function(){
-    log.innerHTML='<b>Not connected.</b> Running a test needs the engine reachable from '+
-      'the browser (a <code>/api/simulate</code> endpoint over the Python package). '+
-      'Nothing was sent.';
-  },550);
-});
-$('#micTest').addEventListener('click',function(){
-  var log=$('#testLog');
-  if(!navigator.mediaDevices||!navigator.mediaDevices.getUserMedia){
-    log.innerHTML='<b>Unavailable.</b> This browser exposes no microphone API.'; return;
-  }
-  log.innerHTML='Requesting microphone…';
-  navigator.mediaDevices.getUserMedia({audio:true}).then(function(st){
-    st.getTracks().forEach(function(t){t.stop();});
-    log.innerHTML='<b>Microphone OK.</b> Capture works; there is no live agent socket '+
-                  'to stream it to yet, so nothing was recorded or sent.';
-  }).catch(function(){
-    log.innerHTML='<b>Microphone blocked.</b> Grant access in the browser to test capture.';
+$('#edPause').addEventListener('click',function(){
+  if(!ED.agent||ED.pausing) return;
+  var id=ED.id,seq=ED.seq,want=!ED.agent.paused,btn=$('#edPause');
+  ED.pausing=true; btn.disabled=true;
+  API.req('PUT','/agents/'+encodeURIComponent(id),{paused:want}).then(function(r){
+    if(seq!==ED.seq) return;
+    ED.agent.paused=!!r.paused;
+    edHead(ED.agent);
+    edStatus(r.paused?'Paused. It takes no calls until you resume it.':'Resumed. It can take calls again.','ok');
+    loadLive();
+  }).catch(function(err){
+    if(seq!==ED.seq||err.status===401) return;
+    edStatus((want?"Couldn't pause this agent. ":"Couldn't resume this agent. ")+err.message,'err');
+  }).then(function(){
+    ED.pausing=false; btn.disabled=false; edSyncButtons();
   });
 });
-$('#saveAgent').addEventListener('click',function(){
-  $('#testLog').innerHTML='<b>Not saved.</b> There is no persistence layer — edits live in '+
-    'this tab only. The prompts of record are in <code>cynea_africa/persona/</code>.';
-  showEdTab('configure');
+$('#edTest').addEventListener('click',function(){
+  if(this.disabled||!ED.id) return;
+  startTestCall(ED.id,function(err){
+    edStatus(err.message,'err');
+    if(err.status===409) openEditor(ED.id);
+  });
 });
-$('#createAgent').addEventListener('click',function(){ location.hash='#/agent/kwame'; });
+
+/* ═══════════════════════════════════════════════════════════════════
+   ACCOUNT
+   ═══════════════════════════════════════════════════════════════════ */
+function acMsg(id,text,kind){
+  var el=$(id); el.textContent=text||''; el.className='ac-msg'+(kind?' '+kind:'');
+}
+function paintMe(){
+  if(!ME) return;
+  var label=ME.company||ME.name||ME.email,
+      parts=String(label).trim().split(/\s+/),
+      initials=((parts[0]||'').charAt(0)+(parts[1]||'').charAt(0)).toUpperCase();
+  $('#wsAv').textContent=initials;
+  $('#wsName').textContent=label;
+  $('#wsSub').textContent=ME.company?(ME.name||ME.email):(ME.name?ME.email:'');
+  $('#wsLink').hidden=false;
+  $('#whoEmail').textContent=ME.email;
+  $('#acProfile').innerHTML=[
+    ['Name',ME.name||'—'],['Company',ME.company||'—'],['Email',ME.email],['Member since',dateLocal(ME.created_at)]
+  ].map(function(f){return '<div><span class="lbl">'+esc(f[0])+'</span><b>'+esc(f[1])+'</b></div>';}).join('');
+}
+function loadMe(){
+  return API.get('/auth/me').then(function(me){
+    ME=me;
+    try{ localStorage.setItem('cynea_email',me.email); }catch(_){}
+    paintMe();
+  }).catch(function(err){
+    if(err.status!==401&&!ME) $('#acProfile').innerHTML='<p class="none" style="padding:12px 0">Not loaded. '+esc(err.message)+'</p>';
+  });
+}
+
+/* ── change password: the answer carries a new session, which must replace ours,
+      because the old token just stopped working. A 401 here can mean the current
+      password was wrong, and that isn't the session ending. ── */
+$('#pwForm').addEventListener('submit',function(e){
+  e.preventDefault();
+  var cur=$('#pwCurrent').value,a=$('#pwNew').value,c=$('#pwNew2').value,btn=$('#pwBtn');
+  if(!cur){ acMsg('#pwMsg','Enter your current password.','err'); $('#pwCurrent').focus(); return; }
+  if(a.length<8){ acMsg('#pwMsg','Your new password must be at least 8 characters.','err'); $('#pwNew').focus(); return; }
+  if(a!==c){ acMsg('#pwMsg',"Those two new passwords don't match.",'err'); $('#pwNew2').focus(); return; }
+  btn.disabled=true;
+  acMsg('#pwMsg','Saving…');
+  API.req('POST','/auth/change-password',{current_password:cur,new_password:a},{keep401:true}).then(function(d){
+    API.token=d.token;
+    localStorage.setItem('cynea_token',d.token);
+    $('#pwForm').reset();
+    acMsg('#pwMsg','Password changed. Other devices have been signed out.','ok');
+  }).catch(function(err){
+    if(err.status===401&&!/current password/i.test(err.message)){ toSignIn(); return; }
+    acMsg('#pwMsg','Password not changed. '+err.message,'err');
+  }).then(function(){ btn.disabled=false; });
+});
+
+/* ── copy a one-time value ── */
+function copyFrom(btn,valueSel,idleText){
+  var text=$(valueSel).textContent;
+  function done(ok){
+    btn.textContent=ok?'Copied':'Select and copy it by hand';
+    setTimeout(function(){ btn.textContent=idleText; },2400);
+  }
+  if(navigator.clipboard&&navigator.clipboard.writeText){
+    navigator.clipboard.writeText(text).then(function(){done(true);},function(){done(false);});
+  }else done(false);
+}
+$('#keyCopy').addEventListener('click',function(){ copyFrom(this,'#keyValue','Copy key'); });
+$('#hookCopy').addEventListener('click',function(){ copyFrom(this,'#hookValue','Copy secret'); });
+$('#keyDone').addEventListener('click',function(){ $('#keyOnce').hidden=true; $('#keyValue').textContent=''; });
+$('#hookDone').addEventListener('click',function(){ $('#hookOnce').hidden=true; $('#hookValue').textContent=''; });
+
+/* ── API keys ── */
+function renderKeys(rows){
+  $('#keyList').innerHTML=rows.length?rows.map(function(k){
+    return '<div class="ac-row" data-key-row="'+esc(k.id)+'"><div class="ac-row-t"><b>'+esc(k.name)+'</b>'+
+      '<code>'+esc(k.prefix)+'…</code>'+
+      '<small>Created '+esc(whenLocal(k.created_at))+' · '+
+      (k.last_used_at?'Last used '+esc(whenLocal(k.last_used_at)):'Never used')+'</small></div>'+
+      '<button class="btn btn-ghost btn-sm" type="button" data-revoke="'+esc(k.id)+'" data-name="'+esc(k.name)+'">Revoke</button></div>';
+  }).join(''):'<p class="none" style="padding:14px 0;text-align:left">No API keys yet.</p>';
+}
+function loadKeys(){
+  return API.get('/api-keys').then(renderKeys).catch(function(err){
+    if(err.status!==401) $('#keyList').innerHTML='<p class="none" style="padding:14px 0;text-align:left">Not loaded. '+esc(err.message)+'</p>';
+  });
+}
+$('#keyForm').addEventListener('submit',function(e){
+  e.preventDefault();
+  var name=$('#keyName').value.trim(),btn=$('#keyBtn');
+  if(!name){ acMsg('#keyMsg','Give the key a name.','err'); $('#keyName').focus(); return; }
+  btn.disabled=true; acMsg('#keyMsg','Creating…');
+  API.req('POST','/api-keys',{name:name}).then(function(k){
+    $('#keyName').value='';
+    acMsg('#keyMsg','');
+    $('#keyValue').textContent=k.key;
+    $('#keyOnce').hidden=false;
+    return loadKeys();
+  }).catch(function(err){
+    acMsg('#keyMsg','Key not created. '+err.message,'err');
+  }).then(function(){ btn.disabled=false; });
+});
+$('#keyList').addEventListener('click',function(e){
+  var b=e.target.closest&&e.target.closest('[data-revoke]');
+  if(!b) return;
+  if(!confirm('Revoke "'+b.getAttribute('data-name')+'"? Anything using this key stops working straight away.')) return;
+  b.disabled=true;
+  API.req('DELETE','/api-keys/'+encodeURIComponent(b.getAttribute('data-revoke'))).then(function(){
+    acMsg('#keyMsg','Key revoked.','ok');
+    return loadKeys();
+  }).catch(function(err){
+    b.disabled=false;
+    acMsg('#keyMsg','Key not revoked. '+err.message,'err');
+  });
+});
+
+/* ── webhooks ── */
+function hookStatusHTML(h){
+  var at=h.last_delivery_at?' · '+esc(whenLocal(h.last_delivery_at)):'';
+  if(h.last_status===null||h.last_status===undefined) return '<small>Nothing sent yet</small>';
+  if(h.last_status===0) return '<small class="st-bad">No answer'+at+'</small>';
+  var good=h.last_status>=200&&h.last_status<300;
+  return '<small class="'+(good?'st-good':'st-bad')+'">Last delivery answered '+h.last_status+at+'</small>';
+}
+function renderHooks(rows){
+  $('#hookList').innerHTML=rows.length?rows.map(function(h){
+    return '<div class="ac-row" data-hook-row="'+esc(h.id)+'"><div class="ac-row-t"><b class="url">'+esc(h.url)+'</b>'+
+      hookStatusHTML(h)+'</div><div class="ac-row-a">'+
+      '<button class="btn btn-ghost btn-sm" type="button" data-hook-test="'+esc(h.id)+'">Send test</button>'+
+      '<button class="btn btn-ghost btn-sm" type="button" data-hook-del="'+esc(h.id)+'" data-url="'+esc(h.url)+'">Remove</button>'+
+      '</div></div>';
+  }).join(''):'<p class="none" style="padding:14px 0;text-align:left">No webhooks yet.</p>';
+}
+function loadHooks(){
+  return API.get('/webhooks').then(renderHooks).catch(function(err){
+    if(err.status!==401) $('#hookList').innerHTML='<p class="none" style="padding:14px 0;text-align:left">Not loaded. '+esc(err.message)+'</p>';
+  });
+}
+$('#hookForm').addEventListener('submit',function(e){
+  e.preventDefault();
+  var url=$('#hookUrl').value.trim(),btn=$('#hookBtn');
+  if(!url){ acMsg('#hookMsg','Enter the URL to send to.','err'); $('#hookUrl').focus(); return; }
+  btn.disabled=true; acMsg('#hookMsg','Adding…');
+  API.req('POST','/webhooks',{url:url}).then(function(h){
+    $('#hookUrl').value='';
+    acMsg('#hookMsg','');
+    $('#hookValue').textContent=h.secret;
+    $('#hookOnce').hidden=false;
+    return loadHooks();
+  }).catch(function(err){
+    acMsg('#hookMsg','Webhook not added. '+err.message,'err');
+  }).then(function(){ btn.disabled=false; });
+});
+$('#hookList').addEventListener('click',function(e){
+  var t=e.target.closest&&e.target.closest('[data-hook-test]');
+  if(t){
+    t.disabled=true; acMsg('#hookMsg','Sending a test event…');
+    API.req('POST','/webhooks/'+encodeURIComponent(t.getAttribute('data-hook-test'))+'/test').then(function(r){
+      var good=r.status>=200&&r.status<300;
+      acMsg('#hookMsg',r.status===0?"Test sent. Your server didn't answer.":'Test sent. Your server answered '+r.status+'.',good?'ok':'err');
+      return loadHooks();
+    }).catch(function(err){
+      t.disabled=false;
+      acMsg('#hookMsg','Test not sent. '+err.message,'err');
+    });
+    return;
+  }
+  var d=e.target.closest&&e.target.closest('[data-hook-del]');
+  if(!d) return;
+  if(!confirm('Remove the webhook for '+d.getAttribute('data-url')+'?')) return;
+  d.disabled=true;
+  API.req('DELETE','/webhooks/'+encodeURIComponent(d.getAttribute('data-hook-del'))).then(function(){
+    acMsg('#hookMsg','Webhook removed.','ok');
+    return loadHooks();
+  }).catch(function(err){
+    d.disabled=false;
+    acMsg('#hookMsg','Webhook not removed. '+err.message,'err');
+  });
+});
+
+/* ── export: needs the session header, so a plain link can't do it ── */
+$('#exportBtn').addEventListener('click',function(){
+  var btn=this;
+  btn.disabled=true; acMsg('#exportMsg','Preparing your export…');
+  fetch(API.base+'/auth/me/export',{headers:API.headers()}).then(function(r){
+    if(r.status===401){ toSignIn(); throw failure(401,'Your session has ended.'); }
+    if(!r.ok) throw failure(r.status,'The server answered with an error ('+r.status+').');
+    return r.blob();
+  }).then(function(blob){
+    var url=URL.createObjectURL(blob),a=document.createElement('a');
+    a.href=url; a.download='cynea-account-export.json';
+    document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(function(){ URL.revokeObjectURL(url); },10000);
+    acMsg('#exportMsg','Downloaded cynea-account-export.json.','ok');
+  },function(err){
+    throw err.status===undefined?failure(0,'Cannot reach the server. Check your connection and try again.'):err;
+  }).catch(function(err){
+    if(err.status!==401) acMsg('#exportMsg','Export failed. '+err.message,'err');
+  }).then(function(){ btn.disabled=false; });
+});
+
+/* ── delete account ── */
+$('#delConfirm').addEventListener('input',function(){
+  $('#delBtn').disabled=this.value!=='DELETE';
+});
+$('#delForm').addEventListener('submit',function(e){
+  e.preventDefault();
+  var btn=$('#delBtn'),pw=$('#delPassword').value;
+  if($('#delConfirm').value!=='DELETE'){ acMsg('#delMsg','Type DELETE to confirm.','err'); return; }
+  if(!pw){ acMsg('#delMsg','Enter your password.','err'); $('#delPassword').focus(); return; }
+  btn.disabled=true; acMsg('#delMsg','Deleting…');
+  API.req('DELETE','/auth/me',{password:pw,confirm:'DELETE'}).then(function(){
+    clearSession();
+    location.replace('index.html');
+  }).catch(function(err){
+    btn.disabled=false;
+    acMsg('#delMsg',err.message,'err');
+  });
+});
+
+function loadAccount(){ loadMe(); loadKeys(); loadHooks(); }
 
 /* ═══════════════════════════════════════════════════════════════════
    ROUTER
    ═══════════════════════════════════════════════════════════════════ */
+function currentPath(){ return (location.hash||'#/ops').replace(/^#\/?/,'/'); }
+function routeName(){
+  var h=currentPath();
+  if(/^\/agent\/[^/]+$/.test(h)) return 'agent';
+  if(h==='/account') return 'account';
+  if(h==='/history') return 'history';
+  return 'ops';
+}
+function scrollToHistory(){
+  var box=$('#opsScroll'),sec=$('#history');
+  box.scrollTop=sec.getBoundingClientRect().top-box.getBoundingClientRect().top+box.scrollTop-8;
+}
 function route(){
-  var h=(location.hash||'#/ops').replace(/^#/,'');
-  var views={ops:$('#v-ops'),agent:$('#v-agent')};
-  Object.keys(views).forEach(function(k){views[k].hidden=true;});
+  var name=routeName(),h=currentPath();
+  var views={ops:$('#v-ops'),agent:$('#v-agent'),account:$('#v-account')};
+  var showing=name==='history'?'ops':name;
+  Object.keys(views).forEach(function(k){views[k].hidden=k!==showing;});
+  ED.seq++;     /* anything the editor still has in flight is now out of date */
 
-  var m=h.match(/^\/agent\/([a-z]+)$/);
-  if(m&&AGENTS[m[1]]){ fillAgent(m[1]); views.agent.hidden=false; }
-  /* Every other route — including the old stub links, if bookmarked —
-     lands on the one implemented screen instead of an empty page. */
-  else{ views.ops.hidden=false; h='/ops'; }
+  if(name==='agent'){
+    openEditor(decodeURIComponent(h.split('/')[2]));
+  }else if(name==='account'){
+    document.title='Account · Cynea';
+    loadAccount();
+  }else{
+    document.title='Operations Center · Cynea';
+  }
 
+  var current=name==='agent'?'/ops':(name==='ops'?'/ops':h);
   $$('.nav-item').forEach(function(a){
     var href=a.getAttribute('href').replace(/^#/,'');
-    if(href===h||(h.indexOf('/agent/')===0&&href==='/ops')) a.setAttribute('aria-current','page');
+    if(href===current) a.setAttribute('aria-current','page');
     else a.removeAttribute('aria-current');
   });
   closeSide();
-  $('.scroll',views.ops.hidden?views.agent:views.ops).scrollTop=0;
+  if(name==='history') scrollToHistory();
+  else{
+    var box=$('.scroll',views[showing]);
+    if(box) box.scrollTop=0;
+  }
 }
 addEventListener('hashchange',route);
 
 /* ═══════════════════════════════════════════════════════════════════
    WIRING
    ═══════════════════════════════════════════════════════════════════ */
-/* row / card click delegation */
 document.addEventListener('click',function(e){
+  var el=e.target.closest&&e.target.closest('[data-test]');
+  if(el){
+    if(!el.disabled) startTestCall(el.getAttribute('data-test'),function(err){
+      banner(err.message,'err');
+      if(err.status===409) loadLive();
+    });
+    return;
+  }
   var call=e.target.closest&&e.target.closest('[data-call]');
-  if(call){ openCall(call.getAttribute('data-call')); return; }
-  var ag=e.target.closest&&e.target.closest('[data-agent]');
-  if(ag){ location.hash='#/agent/'+ag.getAttribute('data-agent'); return; }
+  if(call){ openCall(call.getAttribute('data-call')); }
 });
 /* keyboard activation for the table rows */
 document.addEventListener('keydown',function(e){
@@ -1425,318 +2320,51 @@ document.addEventListener('keydown',function(e){
   e.preventDefault(); openCall(r.getAttribute('data-call'));
 });
 
-/* chart table toggles — a tooltip is never the only way to read a value */
+/* chart table toggles: a tooltip is never the only way to read a value */
 $$('[data-table]').forEach(function(b){
   b.addEventListener('click',function(){
     var t=$('#'+b.getAttribute('data-table')),on=t.classList.toggle('on');
+    $('#'+b.getAttribute('data-plot')).hidden=on;
     b.setAttribute('aria-expanded',on?'true':'false');
     b.textContent=on?'Chart':'Table';
   });
 });
 
 /* sidebar drawer */
-var side=$('#side'),ovl=$('#ovl');
-function openSide(){side.classList.add('open');ovl.classList.add('on');
-  $$('[id="hamb"],[data-hamb]').forEach(function(b){b.setAttribute('aria-expanded','true');});}
-function closeSide(){side.classList.remove('open');ovl.classList.remove('on');
-  $$('[id="hamb"],[data-hamb]').forEach(function(b){b.setAttribute('aria-expanded','false');});}
+var side=$('#side'),ovl=$('#ovl'),sideOpener=null;
+function openSide(btn){
+  sideOpener=btn||null;
+  side.classList.add('open');ovl.classList.add('on');
+  $$('[data-hamb]').forEach(function(b){b.setAttribute('aria-expanded','true');});
+  var first=$('.nav-item',side);
+  if(first) first.focus();
+}
+function closeSide(refocus){
+  var was=side.classList.contains('open');
+  side.classList.remove('open');ovl.classList.remove('on');
+  $$('[data-hamb]').forEach(function(b){b.setAttribute('aria-expanded','false');});
+  if(was&&refocus===true&&sideOpener) sideOpener.focus();
+}
 document.addEventListener('click',function(e){
-  if(e.target.closest&&e.target.closest('#hamb,[data-hamb]')) openSide();
+  var h=e.target.closest&&e.target.closest('[data-hamb]');
+  if(h){ side.classList.contains('open')?closeSide(true):openSide(h); return; }
+  /* a nav link that only changes the hash to where we already are fires no route */
+  if(side.classList.contains('open')&&e.target.closest&&e.target.closest('.nav-item,.ws,.brand')) closeSide();
 });
-ovl.addEventListener('click',closeSide);
-
-(function(){
-  var b=document.getElementById('signOut');
-  if(b) b.addEventListener('click', signOut);
-})();
-
-/* on-call timers tick so the shell feels live */
-(function(){
-  var t0=Date.now();
-  setInterval(function(){
-    var el=$$('.acard-st .timer');
-    Object.keys(STATUS).forEach(function(k,i){
-      if(!STATUS[k].on||!el[i]) return;
-      var parts=STATUS[k].timer.split(':'),
-          s=(+parts[0])*60+(+parts[1])+1;
-      STATUS[k].timer=('0'+Math.floor(s/60)).slice(-2)+':'+('0'+(s%60)).slice(-2);
-      el[i].textContent=STATUS[k].timer;
-    });
-  },1000);
-})();
-
-/* ═══════════════════════════════════════════════════════════════════
-   API LAYER
-   The database is the only source of figures. On load we fetch; if the
-   API answers, the state above is filled in and the view re-renders. If
-   it does not — server down, session expired, Neon asleep — the console
-   keeps its empty states and the toolbar says Disconnected. It never
-   substitutes numbers for the ones it could not fetch.
-   ═══════════════════════════════════════════════════════════════════ */
-var API = {
-  base: (function(){
-    /* Deployed, the API is /api on this same origin — same-origin means no
-       CORS preflight and no hard-coded hostname to rot. Opened from a file
-       or a static server on localhost there is no /api to talk to, so fall
-       back to a locally-run uvicorn. Set localStorage.cynea_api to override
-       either, which is what you want when pointing a local console at a
-       deployed API. */
-    var override = localStorage.getItem('cynea_api');
-    if (override) return override.replace(/\/$/, '');
-    var h = location.hostname;
-    var local = (h === 'localhost' || h === '127.0.0.1' || h === '' || location.protocol === 'file:');
-    return local ? 'http://127.0.0.1:8000' : '/api';
-  })(),
-  token: localStorage.getItem('cynea_token') || '',
-  live: false,
-
-  headers: function(){
-    var h = {'Content-Type':'application/json'};
-    if(this.token) h['Authorization'] = 'Bearer ' + this.token;
-    return h;
-  },
-
-  get: function(path){
-    return fetch(this.base + path, {headers:this.headers()}).then(function(r){
-      if(!r.ok) throw new Error(path + ' -> ' + r.status);
-      return r.json();
-    });
-  },
-
-  login: function(email, password){
-    var self = this;
-    return fetch(this.base + '/auth/login', {
-      method:'POST', headers:{'Content-Type':'application/json'},
-      body: JSON.stringify({email:email, password:password})
-    }).then(function(r){
-      if(!r.ok) throw new Error('login failed: ' + r.status);
-      return r.json();
-    }).then(function(d){
-      self.token = d.token;
-      localStorage.setItem('cynea_token', d.token);
-      return d;
-    });
-  }
-};
-
-function setBadge(live, detail){
-  var badge = document.getElementById('dataBadge'),
-      text  = document.getElementById('dataBadgeText');
-  if(!badge) return;
-  badge.classList.toggle('live', !!live);
-  /* Two honest states only: connected to the database, or not. There is
-     no third "sample data" mode any more, because there is no sample
-     data to fall back to. */
-  text.textContent = live ? 'Connected' : 'Disconnected';
-  badge.title = detail;
-}
-
-/* ── map API shapes onto what the renderers already expect ─────────── */
-function applyStats(stats){
-  var k = stats.kpis;
-
-  KPIS = [
-    {label:'Calls today', value:String(k.calls_today),
-     delta:'', dir:'up', since:'from the database',
-     spark:(stats.volume.length ? stats.volume.map(function(p){return p.v;}) : [0,0])},
-    {label:'Containment rate', value:k.containment_pct + '%',
-     delta:(k.containment_delta_pts >= 0 ? '+' : '') + k.containment_delta_pts + ' pts',
-     dir:(k.containment_delta_pts >= 0 ? 'up' : 'down'), since:'vs last 7 days',
-     spark:[k.containment_pct, k.containment_pct]},
-    {label:'Cost per call', value:'$' + k.cost_per_call.toFixed(2),
-     delta:'', dir:'up', since:'today',
-     spark:(stats.volume.length ? stats.volume.map(function(p){return p.v;}) : [0,0])},
-    {label:'Cost this week', value:'$' + (k.cost_week_cents/100).toFixed(2),
-     delta:'', dir:'up', since:'last 7 days',
-     spark:[0, k.cost_week_cents]}
-  ];
-
-  /* A chart needs at least two points to draw a line. With one hour of
-     data so far today, pad rather than render a degenerate axis. */
-  VOLUME = stats.volume.length >= 2 ? stats.volume
-         : (stats.volume.length ? stats.volume.concat([{h:'--', v:0}]) : []);
-  /* One real point is padded so the line has somewhere to go. Zero real
-     points stays empty: a flat line at 0 would read as "we measured, and
-     it was neutral". */
-  SENT   = stats.sentiment.length >= 2 ? stats.sentiment
-         : (stats.sentiment.length
-              ? stats.sentiment.concat([{h:'--', v:stats.sentiment[0].v}])
-              : []);
-
-  if(stats.cost_breakdown && stats.cost_breakdown.length){
-    COST = stats.cost_breakdown;
-  }
-  CONTAIN = {value:k.containment_pct, goal:90};
-
-  if(stats.agents && stats.agents.length){
-    AGENTS = {}; STATUS = {};
-    stats.agents.forEach(function(a){
-      AGENTS[a.persona] = {
-        name:a.name, role:a.role || '',
-        photo:a.photo,
-        voice:a.voice || '', ver:'v1', cost:'$0.04',
-        prompt:'', id:a.id
-      };
-      /* No telephony layer yet, so nobody is genuinely "on call".
-         Show calls handled today instead of inventing a live timer. */
-      STATUS[a.persona] = {on:false, timer:a.calls_today + ' today'};
-    });
-  }
-}
-
-function applyCalls(rows){
-  if(!rows || !rows.length) return;
-  CALLS = rows.map(function(r){
-    return {
-      id:r.id, t:r.time, ag:r.persona, caller:r.caller,
-      dur:r.duration, out:r.outcome, st:r.status,
-      sent:r.sentiment, cost:r.cost,
-      sum:'', turns:[], fields:[],      /* fetched on open */
-      _remote:true,                     /* detail not fetched yet */
-      _api:true                         /* a real call row: it may have a recording */
-    };
-  });
-}
-
-function applyQueue(rows){
-  QUEUE = (rows || []).map(function(r){
-    return {num:r.num, cat:r.cat, wait:r.wait, agent:r.agent, hot:r.hot, id:r.id};
-  });
-}
-
-/* ── the modal fetches full detail on demand when live ─────────────── */
-var _openCallLocal = openCall;
-openCall = function(id){
-  var row = CALLS.filter(function(c){ return c.id === id; })[0];
-  if(!API.live || !row || !row._remote){ return _openCallLocal(id); }
-
-  API.get('/calls/' + id).then(function(d){
-    row.sum    = d.summary;
-    row.sent   = d.sentiment;
-    row.cost   = d.cost;
-    row.turns  = d.turns.map(function(t){ return [ '', t.speaker, t.text ]; });
-    row.fields = [
-      ['Status', d.status_label], ['Duration', d.duration],
-      ['Caller', d.caller], ['Date', d.date || '--']
-    ];
-    row._remote = false;          /* hydrated; no need to refetch */
-    _openCallLocal(id);
-  }).catch(function(err){
-    console.warn('call detail unavailable, showing what we have:', err);
-    _openCallLocal(id);
-  });
-};
-
-/* ── the editor pulls the real stored prompt when live ─────────────── */
-var _fillAgentLocal = fillAgent;
-fillAgent = function(slug){
-  _fillAgentLocal(slug);
-  var a = AGENTS[slug];
-  if(!API.live || !a || !a.id) return;
-
-  var box = document.getElementById('edPrompt');
-  box.value = 'Loading prompt from the database…';
-  API.get('/agents/' + a.id).then(function(d){
-    a.prompt = d.prompt || '';
-    a.ver = 'v' + (d.prompt_version || 0);
-    box.value = a.prompt;
-    document.getElementById('edVer').textContent = a.ver;
-  }).catch(function(err){
-    box.value = '';
-    console.warn('prompt unavailable:', err);
-  });
-};
-
-/* Save & publish writes a new prompt version instead of claiming nothing. */
-(function(){
-  var btn = document.getElementById('saveAgent');
-  if(!btn) return;
-  btn.addEventListener('click', function(){
-    var slug = (location.hash.match(/^#\/agent\/([a-z]+)$/) || [])[1];
-    var a = slug && AGENTS[slug];
-    var log = document.getElementById('testLog');
-    if(!API.live || !a || !a.id) return;          /* local notice already shown */
-
-    var content = document.getElementById('edPrompt').value;
-    log.innerHTML = 'Saving…';
-    fetch(API.base + '/agents/' + a.id + '/prompt', {
-      method:'POST', headers:API.headers(), body:JSON.stringify({content:content})
-    }).then(function(r){
-      if(!r.ok) throw new Error('save failed: ' + r.status);
-      return r.json();
-    }).then(function(d){
-      a.prompt = content;
-      a.ver = 'v' + d.version;
-      document.getElementById('edVer').textContent = a.ver;
-      log.innerHTML = '<b>Saved.</b> Stored as version ' + d.version + '.';
-    }).catch(function(err){
-      log.innerHTML = '<b>Not saved.</b> ' + err.message;
-    });
-  }, true);
-})();
-
-function renderAll(){
-  renderKpis(); renderQueue(); renderAgents();
-  renderVolume(); renderSent(); renderDonut(); renderMeter();
-  renderHistory();
-}
-
-function loadLive(){
-  return API.get('/dashboard/bootstrap').then(function(d){
-    applyStats(d.stats);
-    applyQueue(d.queue);
-    applyCalls(d.calls);
-    API.live = true;
-    setBadge(true, 'Reading from the API at ' + API.base);
-    renderAll();
-    console.info('cynea: live data loaded', d.stats.kpis);
-    return true;
-  });
-}
-
-function signOut(){
-  localStorage.removeItem('cynea_token');
-  localStorage.removeItem('cynea_email');
-  location.replace('signin.html?next=dashboard.html');
-}
+ovl.addEventListener('click',function(){closeSide(true);});
+$('#signOut').addEventListener('click',signOut);
 
 function boot(){
-  renderAll();          /* paints empty states while the fetch is in flight */
-  route();
-
-  var whoEl = document.querySelector('.who');
-  if(whoEl) whoEl.textContent = localStorage.getItem('cynea_email') || '';
-
-  /* No session, no console. This used to sign itself in as a seeded demo
-     account, which meant anyone opening the file saw somebody's data. */
+  /* No session, no console. */
   if(!API.token){
-    location.replace('signin.html?next=dashboard.html');
+    location.replace('signin.html?next=' + encodeURIComponent('dashboard.html' + location.hash));
     return;
   }
-
-  /* Health first: it is cheap, and it separates "server is down" from
-     "your session expired", which need different fixes. */
-  fetch(API.base + '/health').then(function(r){
-    if(!r.ok) throw new Error('health ' + r.status);
-    return r.json();
-  }).then(function(h){
-    if(!h.database) throw new Error('database unreachable');
-    return loadLive();
-  }).catch(function(err){
-    API.live = false;
-    var why = String(err.message || err);
-
-    if(/ -> 401/.test(why)){
-      signOut();                        /* expired or revoked session */
-      return;
-    }
-    if(/Failed to fetch|NetworkError|health/.test(why)){
-      why = 'API not reachable at ' + API.base +
-            ' - start it with: uvicorn cynea.api:app --port 8000';
-    }
-    setBadge(false, why);
-    console.warn('cynea:', why);
-  });
+  $('#whoEmail').textContent=localStorage.getItem('cynea_email')||'';
+  renderAll();          /* says "Loading" while the fetch is in flight, not "none" */
+  route();
+  loadMe();
+  loadLive();
 }
 
 boot();

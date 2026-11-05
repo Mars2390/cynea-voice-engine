@@ -13,18 +13,17 @@ Honest summary, because the gap between "written" and "wired up" matters:
 
 | Area | State |
 |---|---|
-| Conversation core (barge-in, history, turn-taking) | **Working**, 152 tests |
+| Conversation core (history, turn-taking) | **Working** |
+| Barge-in | **Tested in isolation**; the browser call does not use it |
+| Browser call | **Working** on a Cloudflare Durable Object, see [voice-worker/](voice-worker/README.md) |
 | LLM → speech pipeline | **Working** end to end |
 | Personas (Peter, Amina, Kofi, Maya) | **Working** |
 | Database layer | **Working** (Neon Postgres / SQLite) |
-| HTTP API server | **Working** — auth, agents, calls, dashboard |
-| Auth (bcrypt + sessions) | **Working** |
+| HTTP API server | **Working** — auth, agents, calls, dashboard, API keys, webhooks |
+| Auth (bcrypt + sessions) | **Working** — email verification, password reset, sign-out, rate limits |
 | Console reading live data | **Working** — real login, empty states, no sample data |
-| Telephony (Africa's Talking) | **Interface only** — no audio transport |
+| Telephony (Africa's Talking) | **Interface only** — no audio transport, so no phone calls |
 | Billing, multi-tenancy beyond per-user scoping | **Not built** |
-
-A full audit with a 92-item register and a four-phase roadmap is in
-[GAP_ANALYSIS.md](GAP_ANALYSIS.md).
 
 ---
 
@@ -39,7 +38,7 @@ pip install -r requirements.txt
 
 cp .env.example .env        # add GROQ_API_KEY (free: console.groq.com/keys)
 
-pytest tests/ -q            # 152 tests, ~24s, no API key or Postgres needed
+python -m pytest tests/ -q  # about 3 minutes, no API key or Postgres needed
 ```
 
 Run the whole stack:
@@ -390,7 +389,7 @@ cynea_africa/             Africa-specific modules
   telephony/              Africa's Talking  ⚠ interface only
   dashboard/              metrics + legacy HTML generator
 
-tests/                    152 tests
+tests/                    run on SQLite; test_postgres.py needs TEST_POSTGRES_URL
 *.html                    marketing site and operations console
 ```
 
@@ -399,8 +398,17 @@ tests/                    152 tests
 ## Contributing
 
 ```bash
-pytest tests/ -q          # must pass before you push
+python -m pytest tests/ -q     # must pass before you push
 ```
+
+CI runs this on Python 3.11 and 3.13, then runs `tests/test_postgres.py` against a
+real `postgres:16`. To run that yourself, point `TEST_POSTGRES_URL` at a throwaway
+database: it drops every table. What differs between SQLite and Postgres, and why
+each difference has a test, is written at the top of that file.
+
+`tests/test_worker.py` runs the Cloudflare socket's handlers with the Workers
+runtime stubbed. It cannot catch runtime behaviour such as hibernation; check that
+with `pywrangler dev` and a browser.
 
 New code needs tests. `interruption.py` and `conversation.py` especially —
 they are stateful, reachable from every live call, and were entirely untested

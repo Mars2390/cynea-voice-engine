@@ -179,11 +179,11 @@ h1,h2,h3{font-family:var(--display);letter-spacing:-.02em;font-weight:700;line-h
 
     <div class="done" id="doneView" hidden>
       <div class="mark" aria-hidden="true">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
       </div>
-      <h2 id="doneTitle" tabindex="-1">Check your email to verify your account</h2>
-      <p>We sent a verification link to <strong id="doneEmail"></strong>.</p>
-      <p>The link expires in 24 hours.</p>
+      <h2 id="doneTitle" tabindex="-1">Thanks for signing up</h2>
+      <p id="doneMsg">Account created. An administrator will review it shortly.</p>
+      <p>You can sign in as <strong id="doneEmail"></strong> once it is approved.</p>
       <a class="btn btn-dark" href="signin.html">Back to sign in</a>
     </div>
   </article>
@@ -336,8 +336,9 @@ function fieldsFrom422(detail){
   return bad;
 }
 
-function showSuccess(email){
+function showSuccess(email, message){
   document.getElementById('doneEmail').textContent = email;
+  if (message) document.getElementById('doneMsg').textContent = message;
   document.getElementById('signupView').hidden = true;
   var done = document.getElementById('doneView');
   done.hidden = false;
@@ -393,8 +394,8 @@ form.addEventListener('submit', function(e){
     })
     .then(function(res){
       var detail = res.body.detail;
-      if (res.status === 201 || (res.ok && res.body.status === 'verification_sent')){
-        showSuccess(res.body.email || v.email);
+      if (res.status === 201){
+        showSuccess(res.body.email || v.email, res.body.message);
         return;
       }
       if (res.status === 400 && detail === 'Email already registered'){
@@ -408,7 +409,7 @@ form.addEventListener('submit', function(e){
         return;
       }
       if (typeof detail === 'string' && detail){
-        /* 400 bot check, 429 rate limit, 503 email not configured or not sent:
+        /* 400 bot check, 429 rate limit, 503 server not configured:
            the server's words, because they say what to do next. */
         fail(detail);
         return;

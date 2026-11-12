@@ -20,6 +20,10 @@ def client(tmp_path, monkeypatch):
     monkeypatch.setenv("EMAIL_DEV_LOG_LINKS", "1")
     for k in ("EMAIL_API_KEY", "TURNSTILE_SECRET_KEY", "R2_ACCOUNT_ID", "R2_ACCESS_KEY_ID"):
         monkeypatch.delenv(k, raising=False)
+    # Empty, not deleted: a .env saying ENV=production is loaded on first import
+    # of cynea without overriding, and would switch off the link capture below.
+    for k in ("ENV", "VERCEL"):
+        monkeypatch.setenv(k, "")
 
     # Capture verification links instead of mailing them.
     from cynea import mailer
@@ -44,11 +48,18 @@ def _verify_link(client, email):
     return link[link.index("/auth/verify"):]
 
 
+def _approve(email):
+    """What an administrator does on admin.html."""
+    from cynea import db
+    db.set_user_status(db.get_user_by_email(email).id, db.APPROVED)
+
+
 def _account(client, email="owner@example.com"):
-    """Sign up, follow the emailed link, sign in — the real path to a token."""
+    """Sign up, follow the emailed link, get approved, sign in — the real path to a token."""
     r = client.post("/auth/register", json={"email": email, "password": "demo1234"})
     assert r.status_code == 201, r.text
     assert client.get(_verify_link(client, email), follow_redirects=False).status_code == 303
+    _approve(email)
     r = client.post("/auth/login", json={"email": email, "password": "demo1234"})
     assert r.status_code == 200, r.text
     return {"Authorization": "Bearer " + r.json()["token"]}
@@ -75,10 +86,11 @@ def test_health_reports_database_and_providers(client):
 # ----------------------------------------------------------------------
 
 def test_register_does_not_sign_you_in(client):
-    """Sign-up returns no token: the account is usable only after verifying."""
+    """Sign-up returns no token: the account is usable only after approval."""
     r = client.post("/auth/register", json={"email": "ama@example.com", "password": "demo1234"})
     assert r.status_code == 201
-    assert r.json() == {"status": "verification_sent", "email": "ama@example.com"}
+    assert r.json() == {"status": "pending_approval", "email": "ama@example.com",
+                        "message": "Account created. An administrator will review it shortly."}
     assert "token" not in r.json()
 
 

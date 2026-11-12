@@ -40,7 +40,7 @@ from typing import Iterator, List, Optional
 
 try:
     from sqlalchemy import (
-        Column, DateTime, Float, ForeignKey, Integer, String, Text,
+        Boolean, Column, DateTime, Float, ForeignKey, Integer, String, Text,
         create_engine, select,
     )
     from sqlalchemy.exc import SQLAlchemyError
@@ -118,6 +118,16 @@ class User(Base):
     # sha256 of the emailed token — the token itself is never stored.
     verify_token_hash = Column(String(64), nullable=True)
     verify_token_expires = Column(DateTime(timezone=True), nullable=True)
+
+    # Admin approval: pending -> approved | rejected. Nullable for the same
+    # reason; upgrade_schema() fills in the accounts that predate it, and code
+    # reads a NULL status as pending. approved_by is a user id, not a foreign
+    # key, so deleting the admin who approved someone leaves that account alone.
+    status = Column(String(16), nullable=True, default="pending")
+    approved_at = Column(DateTime(timezone=True), nullable=True)
+    approved_by = Column(GUID, nullable=True)
+    # Set by `python -m cynea.migrate --make-admin <email>`, never by the API.
+    is_admin = Column(Boolean, nullable=True, default=False)
 
     agents = relationship("Agent", back_populates="user",
                           cascade="all, delete-orphan")
@@ -407,6 +417,19 @@ def upgrade_schema(engine=None) -> List[str]:
             n = conn.execute(text("UPDATE users SET email_verified_at = created_at "
                                   "WHERE email_verified_at IS NULL")).rowcount
             log.warning("email verification added: %s existing account(s) marked verified", n)
+        if "users.status" in added:
+            # Accounts already in use keep working. One that never verified its
+            # address stays out until an admin looks at it: approving it here
+            # would hand the workspace to whoever typed someone else's email.
+            ok = conn.execute(text("UPDATE users SET status = 'approved' WHERE status IS NULL "
+                                   "AND email_verified_at IS NOT NULL")).rowcount
+            held = conn.execute(text("UPDATE users SET status = 'pending' "
+                                     "WHERE status IS NULL")).rowcount
+            log.warning("account approval added: %s existing account(s) approved, "
+                        "%s unverified left pending", ok, held)
+        if "users.is_admin" in added:
+            conn.execute(text("UPDATE users SET is_admin = :no WHERE is_admin IS NULL"),
+                         {"no": False})
     if added:
         log.warning("schema upgraded, columns added: %s", ", ".join(added))
     return added
@@ -498,6 +521,61 @@ def get_user_by_id(user_id: str) -> Optional[User]:
         return None
     with session_scope() as s:
         return s.get(User, str(user_id))
+
+
+PENDING, APPROVED, REJECTED = "pending", "approved", "rejected"
+USER_STATUSES = (PENDING, APPROVED, REJECTED)
+
+
+def user_status(user) -> str:
+    """pending / approved / rejected. A NULL from a half-migrated row is pending."""
+    return (user.status if user is not None and user.status in USER_STATUSES else PENDING)
+
+
+def list_users() -> List[User]:
+    """Every account, newest first."""
+    with session_scope() as s:
+        return list(s.scalars(select(User).order_by(User.created_at.desc())))
+
+
+def set_user_status(user_id: str, status: str, by: Optional[str] = None) -> Optional[User]:
+    """Approve or reject an account. Returns the user, or None if there is none.
+
+    Approving stamps when and by whom, unless it was already approved, so a
+    second click does not rewrite the record. Rejecting clears both: an account
+    that was approved and then turned down is not approved any more.
+    """
+    if status not in USER_STATUSES:
+        raise ValueError(f"status must be one of {USER_STATUSES}")
+    if not _is_uuid(user_id):
+        return None
+    with session_scope() as s:
+        user = s.get(User, str(user_id))
+        if user is None:
+            return None
+        if status == APPROVED and user.status != APPROVED:
+            user.approved_at = _now()
+            user.approved_by = str(by) if by else None
+        elif status != APPROVED:
+            user.approved_at = None
+            user.approved_by = None
+        user.status = status
+        return user
+
+
+def make_admin(email: str) -> Optional[User]:
+    """Give an existing account the admin flag, approving it if need be.
+    Returns None when no account has that address."""
+    with session_scope() as s:
+        user = s.scalar(select(User).where(User.email == email.strip().lower()))
+        if user is None:
+            return None
+        user.is_admin = True
+        if user.status != APPROVED:
+            user.status = APPROVED
+            user.approved_at = _now()
+            user.approved_by = None
+        return user
 
 
 def delete_user(user_id: str) -> bool:

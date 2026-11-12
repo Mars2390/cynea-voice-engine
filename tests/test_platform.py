@@ -44,9 +44,16 @@ def _path(link):
     return link[link.index("/auth/verify"):]
 
 
+def _approve(email="ama@example.com"):
+    """What an administrator does on admin.html."""
+    from cynea import db
+    db.set_user_status(db.get_user_by_email(email).id, db.APPROVED)
+
+
 def _signed_in(c, email="ama@example.com"):
     assert _register(c, email).status_code == 201
     c.get(_path(c.sent[email]), follow_redirects=False)
+    _approve(email)
     r = c.post("/auth/login", json={"email": email, "password": "demo1234"})
     assert r.status_code == 200, r.text
     return {"Authorization": "Bearer " + r.json()["token"]}
@@ -68,12 +75,15 @@ def test_name_and_company_are_stored(client):
     assert (u.full_name, u.company) == ("Ama Mensah", "Adinkra Hotel")
 
 
-def test_verify_link_redirects_to_signin_and_unlocks_login(client):
+def test_verify_link_redirects_to_signin_and_approval_unlocks_login(client):
     _register(client)
     r = client.get(_path(client.sent["ama@example.com"]), follow_redirects=False)
     assert r.status_code == 303 and r.headers["location"].endswith("/signin.html?verified=1")
-    assert client.post("/auth/login", json={"email": "ama@example.com",
-                                            "password": "demo1234"}).status_code == 200
+    login = {"email": "ama@example.com", "password": "demo1234"}
+    assert client.post("/auth/login", json=login).json()["detail"] == \
+        "Your account is waiting for approval."
+    _approve()
+    assert client.post("/auth/login", json=login).status_code == 200
 
 
 def test_token_is_stored_hashed_and_single_use(client):

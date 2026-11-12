@@ -59,6 +59,10 @@ class RegisterIn(BaseModel):
 class RegisterOut(BaseModel):
     status: str
     email: str
+    message: str
+
+
+REGISTERED = "Account created. An administrator will review it shortly."
 
 
 class ResendIn(BaseModel):
@@ -271,7 +275,8 @@ async def _unhandled(request: Request, exc: Exception):
 @app.exception_handler(auth.AuthError)
 async def _auth_error(request: Request, exc: auth.AuthError):
     code = (401 if isinstance(exc, (auth.InvalidCredentials, auth.InvalidSession))
-            else 403 if isinstance(exc, auth.EmailNotVerified) else 400)
+            else 403 if isinstance(exc, (auth.EmailNotVerified, auth.AwaitingApproval,
+                                         auth.NotApproved)) else 400)
     return JSONResponse(
         status_code=code,
         content={"error": type(exc).__name__, "detail": str(exc)},
@@ -393,9 +398,32 @@ def _api_base() -> str:
     return f"http://127.0.0.1:{os.getenv('PORT', '8000')}/"
 
 
+def _verification_link(user) -> str:
+    return f"{_api_base()}auth/verify?token={auth.issue_verification(user.id)}"
+
+
 def _send_verification(user) -> str:
-    link = f"{_api_base()}auth/verify?token={auth.issue_verification(user.id)}"
-    return mailer.send_verification(user.email, link, user.full_name or "")
+    return mailer.send_verification(user.email, _verification_link(user), user.full_name or "")
+
+
+def _verify_at_signup(user) -> str:
+    """Issue the verification link and get it to the person if anything can.
+
+    Never fails the sign-up: an administrator's approval is what lets the
+    account in, so a link that could not be delivered is logged, not fatal.
+    With no email configured at all, the link itself goes to the server log
+    (a warning, so Vercel keeps it); that is the only place it can be found.
+    Returns "sent", "logged", or "failed".
+    """
+    link = _verification_link(user)
+    if not mailer.can_send():
+        log.warning("email is not configured; verification link for %s: %s", user.email, link)
+        return "logged"
+    try:
+        return mailer.send_verification(user.email, link, user.full_name or "")
+    except mailer.EmailError as exc:
+        log.error("verification email for %s failed: %s", user.email, exc)
+        return "failed"
 
 
 def _send_reset_quietly(user) -> None:
@@ -549,10 +577,10 @@ def auth_config():
 
 @app.post("/auth/register", response_model=RegisterOut, status_code=201, tags=["auth"])
 def register(body: RegisterIn, request: Request):
-    """Create an unverified account and email a verification link.
+    """Create a pending account, and send it a verification link if email works.
 
-    Does not sign the user in: /auth/login refuses the account until the
-    link is followed.
+    Does not sign the user in: /auth/login refuses the account until an
+    administrator approves it (see /admin/users).
     """
     ip = _client_ip(request)
     try:
@@ -562,24 +590,14 @@ def register(body: RegisterIn, request: Request):
                                  "Try again in an hour.") from None
     if not turnstile.verify(body.turnstile_token, ip):
         raise HTTPException(400, "Bot check failed. Please try again.")
-    # Before the account exists, not after: an account nobody can verify would
-    # just sit on the address.
-    if not mailer.can_send():
-        log.error("sign-up refused: EMAIL_API_KEY is not set")
-        raise HTTPException(503, "Sign-up is not available right now because we can't send "
-                                 "email. Please try again later.")
-    _api_base()                                 # same: refuse before creating anything
+    # A deployment that cannot name its own address refuses before creating
+    # anything, rather than issuing a link that points nowhere.
+    _api_base()
 
     user = auth.register_user(body.email, body.password,
                               full_name=body.name, company=body.company)
-    try:
-        _send_verification(user)
-    except mailer.EmailError as exc:
-        log.error("verification email for %s failed: %s", user.email, exc)
-        raise HTTPException(503, "Your account was created, but the verification email "
-                                 "could not be sent. Use 'Send a new link' on the sign-in "
-                                 "page in a few minutes.") from None
-    return RegisterOut(status="verification_sent", email=user.email)
+    _verify_at_signup(user)
+    return RegisterOut(status="pending_approval", email=user.email, message=REGISTERED)
 
 
 @app.get("/auth/verify", tags=["auth"], include_in_schema=False)
@@ -675,7 +693,8 @@ def login(body: LoginIn, request: Request):
         ratelimit.record("login", pair)
         ratelimit.record("login-ip", ip)
         raise
-    auth.require_verified(user)          # 403 "Please verify your email first."
+    # 403: rejected, awaiting approval, or (when a link can reach them) unverified.
+    auth.require_can_sign_in(user, verification_deliverable=mailer.can_send())
     return TokenOut(token=auth.create_session(user.id), user_id=user.id,
                     email=user.email, expires_in=auth.SESSION_TTL_SECONDS)
 
@@ -694,6 +713,7 @@ def me(user_id: str = Depends(current_user_id)):
         raise HTTPException(401, "The account for this session no longer exists.")
     return {"id": user.id, "email": user.email,
             "name": user.full_name, "company": user.company,
+            "status": db.user_status(user), "is_admin": bool(user.is_admin),
             "created_at": dashboard_data._iso(user.created_at)}
 
 
@@ -719,6 +739,68 @@ def delete_account(body: DeleteAccountIn, user_id: str = Depends(session_user_id
         raise HTTPException(503, "We couldn't remove your recordings, so nothing was "
                                  "deleted. Try again in a moment.") from None
     return None
+
+
+# ----------------------------------------------------------------------
+# Admin
+# ----------------------------------------------------------------------
+# Who is an admin is the users.is_admin flag, read again from the database on
+# every request for the user the session belongs to. Nothing the browser sends
+# or hides counts, and no address is special in this code. A signed-in session
+# is required: an API key cannot act as an admin.
+
+def admin_user_id(claims: dict = Depends(session_claims)) -> str:
+    """The admin's user id, else 403. A missing or dead session is still 401."""
+    user = db.get_user_by_id(str(claims["sub"]))
+    if user is None or not user.is_admin or db.user_status(user) != db.APPROVED:
+        raise HTTPException(403, "This needs an administrator account.")
+    return str(user.id)
+
+
+def _admin_user_json(u) -> dict:
+    return {"id": u.id, "name": u.full_name, "company": u.company, "email": u.email,
+            "status": db.user_status(u), "email_verified": auth.is_verified(u),
+            "is_admin": bool(u.is_admin),
+            "created_at": dashboard_data._iso(u.created_at),
+            "approved_at": dashboard_data._iso(u.approved_at)}
+
+
+@app.get("/admin/users", tags=["admin"])
+def admin_list_users(status: Optional[str] = Query(None, max_length=16),
+                     admin_id: str = Depends(admin_user_id)):
+    """Every account, newest first. ?status= narrows the list; counts never do."""
+    if status is not None and status not in db.USER_STATUSES:
+        raise HTTPException(400, f"status must be one of: {', '.join(db.USER_STATUSES)}.")
+    users = db.list_users()
+    counts = {s: 0 for s in db.USER_STATUSES}
+    for u in users:
+        counts[db.user_status(u)] += 1
+    return {"users": [_admin_user_json(u) for u in users
+                      if status is None or db.user_status(u) == status],
+            "counts": counts, "total": len(users)}
+
+
+@app.post("/admin/users/{user_id}/approve", tags=["admin"])
+def admin_approve(user_id: str, admin_id: str = Depends(admin_user_id)):
+    user = db.set_user_status(user_id, db.APPROVED, by=admin_id)
+    if user is None:
+        raise HTTPException(404, "No such account.")
+    log.info("account %s approved by %s", user.id, admin_id)
+    return _admin_user_json(user)
+
+
+@app.post("/admin/users/{user_id}/reject", tags=["admin"])
+def admin_reject(user_id: str, admin_id: str = Depends(admin_user_id)):
+    """Turn an account down. Its sessions end now; its API keys stop working
+    for as long as it stays rejected."""
+    if str(user_id).lower() == admin_id.lower():
+        raise HTTPException(400, "You can't reject your own account.")
+    user = db.set_user_status(user_id, db.REJECTED)
+    if user is None:
+        raise HTTPException(404, "No such account.")
+    auth.revoke_all_sessions(user.id)
+    log.info("account %s rejected by %s", user.id, admin_id)
+    return _admin_user_json(user)
 
 
 # ----------------------------------------------------------------------

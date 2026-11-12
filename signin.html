@@ -463,8 +463,13 @@ form.addEventListener('submit', function(e){
     }
     btn.disabled = false;
     if (res.status === 403){
-      say(res.detail || 'Please verify your email first.', 'err');
-      showResend(true);
+      /* Three different 403s: unverified (a new link helps), waiting for an
+         administrator, or turned down (a link would not help either). */
+      var unverified = res.body.error === 'EmailNotVerified';
+      say(res.detail || (unverified ? 'Please verify your email first.'
+                                    : 'This account cannot sign in yet.'),
+          unverified ? 'err' : '');
+      showResend(unverified);
       return;
     }
     /* The API returns the same message for an unknown email and a wrong

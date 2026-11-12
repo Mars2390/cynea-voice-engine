@@ -71,6 +71,7 @@ def api(pg, monkeypatch):
         c.post("/auth/register", json={"email": "a@example.com", "password": "correct-horse-1"})
         link = links["a@example.com"]
         c.get(link[link.index("/auth/verify"):], follow_redirects=False)
+        pg.set_user_status(pg.get_user_by_email("a@example.com").id, pg.APPROVED)
         token = c.post("/auth/login", json={"email": "a@example.com",
                                             "password": "correct-horse-1"}).json()["token"]
         c.h = {"Authorization": f"Bearer {token}"}

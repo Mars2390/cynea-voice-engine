@@ -68,6 +68,11 @@ def resolve(raw: str) -> Optional[str]:
         row = s.scalar(select(db.ApiKey).where(db.ApiKey.key_hash == _hash(raw)))
         if row is None or row.revoked_at is not None:
             return None
+        # A rejected account's keys stop with its sessions. Left alone rather
+        # than revoked, so approving the account again brings them back.
+        owner = s.get(db.User, row.user_id)
+        if owner is None or owner.status == db.REJECTED:
+            return None
         # Coarse on purpose: a busy key should not write on every request.
         now = db._now()
         last = row.last_used_at

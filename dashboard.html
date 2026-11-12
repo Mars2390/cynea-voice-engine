@@ -503,6 +503,12 @@ table.hist tbody tr:hover{background:var(--panel);cursor:pointer}
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 5.5A1.5 1.5 0 0 1 6.5 4H19v16H6.5A1.5 1.5 0 0 1 5 18.5z"/><path d="M5 18.5A1.5 1.5 0 0 1 6.5 17H19"/></svg>
           Docs
         </a>
+        <!-- Shown only when GET /auth/me says is_admin. Hiding it is cosmetic:
+             the /admin routes check the flag on the server on every request. -->
+        <a class="nav-item" href="admin.html" id="navAdmin" hidden>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3.5l7 2.5v5.5c0 4.2-2.9 7.6-7 9-4.1-1.4-7-4.8-7-9V6z"/><path d="M9 12l2 2 4-4"/></svg>
+          Admin
+        </a>
       </div>
     </nav>
 
@@ -2048,6 +2054,7 @@ function paintMe(){
   $('#wsName').textContent=label;
   $('#wsSub').textContent=ME.company?(ME.name||ME.email):(ME.name?ME.email:'');
   $('#wsLink').hidden=false;
+  $('#navAdmin').hidden=ME.is_admin!==true;
   $('#whoEmail').textContent=ME.email;
   $('#acProfile').innerHTML=[
     ['Name',ME.name||'—'],['Company',ME.company||'—'],['Email',ME.email],['Member since',dateLocal(ME.created_at)]

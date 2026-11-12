@@ -76,6 +76,14 @@ class EmailNotVerified(AuthError):
     """The password is right but the email address was never confirmed."""
 
 
+class AwaitingApproval(AuthError):
+    """Signed up; an administrator has not looked at the account yet."""
+
+
+class NotApproved(AuthError):
+    """An administrator turned the account down."""
+
+
 class InvalidSession(AuthError):
     """Token missing, malformed, tampered with, or expired."""
 
@@ -267,8 +275,11 @@ def ensure_active(claims: dict) -> str:
     account is gone, it was signed out, or the password has changed since."""
     user_id = str(claims["sub"])
     with db.session_scope() as s:
-        if not db._is_uuid(user_id) or s.get(db.User, user_id) is None:
+        user = s.get(db.User, user_id) if db._is_uuid(user_id) else None
+        if user is None:
             raise InvalidSession("The account for this session no longer exists.")
+        if user.status == db.REJECTED:
+            raise InvalidSession("Your account was not approved.")
         if db.table_ready("revoked_tokens") and claims.get("jti") \
                 and s.get(db.RevokedToken, str(claims["jti"])) is not None:
             raise InvalidSession("You have signed out. Sign in again.")
@@ -397,6 +408,30 @@ def require_verified(user) -> None:
         raise EmailNotVerified("Please verify your email first.")
 
 
+def require_can_sign_in(user, verification_deliverable: bool) -> None:
+    """Raise unless this account may be given a session. Asked after the
+    password has been checked, so none of these answers reveal an account.
+
+    In order:
+      rejected                         -> NotApproved
+      pending, unverified, and a link
+      can actually reach them          -> EmailNotVerified, which they can act on
+      pending                          -> AwaitingApproval
+      approved                         -> signs in
+
+    An approved account signs in whether or not it verified its address. While
+    no email can be sent, nobody can verify, so the administrator's review is
+    the check that stands in for the mailbox.
+    """
+    status = db.user_status(user)
+    if status == db.REJECTED:
+        raise NotApproved("Your account was not approved.")
+    if status == db.PENDING:
+        if verification_deliverable and not is_verified(user):
+            require_verified(user)
+        raise AwaitingApproval("Your account is waiting for approval.")
+
+
 # ----------------------------------------------------------------------
 # Passwords, after the fact
 # ----------------------------------------------------------------------
@@ -475,6 +510,7 @@ def current_user(token: str):
 __all__ = [
     "AuthError", "InvalidCredentials", "EmailAlreadyRegistered",
     "WeakPassword", "InvalidSession", "EmailNotVerified",
+    "AwaitingApproval", "NotApproved", "require_can_sign_in",
     "hash_password", "verify_password",
     "register_user", "login_user", "get_user_by_id",
     "create_session", "validate_session", "session_claims", "current_user",

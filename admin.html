@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Admin · Cynea</title>
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="assets/favicon.ico" sizes="48x48 32x32 16x16">
+<link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+<link rel="mask-icon" href="assets/mask-icon.svg" color="#00D4FF">
+<meta name="theme-color" content="#050505">
+<meta name="color-scheme" content="dark">
+<meta name="robots" content="noindex">
+<script src="assets/report-errors.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+
+<style>
+/* Admin: who may use the console. The same dark brand as dashboard.html.
+   This page holds no data of its own. Everything it shows comes from
+   /admin/users, which checks users.is_admin on the server on every request;
+   the redirects below only keep non-admins from looking at an empty shell. */
+:root{
+  color-scheme:dark;
+  --bg:#050505; --bg-2:#0E0E0E; --panel:#161616; --panel-2:#1C1C1C; --card:#111111;
+  --cyan:#00D4FF; --cyan-hover:#00B8E6;
+  --ink:#F5F5F5; --muted:#8A8A8A; --line:#1E1E1E; --line-strong:#2A2A2A;
+  --ok:#3DD68C; --ok-bg:rgba(61,214,140,.12);
+  --warn:#F5B544; --warn-bg:rgba(245,181,68,.12);
+  --bad:#FF6B6B; --bad-bg:rgba(255,107,107,.13);
+  --r:10px; --r-sm:8px;
+  --display:'Syne',system-ui,sans-serif;
+  --sans:'DM Sans',system-ui,-apple-system,'Segoe UI',sans-serif;
+}
+*,*::before,*::after{box-sizing:border-box}
+[hidden]{display:none!important}
+html,body{margin:0}
+body{background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:14px;line-height:1.45;
+  -webkit-font-smoothing:antialiased;min-height:100vh}
+h1,h2,p{margin:0}
+h1,h2{font-family:var(--display);letter-spacing:-.01em}
+a{color:inherit;text-decoration:none}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
+:focus-visible{outline:2px solid var(--cyan);outline-offset:2px;border-radius:4px}
+::selection{background:rgba(0,212,255,.3)}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;height:32px;padding:0 12px;
+  border-radius:var(--r-sm);font-size:13px;font-weight:500;transition:box-shadow .16s,background .16s;white-space:nowrap}
+.btn-sm{height:28px;padding:0 10px;font-size:12px}
+.btn-primary{background:var(--cyan);color:#050505;font-weight:600}
+.btn-primary:hover{background:var(--cyan-hover)}
+.btn-ghost{box-shadow:inset 0 0 0 1px var(--line-strong)}
+.btn-ghost:hover{box-shadow:inset 0 0 0 1px var(--ink)}
+.btn-reject:hover{box-shadow:inset 0 0 0 1px var(--bad);color:var(--bad)}
+.btn:disabled{opacity:.4;cursor:not-allowed;box-shadow:inset 0 0 0 1px var(--line);background:none;color:var(--muted)}
+
+/* ── top bar ── */
+.top{position:sticky;top:0;z-index:10;display:flex;align-items:center;gap:16px;flex-wrap:wrap;
+  padding:12px 24px;background:rgba(5,5,5,.92);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+.brand{display:inline-flex;align-items:center;gap:9px;font-family:var(--display);font-size:19px;font-weight:700;line-height:1}
+.brand .prism{color:var(--cyan);display:block}
+.crumb{font-size:13px;color:var(--muted);padding-left:16px;border-left:1px solid var(--line-strong)}
+.top-right{margin-left:auto;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.who{font-size:12px;color:var(--muted);max-width:240px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+
+/* ── page ── */
+.wrap{max-width:1120px;margin:0 auto;padding:32px 24px 64px}
+.head{display:flex;align-items:flex-end;gap:16px;flex-wrap:wrap;margin-bottom:24px}
+.head h1{font-size:28px;font-weight:700;line-height:1.1}
+.head p{color:var(--muted);margin-top:8px;max-width:56ch}
+.head .btn{margin-left:auto}
+
+.filters{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px}
+.filter{display:inline-flex;align-items:center;gap:8px;height:32px;padding:0 12px;border-radius:999px;
+  font-size:13px;color:var(--muted);box-shadow:inset 0 0 0 1px var(--line-strong);transition:.16s}
+.filter:hover{color:var(--ink)}
+.filter[aria-pressed="true"]{background:rgba(0,212,255,.1);color:var(--ink);box-shadow:inset 0 0 0 1px rgba(0,212,255,.45)}
+.filter .n{font-variant-numeric:tabular-nums;font-size:12px;color:var(--muted)}
+.filter[aria-pressed="true"] .n{color:var(--cyan)}
+
+.note{margin-bottom:16px;padding:10px 14px;border-radius:var(--r-sm);font-size:13px;background:var(--panel)}
+.note.ok{background:var(--ok-bg);color:var(--ok)}
+.note.err{background:var(--bad-bg);color:var(--bad)}
+
+.panel{background:var(--card);border:1px solid var(--line);border-radius:var(--r);overflow:hidden}
+table{width:100%;border-collapse:collapse}
+th{text-align:left;font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);font-weight:600;
+  padding:12px 16px;border-bottom:1px solid var(--line);background:var(--bg-2)}
+td{padding:14px 16px;border-top:1px solid var(--line);vertical-align:middle}
+tbody tr:first-child td{border-top:0}
+tbody tr:hover td{background:rgba(255,255,255,.015)}
+.name{font-weight:500}
+.sub{display:block;font-size:12px;color:var(--muted);margin-top:2px}
+.email{word-break:break-all}
+.dim{color:var(--muted)}
+.date{white-space:nowrap;font-variant-numeric:tabular-nums;color:var(--muted)}
+.acts{display:flex;gap:8px;justify-content:flex-end}
+th.acts-h{text-align:right}
+
+.pill{display:inline-flex;align-items:center;gap:6px;height:22px;padding:0 9px;border-radius:999px;font-size:12px;font-weight:500;text-transform:capitalize}
+.pill::before{content:"";width:6px;height:6px;border-radius:50%;background:currentColor}
+.pill.pending{background:var(--warn-bg);color:var(--warn)}
+.pill.approved{background:var(--ok-bg);color:var(--ok)}
+.pill.rejected{background:var(--bad-bg);color:var(--bad)}
+.tag{display:inline-block;margin-left:6px;padding:0 6px;border-radius:4px;font-size:11px;color:var(--cyan);
+  box-shadow:inset 0 0 0 1px rgba(0,212,255,.35);vertical-align:1px}
+
+.empty,.loading{padding:48px 16px;text-align:center;color:var(--muted)}
+
+/* ── phones: each account becomes a card ── */
+@media (max-width:760px){
+  .top{padding:12px 16px}
+  .crumb{display:none}
+  .wrap{padding:24px 16px 48px}
+  .head h1{font-size:24px}
+  .head .btn{margin-left:0}
+  thead{display:none}
+  table,tbody,tr,td{display:block;width:100%}
+  tbody tr{padding:14px 16px;border-top:1px solid var(--line)}
+  tbody tr:first-child{border-top:0}
+  td{border:0;padding:4px 0;display:flex;gap:12px;justify-content:space-between;align-items:baseline}
+  td::before{content:attr(data-label);flex-shrink:0;font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);font-weight:600}
+  td.cell-name{display:block;padding-bottom:8px}
+  td.cell-name::before{content:none}
+  td.cell-email{flex-wrap:wrap}
+  .email{text-align:right}
+  td.cell-acts{padding-top:12px}
+  td.cell-acts::before{content:none}
+  .acts{width:100%}
+  .acts .btn{flex:1;height:36px}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <a class="brand" href="dashboard.html" aria-label="Cynea console"><svg class="prism" viewBox="14 2 30 52" width="11" height="19" aria-hidden="true" focusable="false"><g transform="translate(2,2)"><path d="M28 2 L38 2 L40 4 L40 9 L34 15 L34 37 L40 43 L40 48 L38 50 L28 50 L18 43 L14 30 L14 22 L18 9 Z" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linejoin="bevel"/><path d="M22 12 L34 6 L34 15 L27 23 Z" fill="currentColor" fill-opacity=".18"/><path d="M22 40 L34 46 L34 37 L27 29 Z" fill="currentColor" fill-opacity=".09"/><circle cx="26" cy="26" r="2.5" fill="currentColor"/></g></svg><span>Cynea</span></a>
+  <span class="crumb">Admin</span>
+  <div class="top-right">
+    <span class="who" id="who"></span>
+    <a class="btn btn-ghost btn-sm" href="dashboard.html">Back to console</a>
+    <button class="btn btn-ghost btn-sm" id="signOut" type="button">Sign out</button>
+  </div>
+</header>
+
+<main class="wrap">
+  <p class="loading" id="gate">Checking your access…</p>
+
+  <div id="app" hidden>
+    <div class="head">
+      <div>
+        <h1>Accounts</h1>
+        <p>New sign-ups wait here until you approve them. A pending or rejected account cannot sign in.</p>
+      </div>
+      <button class="btn btn-ghost" id="refresh" type="button">Refresh</button>
+    </div>
+
+    <div class="filters" role="group" aria-label="Filter by status">
+      <button class="filter" type="button" data-filter="all" aria-pressed="true">All <span class="n" data-count="all">0</span></button>
+      <button class="filter" type="button" data-filter="pending" aria-pressed="false">Pending <span class="n" data-count="pending">0</span></button>
+      <button class="filter" type="button" data-filter="approved" aria-pressed="false">Approved <span class="n" data-count="approved">0</span></button>
+      <button class="filter" type="button" data-filter="rejected" aria-pressed="false">Rejected <span class="n" data-count="rejected">0</span></button>
+    </div>
+
+    <p class="note" id="note" role="status" aria-live="polite" hidden></p>
+
+    <div class="panel">
+      <table>
+        <thead>
+          <tr><th scope="col">Full name</th><th scope="col">Company</th><th scope="col">Email</th>
+              <th scope="col">Status</th><th scope="col">Created</th><th scope="col" class="acts-h"><span class="sr">Actions</span></th></tr>
+        </thead>
+        <tbody id="rows"><tr><td colspan="6" class="loading">Loading accounts…</td></tr></tbody>
+      </table>
+    </div>
+  </div>
+</main>
+
+<script>
+'use strict';
+
+var API_BASE = (function(){
+  /* Same rule as the console: /api on this origin when deployed, a local
+     uvicorn otherwise, localStorage.cynea_api to point anywhere else. */
+  var override = localStorage.getItem('cynea_api');
+  if (override) return override.replace(/\/$/, '');
+  var h = location.hostname;
+  var local = (h === 'localhost' || h === '127.0.0.1' || h === '' || location.protocol === 'file:');
+  return local ? 'http://127.0.0.1:8000' : '/api';
+})();
+var TOKEN = localStorage.getItem('cynea_token') || '';
+var ME = null, USERS = [], FILTER = 'all', BUSY = {};
+var STATUSES = ['pending', 'approved', 'rejected'];
+
+function $(s){ return document.querySelector(s); }
+function $$(s){ return Array.prototype.slice.call(document.querySelectorAll(s)); }
+
+/* Not signed in, or the session died: sign in and come back here. */
+var leaving = false;
+function toSignIn(){
+  if (leaving) return;
+  leaving = true;
+  localStorage.removeItem('cynea_token');
+  localStorage.removeItem('cynea_email');
+  location.replace('signin.html?next=' + encodeURIComponent('admin.html'));
+}
+/* Signed in but not an admin: off to sign-in, which sends a live session on
+   to the console. The session itself is left alone. */
+function notAdmin(){
+  if (leaving) return;
+  leaving = true;
+  location.replace('signin.html');
+}
+
+function req(method, path){
+  return fetch(API_BASE + path, {method: method, headers: {Authorization: 'Bearer ' + TOKEN}})
+    .catch(function(){ throw new Error('Cannot reach the server. Check your connection and try again.'); })
+    .then(function(r){
+      if (r.status === 401){ toSignIn(); throw new Error('Your session has ended.'); }
+      if (r.status === 403 && path.indexOf('/admin/') === 0){ notAdmin(); throw new Error('Not an administrator.'); }
+      return r.json().catch(function(){ return null; }).then(function(data){
+        if (r.ok) return data;
+        var d = data && data.detail;
+        throw new Error(typeof d === 'string' && d ? d : 'The server answered with an error (' + r.status + ').');
+      });
+    });
+}
+
+function note(text, kind){
+  var n = $('#note');
+  n.textContent = text || '';
+  n.className = 'note' + (kind ? ' ' + kind : '');
+  n.hidden = !text;
+}
+
+var DATE = new Intl.DateTimeFormat(undefined, {day: 'numeric', month: 'short', year: 'numeric'});
+function day(iso){
+  if (!iso) return '—';
+  var d = new Date(iso);
+  return isNaN(d) ? '—' : DATE.format(d);
+}
+
+/* Every string a person typed at sign-up goes in as text, never as markup. */
+function el(tag, cls, text){
+  var e = document.createElement(tag);
+  if (cls) e.className = cls;
+  if (text !== undefined && text !== null) e.textContent = text;
+  return e;
+}
+function cell(label, cls){
+  var td = el('td', cls);
+  td.setAttribute('data-label', label);
+  return td;
+}
+function button(text, cls, disabled, title, onClick){
+  var b = el('button', 'btn btn-sm ' + cls, text);
+  b.type = 'button';
+  b.disabled = !!disabled;
+  if (title) b.title = title;
+  b.addEventListener('click', onClick);
+  return b;
+}
+
+function counts(){
+  var c = {all: USERS.length, pending: 0, approved: 0, rejected: 0};
+  USERS.forEach(function(u){ c[u.status] = (c[u.status] || 0) + 1; });
+  return c;
+}
+
+function render(){
+  var c = counts();
+  $$('[data-count]').forEach(function(n){ n.textContent = c[n.getAttribute('data-count')] || 0; });
+  $$('[data-filter]').forEach(function(b){
+    b.setAttribute('aria-pressed', String(b.getAttribute('data-filter') === FILTER));
+  });
+
+  var shown = USERS.filter(function(u){ return FILTER === 'all' || u.status === FILTER; });
+  var body = $('#rows');
+  body.textContent = '';
+  if (!shown.length){
+    var tr = el('tr'), td = el('td', 'empty',
+      FILTER === 'all' ? 'No accounts yet.' : 'No ' + FILTER + ' accounts.');
+    td.colSpan = 6;
+    tr.appendChild(td);
+    body.appendChild(tr);
+    return;
+  }
+  shown.forEach(function(u){
+    var mine = ME && u.id === ME.id, busy = !!BUSY[u.id];
+    var tr = el('tr');
+
+    var name = cell('Full name', 'cell-name');
+    name.appendChild(el('span', 'name' + (u.name ? '' : ' dim'), u.name || 'No name given'));
+    if (u.is_admin) name.appendChild(el('span', 'tag', 'Admin'));
+    tr.appendChild(name);
+
+    var company = cell('Company');
+    company.appendChild(el('span', u.company ? '' : 'dim', u.company || '—'));
+    tr.appendChild(company);
+
+    var email = cell('Email', 'cell-email');
+    var wrap = el('span', 'email', u.email);
+    if (!u.email_verified) wrap.appendChild(el('span', 'sub', 'Email not verified'));
+    email.appendChild(wrap);
+    tr.appendChild(email);
+
+    var status = cell('Status');
+    status.appendChild(el('span', 'pill ' + u.status, u.status));
+    tr.appendChild(status);
+
+    var created = cell('Created');
+    var time = el('time', 'date', day(u.created_at));
+    if (u.created_at) time.dateTime = u.created_at;
+    created.appendChild(time);
+    tr.appendChild(created);
+
+    var acts = cell('Actions', 'cell-acts');
+    var box = el('div', 'acts');
+    box.appendChild(button('Approve', 'btn-primary', busy || u.status === 'approved',
+      u.status === 'approved' ? 'Already approved' : '', function(){ act(u, 'approve'); }));
+    box.appendChild(button('Reject', 'btn-ghost btn-reject', busy || u.status === 'rejected' || mine,
+      mine ? "You can't reject your own account" : (u.status === 'rejected' ? 'Already rejected' : ''),
+      function(){ act(u, 'reject'); }));
+    acts.appendChild(box);
+    tr.appendChild(acts);
+
+    body.appendChild(tr);
+  });
+}
+
+function load(){
+  return req('GET', '/admin/users').then(function(data){
+    USERS = (data && data.users) || [];
+    render();
+  }).catch(function(err){
+    if (leaving) return;
+    var body = $('#rows');
+    body.textContent = '';
+    var tr = el('tr'), td = el('td', 'empty', 'Accounts did not load. ' + err.message);
+    td.colSpan = 6;
+    tr.appendChild(td);
+    body.appendChild(tr);
+  });
+}
+
+function act(u, what){
+  BUSY[u.id] = true;
+  render();
+  req('POST', '/admin/users/' + encodeURIComponent(u.id) + '/' + what).then(function(updated){
+    USERS = USERS.map(function(x){ return x.id === updated.id ? updated : x; });
+    note((what === 'approve' ? 'Approved ' : 'Rejected ') + updated.email + '.', 'ok');
+  }).catch(function(err){
+    if (!leaving) note(err.message, 'err');
+  }).then(function(){
+    delete BUSY[u.id];
+    render();
+  });
+}
+
+function setFilter(f){
+  FILTER = (f === 'all' || STATUSES.indexOf(f) !== -1) ? f : 'all';
+  if (('#' + FILTER) !== location.hash && !(FILTER === 'all' && !location.hash)){
+    history.replaceState(null, '', FILTER === 'all' ? location.pathname : '#' + FILTER);
+  }
+  render();
+}
+$$('[data-filter]').forEach(function(b){
+  b.addEventListener('click', function(){ setFilter(b.getAttribute('data-filter')); });
+});
+$('#refresh').addEventListener('click', function(){ note(''); load(); });
+
+$('#signOut').addEventListener('click', function(){
+  var done = false;
+  function leave(){
+    if (done) return;
+    done = true;
+    localStorage.removeItem('cynea_token');
+    localStorage.removeItem('cynea_email');
+    location.replace('signin.html');
+  }
+  setTimeout(leave, 4000);
+  fetch(API_BASE + '/auth/logout', {method: 'POST', headers: {Authorization: 'Bearer ' + TOKEN}})
+    .then(leave, leave);
+});
+
+/* Nothing is shown until the server says this session is an admin's. */
+(function boot(){
+  if (!TOKEN){ toSignIn(); return; }
+  req('GET', '/auth/me').then(function(me){
+    if (!me || me.is_admin !== true){ notAdmin(); return; }
+    ME = me;
+    $('#who').textContent = me.email;
+    $('#gate').hidden = true;
+    $('#app').hidden = false;
+    FILTER = location.hash.slice(1) || 'all';
+    setFilter(FILTER);
+    return load();
+  }).catch(function(err){
+    if (!leaving) $('#gate').textContent = 'Could not check your access. ' + err.message;
+  });
+})();
+</script>
+</body>
+</html>

@@ -3,12 +3,16 @@
 Sent through Resend's HTTP API (free tier: 100 emails/day, 3,000/month),
 over httpx like every other provider in this codebase, so there is no SDK.
 
-These links are credentials, so they are never written to a log. A log line
-says that a link was generated and for which address, nothing more.
+These links are credentials, so this module never writes one to a log: a log
+line says that a link was generated and for which address, nothing more. The
+one exception lives in the API, not here: with no EMAIL_API_KEY at all, sign-up
+writes the verification link to the server log (api._verify_at_signup), because
+until a domain is verified that log is the only place the link exists.
 
 Environment:
-    EMAIL_API_KEY       Resend API key (re_...). Without it nothing can be sent,
-                        and sign-up refuses rather than pretending it did.
+    EMAIL_API_KEY       Resend API key (re_...). Without it nothing can be sent.
+                        Sign-up still works: accounts wait for an administrator
+                        to approve them instead of for the email.
     EMAIL_FROM          Sender, e.g. "Cynea <hello@cynea.ai>". Resend only sends
                         from a domain you have verified with them; until then
                         "onboarding@resend.dev" can only deliver to your own

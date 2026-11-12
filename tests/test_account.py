@@ -46,12 +46,20 @@ def env(tmp_path, monkeypatch):
     db.reset_connection()
 
 
+def _approve(email=EMAIL):
+    """What an administrator does on admin.html."""
+    from cynea import db
+    db.set_user_status(db.get_user_by_email(email).id, db.APPROVED)
+
+
 def _sign_up(c, email=EMAIL, password=PASSWORD, verify=True, **extra):
+    """Register, then (unless verify=False) follow the link and get approved."""
     r = c.post("/auth/register", json={"email": email, "password": password, **extra})
     assert r.status_code == 201, r.text
     if verify:
         link = c.verify_links[email]
         c.get(link[link.index("/auth/verify"):], follow_redirects=False)
+        _approve(email)
 
 
 def _login(c, email=EMAIL, password=PASSWORD):
@@ -197,6 +205,7 @@ def test_reset_recovers_an_address_someone_else_squatted(env):
     env.post("/auth/reset-password", json={"token": _reset_token(env), "password": "brand-new-pass-1"})
 
     assert env.post("/auth/login", json={"email": EMAIL, "password": "squatters-pass-1"}).status_code == 401
+    _approve()                       # the recovered account still goes through review
     me = env.get("/auth/me", headers=_login(env, password="brand-new-pass-1")).json()
     assert me["name"] is None and me["company"] is None
 
@@ -251,12 +260,15 @@ def test_vercels_own_domain_is_used_before_site_url_is_set(env, monkeypatch):
     assert env.verify_links["b@example.com"].startswith("https://cynea.example/api/auth/verify?")
 
 
-def test_sign_up_without_email_says_so_and_creates_nothing(env, monkeypatch):
+def test_sign_up_without_email_creates_a_pending_account(env, monkeypatch):
+    """Replaces the old refusal: with no email, the account waits for an admin."""
     from cynea import db
     monkeypatch.delenv("EMAIL_DEV_LOG_LINKS")
     r = env.post("/auth/register", json={"email": "b@example.com", "password": PASSWORD})
-    assert r.status_code == 503 and "email" in r.json()["detail"]
-    assert db.get_user_by_email("b@example.com") is None
+    assert r.status_code == 201
+    assert r.json()["message"] == "Account created. An administrator will review it shortly."
+    assert db.user_status(db.get_user_by_email("b@example.com")) == db.PENDING
+    assert "b@example.com" not in env.verify_links          # nothing was mailed
 
 
 def test_dev_links_are_refused_in_production(monkeypatch):
